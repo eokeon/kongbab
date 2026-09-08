@@ -1,0 +1,614 @@
+{
+  "appName": "kongbab-gta-rp",
+  "version": "1.0",
+  "backupId": "backup_initial",
+  "createdAt": "2026-09-08 18:15:00",
+  "reason": "초기 데이터 백업 (경찰~시민 스트리머, RP네임, 영상링크)",
+  "stats": {
+    "totalCategories": 6,
+    "totalMembers": 23,
+    "totalVideos": 24
+  },
+  "categories": [
+    {
+      "id": "police",
+      "name": "경찰",
+      "emoji": "👮‍♂️",
+      "badge": "POLICE",
+      "icon": "shield",
+      "color": "blue",
+      "hasSubgroups": false,
+      "description": "콩밥특별시의 법과 질서를 수호하는 경찰관들",
+      "members": [
+        {
+          "id": "pol-1",
+          "name": "강철수",
+          "streamer": "스트리머A",
+          "role": "경찰청장",
+          "badgeColor": "bg-blue-600",
+          "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces",
+          "videos": [
+            {
+              "id": "v-p1-1",
+              "title": "[콩밥경찰] 시내 추격전 레전드 검거",
+              "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+              "date": "2026.08.15",
+              "videoType": "clip",
+              "description": "과속 차량 추격 하이라이트"
+            },
+            {
+              "id": "v-p1-2",
+              "title": "[콩밥특별시] 신입 순경 면접 티키타카 모음",
+              "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
+              "date": "2026.08.18",
+              "videoType": "clip",
+              "description": "경찰청 면접 중 일어난 레전드 상황"
+            },
+            {
+              "id": "v-p1-3",
+              "title": "[풀영상] 콩밥특별시 경찰청 1일차 전반부 풀다시보기",
+              "url": "https://www.youtube.com/watch?v=fJ9rUzIMcZQ",
+              "date": "2026.08.15",
+              "videoType": "full",
+              "description": "경찰청 출범 첫날 집중 순찰 및 검거 풀버전 방송"
+            }
+          ]
+        },
+        {
+          "id": "pol-2",
+          "name": "이민우",
+          "streamer": "스트리머B",
+          "role": "순찰팀장 / 경위",
+          "badgeColor": "bg-cyan-600",
+          "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces",
+          "videos": [
+            {
+              "id": "v-p2-1",
+              "title": "[콩밥RP] 갱단 도주차량 완벽 블로킹",
+              "url": "https://www.youtube.com/watch?v=9bZkp7q19f0",
+              "date": "2026.08.20",
+              "videoType": "clip",
+              "description": "고속도로 PIT 기동 명장면"
+            },
+            {
+              "id": "v-p2-2",
+              "title": "[풀영상] 콩밥특별시 야간 순찰 및 갱단 추격전 풀다시보기",
+              "url": "https://www.youtube.com/watch?v=kJQP7kiw5Fk",
+              "date": "2026.08.20",
+              "videoType": "full",
+              "description": "야간 시내 집중 단속 풀버전"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ems",
+      "name": "EMS",
+      "emoji": "🚑",
+      "badge": "중증외상센터",
+      "icon": "cross",
+      "color": "teal",
+      "hasSubgroups": false,
+      "description": "사건 현장에 가장 먼저 달려가는 중증외상센터 의료진 및 구조대",
+      "members": [
+        {
+          "id": "ems-1",
+          "name": "나천사",
+          "streamer": "스트리머I",
+          "role": "외상센터장",
+          "badgeColor": "bg-teal-600",
+          "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=faces",
+          "videos": [
+            {
+              "id": "v-e1-1",
+              "title": "[EMS] 갱단 총격전 현장에 뛰어든 의사",
+              "url": "https://www.youtube.com/watch?v=3JZ_D3ELwOQ",
+              "date": "2026.08.24",
+              "videoType": "clip",
+              "description": "빗발치는 총알 속 심폐소생술"
+            },
+            {
+              "id": "v-e1-2",
+              "title": "[풀영상] 콩밥 외상센터 야간 응급 당직 풀라이브 다시보기",
+              "url": "https://www.youtube.com/watch?v=L_LUpnjgPso",
+              "date": "2026.08.24",
+              "videoType": "full",
+              "description": "연쇄 총격전 속 외상센터 풀방송"
+            }
+          ]
+        },
+        {
+          "id": "ems-2",
+          "name": "한생명",
+          "streamer": "스트리머L",
+          "role": "수석 구조대원",
+          "badgeColor": "bg-emerald-600",
+          "avatar": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=200&h=200&fit=crop&crop=faces",
+          "videos": [
+            {
+              "id": "v-e2-1",
+              "title": "[EMS] 구급차 몰고 산길 역주행 긴급 구조",
+              "url": "https://www.youtube.com/watch?v=9bZkp7q19f0",
+              "date": "2026.08.29",
+              "videoType": "clip",
+              "description": "절벽 아래 추락 차량 탑승자 구조"
+            },
+            {
+              "id": "v-e2-2",
+              "title": "[풀영상] 콩밥 산악 구조대 24시 긴급 출동 풀다시보기",
+              "url": "https://www.youtube.com/watch?v=2Vv-BfVoq4g",
+              "date": "2026.08.29",
+              "videoType": "full",
+              "description": "산악 추락 사고 및 해안 구조 풀영상"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gang",
+      "name": "갱단",
+      "emoji": "💀",
+      "badge": "GANG",
+      "icon": "skull",
+      "color": "red",
+      "hasSubgroups": true,
+      "description": "콩밥특별시를 움직이는 12대 갱단 세력",
+      "groups": [
+        {
+          "id": "gang-nonghyup",
+          "name": "농협",
+          "emoji": "🌾",
+          "description": "겉은 평범한 농협, 속은 거대 범죄 카르텔",
+          "tag": "카르텔",
+          "members": [
+            {
+              "id": "m-nh-1",
+              "name": "김조합장",
+              "streamer": "스트리머_예시1",
+              "role": "조합장 (보스)",
+              "badgeColor": "bg-green-700",
+              "avatar": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=200&h=200&fit=crop&crop=faces",
+              "videos": [
+                {
+                  "id": "v-nh-1",
+                  "title": "[농협] 첫 세력 결성 및 조합원 집합",
+                  "url": "https://www.youtube.com/watch?v=3JZ_D3ELwOQ",
+                  "date": "2026.08.10",
+                  "videoType": "clip",
+                  "description": "농협 갱단 창설 하이라이트"
+                },
+                {
+                  "id": "v-nh-2",
+                  "title": "[풀영상] 농협 갱단 결성식 & 첫 구역 점령전 풀라이브",
+                  "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                  "date": "2026.08.10",
+                  "videoType": "full",
+                  "description": "농협 세력 확장 풀버전 방송"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "gang-goldmoon",
+          "name": "골드문",
+          "emoji": "🌙",
+          "description": "화려하고 거대한 자금력을 자랑하는 기업형 조직",
+          "tag": "기업형",
+          "members": [
+            {
+              "id": "m-gm-1",
+              "name": "정회장",
+              "streamer": "스트리머_예시2",
+              "role": "총괄 회장",
+              "badgeColor": "bg-yellow-600",
+              "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces",
+              "videos": [
+                {
+                  "id": "v-gm-1",
+                  "title": "[골드문] 콩밥시 정복 선언식",
+                  "url": "https://www.youtube.com/watch?v=2Vv-BfVoq4g",
+                  "date": "2026.08.12",
+                  "videoType": "clip",
+                  "description": "조직원 단체 수트 집결"
+                },
+                {
+                  "id": "v-gm-2",
+                  "title": "[풀영상] 골드문 긴급 이사회 & 세력 연합 회동 풀다시보기",
+                  "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
+                  "date": "2026.08.12",
+                  "videoType": "full",
+                  "description": "골드문 기업형 카르텔 회의 풀영상"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "gang-blackrose",
+          "name": "흑장미",
+          "emoji": "🌹",
+          "description": "어둠 속에서 조용하고 치명적으로 움직이는 조직",
+          "tag": "암살/정보",
+          "members": [
+            {
+              "id": "m-br-1",
+              "name": "로즈",
+              "streamer": "스트리머_예시3",
+              "role": "보스",
+              "badgeColor": "bg-rose-800",
+              "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces",
+              "videos": []
+            }
+          ]
+        },
+        {
+          "id": "gang-oompa",
+          "name": "움파룸파",
+          "emoji": "😜",
+          "description": "예측 불가능한 광기와 유쾌함을 지닌 트릭스터 집단",
+          "tag": "광기/유쾌",
+          "members": [
+            {
+              "id": "m-op-1",
+              "name": "움파",
+              "streamer": "스트리머_예시4",
+              "role": "대장",
+              "badgeColor": "bg-orange-600",
+              "avatar": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&h=200&fit=crop&crop=faces",
+              "videos": []
+            }
+          ]
+        },
+        {
+          "id": "gang-sangryeon",
+          "name": "상련",
+          "emoji": "👠",
+          "description": "도도하고 날카로운 카리스마의 강한 조직",
+          "tag": "카리스마",
+          "members": [
+            {
+              "id": "m-sr-1",
+              "name": "연화",
+              "streamer": "스트리머_예시5",
+              "role": "보스",
+              "badgeColor": "bg-pink-700",
+              "avatar": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&h=200&fit=crop&crop=faces",
+              "videos": []
+            }
+          ]
+        },
+        {
+          "id": "gang-bigdick",
+          "name": "빅딕",
+          "emoji": "🍌",
+          "description": "화끈하고 거친 화력과 파괴력을 자랑하는 돌격파",
+          "tag": "화력전",
+          "members": [
+            {
+              "id": "m-bd-1",
+              "name": "빅보스",
+              "streamer": "스트리머_예시6",
+              "role": "보스",
+              "badgeColor": "bg-amber-600",
+              "avatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=faces",
+              "videos": []
+            }
+          ]
+        },
+        {
+          "id": "gang-doremifa",
+          "name": "도레미파",
+          "emoji": "🎹",
+          "description": "음악처럼 리드미컬하게 도시를 뒤흔드는 개성파 조직",
+          "tag": "예술/리듬",
+          "members": [
+            {
+              "id": "m-dr-1",
+              "name": "마에스트로",
+              "streamer": "스트리머_예시7",
+              "role": "지휘자",
+              "badgeColor": "bg-indigo-600",
+              "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=faces",
+              "videos": []
+            }
+          ]
+        },
+        {
+          "id": "gang-adventure",
+          "name": "어드벤처",
+          "emoji": "🐯",
+          "description": "산악, 오지, 공중 어디든 질주하는 모험가형 갱단",
+          "tag": "모험/특공",
+          "members": [
+            {
+              "id": "m-ad-1",
+              "name": "타이거",
+              "streamer": "스트리머_예시8",
+              "role": "탐험대장",
+              "badgeColor": "bg-red-600",
+              "avatar": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop&crop=faces",
+              "videos": []
+            }
+          ]
+        },
+        {
+          "id": "gang-kgaeng",
+          "name": "깨갱",
+          "emoji": "🐶",
+          "description": "물면 절대 놓지 않는 끈질긴 악바리 갱단",
+          "tag": "끈질김",
+          "members": [
+            {
+              "id": "m-kg-1",
+              "name": "도베르만",
+              "streamer": "스트리머_예시9",
+              "role": "두목",
+              "badgeColor": "bg-stone-600",
+              "avatar": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=200&h=200&fit=crop&crop=faces",
+              "videos": []
+            }
+          ]
+        },
+        {
+          "id": "gang-metalunion",
+          "name": "금속노조",
+          "emoji": "⛏️",
+          "description": "육중한 장비와 철통같은 단결력으로 무장한 노동자 갱단",
+          "tag": "철통단결",
+          "members": [
+            {
+              "id": "m-mu-1",
+              "name": "박위원장",
+              "streamer": "스트리머_예시10",
+              "role": "위원장",
+              "badgeColor": "bg-zinc-700",
+              "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=faces",
+              "videos": []
+            }
+          ]
+        },
+        {
+          "id": "gang-girlbang",
+          "name": "GIRL BANG",
+          "emoji": "🐷",
+          "description": "통통 튀는 반전 매력과 막강한 화력의 걸스 갱단",
+          "tag": "걸크러쉬",
+          "members": [
+            {
+              "id": "m-gb-1",
+              "name": "피기",
+              "streamer": "스트리머_예시11",
+              "role": "리더",
+              "badgeColor": "bg-fuchsia-600",
+              "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=faces",
+              "videos": []
+            }
+          ]
+        },
+        {
+          "id": "gang-streetcat",
+          "name": "길고양이 연합",
+          "emoji": "😺",
+          "description": "도시의 골목길을 쥐락펴락하는 민첩한 게릴라 조직",
+          "tag": "게릴라",
+          "members": [
+            {
+              "id": "m-sc-1",
+              "name": "야옹이",
+              "streamer": "스트리머_예시12",
+              "role": "대장냥이",
+              "badgeColor": "bg-amber-500",
+              "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop&crop=faces",
+              "videos": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "business",
+      "name": "사업체",
+      "emoji": "🏢",
+      "badge": "BUSINESS",
+      "icon": "building",
+      "color": "amber",
+      "hasSubgroups": true,
+      "description": "콩밥특별시 경제와 유흥을 이끄는 주요 사업장",
+      "groups": [
+        {
+          "id": "biz-yastation",
+          "name": "야스테이션",
+          "emoji": "🔧",
+          "description": "슈퍼카 튜닝 및 차량 정비 명가",
+          "tag": "정비소",
+          "members": [
+            {
+              "id": "m-ys-1",
+              "name": "오정비",
+              "streamer": "스트리머H",
+              "role": "대표",
+              "badgeColor": "bg-amber-600",
+              "avatar": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=200&h=200&fit=crop&crop=faces",
+              "videos": [
+                {
+                  "id": "v-ys-1",
+                  "title": "[야스테이션] 슈퍼카 개조 첫날 튜닝 썰",
+                  "url": "https://www.youtube.com/watch?v=kJQP7kiw5Fk",
+                  "date": "2026.08.19",
+                  "videoType": "clip",
+                  "description": "엔진 튜닝 및 시험 주행"
+                },
+                {
+                  "id": "v-ys-2",
+                  "title": "[풀영상] 야스테이션 개업 첫날 튜닝샵 영업 풀방송",
+                  "url": "https://www.youtube.com/watch?v=9bZkp7q19f0",
+                  "date": "2026.08.19",
+                  "videoType": "full",
+                  "description": "차량 10대 연속 풀튜닝 다시보기"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "biz-lux",
+          "name": "LUX 클럽",
+          "emoji": "🎭",
+          "description": "콩밥특별시 최고의 핫플레이스 나이트클럽",
+          "tag": "클럽/파티",
+          "members": [
+            {
+              "id": "m-lx-1",
+              "name": "DJ 럭스",
+              "streamer": "스트리머M",
+              "role": "총괄 지배인",
+              "badgeColor": "bg-purple-600",
+              "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces",
+              "videos": [
+                {
+                  "id": "v-lx-1",
+                  "title": "[LUX클럽] 주말 파티 댄스 배틀 현장",
+                  "url": "https://www.youtube.com/watch?v=fJ9rUzIMcZQ",
+                  "date": "2026.08.30",
+                  "videoType": "clip",
+                  "description": "클럽 오프닝 파티 하이라이트"
+                },
+                {
+                  "id": "v-lx-2",
+                  "title": "[풀영상] LUX 클럽 그랜드 오픈 나이트 파티 풀라이브",
+                  "url": "https://www.youtube.com/watch?v=3JZ_D3ELwOQ",
+                  "date": "2026.08.30",
+                  "videoType": "full",
+                  "description": "DJ 파티 실황 풀영상"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "biz-young31",
+          "name": "영써티원",
+          "emoji": "🍔",
+          "description": "입소문 난 맛있는 수제버거 & 디저트 프랜차이즈",
+          "tag": "요식업",
+          "members": [
+            {
+              "id": "m-yt-1",
+              "name": "영사장",
+              "streamer": "스트리머_영",
+              "role": "점주",
+              "badgeColor": "bg-red-500",
+              "avatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=faces",
+              "videos": []
+            }
+          ]
+        },
+        {
+          "id": "biz-koi",
+          "name": "KOI 레스토랑",
+          "emoji": "💌",
+          "description": "고급스럽고 로맨틱한 분위기의 프리미엄 다이닝",
+          "tag": "파인다이닝",
+          "members": [
+            {
+              "id": "m-ki-1",
+              "name": "코이 셰프",
+              "streamer": "스트리머_코",
+              "role": "오너 셰프",
+              "badgeColor": "bg-rose-600",
+              "avatar": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=faces",
+              "videos": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "press",
+      "name": "기자",
+      "emoji": "📰",
+      "badge": "KBTBS",
+      "icon": "camera",
+      "color": "sky",
+      "hasSubgroups": false,
+      "description": "도시의 모든 사건 사고를 가장 빠르게 보도하는 KBTBS 기자단",
+      "members": [
+        {
+          "id": "press-1",
+          "name": "박특종",
+          "streamer": "스트리머K",
+          "role": "보도국장",
+          "badgeColor": "bg-sky-600",
+          "avatar": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=faces",
+          "videos": [
+            {
+              "id": "v-c2-1",
+              "title": "[KBTBS] 항만 밀수 현장 드론 밀착 취재기",
+              "url": "https://www.youtube.com/watch?v=fJ9rUzIMcZQ",
+              "date": "2026.08.26",
+              "videoType": "clip",
+              "description": "발각되어 도망치는 과정까지 생생하게 담긴 특종"
+            },
+            {
+              "id": "v-c2-2",
+              "title": "[생방송 사고] 경찰 총격전 생중계하다 카메라 부서짐ㅋㅋ",
+              "url": "https://www.youtube.com/watch?v=JGwWNGJdvx8",
+              "date": "2026.08.31",
+              "videoType": "clip",
+              "description": "현장감 넘치는 위험천만 방송 모음"
+            },
+            {
+              "id": "v-c2-3",
+              "title": "[풀영상] KBTBS 보도국 24시 긴급 취재 풀다시보기",
+              "url": "https://www.youtube.com/watch?v=2Vv-BfVoq4g",
+              "date": "2026.08.27",
+              "videoType": "full",
+              "description": "콩밥특별시 심야 사건사고 밀착 취재 풀영상"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "citizen",
+      "name": "시민",
+      "emoji": "👥",
+      "badge": "CITIZEN",
+      "icon": "users",
+      "color": "purple",
+      "hasSubgroups": false,
+      "description": "택시기사, 배달원, 낚시꾼, 자유로운 소시민들",
+      "members": [
+        {
+          "id": "cit-1",
+          "name": "김기사",
+          "streamer": "스트리머J",
+          "role": "총알 택시 기사",
+          "badgeColor": "bg-purple-600",
+          "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop&crop=faces",
+          "videos": [
+            {
+              "id": "v-c1-1",
+              "title": "[택시RP] 강도 용의자를 손님으로 태웠을 때 대처법",
+              "url": "https://www.youtube.com/watch?v=2Vv-BfVoq4g",
+              "date": "2026.08.17",
+              "videoType": "clip",
+              "description": "뒤에서 권총 들이대는데 미터기 요금 깎아준 상황"
+            },
+            {
+              "id": "v-c1-2",
+              "title": "[풀영상] 콩밥 심야 총알택시 영업 1일차 풀다시보기",
+              "url": "https://www.youtube.com/watch?v=fJ9rUzIMcZQ",
+              "date": "2026.08.17",
+              "videoType": "full",
+              "description": "진상 손님부터 갱단까지 태운 심야 택시 풀라이브"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+# IntelliJ IDEA 설정 및 프로젝트 파일 제외
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# OS 생성 파일 제외
+.DS_Store
+Thumbs.db
+
+# Gradle 빌드 산출물
+.gradle/
+build/
+data/*.db
+data/*.mv.db
+data/*.trace.db

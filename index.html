@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>콩밥특별시 GTA RP 스트리머 영상</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#ef4444',
+              gold: '#f59e0b',
+              dark: '#09090b',
+              card: '#121216',
+              border: '#27272a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- 커스텀 스타일 -->
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="bg-[#09090b] text-zinc-100 min-h-screen flex flex-col selection:bg-red-500 selection:text-white">
+
+  <!-- 상단 네비게이션 헤더 (완전 불투명 솔리드로 스크롤 시 텍스트 겹침 방지) -->
+  <header class="sticky top-0 z-50 bg-[#09090b] border-b border-zinc-800 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20 gap-4">
+        
+        <!-- 로고 및 타이틀 -->
+        <div class="flex items-center gap-3.5 cursor-pointer" onclick="selectCategory('police')">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-red-600 via-rose-500 to-amber-500 flex items-center justify-center font-black text-xl text-white shadow-lg shadow-red-500/20">
+            KB
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xl font-black tracking-tight text-white">콩밥특별시</span>
+              <span class="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 border border-red-500/30">GTA RP</span>
+            </div>
+            <p class="text-xs text-zinc-400">스트리머 영상</p>
+          </div>
+        </div>
+
+        <!-- 통합 검색창 -->
+        <div class="flex-1 max-w-md hidden sm:block">
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </div>
+            <input 
+              type="text" 
+              id="search-input" 
+              placeholder="인원, 스트리머, 갱단, 영상 검색..." 
+              class="w-full pl-10 pr-4 py-2 bg-zinc-900/90 border border-zinc-800 rounded-xl text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
+            />
+          </div>
+        </div>
+
+        <!-- 우측 액션: 사용자/로그인 영역 -->
+        <div id="header-auth" class="flex items-center gap-2.5">
+          <!-- JS renderHeaderAuth() 에서 동적 렌더링 -->
+        </div>
+
+      </div>
+
+      <!-- 모바일용 검색창 -->
+      <div class="pb-3 sm:hidden">
+        <input 
+          type="text" 
+          oninput="state.searchQuery = this.value.trim().toLowerCase(); renderContent();"
+          placeholder="인원, 스트리머, 영상 검색..." 
+          class="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-red-500"
+        />
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 컨테이너 -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    
+    <!-- 카테고리 탭 네비게이션 & 통계 바 -->
+    <div class="mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-zinc-800/80 pb-5">
+      
+      <!-- 대분류 탭 (경찰, EMS, 갱단, 사업체, 기자, 시민) -->
+      <div id="category-tabs" class="flex flex-wrap items-center gap-2">
+        <!-- js/app.js에서 동적 생성 -->
+      </div>
+
+      <!-- 통계 바 -->
+      <div id="header-stats" class="text-xs text-zinc-400 flex items-center gap-2.5 bg-zinc-900/60 px-4 py-2 rounded-xl border border-zinc-800/60 flex-shrink-0">
+        <!-- js/app.js에서 동적 생성 -->
+      </div>
+
+    </div>
+
+    <!-- 메인 컨텐츠 영역 (조직 목록 or 인원 목록 or 영상 목록 or 검색 결과) -->
+    <section id="main-content" class="animate-fade-in">
+      <!-- js/app.js에서 동적 렌더링 -->
+    </section>
+
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="mt-auto border-t border-zinc-800/80 bg-zinc-950 py-8 text-center text-xs text-zinc-500">
+    <div class="max-w-7xl mx-auto px-4">
+      <p class="font-medium text-zinc-400 mb-1">콩밥특별시 GTA RP 스트리머 영상 아카이브</p>
+      <p>본 사이트는 GTA 롤플레잉 스트리머 팬 및 시청자를 위한 영상 모음집입니다.</p>
+      <p class="mt-2 text-zinc-600">유튜브 썸네일 및 영상에 대한 모든 저작권은 해당 원작자 및 스트리머에게 있습니다.</p>
+    </div>
+  </footer>
+
+  <!-- [1. 로그인 모달 (어드민 / 게스트)] -->
+  <div id="login-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-md shadow-2xl p-6 md:p-8 flex flex-col">
+      <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-6">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-500">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-white">로그인</h3>
+            <p class="text-xs text-zinc-400">콩밥특별시 영상 아카이브</p>
+          </div>
+        </div>
+        <button onclick="closeLoginModal()" class="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors flex-shrink-0">✕</button>
+      </div>
+
+      <!-- 어드민 로그인 폼 -->
+      <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1.5">어드민 아이디</label>
+          <input 
+            type="text" 
+            id="login-username" 
+            placeholder="아이디를 입력하세요" 
+            autocomplete="username"
+            required
+            class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-zinc-200 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all placeholder-zinc-600"
+          />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1.5">비밀번호</label>
+          <input 
+            type="password" 
+            id="login-password" 
+            placeholder="비밀번호를 입력하세요" 
+            autocomplete="current-password"
+            required
+            class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-zinc-200 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all placeholder-zinc-600"
+          />
+        </div>
+
+        <div id="login-error" class="hidden text-xs font-medium text-red-400 bg-red-950/50 border border-red-800/50 p-2.5 rounded-xl text-center"></div>
+
+        <div class="pt-2">
+          <button 
+            type="submit" 
+            class="w-full py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-red-600/30 cursor-pointer flex items-center justify-center gap-2"
+          >
+            <span>어드민 로그인</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </button>
+        </div>
+      </form>
+
+      <div class="relative my-6 text-center">
+        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-zinc-800"></div></div>
+        <span class="relative px-3 bg-zinc-900 text-xs text-zinc-500 font-medium">또는</span>
+      </div>
+
+      <!-- 게스트 계속하기 -->
+      <button 
+        type="button"
+        onclick="handleGuestLogin()" 
+        class="w-full py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white rounded-xl text-sm font-semibold transition-colors cursor-pointer flex items-center justify-center gap-2"
+      >
+        <span>👤 게스트로 둘러보기 (시청 전용)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- [2. 영상 추가 / 수정 모달 (어드민 전용)] -->
+  <div id="video-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 flex flex-col">
+      <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-5">
+        <div>
+          <h3 id="video-modal-title" class="text-xl font-bold text-white">영상 추가</h3>
+          <p id="video-modal-subtitle" class="text-xs text-zinc-400 mt-0.5">인원의 유튜브 영상을 등록합니다</p>
+        </div>
+        <button onclick="closeVideoModal()" class="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors flex-shrink-0">✕</button>
+      </div>
+
+      <form onsubmit="handleSaveVideo(event)" class="space-y-4">
+        <input type="hidden" id="video-form-id" value="" />
+
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">유튜브 URL <span class="text-red-500">*</span></label>
+          <input 
+            type="text" 
+            id="video-form-url" 
+            placeholder="https://www.youtube.com/watch?v=..." 
+            required
+            oninput="previewVideoModalThumb(this.value)"
+            class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
+          />
+        </div>
+
+        <!-- 실시간 썸네일 미리보기 -->
+        <div id="video-modal-thumb-preview" class="hidden items-center gap-3 bg-zinc-950 p-2.5 rounded-xl border border-zinc-800">
+          <img id="video-modal-thumb-img" src="" class="w-24 aspect-video rounded-lg object-cover bg-black" />
+          <div class="text-xs text-emerald-400 font-medium">✓ 유튜브 썸네일 인식 성공</div>
+        </div>
+
+        <!-- 영상 종류 (편집 영상 vs 풀 영상) -->
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1.5">영상 구분 <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="flex items-center gap-2 p-2.5 bg-zinc-950 border border-zinc-800 rounded-xl cursor-pointer hover:border-zinc-700">
+              <input type="radio" name="video-form-type" value="clip" checked class="text-red-600 focus:ring-0">
+              <span class="text-xs text-zinc-200 font-bold">🎬 편집 영상</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 bg-zinc-950 border border-zinc-800 rounded-xl cursor-pointer hover:border-zinc-700">
+              <input type="radio" name="video-form-type" value="full" class="text-indigo-600 focus:ring-0">
+              <span class="text-xs text-zinc-200 font-bold">📹 풀 영상</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">영상 제목 <span class="text-red-500">*</span></label>
+          <input 
+            type="text" 
+            id="video-form-title" 
+            placeholder="[콩밥특별시] 영상 제목 입력" 
+            required
+            class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">날짜</label>
+            <input 
+              type="text" 
+              id="video-form-date" 
+              value="2026.09.08" 
+              class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">간단 설명</label>
+            <input 
+              type="text" 
+              id="video-form-desc" 
+              placeholder="영상 메모 및 설명" 
+              class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
+            />
+          </div>
+        </div>
+
+        <div class="pt-4 flex items-center justify-end gap-2 border-t border-zinc-800 mt-6">
+          <button 
+            type="button" 
+            onclick="closeVideoModal()" 
+            class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+          >
+            취소
+          </button>
+          <button 
+            type="submit" 
+            class="px-5 py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-xl transition-colors cursor-pointer shadow-md shadow-red-600/30"
+          >
+            저장하기
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- [3. 인원 추가 / 수정 모달 (어드민 전용)] -->
+  <div id="member-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 flex flex-col">
+      <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-5">
+        <div>
+          <h3 id="member-modal-title" class="text-xl font-bold text-white">인원 추가</h3>
+          <p id="member-modal-subtitle" class="text-xs text-zinc-400 mt-0.5">새로운 스트리머 / RP 캐릭터를 등록합니다</p>
+        </div>
+        <button onclick="closeMemberModal()" class="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors flex-shrink-0">✕</button>
+      </div>
+
+      <form onsubmit="handleSaveMember(event)" class="space-y-4">
+        <input type="hidden" id="member-form-id" value="" />
+
+        <!-- 소속 카테고리 / 그룹 선택 -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">카테고리 <span class="text-red-500">*</span></label>
+            <select 
+              id="member-form-category" 
+              onchange="handleMemberCategoryChange(this.value)"
+              class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500"
+            >
+              <option value="police">👮‍♂️ 경찰</option>
+              <option value="ems">🚑 EMS</option>
+              <option value="gang">💀 갱단</option>
+              <option value="business">🏢 사업체</option>
+              <option value="press">📰 기자</option>
+              <option value="citizen">👥 시민</option>
+            </select>
+          </div>
+          <div id="member-form-group-container" class="hidden">
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">세부 소속 조직 <span class="text-red-500">*</span></label>
+            <select 
+              id="member-form-group" 
+              class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500"
+            >
+              <!-- 동적 채움 -->
+            </select>
+          </div>
+        </div>
+
+        <!-- RP 네임 & 스트리머 이름 -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">RP 캐릭터 이름 <span class="text-red-500">*</span></label>
+            <input 
+              type="text" 
+              id="member-form-name" 
+              placeholder="예: 강철수, 홍길동" 
+              required
+              class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">내부 스트리머명 <span class="text-red-500">*</span></label>
+            <input 
+              type="text" 
+              id="member-form-streamer" 
+              placeholder="예: 스트리머A, 침착맨" 
+              required
+              class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
+            />
+          </div>
+        </div>
+
+        <!-- 직책/역할 & 뱃지 색상 -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">직책 / 역할 <span class="text-zinc-500 font-normal">(선택)</span></label>
+            <input 
+              type="text" 
+              id="member-form-role" 
+              placeholder="예: 경찰청장, 부청장 (미입력 시 직책 미표시)" 
+              class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">직책 뱃지 테마</label>
+            <select 
+              id="member-form-badge" 
+              class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500"
+            >
+              <option value="bg-blue-600">🔵 파랑 (경찰/공직)</option>
+              <option value="bg-cyan-600">🔷 시안 (순찰/팀장)</option>
+              <option value="bg-teal-600">🟢 청록 (EMS/의료)</option>
+              <option value="bg-red-600">🔴 빨강 (갱단/화력)</option>
+              <option value="bg-amber-600">🟡 황금 (사업체/대표)</option>
+              <option value="bg-purple-600">🟣 보라 (클럽/시민)</option>
+              <option value="bg-zinc-700">⚪ 회색 (일반/조직원)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 프로필 이미지 링크 (URL) -->
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1.5">
+            프로필 이미지 링크 (URL)
+          </label>
+          <div class="flex items-center gap-3">
+            <input 
+              type="text" 
+              id="member-form-avatar" 
+              placeholder="https://... 이미지 웹 주소 (비워두면 기본 실루엣 아바타)" 
+              oninput="previewMemberAvatar(this.value)"
+              class="flex-1 px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+            />
+            <img 
+              id="member-form-avatar-preview" 
+              src="assets/default-avatar.svg" 
+              class="w-11 h-11 rounded-xl object-cover border border-zinc-700 bg-zinc-800 flex-shrink-0"
+              alt="아바타 미리보기"
+            />
+          </div>
+          <p class="text-[11px] text-zinc-500 mt-1.5 leading-relaxed">
+            💡 유튜브 프로필 동그라미 사진 우클릭 ➔ <b>[이미지 주소 복사]</b> 후 여기에 붙여넣으시면 됩니다.
+          </p>
+        </div>
+
+        <div class="pt-4 flex items-center justify-end gap-2 border-t border-zinc-800 mt-6">
+          <button 
+            type="button" 
+            onclick="closeMemberModal()" 
+            class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+          >
+            취소
+          </button>
+          <button 
+            type="submit" 
+            class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold rounded-xl transition-colors cursor-pointer shadow-md shadow-amber-500/20"
+          >
+            저장하기
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- [4. JSON 백업 & 데이터 복구 관리자 모달 (어드민 전용)] -->
+  <div id="backup-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 flex flex-col">
+      
+      <!-- 상단 헤더 -->
+      <div class="flex items-start justify-between pb-4 border-b border-zinc-800 mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-red-600 to-amber-500 flex items-center justify-center text-white text-2xl shadow-lg shadow-red-600/30">
+            📦
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-xl font-bold text-white">JSON 백업 및 복구 관리자</h3>
+              <span id="backup-count-pill" class="text-xs font-bold px-2 py-0.5 rounded-full bg-red-950 text-red-400 border border-red-800/60">0 / 20개</span>
+            </div>
+            <p class="text-xs text-zinc-400 mt-0.5">인원/영상 변경 시 JSON 파일 자동 생성 · 최대 20개 롤링 보관 (초과 시 1개씩 자동 삭제)</p>
+          </div>
+        </div>
+        <button onclick="closeBackupModal()" class="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors flex-shrink-0">✕</button>
+      </div>
+
+      <!-- 외부 저장 경로 정보 배너 -->
+      <div class="mb-4 p-3.5 bg-zinc-950 rounded-2xl border border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-bold text-zinc-400">📁 지정된 외부 백업 저장 경로</span>
+          </div>
+          <p class="text-xs font-mono font-bold text-amber-400 mt-0.5 select-all">
+            D:\백업 파일\KONGBAB_BACKUPS_JSON
+          </p>
+        </div>
+        <div id="backup-server-badge" class="flex items-center gap-1.5 flex-shrink-0">
+          <!-- js checkBackupServerHealth() 에서 동적 갱신 -->
+        </div>
+      </div>
+
+      <!-- 상단 액션 툴바 -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+        <button 
+          onclick="createManualBackup()"
+          class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-lg shadow-red-600/20 transition-all cursor-pointer"
+        >
+          <span>💾 현재 데이터 즉시 백업</span>
+        </button>
+
+        <button 
+          onclick="document.getElementById('backup-file-input').click()"
+          class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs border border-zinc-700 transition-all cursor-pointer"
+          title="외부 JSON 백업 파일을 불러와 복구합니다"
+        >
+          <span>📁 외부 JSON 파일로 복구</span>
+        </button>
+        <input type="file" id="backup-file-input" accept=".json" class="hidden" onchange="handleBackupFileSelect(event)" />
+
+        <button 
+          onclick="selectLocalBackupDirectory()"
+          class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-amber-600/90 hover:bg-amber-500 text-white font-bold text-xs shadow-lg shadow-amber-600/20 transition-all cursor-pointer"
+          title="브라우저에서 D:\백업 파일\KONGBAB_BACKUPS_JSON 폴더 직접 연결"
+        >
+          <span>📂 브라우저 폴더 연결</span>
+        </button>
+      </div>
+
+      <!-- 옵션 및 상태 바 -->
+      <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800/80 mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <label class="flex items-center gap-2 text-zinc-300 font-medium cursor-pointer select-none">
+          <input 
+            type="checkbox" 
+            id="backup-auto-download-toggle" 
+            onchange="toggleAutoDownload(this.checked)" 
+            class="w-4 h-4 rounded text-red-600 focus:ring-0 bg-zinc-900 border-zinc-700 cursor-pointer"
+          />
+          <span>인원/영상 추가 및 수정 시 브라우저 자동 다운로드</span>
+        </label>
+
+        <div id="backup-folder-status" class="text-zinc-500 text-[11px] flex items-center gap-1.5 truncate">
+          <!-- 동적 채움 -->
+        </div>
+      </div>
+
+      <!-- 백업 히스토리 목록 (최대 20개) -->
+      <div class="mb-4">
+        <div class="flex items-center justify-between mb-2.5">
+          <h4 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>📋 백업 목록 (최근 순 정렬, 최대 20개)</span>
+          </h4>
+          <span class="text-[11px] text-zinc-500">20개 도달 후 새 백업 시 가장 오래된 1개 삭제</span>
+        </div>
+
+        <div id="backup-list-container" class="space-y-2 max-h-[340px] overflow-y-auto pr-1">
+          <!-- js renderBackupList() 에서 동적 렌더링 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 스크립트 모듈 로드 -->
+  <script src="./js/data.js"></script>
+  <script src="./js/state.js"></script>
+  <script src="./js/drag-drop.js"></script>
+  <script src="./js/backup.js"></script>
+  <script src="./js/admin.js"></script>
+  <script src="./js/render.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>

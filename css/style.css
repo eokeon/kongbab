@@ -1,0 +1,132 @@
+/* 콩밥특별시 GTA RP 커스텀 스타일 */
+
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+:root {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+}
+
+/* 스크롤바 생김/사라짐으로 인한 레이아웃 깨짐(17px 덜컥거림) 완벽 방지 */
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  background-color: #09090b;
+  color: #f4f4f5;
+  overflow-y: scroll; /* 항상 스크롤 트랙을 예약하여 휠 스크롤 발생 시 UI 깨짐 방지 */
+  overflow-x: hidden;
+}
+
+/* 깔끔한 커스텀 스크롤바 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #09090b;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* 스크롤바 숨기기 유틸리티 */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* 텍스트 줄바꿈 및 그리드 깨짐 방지 */
+* {
+  box-sizing: border-box;
+}
+
+/* 네온 글로우 효과 */
+.neon-glow-red {
+  box-shadow: 0 0 25px -5px rgba(239, 68, 68, 0.3);
+}
+
+.neon-glow-blue {
+  box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.3);
+}
+
+.neon-glow-gold {
+  box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.3);
+}
+
+/* 글래스모피즘 */
+.glass-panel {
+  background: rgba(18, 18, 23, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* 페이드인 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+/* 텍스트 줄임 */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 드래그 앤 드롭 카드 스타일 */
+.card-drag-source {
+  opacity: 0.45 !important;
+  transform: scale(0.96) !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.4) !important;
+}
+
+.card-drag-over {
+  border-color: #f59e0b !important;
+  outline: 2px dashed #f59e0b !important;
+  outline-offset: -2px !important;
+  background-color: rgba(245, 158, 11, 0.08) !important;
+  transform: translateY(-4px) scale(1.02) !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+.cursor-grab {
+  cursor: grab;
+}
+
+.cursor-grab:active, .cursor-grabbing {
+  cursor: grabbing !important;
+}
+
+/* 카드 상단 헤더 우측 액션 버튼 래퍼 줄바꿈/축소 방지 */
+.card-header-actions {
+  display: flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+}
