@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class YouTubeInfoDto {
     private boolean success;
     private String videoId;
+    private String url;
     private String title;
     private String publishedDate;
     private String duration;

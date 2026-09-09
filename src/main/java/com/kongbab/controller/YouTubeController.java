@@ -29,4 +29,20 @@ public class YouTubeController {
         YouTubeInfoDto info = youtubeService.getVideoInfo(query);
         return ResponseEntity.ok(info);
     }
+
+    @GetMapping("/playlist")
+    public ResponseEntity<?> getPlaylistVideos(@RequestParam(name = "url", required = false) String url,
+                                               @RequestParam(name = "playlistId", required = false) String playlistId) {
+        String query = (playlistId != null && !playlistId.isBlank()) ? playlistId : url;
+        if (query == null || query.isBlank()) {
+            return ResponseEntity.badRequest().body(
+                    YouTubeInfoDto.builder()
+                            .success(false)
+                            .message("url 또는 playlistId 파라미터가 필요합니다.")
+                            .build()
+            );
+        }
+        java.util.List<YouTubeInfoDto> list = youtubeService.getPlaylistVideos(query);
+        return ResponseEntity.ok(list);
+    }
 }

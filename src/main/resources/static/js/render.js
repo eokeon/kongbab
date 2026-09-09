@@ -195,7 +195,7 @@ function renderDirectCategoryMembers(container, cat) {
       ${isAdmin() ? `
         <button onclick="openMemberModal('add', null, '${cat.id}')" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-all shadow-lg shadow-amber-500/20 cursor-pointer self-start sm:self-auto">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-          <span>+ 인원 추가</span>
+          <span>인원 추가</span>
         </button>
       ` : ''}
     </div>
@@ -223,6 +223,45 @@ function renderSubgroupList(container, cat) {
         ondragend="handleCardDragEnd(event)"
     ` : `draggable="false"`;
     const cursorClass = admin ? "cursor-grab active:cursor-grabbing" : "cursor-pointer";
+    const bgImage = typeof getGroupBgImage === "function" ? getGroupBgImage(group) : (group.bgImage || (group.id === "gang-bigdick" || group.name === "빅딕" ? "assets/bigdick.webp" : null));
+
+    if (bgImage) {
+      return `
+        <div 
+          ${dragAttrs}
+          onclick="selectGroup('${group.id}')"
+          class="group relative overflow-hidden bg-zinc-950 border border-amber-500/40 hover:border-amber-400 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1.5 ${cursorClass} shadow-xl hover:shadow-[0_0_30px_rgba(245,158,11,0.3)] select-none min-h-[140px] flex flex-col justify-between"
+        >
+          <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+            <div 
+              class="w-full h-full bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-110 opacity-40"
+              style="background-image: url('${bgImage}');"
+            ></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-zinc-950/40"></div>
+          </div>
+
+          <div class="relative z-10 flex items-center justify-between gap-2 mb-4">
+            <h3 class="text-2xl font-black text-white group-hover:text-amber-400 transition-colors flex items-center gap-2 truncate min-w-0 flex-1 drop-shadow-md" title="${group.name}">
+              <span class="flex-shrink-0">${group.emoji || ''}</span>
+              <span class="truncate">${group.name}</span>
+            </h3>
+            <div class="w-8 h-8 rounded-xl bg-black/60 backdrop-blur-md border border-zinc-700/60 flex items-center justify-center text-zinc-300 group-hover:bg-amber-500 group-hover:text-black group-hover:border-amber-500 transition-all flex-shrink-0 shadow">
+              ${SVG_ICONS.chevronRight}
+            </div>
+          </div>
+
+          <div class="relative z-10 pt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs text-zinc-300">
+            <span class="font-medium text-zinc-200">
+              소속 인원 <strong class="text-amber-400 font-bold">${group.members.length}</strong>명
+            </span>
+            <span class="flex items-center gap-1.5 text-red-400 font-semibold bg-black/60 px-2 py-0.5 rounded-lg border border-white/5 shadow-inner">
+              ${SVG_ICONS.youtube}
+              <span>영상 ${totalVideos}개</span>
+            </span>
+          </div>
+        </div>
+      `;
+    }
 
     return `
       <div 
@@ -274,6 +313,7 @@ function renderGroupMembers(container) {
   const cat = getCurrentCategory();
   const group = state.currentGroup;
   const members = group.members || [];
+  const bgImage = typeof getGroupBgImage === "function" ? getGroupBgImage(group) : (group.bgImage || (group.id === "gang-bigdick" || group.name === "빅딕" ? "assets/bigdick.webp" : null));
   const membersHtml = members.length > 0
     ? members.map(m => renderMemberCard(m, 'group-member', 'selectGroupMember')).join("")
     : renderEmptyState(group.emoji || '👥', "등록된 인원이 없습니다.");
@@ -286,6 +326,7 @@ function renderGroupMembers(container) {
           <span>${cat.name} 목록으로 돌아가기</span>
         </button>
         <div class="flex items-center gap-3 flex-wrap">
+          ${bgImage ? `<img src="${bgImage}" alt="${group.name}" class="w-10 h-10 rounded-xl object-cover border-2 border-amber-500/60 shadow-lg shadow-amber-500/20" />` : ''}
           <h2 class="text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
             <span>${group.emoji || ''}</span>
             <span>${group.name}</span>
@@ -293,7 +334,7 @@ function renderGroupMembers(container) {
           ${isAdmin() ? `
             <button onclick="openMemberModal('add', null, '${cat.id}', '${group.id}')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-all shadow-lg shadow-amber-500/20 cursor-pointer">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-              <span>+ 인원 추가</span>
+              <span>인원 추가</span>
             </button>
           ` : ''}
         </div>
@@ -323,15 +364,30 @@ function renderMemberVideos(container) {
   const group = state.currentGroup;
   const cat = getCurrentCategory();
 
-  const allVideos = member.videos || [];
-  const clipVideos = allVideos.filter(v => !isFullVideo(v));
-  const fullVideos = allVideos.filter(v => isFullVideo(v));
+  // 유효한 영상만 필터링 (잘못 등록된 undefined/빈 링크 영상 자동 제거)
+  const allVideos = (member.videos || []).filter(v => v && v.url && v.url !== "undefined" && v.url.trim() !== "");
+  const clipVideos = allVideos.filter(v => getVideoType(v) === 'clip');
+  const fullVideos = allVideos.filter(v => getVideoType(v) === 'full');
+  const bingeVideos = allVideos.filter(v => getVideoType(v) === 'binge');
   const clipCount = clipVideos.length;
   const fullCount = fullVideos.length;
+  const bingeCount = bingeVideos.length;
 
-  const currentTab = state.currentVideoTab === "full" ? "full" : "clip";
+  const clipTotalSeconds = clipVideos.reduce((sum, v) => sum + (typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0), 0);
+  const fullTotalSeconds = fullVideos.reduce((sum, v) => sum + (typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0), 0);
+  const bingeTotalSeconds = bingeVideos.reduce((sum, v) => sum + (typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0), 0);
+  const clipTotalDuration = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(clipTotalSeconds) : "0분";
+  const fullTotalDuration = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(fullTotalSeconds) : "0분";
+  const bingeTotalDuration = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(bingeTotalSeconds) : "0분";
 
-  const displayedVideos = currentTab === "full" ? fullVideos : clipVideos;
+  const currentTab = state.currentVideoTab === "binge" ? "binge" : (state.currentVideoTab === "full" ? "full" : "clip");
+
+  let displayedVideos = clipVideos;
+  if (currentTab === "binge") {
+    displayedVideos = bingeVideos;
+  } else if (currentTab === "full") {
+    displayedVideos = fullVideos;
+  }
 
   const backButtonHtml = !cat.hasSubgroups ? `
     <button onclick="resetToCategory('${cat.id}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-4 cursor-pointer">
@@ -348,8 +404,18 @@ function renderMemberVideos(container) {
   const admin = isAdmin();
   let videosHtml = displayedVideos.map((video, vIndex) => {
     const videoNum = vIndex + 1;
-    const thumbUrl = getYoutubeThumbnail(video.url);
-    const isFull = isFullVideo(video);
+    const vUrl = (video.url && video.url !== "undefined") ? video.url : (video.videoId ? `https://www.youtube.com/watch?v=${video.videoId}` : "");
+    const thumbUrl = video.thumbnailUrl || getYoutubeThumbnail(vUrl);
+    const vType = getVideoType(video);
+    let typeBadgeClass = 'bg-red-950/90 text-red-300 border-red-700/60';
+    let typeBadgeText = '🎬 편집 영상';
+    if (vType === 'binge') {
+      typeBadgeClass = 'bg-amber-950/90 text-amber-300 border-amber-600/60';
+      typeBadgeText = '🍿 몰아보기';
+    } else if (vType === 'full') {
+      typeBadgeClass = 'bg-indigo-950/90 text-indigo-300 border-indigo-700/60';
+      typeBadgeText = '📹 풀 영상';
+    }
     const dragAttrs = admin ? `
         draggable="true"
         data-drag-type="video"
@@ -369,22 +435,22 @@ function renderMemberVideos(container) {
       >
         <div>
           <a 
-            href="${video.url}" 
+            href="${vUrl || '#'}" 
             target="_blank" 
             rel="noopener noreferrer" 
             draggable="false"
-            onclick="if (isDraggingCard) { event.preventDefault(); return false; }"
+            onclick="if (isDraggingCard || !this.getAttribute('href') || this.getAttribute('href') === '#') { event.preventDefault(); return false; }"
             class="relative block aspect-video bg-black overflow-hidden group cursor-pointer"
             title="유튜브에서 영상 보기 (새 탭)"
           >
             <img src="${thumbUrl}" alt="${video.title}" draggable="false" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
             
-            <div class="absolute top-2.5 left-2.5 ${isFull ? 'bg-indigo-950/90 text-indigo-300 border-indigo-700/60' : 'bg-red-950/90 text-red-300 border-red-700/60'} border backdrop-blur-md text-[11px] font-bold px-2.5 py-1 rounded-lg shadow flex items-center gap-1 z-10 whitespace-nowrap select-none flex-shrink-0">
-              <span>${isFull ? '📹 풀 영상' : '🎬 편집 영상'}</span>
+            <div class="absolute top-2.5 left-2.5 ${typeBadgeClass} border backdrop-blur-md text-[11px] font-bold px-2.5 py-1 rounded-lg shadow flex items-center gap-1 z-10 whitespace-nowrap select-none flex-shrink-0">
+              <span>${typeBadgeText}</span>
             </div>
 
-            <div class="absolute top-2.5 right-2.5 bg-zinc-950/90 border border-zinc-700/80 backdrop-blur-md text-amber-300 text-xs font-black px-2.5 py-1 rounded-lg shadow-md z-10 flex items-center gap-0.5 select-none font-mono" title="${videoNum}번째 영상">
-              <span>${videoNum}번</span>
+            <div class="absolute top-2.5 right-2.5 min-w-[28px] h-7 px-2 bg-red-600 text-white font-black text-sm rounded-xl shadow-[0_2px_12px_rgba(220,38,38,0.5)] border border-red-500/80 flex items-center justify-center select-none font-mono tracking-tighter z-10 group-hover:scale-110 transition-transform duration-200" title="${videoNum}번째 영상">
+              <span>${videoNum}</span>
             </div>
 
             <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 z-10">
@@ -413,15 +479,15 @@ function renderMemberVideos(container) {
             </div>
           </a>
 
-          <div class="p-5 flex-1 flex flex-col justify-between">
+          <div class="px-5 pt-5 pb-2.5 flex-1 flex flex-col justify-between">
             <div>
               <a 
-                href="${video.url}" 
+                href="${vUrl || '#'}" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 draggable="false"
-                onclick="if (isDraggingCard) { event.preventDefault(); return false; }"
-                class="block text-base font-bold text-white hover:text-red-400 transition-colors line-clamp-2 leading-snug cursor-pointer mb-2"
+                onclick="if (isDraggingCard || !this.getAttribute('href') || this.getAttribute('href') === '#') { event.preventDefault(); return false; }"
+                class="block text-base font-bold text-white hover:text-red-400 transition-colors line-clamp-2 leading-snug cursor-pointer ${video.description ? 'mb-2' : ''}"
                 title="${video.title}"
               >
                 ${video.title}
@@ -457,15 +523,32 @@ function renderMemberVideos(container) {
         <div class="col-span-full py-16 text-center bg-zinc-900/40 rounded-2xl border border-zinc-800/50">
           <div class="w-14 h-14 mx-auto rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 mb-3 text-2xl">🎬</div>
           <h4 class="text-lg font-bold text-zinc-300">등록된 편집 영상이 없습니다.</h4>
-          ${fullCount > 0 ? `<div class="mt-4"><button onclick="setVideoTab('full')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-indigo-600/30"><span>📹 풀 영상 (${fullCount}개) 보러가기</span></button></div>` : ''}
+          <div class="mt-4 flex items-center justify-center gap-2 flex-wrap">
+            ${fullCount > 0 ? `<button onclick="setVideoTab('full')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-indigo-600/30"><span>📹 풀 영상 (${fullCount}개) 보러가기</span></button>` : ''}
+            ${bingeCount > 0 ? `<button onclick="setVideoTab('binge')" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-amber-600/30"><span>🍿 몰아보기 (${bingeCount}개) 보러가기</span></button>` : ''}
+          </div>
+        </div>
+      `;
+    } else if (currentTab === "full") {
+      videosHtml = `
+        <div class="col-span-full py-16 text-center bg-zinc-900/40 rounded-2xl border border-zinc-800/50">
+          <div class="w-14 h-14 mx-auto rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 mb-3 text-2xl">📹</div>
+          <h4 class="text-lg font-bold text-zinc-300">등록된 풀 영상이 없습니다.</h4>
+          <div class="mt-4 flex items-center justify-center gap-2 flex-wrap">
+            ${clipCount > 0 ? `<button onclick="setVideoTab('clip')" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-red-600/30"><span>🎬 편집 영상 (${clipCount}개) 보러가기</span></button>` : ''}
+            ${bingeCount > 0 ? `<button onclick="setVideoTab('binge')" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-amber-600/30"><span>🍿 몰아보기 (${bingeCount}개) 보러가기</span></button>` : ''}
+          </div>
         </div>
       `;
     } else {
       videosHtml = `
         <div class="col-span-full py-16 text-center bg-zinc-900/40 rounded-2xl border border-zinc-800/50">
-          <div class="w-14 h-14 mx-auto rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 mb-3 text-2xl">📹</div>
-          <h4 class="text-lg font-bold text-zinc-300">등록된 풀 영상이 없습니다.</h4>
-          ${clipCount > 0 ? `<div class="mt-4"><button onclick="setVideoTab('clip')" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-red-600/30"><span>🎬 편집 영상 (${clipCount}개) 보러가기</span></button></div>` : ''}
+          <div class="w-14 h-14 mx-auto rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 mb-3 text-2xl">🍿</div>
+          <h4 class="text-lg font-bold text-zinc-300">등록된 몰아보기 영상이 없습니다.</h4>
+          <div class="mt-4 flex items-center justify-center gap-2 flex-wrap">
+            ${clipCount > 0 ? `<button onclick="setVideoTab('clip')" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-red-600/30"><span>🎬 편집 영상 (${clipCount}개) 보러가기</span></button>` : ''}
+            ${fullCount > 0 ? `<button onclick="setVideoTab('full')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-indigo-600/30"><span>📹 풀 영상 (${fullCount}개) 보러가기</span></button>` : ''}
+          </div>
         </div>
       `;
     }
@@ -508,15 +591,24 @@ function renderMemberVideos(container) {
           </div>
         </div>
 
-        <div class="flex items-center gap-3 self-start md:self-auto border-t md:border-t-0 border-zinc-800/80 pt-4 md:pt-0">
-          <button onclick="setVideoTab('clip')" title="편집 영상만 보기" class="bg-zinc-950/70 hover:bg-zinc-800/80 border ${currentTab === 'clip' ? 'border-red-500/80 ring-2 ring-red-500/20' : 'border-zinc-800/90'} rounded-2xl px-4 py-2.5 text-center min-w-[90px] transition-all cursor-pointer">
-            <span class="text-[11px] text-zinc-400 block font-medium">🎬 편집 영상</span>
-            <span class="text-xl font-black text-red-400">${clipCount}<span class="text-xs font-normal text-zinc-400">개</span></span>
+        <div class="flex items-center gap-3 self-start md:self-auto border-t md:border-t-0 border-zinc-800/80 pt-4 md:pt-0 flex-wrap">
+          <button onclick="setVideoTab('clip')" title="편집 영상만 보기" class="bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'clip' ? 'border-red-500 ring-2 ring-red-500/30 bg-red-950/20' : 'border-zinc-800'} rounded-2xl px-4 sm:px-5 py-3 text-center min-w-[115px] sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
+            <span class="text-xs sm:text-sm text-zinc-300 block font-bold group-hover:text-white transition-colors">🎬 편집 영상</span>
+            <span class="text-2xl sm:text-3xl font-black text-red-400 my-0.5 block tracking-tight">${clipCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
+            <span class="text-xs sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2.5 py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${clipTotalDuration}</span>
           </button>
-          <button onclick="setVideoTab('full')" title="풀 영상만 보기" class="bg-zinc-950/70 hover:bg-zinc-800/80 border ${currentTab === 'full' ? 'border-indigo-500/80 ring-2 ring-indigo-500/20' : 'border-zinc-800/90'} rounded-2xl px-4 py-2.5 text-center min-w-[90px] transition-all cursor-pointer">
-            <span class="text-[11px] text-zinc-400 block font-medium">📹 풀 영상</span>
-            <span class="text-xl font-black text-indigo-400">${fullCount}<span class="text-xs font-normal text-zinc-400">개</span></span>
+          <button onclick="setVideoTab('full')" title="풀 영상만 보기" class="bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'full' ? 'border-indigo-500 ring-2 ring-indigo-500/30 bg-indigo-950/20' : 'border-zinc-800'} rounded-2xl px-4 sm:px-5 py-3 text-center min-w-[115px] sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
+            <span class="text-xs sm:text-sm text-zinc-300 block font-bold group-hover:text-white transition-colors">📹 풀 영상</span>
+            <span class="text-2xl sm:text-3xl font-black text-indigo-400 my-0.5 block tracking-tight">${fullCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
+            <span class="text-xs sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2.5 py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${fullTotalDuration}</span>
           </button>
+          ${bingeCount > 0 ? `
+            <button onclick="setVideoTab('binge')" title="몰아보기 영상만 보기" class="bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'binge' ? 'border-amber-500 ring-2 ring-amber-500/30 bg-amber-950/20' : 'border-zinc-800'} rounded-2xl px-4 sm:px-5 py-3 text-center min-w-[115px] sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
+              <span class="text-xs sm:text-sm text-zinc-300 block font-bold group-hover:text-white transition-colors">🍿 몰아보기</span>
+              <span class="text-2xl sm:text-3xl font-black text-amber-400 my-0.5 block tracking-tight">${bingeCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
+              <span class="text-xs sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2.5 py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${bingeTotalDuration}</span>
+            </button>
+          ` : ''}
         </div>
       </div>
     </div>
@@ -532,19 +624,21 @@ function renderMemberVideos(container) {
             <span>📹 풀 영상</span>
             <span class="text-[11px] px-1.5 py-0.5 rounded-full ${currentTab === 'full' ? 'bg-black/30 text-white' : 'bg-zinc-800 text-zinc-400'}">${fullCount}</span>
           </button>
+          <button onclick="setVideoTab('binge')" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${currentTab === 'binge' ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/30' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'}">
+            <span>🍿 몰아보기</span>
+            <span class="text-[11px] px-1.5 py-0.5 rounded-full ${currentTab === 'binge' ? 'bg-black/20 text-black font-extrabold' : 'bg-zinc-800 text-zinc-400'}">${bingeCount}</span>
+          </button>
         </div>
 
         ${isAdmin() ? `
           <button onclick="openVideoModal('add')" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-all shadow-lg shadow-amber-500/20 cursor-pointer" title="새 영상 등록">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            <span>+ 영상 추가</span>
+            <span>영상 추가</span>
           </button>
-          ${(allVideos.length > 1) ? `
-            <button onclick="sortMemberVideosByDate()" class="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white text-xs font-bold transition-all border border-zinc-700/80 cursor-pointer shadow-md" title="모든 영상을 게시일자가 빠른 순(1번부터)으로 재정렬">
-              <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-              <span>📅 날짜순 정렬</span>
-            </button>
-          ` : ''}
+          <button onclick="openPlaylistModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-amber-400 hover:text-amber-300 text-xs font-bold transition-all border border-amber-500/40 hover:border-amber-400 shadow-lg cursor-pointer" title="유튜브 재생목록에서 영상 일괄 등록">
+            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            <span>📑 재생목록 일괄 등록</span>
+          </button>
         ` : ''}
       </div>
     </div>
@@ -630,7 +724,16 @@ function renderSearchResults(container) {
     if (item.type === 'video') {
       const v = item.data;
       const thumb = getYoutubeThumbnail(v.url);
-      const isFull = isFullVideo(v);
+      const vType = getVideoType(v);
+      let searchBadgeClass = 'bg-red-950 text-red-300 border-red-700/50';
+      let searchBadgeText = '🎬 편집 영상';
+      if (vType === 'binge') {
+        searchBadgeClass = 'bg-amber-950 text-amber-300 border-amber-600/50';
+        searchBadgeText = '🍿 몰아보기';
+      } else if (vType === 'full') {
+        searchBadgeClass = 'bg-indigo-950 text-indigo-300 border-indigo-700/50';
+        searchBadgeText = '📹 풀 영상';
+      }
       const groupLabel = item.group ? `${item.group.name} > ` : '';
       html += `
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden p-4 flex flex-col justify-between">
@@ -644,8 +747,8 @@ function renderSearchResults(container) {
               </div>
             </a>
             <div class="flex items-center gap-1.5 text-xs text-amber-400 mb-1 font-semibold flex-wrap">
-              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${isFull ? 'bg-indigo-950 text-indigo-300 border border-indigo-700/50' : 'bg-red-950 text-red-300 border border-red-700/50'} whitespace-nowrap flex-shrink-0">
-                ${isFull ? '📹 풀 영상' : '🎬 편집 영상'}
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${searchBadgeClass} whitespace-nowrap flex-shrink-0">
+                ${searchBadgeText}
               </span>
               <span class="truncate min-w-0">${item.category.name} > ${groupLabel}${item.member.name}</span>
             </div>
@@ -793,7 +896,7 @@ function selectDirectMember(memberId) {
     state.searchQuery = "";
     clearSearchInput();
     const allV = member.videos || [];
-    state.currentVideoTab = (!allV.some(v => !isFullVideo(v)) && allV.some(v => isFullVideo(v))) ? "full" : "clip";
+    state.currentVideoTab = typeof getDefaultVideoTab === "function" ? getDefaultVideoTab(allV) : "clip";
     saveNavigationState();
     renderContent();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -809,7 +912,7 @@ function selectGroupMember(memberId) {
     state.searchQuery = "";
     clearSearchInput();
     const allV = member.videos || [];
-    state.currentVideoTab = (!allV.some(v => !isFullVideo(v)) && allV.some(v => isFullVideo(v))) ? "full" : "clip";
+    state.currentVideoTab = typeof getDefaultVideoTab === "function" ? getDefaultVideoTab(allV) : "clip";
     saveNavigationState();
     renderContent();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -847,7 +950,7 @@ function selectMemberFromSearch(catId, groupId, memberId) {
 
   if (state.currentMember) {
     const allV = state.currentMember.videos || [];
-    state.currentVideoTab = (!allV.some(v => !isFullVideo(v)) && allV.some(v => isFullVideo(v))) ? "full" : "clip";
+    state.currentVideoTab = typeof getDefaultVideoTab === "function" ? getDefaultVideoTab(allV) : "clip";
   }
 
   state.searchQuery = "";
@@ -881,6 +984,9 @@ function setupEventListeners() {
     if (e.key === "Escape") {
       closeLoginModal();
       closeVideoModal();
+      if (typeof closePlaylistModal === "function") {
+        closePlaylistModal();
+      }
       closeMemberModal();
       if (typeof closeBackupModal === "function") {
         closeBackupModal();

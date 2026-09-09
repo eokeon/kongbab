@@ -42,7 +42,22 @@ public class StreamerController {
     }
 
     @DeleteMapping("/streamers/{id}")
-    public ResponseEntity<Map<String, Object>> deleteStreamer(@PathVariable String id) {
+    public ResponseEntity<Map<String, Object>> deleteStreamer(
+            @PathVariable String id,
+            @RequestHeader(value = "X-Delete-Password", required = false) String passwordHeader,
+            @RequestParam(value = "password", required = false) String passwordParam) {
+
+        String inputPassword = (passwordHeader != null && !passwordHeader.isBlank())
+                ? passwordHeader
+                : passwordParam;
+
+        if (inputPassword == null || !inputPassword.trim().equals("kongbab1234")) {
+            Map<String, Object> res = new HashMap<>();
+            res.put("success", false);
+            res.put("message", "인원 삭제를 위한 비밀번호가 일치하지 않습니다.");
+            return ResponseEntity.status(403).body(res);
+        }
+
         boolean deleted = streamerService.deleteStreamer(id);
         Map<String, Object> res = new HashMap<>();
         res.put("success", deleted);

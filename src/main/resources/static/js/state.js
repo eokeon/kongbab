@@ -9,7 +9,7 @@ const DEFAULT_CATEGORIES = [
       { id: "gang-blackrose", name: "흑장미", emoji: "🌹", members: [] },
       { id: "gang-oompa", name: "움파룸파", emoji: "😜", members: [] },
       { id: "gang-sangryeon", name: "상련", emoji: "👠", members: [] },
-      { id: "gang-bigdick", name: "빅딕", emoji: "🍌", members: [] },
+      { id: "gang-bigdick", name: "빅딕", emoji: "🍌", bgImage: "assets/bigdick.webp", members: [] },
       { id: "gang-doremifa", name: "도레미파", emoji: "🎹", members: [] },
       { id: "gang-adventure", name: "어드벤처", emoji: "🐯", members: [] },
       { id: "gang-kgaeng", name: "깨갱", emoji: "🐶", members: [] },
@@ -209,8 +209,43 @@ const SVG_ICONS = {
   back: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>`
 };
 
+const GROUP_BACKGROUND_IMAGES = {
+  "gang-bigdick": "assets/bigdick.webp"
+};
+
+function getGroupBgImage(group) {
+  if (!group) return null;
+  if (group.bgImage) return group.bgImage;
+  if (GROUP_BACKGROUND_IMAGES[group.id]) return GROUP_BACKGROUND_IMAGES[group.id];
+  if (group.name === "빅딕") return "assets/bigdick.webp";
+  return null;
+}
+
+function getVideoType(video) {
+  if (!video) return 'clip';
+  const t = video.videoType || video.type;
+  if (t === 'binge' || t === 'playlist' || t === 'series') return 'binge';
+  if (t === 'full') return 'full';
+  return 'clip';
+}
+
 function isFullVideo(video) {
-  return !!(video && (video.videoType === 'full' || video.type === 'full'));
+  return getVideoType(video) === 'full';
+}
+
+function isBingeVideo(video) {
+  return getVideoType(video) === 'binge';
+}
+
+function getDefaultVideoTab(videos) {
+  const allV = videos || [];
+  const hasClip = allV.some(v => getVideoType(v) === 'clip');
+  const hasFull = allV.some(v => getVideoType(v) === 'full');
+  const hasBinge = allV.some(v => getVideoType(v) === 'binge');
+  if (hasClip) return 'clip';
+  if (hasFull) return 'full';
+  if (hasBinge) return 'binge';
+  return 'clip';
 }
 
 function extractYoutubeId(url) {
@@ -328,4 +363,49 @@ function sortVideosByDateAsc(videos) {
 
   return videos;
 }
+
+// 영상 재생 시간(H:MM:SS, MM:SS, ISO)을 초 단위로 변환
+function parseDurationToSeconds(durationStr) {
+  if (!durationStr || typeof durationStr !== "string") return 0;
+  const str = durationStr.trim();
+  if (!str) return 0;
+
+  if (str.startsWith("PT") || str.startsWith("P")) {
+    let hours = 0, minutes = 0, seconds = 0;
+    const hMatch = str.match(/(\d+)H/i);
+    const mMatch = str.match(/(\d+)M/i);
+    const sMatch = str.match(/(\d+)S/i);
+    if (hMatch) hours = parseInt(hMatch[1], 10);
+    if (mMatch) minutes = parseInt(mMatch[1], 10);
+    if (sMatch) seconds = parseInt(sMatch[1], 10);
+    return hours * 3600 + minutes * 60 + seconds;
+  }
+
+  const parts = str.split(":").map(p => parseInt(p.trim(), 10)).filter(n => !isNaN(n));
+  if (parts.length === 3) {
+    return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  } else if (parts.length === 2) {
+    return parts[0] * 60 + parts[1];
+  } else if (parts.length === 1) {
+    return parts[0];
+  }
+  return 0;
+}
+
+// 초 단위를 한글 시간 표기(X시간 Y분 / X분 Y초)로 변환
+function formatSecondsToHangul(totalSec) {
+  if (!totalSec || totalSec <= 0) return "0분";
+  const hours = Math.floor(totalSec / 3600);
+  const minutes = Math.floor((totalSec % 3600) / 60);
+  const seconds = totalSec % 60;
+
+  if (hours > 0) {
+    return minutes > 0 ? `${hours}시간 ${minutes}분` : `${hours}시간`;
+  } else if (minutes > 0) {
+    return seconds > 0 ? `${minutes}분 ${seconds}초` : `${minutes}분`;
+  } else {
+    return `${seconds}초`;
+  }
+}
+
 

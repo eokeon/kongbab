@@ -212,12 +212,16 @@ async function saveStreamerToDb(dto) {
   return null;
 }
 
-async function deleteStreamerFromDb(streamerId) {
+async function deleteStreamerFromDb(streamerId, password = "kongbab1234") {
   try {
+    const headers = { ...getAuthHeaders() };
+    if (password) {
+      headers["X-Delete-Password"] = password;
+    }
     const res = await fetch(`${API_BASE}/api/streamers/${encodeURIComponent(streamerId)}`, {
       method: "DELETE",
       credentials: "include",
-      headers: getAuthHeaders()
+      headers
     });
     if (res.ok) {
       return await res.json();
