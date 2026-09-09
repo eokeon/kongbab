@@ -148,8 +148,12 @@ function isFullVideo(video) {
 
 function extractYoutubeId(url) {
   if (!url) return null;
-  const match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/);
-  return (match && match[2].length === 11) ? match[2] : null;
+  const str = String(url).trim();
+  if (str.length === 11 && /^[a-zA-Z0-9_-]{11}$/.test(str)) {
+    return str;
+  }
+  const match = str.match(/^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/|live\/)([^#&?]*).*/);
+  return (match && match[2] && match[2].length === 11) ? match[2] : null;
 }
 
 function getYoutubeThumbnail(url) {

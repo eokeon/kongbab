@@ -1,4 +1,6 @@
-const API_BASE = "";
+const API_BASE = (window.location.protocol === "file:" || window.location.port === "63342") 
+  ? "http://localhost:8080" 
+  : "";
 
 async function apiLogin(username, password) {
   try {

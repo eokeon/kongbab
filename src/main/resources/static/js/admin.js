@@ -195,28 +195,6 @@ async function triggerFetchYouTubeInfo() {
   await fetchAndFillYouTubeInfo(urlInput.value.trim(), true);
 }
 
-function promptYouTubeApiKey() {
-  const currentKey = localStorage.getItem("youtube_api_key") || "";
-  const key = prompt(
-    "Google YouTube Data API v3 키를 입력하세요.\n(등록 시 GitHub Pages 배포 환경에서도 실제 업로드 일자가 자동 완성됩니다)\n\n※ 등록을 해제하려면 빈칸으로 두고 확인을 누르세요.\n현재 설정된 키:",
-    currentKey
-  );
-  if (key !== null) {
-    const trimmed = key.trim();
-    if (trimmed) {
-      localStorage.setItem("youtube_api_key", trimmed);
-      showToast("✓ YouTube API 키가 저장되었습니다.");
-      const urlInput = document.getElementById("video-form-url");
-      if (urlInput && urlInput.value.trim()) {
-        fetchAndFillYouTubeInfo(urlInput.value.trim(), true);
-      }
-    } else {
-      localStorage.removeItem("youtube_api_key");
-      showToast("YouTube API 키가 해제되었습니다.");
-    }
-  }
-}
-
 async function fetchAndFillYouTubeInfo(url, forceOverwrite = false) {
   const videoId = extractYoutubeId(url);
   if (!videoId) return;
@@ -227,30 +205,27 @@ async function fetchAndFillYouTubeInfo(url, forceOverwrite = false) {
   const titleInput = document.getElementById("video-form-title");
   const dateInput = document.getElementById("video-form-date");
 
-  if (btnText) btnText.textContent = "가져오는 중...";
+  if (btnText) btnText.textContent = "조회 중...";
   if (statusEl) {
-    statusEl.textContent = "⏳ 유튜브 영상 정보 조회 중...";
+    statusEl.textContent = "⏳ 유튜브 영상 정보(제목, 날짜) 불러오는 중...";
     statusEl.className = "text-xs text-amber-400 font-medium";
   }
 
   try {
     const info = await apiGetYouTubeInfo(url);
-    lastFetchedYoutubeId = videoId;
 
     if (info && info.success) {
-      if (titleInput && (forceOverwrite || !titleInput.value.trim())) {
-        titleInput.value = info.title || "";
+      lastFetchedYoutubeId = videoId;
+
+      if (titleInput && info.title && (forceOverwrite || !titleInput.value.trim())) {
+        titleInput.value = info.title;
       }
       if (dateInput && info.publishedDate && (forceOverwrite || !dateInput.value.trim() || dateInput.value === getTodayDateString())) {
         dateInput.value = info.publishedDate;
       }
 
       if (statusEl) {
-        if (info.source === "api" || info.source === "api_client") {
-          statusEl.textContent = "✓ 제목 및 업로드 날짜 자동 완성 (YouTube API)";
-        } else {
-          statusEl.textContent = "✓ 영상 제목 자동 입력 완료";
-        }
+        statusEl.textContent = `✓ 제목 및 업로드 날짜 자동 입력 완료 (${info.publishedDate || '성공'})`;
         statusEl.className = "text-xs text-emerald-400 font-medium";
       }
 
@@ -263,15 +238,17 @@ async function fetchAndFillYouTubeInfo(url, forceOverwrite = false) {
           subtextEl.classList.remove("hidden");
         }
       }
-      showToast("✓ 유튜브 정보를 불러왔습니다.");
+      showToast("✓ 유튜브 정보(제목, 날짜)를 불러왔습니다.");
     } else {
+      lastFetchedYoutubeId = null;
       if (statusEl) {
-        statusEl.textContent = "✓ 썸네일 인식 완료";
+        statusEl.textContent = "✓ 썸네일 인식 완료 (영상 정보 자동 조회 실패)";
         statusEl.className = "text-xs text-zinc-400 font-medium";
       }
     }
   } catch (err) {
     console.error("유튜브 정보 자동 완성 실패:", err);
+    lastFetchedYoutubeId = null;
     if (statusEl) {
       statusEl.textContent = "✓ 썸네일 인식 완료";
       statusEl.className = "text-xs text-zinc-400 font-medium";
