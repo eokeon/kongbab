@@ -7,7 +7,7 @@ function renderHeaderAuth() {
       <div class="flex items-center gap-2">
         <div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-950/70 border border-amber-600/50 text-amber-300 text-xs font-bold shadow-sm" title="어드민 로그인 상태 (1시간 이내 자동 유지)">
           <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-          <span>🛡️ 어드민</span>
+          <span>🛡️ 어드민 (1시간 유지)</span>
         </div>
         <div id="backend-status-badge"></div>
         <button onclick="manualBackupNow()" class="px-3 py-1.5 rounded-xl bg-red-950/80 hover:bg-red-900 border border-red-600/60 text-red-200 hover:text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer" title="현재 데이터를 D:\\백업 파일 폴더로 즉시 저장">

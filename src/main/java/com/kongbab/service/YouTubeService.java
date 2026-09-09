@@ -158,7 +158,7 @@ public class YouTubeService {
                     .body(String.class);
 
             if (html != null) {
-                Pattern datePattern = Pattern.compile("(?:datePublished|uploadDate)\"\\s*:\\s*\"(\\d{4}-\\d{2}-\\d{2})");
+                Pattern datePattern = Pattern.compile("\"(?:publishDate|uploadDate)\"\\s*:\\s*\"(\\d{4}-\\d{2}-\\d{2})");
                 Matcher matcher = datePattern.matcher(html);
                 if (matcher.find()) {
                     return matcher.group(1).replace("-", ".");

@@ -195,6 +195,28 @@ async function triggerFetchYouTubeInfo() {
   await fetchAndFillYouTubeInfo(urlInput.value.trim(), true);
 }
 
+function promptYouTubeApiKey() {
+  const currentKey = localStorage.getItem("youtube_api_key") || "";
+  const key = prompt(
+    "Google YouTube Data API v3 키를 입력하세요.\n(등록 시 GitHub Pages 배포 환경에서도 실제 업로드 일자가 자동 완성됩니다)\n\n※ 등록을 해제하려면 빈칸으로 두고 확인을 누르세요.\n현재 설정된 키:",
+    currentKey
+  );
+  if (key !== null) {
+    const trimmed = key.trim();
+    if (trimmed) {
+      localStorage.setItem("youtube_api_key", trimmed);
+      showToast("✓ YouTube API 키가 저장되었습니다.");
+      const urlInput = document.getElementById("video-form-url");
+      if (urlInput && urlInput.value.trim()) {
+        fetchAndFillYouTubeInfo(urlInput.value.trim(), true);
+      }
+    } else {
+      localStorage.removeItem("youtube_api_key");
+      showToast("YouTube API 키가 해제되었습니다.");
+    }
+  }
+}
+
 async function fetchAndFillYouTubeInfo(url, forceOverwrite = false) {
   const videoId = extractYoutubeId(url);
   if (!videoId) return;
