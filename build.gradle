@@ -28,3 +28,11 @@ dependencies {
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
+
+// static 폴더의 파일들을 docs 폴더로 자동 복사
+tasks.register('copyToDocs', Copy) {
+    from 'src/main/resources/static'
+    into 'docs'
+}
+
+processResources.finalizedBy copyToDocs
