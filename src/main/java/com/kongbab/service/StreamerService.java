@@ -218,19 +218,13 @@ public class StreamerService {
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
             String json = mapper.writeValueAsString(all);
 
-            // 1. static 리소스 폴더 저장
-            Path staticPath = Paths.get("src", "main", "resources", "static", "streamers.json");
-            if (Files.exists(staticPath.getParent())) {
-                Files.writeString(staticPath, json, StandardCharsets.UTF_8);
-            }
-
-            // 2. 루트 폴더 저장 (GitHub Pages 배포용)
+            // GitHub Pages 배포용 루트 streamers.json 단일 저장
             Path rootPath = Paths.get("streamers.json");
             Files.writeString(rootPath, json, StandardCharsets.UTF_8);
 
-            log.info("GitHub Pages 배포용 정적 데이터(streamers.json) 내보내기 완료 (총 {}명)", all.size());
+            log.info("GitHub Pages 배포용 streamers.json 자동 갱신 완료 (총 {}명)", all.size());
         } catch (Exception e) {
-            log.error("정적 데이터 내보내기 실패", e);
+            log.error("streamers.json 저장 실패", e);
         }
     }
 
