@@ -74,13 +74,80 @@ function getMemberAvatar(member) {
   return (!av || av.includes("images.unsplash.com")) ? DEFAULT_AVATAR : av;
 }
 
+function applyCategoryStructure(structureCategories) {
+  if (!Array.isArray(structureCategories) || structureCategories.length === 0) return;
+
+  const catMap = new Map();
+  KONGBAB_DATA.categories.forEach(c => catMap.set(c.id, c));
+
+  const reorderedCats = [];
+  structureCategories.forEach(savedCat => {
+    if (catMap.has(savedCat.id)) {
+      const liveCat = catMap.get(savedCat.id);
+
+      if (liveCat.hasSubgroups && Array.isArray(savedCat.groups)) {
+        const groupMap = new Map();
+        (liveCat.groups || []).forEach(g => groupMap.set(g.id, g));
+
+        const reorderedGroups = [];
+        savedCat.groups.forEach(savedG => {
+          if (groupMap.has(savedG.id)) {
+            const liveG = groupMap.get(savedG.id);
+            if (savedG.name) liveG.name = savedG.name;
+            if (savedG.emoji) liveG.emoji = savedG.emoji;
+            reorderedGroups.push(liveG);
+            groupMap.delete(savedG.id);
+          } else {
+            reorderedGroups.push({
+              id: savedG.id,
+              name: savedG.name || savedG.id,
+              emoji: savedG.emoji || "📁",
+              members: []
+            });
+          }
+        });
+
+        groupMap.forEach(remainingG => {
+          reorderedGroups.push(remainingG);
+        });
+
+        liveCat.groups = reorderedGroups;
+      }
+
+      reorderedCats.push(liveCat);
+      catMap.delete(savedCat.id);
+    }
+  });
+
+  catMap.forEach(remainingCat => {
+    reorderedCats.push(remainingCat);
+  });
+
+  KONGBAB_DATA.categories = reorderedCats;
+}
+
 function loadStoredData() {
   try {
     const saved = localStorage.getItem("kongbab_custom_data");
     if (saved) {
       const parsed = JSON.parse(saved);
       if (parsed && Array.isArray(parsed.categories)) {
-        KONGBAB_DATA.categories = parsed.categories;
+        applyCategoryStructure(parsed.categories);
+
+        parsed.categories.forEach(savedCat => {
+          const liveCat = KONGBAB_DATA.categories.find(c => c.id === savedCat.id);
+          if (!liveCat) return;
+          if (liveCat.hasSubgroups && Array.isArray(savedCat.groups)) {
+            savedCat.groups.forEach(savedG => {
+              const liveG = (liveCat.groups || []).find(g => g.id === savedG.id);
+              if (liveG && Array.isArray(savedG.members) && savedG.members.length > 0) {
+                liveG.members = savedG.members;
+              }
+            });
+          } else if (Array.isArray(savedCat.members) && savedCat.members.length > 0) {
+            liveCat.members = savedCat.members;
+          }
+        });
       }
     }
   } catch (e) {

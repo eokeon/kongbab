@@ -43,8 +43,25 @@ public class Streamer {
 
     private Integer displayOrder;
 
+    @Column(columnDefinition = "TEXT")
+    private String affiliations;
+
+    @Setter(AccessLevel.NONE)
     @OneToMany(mappedBy = "streamer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("displayOrder ASC, id ASC")
     @JsonManagedReference
     @Builder.Default
     private List<Video> videos = new ArrayList<>();
+
+    public void setVideos(List<Video> newVideos) {
+        if (this.videos == null) {
+            this.videos = new ArrayList<>();
+        }
+        if (this.videos != newVideos) {
+            this.videos.clear();
+            if (newVideos != null) {
+                this.videos.addAll(newVideos);
+            }
+        }
+    }
 }

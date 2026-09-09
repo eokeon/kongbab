@@ -22,6 +22,7 @@ public class StreamerDto {
     private String badgeColor;
     private String avatar;
     private Integer displayOrder;
+    private String affiliations;
     @Builder.Default
     private List<VideoDto> videos = new ArrayList<>();
 
@@ -37,6 +38,7 @@ public class StreamerDto {
                 .badgeColor(entity.getBadgeColor())
                 .avatar(entity.getAvatar())
                 .displayOrder(entity.getDisplayOrder())
+                .affiliations(entity.getAffiliations())
                 .videos(entity.getVideos() != null 
                         ? entity.getVideos().stream().map(VideoDto::fromEntity).collect(Collectors.toList())
                         : new ArrayList<>())

@@ -7,19 +7,16 @@ function renderHeaderAuth() {
       <div class="flex items-center gap-2">
         <div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-950/70 border border-amber-600/50 text-amber-300 text-xs font-bold shadow-sm" title="어드민 로그인 상태 (1시간 이내 자동 유지)">
           <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-          <span>🛡️ 어드민 (1시간 유지)</span>
+          <span>🛡️ 어드민 </span>
         </div>
-        <div id="backend-status-badge"></div>
-        <button onclick="manualBackupNow()" class="px-3 py-1.5 rounded-xl bg-red-950/80 hover:bg-red-900 border border-red-600/60 text-red-200 hover:text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer" title="현재 데이터를 D:\\백업 파일 폴더로 즉시 저장">
-          <span>💾</span>
-          <span>즉시 저장</span>
+        <button onclick="openBackupModal()" class="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white text-xs font-semibold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer" title="DB / 백업 관리 센터 (즉시 저장, 백업 기록, 불러오기)">
+          <span>💾 백업 관리</span>
         </button>
         <button onclick="logoutUser()" class="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white text-xs font-semibold border border-zinc-800 transition-colors cursor-pointer">
           로그아웃
         </button>
       </div>
     `;
-    updateServerStatusBadge();
   } else {
     container.innerHTML = `
       <div class="flex items-center gap-2">
@@ -115,8 +112,9 @@ function renderEmptyState(emoji, title) {
 
 function renderMemberCard(member, dragType, clickFn) {
   const videoCount = (member.videos || []).length;
-  return `
-    <div 
+  const isDualRole = Array.isArray(member.affiliations) && member.affiliations.length > 1;
+  const admin = isAdmin();
+  const dragAttrs = admin ? `
       draggable="true"
       data-drag-type="${dragType}"
       data-drag-id="${member.id}"
@@ -125,8 +123,14 @@ function renderMemberCard(member, dragType, clickFn) {
       ondragleave="handleCardDragLeave(event)"
       ondrop="handleCardDrop(event, '${dragType}', '${member.id}')"
       ondragend="handleCardDragEnd(event)"
+  ` : `draggable="false"`;
+  const cursorClass = admin ? "cursor-grab active:cursor-grabbing" : "cursor-pointer";
+
+  return `
+    <div 
+      ${dragAttrs}
       onclick="${clickFn}('${member.id}')"
-      class="group bg-zinc-900/80 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1.5 cursor-grab active:cursor-grabbing shadow-lg hover:shadow-2xl flex flex-col justify-between select-none"
+      class="group bg-zinc-900/80 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1.5 ${cursorClass} shadow-lg hover:shadow-2xl flex flex-col justify-between select-none"
     >
       <div>
         <div class="flex items-start gap-4 mb-4">
@@ -142,8 +146,8 @@ function renderMemberCard(member, dragType, clickFn) {
           
           <div class="flex-1 min-w-0">
             <div class="flex items-center justify-between gap-2">
-              <h4 class="text-xl font-bold text-white group-hover:text-amber-400 transition-colors truncate min-w-0 flex-1" title="${member.name}">
-                ${member.name}
+              <h4 class="text-xl font-bold text-white group-hover:text-amber-400 transition-colors truncate min-w-0 flex-1" title="${member.streamer}">
+                ${member.streamer}
               </h4>
               ${isAdmin() ? `
                 <div class="flex items-center gap-1.5 ml-2 flex-shrink-0 card-header-actions" onclick="event.stopPropagation()">
@@ -152,10 +156,13 @@ function renderMemberCard(member, dragType, clickFn) {
                 </div>
               ` : ''}
             </div>
-            <p class="text-sm font-medium text-amber-400/90 flex items-center gap-1.5 mt-0.5">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-              <span>${member.streamer}</span>
-            </p>
+            <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+              <p class="text-sm font-medium text-amber-400/90 flex items-center gap-1.5" title="RP 캐릭터: ${member.name}">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <span>${member.name}</span>
+              </p>
+              ${isDualRole ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-950/80 border border-amber-500/50 text-amber-300 shadow-sm" title="겸직 (${member.affiliations.length}개 소속)">겸직</span>` : ''}
+            </div>
           </div>
         </div>
       </div>
@@ -201,11 +208,11 @@ function renderDirectCategoryMembers(container, cat) {
 
 function renderSubgroupList(container, cat) {
   const theme = COLOR_THEMES[cat.color] || COLOR_THEMES.blue;
+  const admin = isAdmin();
 
   const cardsHtml = cat.groups.map(group => {
     const totalVideos = group.members.reduce((sum, m) => sum + (m.videos || []).length, 0);
-    return `
-      <div 
+    const dragAttrs = admin ? `
         draggable="true"
         data-drag-type="group"
         data-drag-id="${group.id}"
@@ -214,8 +221,14 @@ function renderSubgroupList(container, cat) {
         ondragleave="handleCardDragLeave(event)"
         ondrop="handleCardDrop(event, 'group', '${group.id}')"
         ondragend="handleCardDragEnd(event)"
+    ` : `draggable="false"`;
+    const cursorClass = admin ? "cursor-grab active:cursor-grabbing" : "cursor-pointer";
+
+    return `
+      <div 
+        ${dragAttrs}
         onclick="selectGroup('${group.id}')"
-        class="group relative bg-gradient-to-b from-zinc-900/90 to-zinc-950/90 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1.5 cursor-grab active:cursor-grabbing shadow-xl ${theme.glow} select-none"
+        class="group relative bg-gradient-to-b from-zinc-900/90 to-zinc-950/90 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1.5 ${cursorClass} shadow-xl ${theme.glow} select-none"
       >
         <div class="flex items-center justify-between gap-2 mb-4">
           <h3 class="text-2xl font-bold text-white group-hover:text-amber-400 transition-colors flex items-center gap-2 truncate min-w-0 flex-1" title="${group.name}">
@@ -316,14 +329,7 @@ function renderMemberVideos(container) {
   const clipCount = clipVideos.length;
   const fullCount = fullVideos.length;
 
-  let currentTab = state.currentVideoTab === "full" ? "full" : "clip";
-  if (currentTab === "clip" && clipCount === 0 && fullCount > 0) {
-    currentTab = "full";
-    state.currentVideoTab = "full";
-  } else if (currentTab === "full" && fullCount === 0 && clipCount > 0) {
-    currentTab = "clip";
-    state.currentVideoTab = "clip";
-  }
+  const currentTab = state.currentVideoTab === "full" ? "full" : "clip";
 
   const displayedVideos = currentTab === "full" ? fullVideos : clipVideos;
 
@@ -339,12 +345,11 @@ function renderMemberVideos(container) {
     </button>
   `;
 
+  const admin = isAdmin();
   let videosHtml = displayedVideos.map(video => {
     const thumbUrl = getYoutubeThumbnail(video.url);
     const isFull = isFullVideo(video);
-
-    return `
-      <div 
+    const dragAttrs = admin ? `
         draggable="true"
         data-drag-type="video"
         data-drag-id="${video.id}"
@@ -353,7 +358,13 @@ function renderMemberVideos(container) {
         ondragleave="handleCardDragLeave(event)"
         ondrop="handleCardDrop(event, 'video', '${video.id}')"
         ondragend="handleCardDragEnd(event)"
-        class="group bg-zinc-900/90 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1.5 shadow-xl flex flex-col justify-between cursor-grab active:cursor-grabbing select-none"
+    ` : `draggable="false"`;
+    const cursorClass = admin ? "cursor-grab active:cursor-grabbing" : "";
+
+    return `
+      <div 
+        ${dragAttrs}
+        class="group bg-zinc-900/90 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1.5 shadow-xl flex flex-col justify-between ${cursorClass} select-none"
       >
         <div>
           <a 
@@ -398,29 +409,14 @@ function renderMemberVideos(container) {
             >
               ${video.title}
             </a>
-            <p class="text-xs text-zinc-400 line-clamp-2 leading-relaxed mb-2">
-              ${video.description || "콩밥특별시 영상 기록"}
-            </p>
+            ${video.description ? `
+              <p class="text-xs text-zinc-400 line-clamp-2 leading-relaxed mb-2">
+                ${video.description}
+              </p>
+            ` : ''}
           </div>
         </div>
 
-        <div class="px-5 py-3.5 bg-zinc-950/70 border-t border-zinc-800/60 flex items-center justify-between">
-          <span class="text-[11px] font-semibold ${isFull ? 'text-indigo-400' : 'text-red-400'}">
-            ${isFull ? '📹 풀 영상' : '🎬 편집 하이라이트'}
-          </span>
-          <a 
-            href="${video.url}" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            draggable="false"
-            onclick="if (isDraggingCard) { event.preventDefault(); return false; }"
-            class="text-xs font-bold text-white bg-red-600/90 hover:bg-red-600 px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors shadow-sm"
-          >
-            ${SVG_ICONS.youtube}
-            <span>유튜브에서 시청</span>
-            ${SVG_ICONS.external}
-          </a>
-        </div>
 
         ${isAdmin() ? `
           <div class="px-5 py-2.5 bg-zinc-950 border-t border-zinc-800/80 flex items-center justify-between">
@@ -457,7 +453,19 @@ function renderMemberVideos(container) {
     }
   }
 
-  const affiliation = cat.hasSubgroups ? `${group.emoji || ''} ${group.name}` : `${cat.emoji || ''} ${cat.name}`;
+  const baseAffiliation = cat.hasSubgroups ? `${group.emoji || ''} ${group.name}` : `${cat.emoji || ''} ${cat.name}`;
+  let affiliationsText = baseAffiliation;
+  if (Array.isArray(member.affiliations) && member.affiliations.length > 1) {
+    const allNames = member.affiliations.map(a => {
+      const c = KONGBAB_DATA.categories.find(catItem => catItem.id === a.category);
+      if (a.subgroup && c?.groups) {
+        const g = c.groups.find(grp => grp.id === a.subgroup);
+        return `${c?.emoji || ''} ${g ? g.name : c?.name}`;
+      }
+      return `${c?.emoji || ''} ${c?.name || a.category}`;
+    });
+    affiliationsText = allNames.join(" · ");
+  }
 
   container.innerHTML = `
     <div class="mb-8">
@@ -468,10 +476,11 @@ function renderMemberVideos(container) {
           <div>
             <div class="flex items-center gap-2.5 mb-1.5 flex-wrap">
               ${member.role ? `<span class="text-xs font-bold px-2.5 py-1 rounded-md ${member.badgeColor || 'bg-red-700'} text-white">${member.role}</span>` : ''}
-              <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-300">소속: ${affiliation}</span>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-300">소속: ${affiliationsText}</span>
+              ${Array.isArray(member.affiliations) && member.affiliations.length > 1 ? `<span class="text-xs font-bold px-2 py-0.5 rounded-md bg-amber-950/80 border border-amber-500/50 text-amber-300">겸직 중</span>` : ''}
             </div>
-            <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">${member.name}</h2>
-            <p class="text-amber-400 text-base font-semibold mt-1">스트리머: ${member.streamer}</p>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">${member.streamer}</h2>
+            <p class="text-amber-400 text-base font-semibold mt-1">RP 캐릭터: ${member.name}</p>
             ${isAdmin() ? `
               <div class="flex items-center gap-2 mt-3">
                 <button onclick="openMemberModal('edit', '${member.id}')" class="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white text-xs font-semibold transition-colors cursor-pointer inline-flex items-center gap-1">✏️ 정보 수정</button>
@@ -639,8 +648,8 @@ function renderSearchResults(container) {
             <img src="${getMemberAvatar(m)}" class="w-14 h-14 rounded-2xl object-cover border border-zinc-700" />
             <div>
               <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">[인원] ${groupName}</span>
-              <h4 class="text-lg font-bold text-white mt-1">${m.name}</h4>
-              <p class="text-xs text-amber-400 font-medium">${m.streamer}${m.role ? ` (${m.role})` : ''}</p>
+              <h4 class="text-lg font-bold text-white mt-1">${m.streamer}</h4>
+              <p class="text-xs text-amber-400 font-medium">${m.name}${m.role ? ` (${m.role})` : ''}</p>
             </div>
           </div>
           <div class="pt-3 border-t border-zinc-800 flex justify-between items-center text-xs text-zinc-500">
@@ -671,12 +680,56 @@ function renderSearchResults(container) {
   container.innerHTML = html;
 }
 
+function saveNavigationState() {
+  try {
+    sessionStorage.setItem("kongbab_nav_category", state.currentCategory || "police");
+    if (state.currentGroup && state.currentGroup.id) {
+      sessionStorage.setItem("kongbab_nav_group", state.currentGroup.id);
+    } else {
+      sessionStorage.removeItem("kongbab_nav_group");
+    }
+    if (state.currentMember && state.currentMember.id) {
+      sessionStorage.setItem("kongbab_nav_member", state.currentMember.id);
+    } else {
+      sessionStorage.removeItem("kongbab_nav_member");
+    }
+  } catch (e) {}
+}
+
+function restoreNavigationState() {
+  try {
+    const savedCat = sessionStorage.getItem("kongbab_nav_category");
+    if (savedCat && KONGBAB_DATA.categories.some(c => c.id === savedCat)) {
+      state.currentCategory = savedCat;
+    }
+
+    const cat = getCurrentCategory();
+    const savedGroup = sessionStorage.getItem("kongbab_nav_group");
+    if (savedGroup && cat.hasSubgroups) {
+      const g = (cat.groups || []).find(grp => grp.id === savedGroup);
+      if (g) state.currentGroup = g;
+    }
+
+    const savedMember = sessionStorage.getItem("kongbab_nav_member");
+    if (savedMember) {
+      if (state.currentGroup) {
+        const m = (state.currentGroup.members || []).find(mem => mem.id === savedMember);
+        if (m) state.currentMember = m;
+      } else if (!cat.hasSubgroups) {
+        const m = (cat.members || []).find(mem => mem.id === savedMember);
+        if (m) state.currentMember = m;
+      }
+    }
+  } catch (e) {}
+}
+
 function selectCategory(catId) {
   state.currentCategory = catId;
   state.currentGroup = null;
   state.currentMember = null;
   state.searchQuery = "";
   clearSearchInput();
+  saveNavigationState();
   renderContent();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -685,6 +738,7 @@ function resetToCategory(catId) {
   state.currentCategory = catId;
   state.currentGroup = null;
   state.currentMember = null;
+  saveNavigationState();
   renderContent();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -699,6 +753,7 @@ function selectGroup(groupId) {
     state.currentMember = null;
     state.searchQuery = "";
     clearSearchInput();
+    saveNavigationState();
     renderContent();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -713,6 +768,9 @@ function selectDirectMember(memberId) {
     state.currentMember = member;
     state.searchQuery = "";
     clearSearchInput();
+    const allV = member.videos || [];
+    state.currentVideoTab = (!allV.some(v => !isFullVideo(v)) && allV.some(v => isFullVideo(v))) ? "full" : "clip";
+    saveNavigationState();
     renderContent();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -726,6 +784,9 @@ function selectGroupMember(memberId) {
     state.currentMember = member;
     state.searchQuery = "";
     clearSearchInput();
+    const allV = member.videos || [];
+    state.currentVideoTab = (!allV.some(v => !isFullVideo(v)) && allV.some(v => isFullVideo(v))) ? "full" : "clip";
+    saveNavigationState();
     renderContent();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -739,6 +800,7 @@ function selectGroupFromSearch(catId, groupId) {
     state.currentMember = null;
     state.searchQuery = "";
     clearSearchInput();
+    saveNavigationState();
     renderContent();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -759,8 +821,14 @@ function selectMemberFromSearch(catId, groupId, memberId) {
     state.currentMember = (cat.members || []).find(m => m.id === memberId);
   }
 
+  if (state.currentMember) {
+    const allV = state.currentMember.videos || [];
+    state.currentVideoTab = (!allV.some(v => !isFullVideo(v)) && allV.some(v => isFullVideo(v))) ? "full" : "clip";
+  }
+
   state.searchQuery = "";
   clearSearchInput();
+  saveNavigationState();
   renderContent();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -790,6 +858,9 @@ function setupEventListeners() {
       closeLoginModal();
       closeVideoModal();
       closeMemberModal();
+      if (typeof closeBackupModal === "function") {
+        closeBackupModal();
+      }
     }
   });
 }

@@ -81,6 +81,58 @@ async function apiGetLoginLogs() {
   return [];
 }
 
+async function fetchCategoryStructure() {
+  try {
+    const res = await fetch(`${API_BASE}/api/config/structure`, {
+      cache: "no-store",
+      credentials: "include"
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.success && Array.isArray(data.categories) && data.categories.length > 0) {
+        if (typeof applyCategoryStructure === "function") {
+          applyCategoryStructure(data.categories);
+        }
+        persistData();
+        return data.categories;
+      }
+    }
+  } catch (e) {
+    console.warn("서버 카테고리/조직 구조 조회 실패 (로컬 캐시 사용):", e);
+  }
+  return null;
+}
+
+async function saveCategoryStructureToDb(categories) {
+  if (!Array.isArray(categories)) return null;
+  try {
+    const cleanStructure = categories.map(cat => ({
+      id: cat.id,
+      name: cat.name,
+      emoji: cat.emoji,
+      hasSubgroups: cat.hasSubgroups,
+      groups: cat.hasSubgroups ? (cat.groups || []).map(g => ({
+        id: g.id,
+        name: g.name,
+        emoji: g.emoji
+      })) : []
+    }));
+
+    const res = await fetch(`${API_BASE}/api/config/structure`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
+      body: JSON.stringify({ categories: cleanStructure })
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (e) {
+    console.error("서버 카테고리/조직 구조 저장 실패:", e);
+  }
+  return null;
+}
+
 async function fetchStreamersFromDb() {
   try {
     const res = await fetch(`${API_BASE}/api/streamers`, { cache: "no-store" });
@@ -313,8 +365,25 @@ function applyStreamersToKongbabData(dbStreamers) {
   });
 
   dbStreamers.forEach(s => {
-    const cat = KONGBAB_DATA.categories.find(c => c.id === s.category);
-    if (!cat) return;
+    // affiliations 파싱 (배열 또는 JSON 문자열)
+    let affs = [];
+    if (Array.isArray(s.affiliations)) {
+      affs = s.affiliations;
+    } else if (typeof s.affiliations === "string" && s.affiliations.trim().startsWith("[")) {
+      try {
+        affs = JSON.parse(s.affiliations);
+      } catch (e) {}
+    }
+
+    // affiliations가 없으면 기본 category & subgroup을 1개짜리 affiliation으로 취급
+    if (!Array.isArray(affs) || affs.length === 0) {
+      if (s.category) {
+        affs = [{ category: s.category, subgroup: s.subgroup || null }];
+      }
+    }
+
+    const videosList = Array.isArray(s.videos) ? [...s.videos] : [];
+    videosList.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
 
     const memberObj = {
       id: s.id,
@@ -324,22 +393,33 @@ function applyStreamersToKongbabData(dbStreamers) {
       badgeColor: s.badgeColor || "bg-blue-600",
       avatar: s.avatar || "assets/default-avatar.svg",
       displayOrder: s.displayOrder ?? 0,
-      videos: Array.isArray(s.videos) ? s.videos : []
+      videos: videosList,
+      affiliations: affs
     };
 
-    if (cat.hasSubgroups) {
-      let group = (cat.groups || []).find(g => g.id === s.subgroup);
-      if (!group && (cat.groups || []).length > 0) {
-        group = cat.groups[0];
+    // 소속된 모든 위치(카테고리/조직)에 동일한 memberObj 인스턴스를 추가 (겸직 반영)
+    affs.forEach(aff => {
+      const cat = KONGBAB_DATA.categories.find(c => c.id === aff.category);
+      if (!cat) return;
+
+      if (cat.hasSubgroups) {
+        let group = (cat.groups || []).find(g => g.id === aff.subgroup);
+        if (!group && (cat.groups || []).length > 0) {
+          group = cat.groups[0];
+        }
+        if (group) {
+          if (!group.members) group.members = [];
+          if (!group.members.some(m => m.id === memberObj.id)) {
+            group.members.push(memberObj);
+          }
+        }
+      } else {
+        if (!cat.members) cat.members = [];
+        if (!cat.members.some(m => m.id === memberObj.id)) {
+          cat.members.push(memberObj);
+        }
       }
-      if (group) {
-        if (!group.members) group.members = [];
-        group.members.push(memberObj);
-      }
-    } else {
-      if (!cat.members) cat.members = [];
-      cat.members.push(memberObj);
-    }
+    });
   });
 
   KONGBAB_DATA.categories.forEach(cat => {
@@ -358,44 +438,90 @@ function applyStreamersToKongbabData(dbStreamers) {
 }
 
 function extractAllStreamersFromKongbabData() {
-  const result = [];
+  const memberMap = new Map();
   let globalOrder = 0;
 
   KONGBAB_DATA.categories.forEach(cat => {
     if (cat.hasSubgroups) {
       (cat.groups || []).forEach(g => {
         (g.members || []).forEach(m => {
-          result.push({
-            id: m.id,
-            name: m.name,
-            streamer: m.streamer,
-            category: cat.id,
-            subgroup: g.id,
-            role: m.role || "",
-            badgeColor: m.badgeColor || "bg-blue-600",
-            avatar: m.avatar || "assets/default-avatar.svg",
-            displayOrder: globalOrder++,
-            videos: m.videos || []
-          });
+          const currentAff = { category: cat.id, subgroup: g.id };
+          if (!memberMap.has(m.id)) {
+            const initialAffs = Array.isArray(m.affiliations) && m.affiliations.length > 0
+              ? [...m.affiliations]
+              : [currentAff];
+            if (!initialAffs.some(a => a.category === currentAff.category && a.subgroup === currentAff.subgroup)) {
+              initialAffs.push(currentAff);
+            }
+
+            const videoList = (m.videos || []).map((v, vIdx) => ({
+              ...v,
+              displayOrder: vIdx
+            }));
+
+            memberMap.set(m.id, {
+              id: m.id,
+              name: m.name,
+              streamer: m.streamer,
+              category: cat.id,
+              subgroup: g.id,
+              role: m.role || "",
+              badgeColor: m.badgeColor || "bg-blue-600",
+              avatar: m.avatar || "assets/default-avatar.svg",
+              displayOrder: globalOrder++,
+              videos: videoList,
+              affiliations: initialAffs
+            });
+          } else {
+            const existing = memberMap.get(m.id);
+            if (!existing.affiliations.some(a => a.category === currentAff.category && a.subgroup === currentAff.subgroup)) {
+              existing.affiliations.push(currentAff);
+            }
+          }
         });
       });
     } else {
       (cat.members || []).forEach(m => {
-        result.push({
-          id: m.id,
-          name: m.name,
-          streamer: m.streamer,
-          category: cat.id,
-          subgroup: null,
-          role: m.role || "",
-          badgeColor: m.badgeColor || "bg-blue-600",
-          avatar: m.avatar || "assets/default-avatar.svg",
-          displayOrder: globalOrder++,
-          videos: m.videos || []
-        });
+        const currentAff = { category: cat.id, subgroup: null };
+        if (!memberMap.has(m.id)) {
+          const initialAffs = Array.isArray(m.affiliations) && m.affiliations.length > 0
+            ? [...m.affiliations]
+            : [currentAff];
+          if (!initialAffs.some(a => a.category === currentAff.category && a.subgroup === currentAff.subgroup)) {
+            initialAffs.push(currentAff);
+          }
+
+          const videoList = (m.videos || []).map((v, vIdx) => ({
+            ...v,
+            displayOrder: vIdx
+          }));
+
+          memberMap.set(m.id, {
+            id: m.id,
+            name: m.name,
+            streamer: m.streamer,
+            category: cat.id,
+            subgroup: null,
+            role: m.role || "",
+            badgeColor: m.badgeColor || "bg-blue-600",
+            avatar: m.avatar || "assets/default-avatar.svg",
+            displayOrder: globalOrder++,
+            videos: videoList,
+            affiliations: initialAffs
+          });
+        } else {
+          const existing = memberMap.get(m.id);
+          if (!existing.affiliations.some(a => a.category === currentAff.category && a.subgroup === currentAff.subgroup)) {
+            existing.affiliations.push(currentAff);
+          }
+        }
       });
     }
   });
 
-  return result;
+  const list = Array.from(memberMap.values());
+  list.forEach(item => {
+    item.affiliations = JSON.stringify(item.affiliations);
+  });
+  return list;
 }

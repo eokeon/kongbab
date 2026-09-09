@@ -68,6 +68,7 @@ public class StreamerService {
         streamer.setRole(dto.getRole());
         streamer.setBadgeColor(dto.getBadgeColor());
         streamer.setAvatar(dto.getAvatar());
+        streamer.setAffiliations(dto.getAffiliations());
         if (dto.getDisplayOrder() != null) {
             streamer.setDisplayOrder(dto.getDisplayOrder());
         }
@@ -128,7 +129,12 @@ public class StreamerService {
     public boolean deleteVideo(String videoIdOrCustomId) {
         Optional<Video> opt = findVideoEntity(videoIdOrCustomId);
         if (opt.isPresent()) {
-            videoRepository.delete(opt.get());
+            Video video = opt.get();
+            Streamer streamer = video.getStreamer();
+            if (streamer != null && streamer.getVideos() != null) {
+                streamer.getVideos().remove(video);
+            }
+            videoRepository.delete(video);
             exportStaticJson();
             return true;
         }
@@ -168,30 +174,36 @@ public class StreamerService {
             streamer.setRole(dto.getRole());
             streamer.setBadgeColor(dto.getBadgeColor());
             streamer.setAvatar(dto.getAvatar());
+            streamer.setAffiliations(dto.getAffiliations());
             streamer.setDisplayOrder(dto.getDisplayOrder());
 
-            Streamer savedStreamer = streamerRepository.save(streamer);
-
             if (dto.getVideos() != null) {
+                List<Video> currentVideos = streamer.getVideos();
+                if (currentVideos == null) {
+                    currentVideos = new ArrayList<>();
+                    streamer.setVideos(currentVideos);
+                }
+
                 Map<String, Video> existingVideosMap = new HashMap<>();
-                if (savedStreamer.getVideos() != null) {
-                    for (Video v : savedStreamer.getVideos()) {
+                for (Video v : currentVideos) {
+                    if (v.getCustomId() != null) {
                         existingVideosMap.put(v.getCustomId(), v);
                     }
                 }
 
-                List<Video> updatedVideos = new ArrayList<>();
+                Set<Video> keptVideos = new HashSet<>();
                 int vOrder = 0;
                 for (VideoDto vDto : dto.getVideos()) {
-                    Video v = existingVideosMap.get(vDto.getId());
+                    Video v = (vDto.getId() != null) ? existingVideosMap.get(vDto.getId()) : null;
                     if (v == null) {
                         String vCustomId = (vDto.getId() != null && !vDto.getId().isBlank())
                                 ? vDto.getId()
-                                : "v-" + System.currentTimeMillis() + "-" + vOrder;
+                                : "v-" + System.currentTimeMillis() + "-" + UUID.randomUUID().toString().substring(0, 6);
                         v = Video.builder()
                                 .customId(vCustomId)
-                                .streamer(savedStreamer)
+                                .streamer(streamer)
                                 .build();
+                        currentVideos.add(v);
                     }
                     v.setTitle(vDto.getTitle());
                     v.setUrl(vDto.getUrl());
@@ -199,11 +211,15 @@ public class StreamerService {
                     v.setDate(vDto.getDate());
                     v.setDescription(vDto.getDescription());
                     v.setDisplayOrder(vDto.getDisplayOrder() != null ? vDto.getDisplayOrder() : vOrder++);
-                    updatedVideos.add(videoRepository.save(v));
+                    v.setStreamer(streamer);
+                    keptVideos.add(v);
                 }
-                savedStreamer.setVideos(updatedVideos);
+
+                // DTO에 없는 기존 영상은 orphanRemoval로 자동 삭제되도록 컬렉션에서 제거
+                currentVideos.removeIf(v -> !keptVideos.contains(v));
             }
 
+            Streamer savedStreamer = streamerRepository.save(streamer);
             results.add(StreamerDto.fromEntity(savedStreamer));
         }
 
@@ -218,12 +234,19 @@ public class StreamerService {
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
             String json = mapper.writeValueAsString(all);
 
-            // static 리소스 폴더에 streamers.json 단일 저장
-            Path staticPath = Paths.get("src", "main", "resources", "static", "streamers.json");
-            if (!Files.exists(staticPath.getParent())) {
-                Files.createDirectories(staticPath.getParent());
+            // static 및 docs, build 폴더의 streamers.json 동시 갱신
+            List<Path> targets = List.of(
+                    Paths.get("src", "main", "resources", "static", "streamers.json"),
+                    Paths.get("build", "resources", "main", "static", "streamers.json"),
+                    Paths.get("docs", "streamers.json")
+            );
+            for (Path p : targets) {
+                try {
+                    if (Files.exists(p.getParent())) {
+                        Files.writeString(p, json, StandardCharsets.UTF_8);
+                    }
+                } catch (Exception ignored) {}
             }
-            Files.writeString(staticPath, json, StandardCharsets.UTF_8);
 
             log.info("정적 streamers.json 자동 갱신 완료 (총 {}명)", all.size());
         } catch (Exception e) {

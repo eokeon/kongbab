@@ -95,7 +95,6 @@ function openVideoModal(mode = 'add', videoId = null) {
   const formUrl = document.getElementById("video-form-url");
   const formTitle = document.getElementById("video-form-title");
   const formDate = document.getElementById("video-form-date");
-  const formDesc = document.getElementById("video-form-desc");
   const radioClip = document.querySelector('input[name="video-form-type"][value="clip"]');
   const radioFull = document.querySelector('input[name="video-form-type"][value="full"]');
 
@@ -104,12 +103,11 @@ function openVideoModal(mode = 'add', videoId = null) {
     if (!video) return;
 
     modalTitle.textContent = "영상 수정";
-    modalSubtitle.textContent = `${state.currentMember.name}의 영상 수정`;
+    modalSubtitle.textContent = `${state.currentMember.streamer} (${state.currentMember.name})의 영상 수정`;
     formId.value = video.id;
     formUrl.value = video.url || "";
     formTitle.value = video.title || "";
     formDate.value = video.date || getTodayDateString();
-    formDesc.value = video.description || "";
     if (isFullVideo(video)) {
       if (radioFull) radioFull.checked = true;
     } else {
@@ -118,12 +116,11 @@ function openVideoModal(mode = 'add', videoId = null) {
     previewVideoModalThumb(video.url);
   } else {
     modalTitle.textContent = "영상 추가";
-    modalSubtitle.textContent = `${state.currentMember.name}의 새 영상 등록`;
+    modalSubtitle.textContent = `${state.currentMember.streamer} (${state.currentMember.name})의 새 영상 등록`;
     formId.value = "";
     formUrl.value = "";
     formTitle.value = "";
     formDate.value = getTodayDateString();
-    formDesc.value = "";
     if (state.currentVideoTab === 'full') {
       if (radioFull) radioFull.checked = true;
     } else {
@@ -288,7 +285,8 @@ function handleSaveVideo(e) {
   const url = document.getElementById("video-form-url").value.trim();
   const title = document.getElementById("video-form-title").value.trim();
   const date = document.getElementById("video-form-date").value.trim() || getTodayDateString();
-  const desc = document.getElementById("video-form-desc").value.trim();
+  const formDesc = document.getElementById("video-form-desc");
+  const desc = formDesc ? formDesc.value.trim() : "";
   const typeRadio = document.querySelector('input[name="video-form-type"]:checked');
   const videoType = typeRadio ? typeRadio.value : "clip";
 
@@ -381,6 +379,147 @@ function findMemberLocation(memberId) {
   return null;
 }
 
+function findAllMemberLocations(memberId) {
+  const locs = [];
+  for (const cat of KONGBAB_DATA.categories) {
+    if (!cat.hasSubgroups) {
+      const found = (cat.members || []).find(m => m.id === memberId);
+      if (found) locs.push({ category: cat, group: null, member: found });
+    } else {
+      for (const g of (cat.groups || [])) {
+        const found = (g.members || []).find(m => m.id === memberId);
+        if (found) locs.push({ category: cat, group: g, member: found });
+      }
+    }
+  }
+  return locs;
+}
+
+function setupAffiliationPanels() {
+  const gangCat = KONGBAB_DATA.categories.find(c => c.id === "gang");
+  const bizCat = KONGBAB_DATA.categories.find(c => c.id === "business");
+
+  const gangContainer = document.getElementById("aff-gang-chips");
+  if (gangContainer && gangCat?.groups) {
+    gangContainer.innerHTML = gangCat.groups.map(g => `
+      <label class="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border border-red-900/60 bg-red-950/40 hover:border-red-500/60 cursor-pointer text-xs select-none truncate" title="${g.name}">
+        <input type="checkbox" name="aff-gang-group" value="${g.id}" onchange="updateSelectedAffiliationCount()" class="rounded border-red-800 text-red-600 focus:ring-0 w-3.5 h-3.5 cursor-pointer flex-shrink-0">
+        <span class="truncate text-red-200 text-[11px] font-medium">${g.emoji || ''} ${g.name}</span>
+      </label>
+    `).join("");
+  }
+
+  const bizContainer = document.getElementById("aff-business-chips");
+  if (bizContainer && bizCat?.groups) {
+    bizContainer.innerHTML = bizCat.groups.map(g => `
+      <label class="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border border-amber-900/60 bg-amber-950/40 hover:border-amber-500/60 cursor-pointer text-xs select-none truncate" title="${g.name}">
+        <input type="checkbox" name="aff-business-group" value="${g.id}" onchange="updateSelectedAffiliationCount()" class="rounded border-amber-800 text-amber-600 focus:ring-0 w-3.5 h-3.5 cursor-pointer flex-shrink-0">
+        <span class="truncate text-amber-200 text-[11px] font-medium">${g.emoji || ''} ${g.name}</span>
+      </label>
+    `).join("");
+  }
+}
+
+function handleAffiliationCheckboxChange() {
+  const gangChecked = document.getElementById("aff-check-gang")?.checked;
+  const bizChecked = document.getElementById("aff-check-business")?.checked;
+
+  const gangPanel = document.getElementById("aff-gang-panel");
+  if (gangPanel) {
+    if (gangChecked) {
+      gangPanel.classList.remove("hidden");
+      const gangInputs = document.querySelectorAll('input[name="aff-gang-group"]');
+      const anyChecked = Array.from(gangInputs).some(i => i.checked);
+      if (!anyChecked && gangInputs.length > 0) {
+        gangInputs[0].checked = true;
+      }
+    } else {
+      gangPanel.classList.add("hidden");
+    }
+  }
+
+  const bizPanel = document.getElementById("aff-business-panel");
+  if (bizPanel) {
+    if (bizChecked) {
+      bizPanel.classList.remove("hidden");
+      const bizInputs = document.querySelectorAll('input[name="aff-business-group"]');
+      const anyChecked = Array.from(bizInputs).some(i => i.checked);
+      if (!anyChecked && bizInputs.length > 0) {
+        bizInputs[0].checked = true;
+      }
+    } else {
+      bizPanel.classList.add("hidden");
+    }
+  }
+
+  updateSelectedAffiliationCount();
+}
+
+function getSelectedAffiliations() {
+  const affs = [];
+  const directCats = ["police", "ems", "press", "citizen"];
+  directCats.forEach(catId => {
+    const chk = document.getElementById(`aff-check-${catId}`);
+    if (chk && chk.checked) {
+      affs.push({ category: catId, subgroup: null });
+    }
+  });
+
+  const gangChk = document.getElementById("aff-check-gang");
+  if (gangChk && gangChk.checked) {
+    const gangInputs = document.querySelectorAll('input[name="aff-gang-group"]:checked');
+    if (gangInputs.length > 0) {
+      gangInputs.forEach(input => {
+        affs.push({ category: "gang", subgroup: input.value });
+      });
+    } else {
+      const gangCat = KONGBAB_DATA.categories.find(c => c.id === "gang");
+      const firstGroup = gangCat?.groups?.[0]?.id || "gang-nonghyup";
+      affs.push({ category: "gang", subgroup: firstGroup });
+    }
+  }
+
+  const bizChk = document.getElementById("aff-check-business");
+  if (bizChk && bizChk.checked) {
+    const bizInputs = document.querySelectorAll('input[name="aff-business-group"]:checked');
+    if (bizInputs.length > 0) {
+      bizInputs.forEach(input => {
+        affs.push({ category: "business", subgroup: input.value });
+      });
+    } else {
+      const bizCat = KONGBAB_DATA.categories.find(c => c.id === "business");
+      const firstGroup = bizCat?.groups?.[0]?.id || "biz-yastation";
+      affs.push({ category: "business", subgroup: firstGroup });
+    }
+  }
+
+  return affs;
+}
+
+function updateSelectedAffiliationCount() {
+  const affs = getSelectedAffiliations();
+  const summaryEl = document.getElementById("member-form-selected-summary");
+  if (!summaryEl) return;
+
+  if (affs.length === 0) {
+    summaryEl.textContent = "선택됨: 없음 (최소 1개 선택 필요)";
+    summaryEl.className = "text-[11px] text-red-400 font-semibold truncate max-w-[220px] text-right";
+    return;
+  }
+
+  const names = affs.map(a => {
+    const cat = KONGBAB_DATA.categories.find(c => c.id === a.category);
+    if (a.subgroup && cat?.groups) {
+      const g = cat.groups.find(group => group.id === a.subgroup);
+      return `${cat.emoji || ''} ${g ? g.name : cat.name}`;
+    }
+    return `${cat?.emoji || ''} ${cat?.name || a.category}`;
+  });
+
+  summaryEl.textContent = `선택됨(${affs.length}): ${names.join(", ")}`;
+  summaryEl.className = "text-[11px] text-emerald-400 font-semibold truncate max-w-[220px] text-right";
+}
+
 function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, prefillGroupId = null) {
   if (!isAdmin()) {
     alert("어드민 전용 기능입니다.");
@@ -388,52 +527,99 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
   }
 
   editingMemberId = memberId;
+  setupAffiliationPanels();
+
   const modal = document.getElementById("member-modal");
   const modalTitle = document.getElementById("member-modal-title");
   const modalSubtitle = document.getElementById("member-modal-subtitle");
   const formId = document.getElementById("member-form-id");
-  const formCat = document.getElementById("member-form-category");
-  const formGroup = document.getElementById("member-form-group");
   const formName = document.getElementById("member-form-name");
   const formStreamer = document.getElementById("member-form-streamer");
   const formRole = document.getElementById("member-form-role");
   const formBadge = document.getElementById("member-form-badge");
   const formAvatar = document.getElementById("member-form-avatar");
 
+  // 모든 소속 체크박스 초기화
+  document.querySelectorAll('input[name="member-aff-category"], input[name="aff-gang-group"], input[name="aff-business-group"]').forEach(chk => {
+    chk.checked = false;
+  });
+  ["aff-check-police", "aff-check-ems", "aff-check-press", "aff-check-citizen", "aff-check-gang", "aff-check-business"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.checked = false;
+  });
+
   if (mode === 'edit' && memberId) {
-    const loc = findMemberLocation(memberId);
-    if (!loc) {
+    const allLocs = findAllMemberLocations(memberId);
+    if (!allLocs || allLocs.length === 0) {
       alert("인원 정보를 찾을 수 없습니다.");
       return;
     }
+    const primaryMember = allLocs[0].member;
+
     modalTitle.textContent = "인원 정보 수정";
-    modalSubtitle.textContent = `${loc.member.name} (${loc.member.streamer}) 수정`;
-    formId.value = loc.member.id;
-    formCat.value = loc.category.id;
-    handleMemberCategoryChange(loc.category.id);
-    if (loc.group && formGroup) formGroup.value = loc.group.id;
-    formName.value = loc.member.name || "";
-    formStreamer.value = loc.member.streamer || "";
-    formRole.value = loc.member.role || "";
-    formBadge.value = loc.member.badgeColor || "bg-blue-600";
-    formAvatar.value = loc.member.avatar || "";
-    previewMemberAvatar(loc.member.avatar);
+    modalSubtitle.textContent = `${primaryMember.streamer} (${primaryMember.name}) - 소속 겸직 관리`;
+    formId.value = primaryMember.id;
+    formName.value = primaryMember.name || "";
+    formStreamer.value = primaryMember.streamer || "";
+    formRole.value = primaryMember.role || "";
+    formBadge.value = primaryMember.badgeColor || "bg-blue-600";
+    formAvatar.value = primaryMember.avatar || "";
+    previewMemberAvatar(primaryMember.avatar);
+
+    // 기존 소속 체크박스 복원
+    allLocs.forEach(loc => {
+      const catCheck = document.getElementById(`aff-check-${loc.category.id}`);
+      if (catCheck) catCheck.checked = true;
+      if (loc.category.id === "gang" && loc.group) {
+        const gangInput = document.querySelector(`input[name="aff-gang-group"][value="${loc.group.id}"]`);
+        if (gangInput) gangInput.checked = true;
+      }
+      if (loc.category.id === "business" && loc.group) {
+        const bizInput = document.querySelector(`input[name="aff-business-group"][value="${loc.group.id}"]`);
+        if (bizInput) bizInput.checked = true;
+      }
+    });
+
+    if (Array.isArray(primaryMember.affiliations)) {
+      primaryMember.affiliations.forEach(aff => {
+        const catCheck = document.getElementById(`aff-check-${aff.category}`);
+        if (catCheck) catCheck.checked = true;
+        if (aff.category === "gang" && aff.subgroup) {
+          const gangInput = document.querySelector(`input[name="aff-gang-group"][value="${aff.subgroup}"]`);
+          if (gangInput) gangInput.checked = true;
+        }
+        if (aff.category === "business" && aff.subgroup) {
+          const bizInput = document.querySelector(`input[name="aff-business-group"][value="${aff.subgroup}"]`);
+          if (bizInput) bizInput.checked = true;
+        }
+      });
+    }
+
+    handleAffiliationCheckboxChange();
   } else {
     modalTitle.textContent = "새 인원 추가";
-    modalSubtitle.textContent = "새 인원 등록";
+    modalSubtitle.textContent = "새 인원 등록 (다중 소속/겸직 가능)";
     formId.value = "";
-    
-    const targetCatId = prefillCatId || state.currentCategory || "police";
-    formCat.value = targetCatId;
-    handleMemberCategoryChange(targetCatId);
-
-    const targetGroupId = prefillGroupId || state.currentGroup?.id;
-    if (targetGroupId && formGroup) formGroup.value = targetGroupId;
-
     formName.value = "";
     formStreamer.value = "";
     formRole.value = "";
-    
+    formAvatar.value = "";
+    previewMemberAvatar("");
+
+    const targetCatId = prefillCatId || state.currentCategory || "police";
+    const catCheck = document.getElementById(`aff-check-${targetCatId}`);
+    if (catCheck) catCheck.checked = true;
+
+    const targetGroupId = prefillGroupId || state.currentGroup?.id;
+    if (targetCatId === "gang" && targetGroupId) {
+      const gangInput = document.querySelector(`input[name="aff-gang-group"][value="${targetGroupId}"]`);
+      if (gangInput) gangInput.checked = true;
+    }
+    if (targetCatId === "business" && targetGroupId) {
+      const bizInput = document.querySelector(`input[name="aff-business-group"][value="${targetGroupId}"]`);
+      if (bizInput) bizInput.checked = true;
+    }
+
     const defaultBadges = {
       police: "bg-blue-600",
       ems: "bg-teal-600",
@@ -443,8 +629,8 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
       citizen: "bg-purple-600"
     };
     formBadge.value = defaultBadges[targetCatId] || "bg-blue-600";
-    formAvatar.value = "";
-    previewMemberAvatar("");
+
+    handleAffiliationCheckboxChange();
   }
 
   if (modal) {
@@ -465,21 +651,6 @@ function closeMemberModal() {
   editingMemberId = null;
 }
 
-function handleMemberCategoryChange(catId) {
-  const groupContainer = document.getElementById("member-form-group-container");
-  const groupSelect = document.getElementById("member-form-group");
-  if (!groupContainer || !groupSelect) return;
-
-  const cat = KONGBAB_DATA.categories.find(c => c.id === catId);
-  if (cat?.hasSubgroups && Array.isArray(cat.groups) && cat.groups.length > 0) {
-    groupContainer.classList.remove("hidden");
-    groupSelect.innerHTML = cat.groups.map(g => `<option value="${g.id}">${g.emoji || ''} ${g.name}</option>`).join("");
-  } else {
-    groupContainer.classList.add("hidden");
-    groupSelect.innerHTML = "";
-  }
-}
-
 function previewMemberAvatar(url) {
   const preview = document.getElementById("member-form-avatar-preview");
   if (preview) preview.src = getMemberAvatar(url);
@@ -492,9 +663,6 @@ function handleSaveMember(e) {
   const name = document.getElementById("member-form-name").value.trim();
   const streamer = document.getElementById("member-form-streamer").value.trim();
   const role = document.getElementById("member-form-role").value.trim();
-  const catId = document.getElementById("member-form-category").value;
-  const groupSelect = document.getElementById("member-form-group");
-  const groupId = groupSelect ? groupSelect.value : null;
   const badgeColor = document.getElementById("member-form-badge").value;
   let avatar = document.getElementById("member-form-avatar").value.trim();
 
@@ -503,50 +671,90 @@ function handleSaveMember(e) {
     return;
   }
 
+  const selectedAffiliations = getSelectedAffiliations();
+  if (selectedAffiliations.length === 0) {
+    alert("소속을 최소 하나 이상 선택해주세요 (경찰, EMS, 갱단 등).");
+    return;
+  }
+
   if (!avatar || avatar.includes("images.unsplash.com")) {
     avatar = DEFAULT_AVATAR;
   }
 
-  const cat = KONGBAB_DATA.categories.find(c => c.id === catId);
-  if (!cat) return;
-
-  let targetList = null;
-  if (!cat.hasSubgroups) {
-    if (!cat.members) cat.members = [];
-    targetList = cat.members;
-  } else {
-    const group = (cat.groups || []).find(g => g.id === groupId) || cat.groups[0];
-    if (!group) return;
-    if (!group.members) group.members = [];
-    targetList = group.members;
-  }
+  const primaryAff = selectedAffiliations[0];
 
   if (editingMemberId) {
-    const loc = findMemberLocation(editingMemberId);
-    if (loc) {
-      loc.member.name = name;
-      loc.member.streamer = streamer;
-      loc.member.role = role;
-      loc.member.badgeColor = badgeColor;
-      loc.member.avatar = avatar;
+    const allLocs = findAllMemberLocations(editingMemberId);
+    if (allLocs.length === 0) {
+      alert("수정할 인원 정보를 찾을 수 없습니다.");
+      return;
+    }
 
-      saveStreamerToDb({
-        id: loc.member.id,
-        name,
-        streamer,
-        role,
-        category: loc.category.id,
-        subgroup: loc.group ? loc.group.id : null,
-        badgeColor,
-        avatar,
-        displayOrder: loc.member.displayOrder ?? 0
+    const memberObj = allLocs[0].member;
+    memberObj.name = name;
+    memberObj.streamer = streamer;
+    memberObj.role = role;
+    memberObj.badgeColor = badgeColor;
+    memberObj.avatar = avatar;
+    memberObj.affiliations = selectedAffiliations;
+
+    // 1) 이전 소속 중 선택 해제된 곳에서 제거
+    allLocs.forEach(loc => {
+      const stillBelongs = selectedAffiliations.some(aff => {
+        if (loc.category.hasSubgroups) {
+          return aff.category === loc.category.id && aff.subgroup === loc.group?.id;
+        } else {
+          return aff.category === loc.category.id;
+        }
       });
 
-      persistData();
-      updateStats();
-      createBackupSnapshot(`인원 수정: ${name} (${streamer})`);
-      showToast(`✓ ${name} (${streamer}) 정보 수정 완료`);
-    }
+      if (!stillBelongs) {
+        if (loc.category.hasSubgroups && loc.group) {
+          loc.group.members = loc.group.members.filter(m => m.id !== memberObj.id);
+        } else {
+          loc.category.members = loc.category.members.filter(m => m.id !== memberObj.id);
+        }
+      }
+    });
+
+    // 2) 새로 선택된 소속에 아직 포함되지 않았으면 추가
+    selectedAffiliations.forEach(aff => {
+      const cat = KONGBAB_DATA.categories.find(c => c.id === aff.category);
+      if (!cat) return;
+
+      if (cat.hasSubgroups) {
+        const group = (cat.groups || []).find(g => g.id === aff.subgroup) || cat.groups[0];
+        if (group) {
+          if (!group.members) group.members = [];
+          if (!group.members.some(m => m.id === memberObj.id)) {
+            group.members.push(memberObj);
+          }
+        }
+      } else {
+        if (!cat.members) cat.members = [];
+        if (!cat.members.some(m => m.id === memberObj.id)) {
+          cat.members.push(memberObj);
+        }
+      }
+    });
+
+    saveStreamerToDb({
+      id: memberObj.id,
+      name,
+      streamer,
+      role,
+      category: primaryAff.category,
+      subgroup: primaryAff.subgroup,
+      affiliations: JSON.stringify(selectedAffiliations),
+      badgeColor,
+      avatar,
+      displayOrder: memberObj.displayOrder ?? 0
+    });
+
+    persistData();
+    updateStats();
+    createBackupSnapshot(`인원 수정: ${name} (${streamer}) - 소속 ${selectedAffiliations.length}개`);
+    showToast(`✓ ${name} (${streamer}) 정보 수정 완료 (${selectedAffiliations.length}개 소속)`);
   } else {
     const newMember = {
       id: "m-" + Date.now().toString(36) + Math.random().toString(36).substr(2, 4),
@@ -555,26 +763,45 @@ function handleSaveMember(e) {
       role,
       badgeColor,
       avatar,
+      displayOrder: 0,
+      affiliations: selectedAffiliations,
       videos: []
     };
-    targetList.push(newMember);
+
+    // 선택된 모든 소속에 새 멤버 추가
+    selectedAffiliations.forEach(aff => {
+      const cat = KONGBAB_DATA.categories.find(c => c.id === aff.category);
+      if (!cat) return;
+
+      if (cat.hasSubgroups) {
+        const group = (cat.groups || []).find(g => g.id === aff.subgroup) || cat.groups[0];
+        if (group) {
+          if (!group.members) group.members = [];
+          group.members.push(newMember);
+        }
+      } else {
+        if (!cat.members) cat.members = [];
+        cat.members.push(newMember);
+      }
+    });
 
     saveStreamerToDb({
       id: newMember.id,
       name,
       streamer,
       role,
-      category: catId,
-      subgroup: groupId || null,
+      category: primaryAff.category,
+      subgroup: primaryAff.subgroup,
+      affiliations: JSON.stringify(selectedAffiliations),
       badgeColor,
       avatar,
-      displayOrder: targetList.length - 1
+      displayOrder: 0
     });
 
     persistData();
     updateStats();
-    createBackupSnapshot(`인원 추가: ${name} (${streamer})`);
-    showToast(`✓ 새 인원 '${name} (${streamer})' 등록 완료`);
+    createBackupSnapshot(`인원 추가: ${name} (${streamer}) - 소속 ${selectedAffiliations.length}개`);
+    showToast(`✓ 새 인원 '${name} (${streamer})' 등록 완료 (${selectedAffiliations.length}개 소속)`);
   }
 
   closeMemberModal();
@@ -584,17 +811,19 @@ function handleSaveMember(e) {
 function deleteMember(memberId) {
   if (!isAdmin()) return;
 
-  const loc = findMemberLocation(memberId);
-  if (!loc) return;
+  const allLocs = findAllMemberLocations(memberId);
+  if (allLocs.length === 0) return;
 
-  const targetName = `${loc.member.name} (${loc.member.streamer})`;
-  if (!confirm(`'${targetName}' 인원을 삭제하시겠습니까?`)) return;
+  const targetName = `${allLocs[0].member.name} (${allLocs[0].member.streamer})`;
+  if (!confirm(`'${targetName}' 인원을 전체 소속에서 삭제하시겠습니까?`)) return;
 
-  if (!loc.category.hasSubgroups) {
-    loc.category.members = loc.category.members.filter(m => m.id !== memberId);
-  } else if (loc.group) {
-    loc.group.members = loc.group.members.filter(m => m.id !== memberId);
-  }
+  allLocs.forEach(loc => {
+    if (!loc.category.hasSubgroups) {
+      loc.category.members = loc.category.members.filter(m => m.id !== memberId);
+    } else if (loc.group) {
+      loc.group.members = loc.group.members.filter(m => m.id !== memberId);
+    }
+  });
 
   if (state.currentMember?.id === memberId) state.currentMember = null;
 

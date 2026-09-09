@@ -1,5 +1,6 @@
 async function initializeApplication() {
   loadStoredAuth();
+  loadStoredData();
   initBackupStorage();
   setupEventListeners();
 
@@ -19,6 +20,14 @@ async function initializeApplication() {
     }
   } catch (e) {}
 
+  // 1. 서버(DB/백업)에 영구 보관된 카테고리 및 조직 순서 구조 동기화
+  try {
+    await fetchCategoryStructure();
+  } catch (e) {
+    console.warn("카테고리/조직 구조 서버 동기화 건너뜀 (로컬 캐시 사용):", e);
+  }
+
+  // 2. DB 스트리머 및 영상 데이터 로드
   let loadedFromDb = false;
   try {
     const dbStreamers = await fetchStreamersFromDb();
@@ -39,8 +48,8 @@ async function initializeApplication() {
     console.warn("DB 연결 대기 중 (오프라인 캐시 사용):", e);
   }
 
-  if (!loadedFromDb) {
-    loadStoredData();
+  if (typeof restoreNavigationState === "function") {
+    restoreNavigationState();
   }
 
   renderHeaderAuth();

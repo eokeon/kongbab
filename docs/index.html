@@ -90,8 +90,8 @@
     </div>
   </footer>
 
-  <div id="login-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-md shadow-2xl p-6 md:p-8 flex flex-col">
+  <div id="login-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4 select-none" draggable="false">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-md shadow-2xl p-6 md:p-8 flex flex-col select-none" draggable="false">
       <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-6">
         <div class="flex items-center gap-2.5">
           <div class="w-10 h-10 rounded-2xl bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-500">
@@ -158,8 +158,8 @@
     </div>
   </div>
 
-  <div id="video-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 flex flex-col">
+  <div id="video-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4 select-none" draggable="false">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 flex flex-col select-none" draggable="false">
       <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-5">
         <div>
           <h3 id="video-modal-title" class="text-xl font-bold text-white">영상 추가</h3>
@@ -200,8 +200,8 @@
           </p>
         </div>
 
-        <div id="video-modal-thumb-preview" class="hidden items-center gap-3 bg-zinc-950 p-2.5 rounded-xl border border-zinc-800">
-          <img id="video-modal-thumb-img" src="" class="w-24 aspect-video rounded-lg object-cover bg-black flex-shrink-0" />
+        <div id="video-modal-thumb-preview" class="hidden items-center gap-3 bg-zinc-950 p-2.5 rounded-xl border border-zinc-800 select-none">
+          <img id="video-modal-thumb-img" src="" draggable="false" class="w-24 aspect-video rounded-lg object-cover bg-black flex-shrink-0" />
           <div class="flex-1 min-w-0">
             <div id="video-modal-thumb-status" class="text-xs text-emerald-400 font-medium">✓ 유튜브 썸네일 인식 성공</div>
             <div id="video-modal-thumb-subtext" class="text-[11px] text-zinc-400 mt-0.5 truncate hidden"></div>
@@ -233,25 +233,14 @@
           />
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-zinc-300 mb-1">날짜</label>
-            <input 
-              type="text" 
-              id="video-form-date" 
-              value="2026.09.08" 
-              class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
-            />
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-zinc-300 mb-1">간단 설명</label>
-            <input 
-              type="text" 
-              id="video-form-desc" 
-              placeholder="영상 메모 및 설명" 
-              class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
-            />
-          </div>
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">날짜</label>
+          <input 
+            type="text" 
+            id="video-form-date" 
+            value="2026.09.08" 
+            class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
+          />
         </div>
 
         <div class="pt-4 flex items-center justify-end gap-2 border-t border-zinc-800 mt-6">
@@ -273,8 +262,8 @@
     </div>
   </div>
 
-  <div id="member-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 flex flex-col">
+  <div id="member-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4 select-none" draggable="false">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 flex flex-col select-none" draggable="false">
       <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-5">
         <div>
           <h3 id="member-modal-title" class="text-xl font-bold text-white">인원 추가</h3>
@@ -286,48 +275,84 @@
       <form onsubmit="handleSaveMember(event)" class="space-y-4">
         <input type="hidden" id="member-form-id" value="" />
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-zinc-300 mb-1">카테고리 <span class="text-red-500">*</span></label>
-            <select 
-              id="member-form-category" 
-              onchange="handleMemberCategoryChange(this.value)"
-              class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500"
-            >
-              <option value="police">👮‍♂️ 경찰</option>
-              <option value="ems">🚑 EMS</option>
-              <option value="gang">💀 갱단</option>
-              <option value="business">🏢 사업체</option>
-              <option value="press">📰 기자</option>
-              <option value="citizen">👥 시민</option>
-            </select>
+        <div class="bg-zinc-950/70 border border-zinc-800/80 rounded-2xl p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-bold text-zinc-200">
+              소속 선택 <span class="text-red-400">*</span>
+              <span class="text-[11px] font-normal text-amber-400 ml-1">(겸직 가능 · 다중 선택)</span>
+            </label>
+            <span id="member-form-selected-summary" class="text-[11px] text-zinc-400 font-medium truncate max-w-[220px] text-right">선택됨: 없음</span>
           </div>
-          <div id="member-form-group-container" class="hidden">
-            <label class="block text-xs font-semibold text-zinc-300 mb-1">세부 소속 조직 <span class="text-red-500">*</span></label>
-            <select 
-              id="member-form-group" 
-              class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500"
-            ></select>
+
+          <!-- 6개 카테고리 체크박스 그리드 -->
+          <div class="grid grid-cols-3 gap-2">
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-blue-500/60 cursor-pointer transition-all select-none">
+              <input type="checkbox" id="aff-check-police" value="police" onchange="handleAffiliationCheckboxChange()" class="rounded border-zinc-700 text-blue-600 focus:ring-0 cursor-pointer w-4 h-4">
+              <span class="text-xs font-semibold text-zinc-200">👮‍♂️ 경찰</span>
+            </label>
+
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-teal-500/60 cursor-pointer transition-all select-none">
+              <input type="checkbox" id="aff-check-ems" value="ems" onchange="handleAffiliationCheckboxChange()" class="rounded border-zinc-700 text-teal-600 focus:ring-0 cursor-pointer w-4 h-4">
+              <span class="text-xs font-semibold text-zinc-200">🚑 EMS</span>
+            </label>
+
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-sky-500/60 cursor-pointer transition-all select-none">
+              <input type="checkbox" id="aff-check-press" value="press" onchange="handleAffiliationCheckboxChange()" class="rounded border-zinc-700 text-sky-600 focus:ring-0 cursor-pointer w-4 h-4">
+              <span class="text-xs font-semibold text-zinc-200">📰 기자</span>
+            </label>
+
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-purple-500/60 cursor-pointer transition-all select-none">
+              <input type="checkbox" id="aff-check-citizen" value="citizen" onchange="handleAffiliationCheckboxChange()" class="rounded border-zinc-700 text-purple-600 focus:ring-0 cursor-pointer w-4 h-4">
+              <span class="text-xs font-semibold text-zinc-200">👥 시민</span>
+            </label>
+
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-red-500/60 cursor-pointer transition-all select-none">
+              <input type="checkbox" id="aff-check-gang" value="gang" onchange="handleAffiliationCheckboxChange()" class="rounded border-zinc-700 text-red-600 focus:ring-0 cursor-pointer w-4 h-4">
+              <span class="text-xs font-semibold text-zinc-200">💀 갱단</span>
+            </label>
+
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-amber-500/60 cursor-pointer transition-all select-none">
+              <input type="checkbox" id="aff-check-business" value="business" onchange="handleAffiliationCheckboxChange()" class="rounded border-zinc-700 text-amber-600 focus:ring-0 cursor-pointer w-4 h-4">
+              <span class="text-xs font-semibold text-zinc-200">🏢 사업체</span>
+            </label>
+          </div>
+
+          <!-- 갱단 세부 조직 선택 패널 (갱단 체크 시 열림) -->
+          <div id="aff-gang-panel" class="hidden p-3 bg-red-950/30 border border-red-800/50 rounded-xl space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-red-300">💀 소속 갱단 선택</span>
+              <span class="text-[10px] text-zinc-400">하나 이상 선택 가능</span>
+            </div>
+            <div id="aff-gang-chips" class="grid grid-cols-3 gap-1.5 max-h-36 overflow-y-auto pr-1"></div>
+          </div>
+
+          <!-- 사업체 세부 조직 선택 패널 (사업체 체크 시 열림) -->
+          <div id="aff-business-panel" class="hidden p-3 bg-amber-950/30 border border-amber-800/50 rounded-xl space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-amber-300">🏢 소속 사업체 선택</span>
+              <span class="text-[10px] text-zinc-400">하나 이상 선택 가능</span>
+            </div>
+            <div id="aff-business-chips" class="grid grid-cols-2 gap-1.5 max-h-36 overflow-y-auto pr-1"></div>
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-zinc-300 mb-1">RP 캐릭터 이름 <span class="text-red-500">*</span></label>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">스트리머명 <span class="text-red-500">*</span></label>
             <input 
               type="text" 
-              id="member-form-name" 
-              placeholder="예: 강철수, 홍길동" 
+              id="member-form-streamer" 
+              placeholder="예: 괴물쥐, 핑맨, 침착맨" 
               required
               class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
             />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-zinc-300 mb-1">내부 스트리머명 <span class="text-red-500">*</span></label>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">RP 캐릭터 이름 <span class="text-red-500">*</span></label>
             <input 
               type="text" 
-              id="member-form-streamer" 
-              placeholder="예: 스트리머A, 침착맨" 
+              id="member-form-name" 
+              placeholder="예: 장지환, 래퍼핑, 홍길동" 
               required
               class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
             />
@@ -376,7 +401,8 @@
             <img 
               id="member-form-avatar-preview" 
               src="assets/default-avatar.svg" 
-              class="w-11 h-11 rounded-xl object-cover border border-zinc-700 bg-zinc-800 flex-shrink-0"
+              draggable="false"
+              class="w-11 h-11 rounded-xl object-cover border border-zinc-700 bg-zinc-800 flex-shrink-0 select-none"
               alt="아바타 미리보기"
             />
           </div>
@@ -404,13 +430,110 @@
     </div>
   </div>
 
+  <!-- 백업 관리 모달 -->
+  <div id="backup-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4 select-none" draggable="false">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 flex flex-col select-none" draggable="false">
+      <!-- 헤더 -->
+      <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-5">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-xl shadow-md">
+            💾
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+              <span>DB / 백업 관리 센터</span>
+              <span id="backup-modal-count-badge" class="text-xs px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/40 font-bold"></span>
+            </h3>
+            <p class="text-xs text-zinc-400 mt-0.5">데이터 자동 백업 내역 조회, 즉시 저장 및 특정 시점 복원</p>
+          </div>
+        </div>
+        <button onclick="closeBackupModal()" class="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors flex-shrink-0">✕</button>
+      </div>
 
-  <script src="./js/state.js"></script>
-  <script src="./js/api.js"></script>
-  <script src="./js/drag-drop.js"></script>
-  <script src="./js/backup.js"></script>
-  <script src="./js/admin.js"></script>
-  <script src="./js/render.js"></script>
-  <script src="./js/app.js"></script>
+      <!-- 정보 바 (저장 위치) -->
+      <div class="bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-4 mb-5 space-y-2">
+        <div class="flex items-center justify-between text-xs flex-wrap gap-2">
+          <span class="text-zinc-400 flex items-center gap-1.5 font-medium">
+            <span>📁</span>
+            <span>지정 백업 경로:</span>
+          </span>
+          <span id="backup-modal-dir-path" class="font-mono text-amber-300 font-semibold truncate max-w-md"></span>
+        </div>
+        <div class="flex items-center justify-between text-[11px] text-zinc-500 pt-1 border-t border-zinc-800/50">
+          <span>최대 20개 자동 순환 보관 (초과 시 오래된 백업부터 자동 정리)</span>
+          <span id="backup-modal-server-status" class="text-emerald-400 font-semibold">🟢 백엔드 정상 연동 중</span>
+        </div>
+      </div>
+
+      <!-- 즉시 저장 섹션 -->
+      <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-4 mb-5">
+        <h4 class="text-xs font-bold text-zinc-300 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+          <span>⚡</span>
+          <span>현재 상태 즉시 백업</span>
+        </h4>
+        <div class="flex gap-2">
+          <input 
+            type="text" 
+            id="backup-manual-reason" 
+            placeholder="백업 사유 또는 메모 입력 (예: 갱단 순서 조정 완료 후)" 
+            class="flex-1 px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+          />
+          <button 
+            type="button" 
+            onclick="handleManualBackupFromModal()" 
+            class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-emerald-600/20 cursor-pointer flex items-center gap-1.5 flex-shrink-0"
+          >
+            <span>💾 즉시 저장</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 저장 기록 & 불러오기 섹션 -->
+      <div class="flex-1 flex flex-col min-h-0">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+            <span>📋</span>
+            <span>백업 저장 기록</span>
+            <span id="backup-modal-list-count" class="text-amber-400 text-xs font-bold ml-1"></span>
+          </h4>
+          <div class="flex items-center gap-2">
+            <label class="cursor-pointer inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-[11px] font-medium border border-zinc-700/60 transition-colors" title="외부 백업 JSON 파일 직접 복원">
+              <span>📤 파일 복원</span>
+              <input type="file" id="backup-file-upload-input" accept=".json" class="hidden" onchange="handleBackupFileUpload(event)" />
+            </label>
+            <button onclick="loadAndRenderBackupList()" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-[11px] font-medium border border-zinc-700/60 transition-colors cursor-pointer" title="목록 새로고침">
+              <span>🔄 새로고침</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 백업 목록 컨테이너 -->
+        <div id="backup-modal-list-container" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+          <div class="text-center py-8 text-zinc-500 text-xs">
+            백업 기록을 불러오는 중...
+          </div>
+        </div>
+      </div>
+
+      <!-- 모달 하단 닫기 버튼 -->
+      <div class="pt-4 border-t border-zinc-800 mt-5 flex justify-end">
+        <button 
+          type="button" 
+          onclick="closeBackupModal()" 
+          class="px-5 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+        >
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/state.js?v=20260909_03"></script>
+  <script src="./js/api.js?v=20260909_03"></script>
+  <script src="./js/drag-drop.js?v=20260909_03"></script>
+  <script src="./js/backup.js?v=20260909_03"></script>
+  <script src="./js/admin.js?v=20260909_03"></script>
+  <script src="./js/render.js?v=20260909_03"></script>
+  <script src="./js/app.js?v=20260909_03"></script>
 </body>
 </html>

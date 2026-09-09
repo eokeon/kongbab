@@ -2,6 +2,10 @@ let cardDragSource = null;
 let isDraggingCard = false;
 
 function handleCardDragStart(e, type, id) {
+  if (typeof isAdmin === "function" && !isAdmin()) {
+    e.preventDefault();
+    return false;
+  }
   isDraggingCard = true;
   cardDragSource = { type, id };
   if (e.dataTransfer) {
@@ -13,6 +17,7 @@ function handleCardDragStart(e, type, id) {
 }
 
 function handleCardDragOver(e) {
+  if (typeof isAdmin === "function" && !isAdmin()) return;
   e.preventDefault();
   if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
   const card = e.currentTarget;
@@ -41,11 +46,12 @@ function clearCardDragOverStyles() {
   document.querySelectorAll(".card-drag-source").forEach(el => el.classList.remove("card-drag-source"));
 }
 
-function handleCardDrop(e, type, targetId) {
+async function handleCardDrop(e, type, targetId) {
   e.preventDefault();
   e.stopPropagation();
   clearCardDragOverStyles();
 
+  if (typeof isAdmin === "function" && !isAdmin()) return;
   if (!cardDragSource || cardDragSource.type !== type || cardDragSource.id === targetId) return;
   const sourceId = cardDragSource.id;
 
@@ -83,10 +89,31 @@ function handleCardDrop(e, type, targetId) {
   const [moved] = list.splice(fromIdx, 1);
   list.splice(toIdx, 0, moved);
 
+  // 변경된 순서에 맞게 displayOrder 즉시 재부여
+  if (type === "direct-member" || type === "group-member") {
+    list.forEach((m, idx) => { m.displayOrder = idx; });
+  } else if (type === "video") {
+    list.forEach((v, idx) => { v.displayOrder = idx; });
+  }
+
   const reason = `${reasonPrefix} ${getName(moved)} (${fromIdx + 1}번 → ${toIdx + 1}번)`;
   persistData();
-  createBackupSnapshot(reason, false);
-  syncAllStreamersToDb(extractAllStreamersFromKongbabData());
-  showToast(`✓ 순서가 변경되어 저장되었습니다.<br><span class="text-[11px] text-amber-300">${reason}</span>`);
   renderContent();
+
+  const syncPromises = [];
+  if (type === "group" && typeof saveCategoryStructureToDb === "function") {
+    syncPromises.push(saveCategoryStructureToDb(KONGBAB_DATA.categories));
+  }
+  if (typeof syncAllStreamersToDb === "function") {
+    syncPromises.push(syncAllStreamersToDb(extractAllStreamersFromKongbabData()));
+  }
+  createBackupSnapshot(reason, false);
+
+  try {
+    await Promise.all(syncPromises);
+  } catch (err) {
+    console.error("순서 변경 동기화 오류:", err);
+  }
+
+  showToast(`✓ 순서가 변경되어 저장되었습니다.<br><span class="text-[11px] text-amber-300">${reason}</span>`);
 }
