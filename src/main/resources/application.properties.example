@@ -26,4 +26,4 @@ server.servlet.session.cookie.max-age=3600
 
 # YouTube Data API v3 설정 (Google Cloud Console에서 발급받은 API 키 입력)
 # 미등록 시 oEmbed 방식으로 기본 정보(제목 등)를 자동 조회합니다.
-youtube.api.key=
+youtube.api.key=111
