@@ -77,10 +77,13 @@ public class BackupController {
             Files.writeString(backupPath, payload, StandardCharsets.UTF_8);
             Files.writeString(latestPath, payload, StandardCharsets.UTF_8);
 
-            // GitHub Pages 배포용 루트 streamers.json에만 단일 저장
+            // static 리소스 폴더의 streamers.json에 저장
             try {
-                Path rootPath = Paths.get("streamers.json");
-                Files.writeString(rootPath, payload, StandardCharsets.UTF_8);
+                Path staticPath = Paths.get("src", "main", "resources", "static", "streamers.json");
+                if (!Files.exists(staticPath.getParent())) {
+                    Files.createDirectories(staticPath.getParent());
+                }
+                Files.writeString(staticPath, payload, StandardCharsets.UTF_8);
             } catch (Exception ignored) {}
 
             cleanOldBackups(dir);
