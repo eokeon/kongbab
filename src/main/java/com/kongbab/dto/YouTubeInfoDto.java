@@ -14,6 +14,7 @@ public class YouTubeInfoDto {
     private String videoId;
     private String title;
     private String publishedDate;
+    private String duration;
     private String channelTitle;
     private String thumbnailUrl;
     private String source;

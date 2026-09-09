@@ -114,6 +114,7 @@ public class StreamerService {
         video.setUrl(dto.getUrl());
         video.setVideoType(dto.getVideoType() != null ? dto.getVideoType() : "clip");
         video.setDate(dto.getDate());
+        video.setDuration(dto.getDuration());
         video.setDescription(dto.getDescription());
         if (dto.getDisplayOrder() != null) {
             video.setDisplayOrder(dto.getDisplayOrder());
@@ -209,6 +210,7 @@ public class StreamerService {
                     v.setUrl(vDto.getUrl());
                     v.setVideoType(vDto.getVideoType() != null ? vDto.getVideoType() : "clip");
                     v.setDate(vDto.getDate());
+                    v.setDuration(vDto.getDuration());
                     v.setDescription(vDto.getDescription());
                     v.setDisplayOrder(vDto.getDisplayOrder() != null ? vDto.getDisplayOrder() : vOrder++);
                     v.setStreamer(streamer);

@@ -30,6 +30,8 @@ public class Video {
 
     private String date;
 
+    private String duration;
+
     @Column(length = 1000)
     private String description;
 

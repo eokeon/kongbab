@@ -14,6 +14,7 @@ public class VideoDto {
     private String url;
     private String videoType;
     private String date;
+    private String duration;
     private String description;
     private Integer displayOrder;
 
@@ -25,6 +26,7 @@ public class VideoDto {
                 .url(entity.getUrl())
                 .videoType(entity.getVideoType())
                 .date(entity.getDate())
+                .duration(entity.getDuration())
                 .description(entity.getDescription())
                 .displayOrder(entity.getDisplayOrder())
                 .build();

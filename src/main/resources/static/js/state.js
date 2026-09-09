@@ -280,3 +280,52 @@ function updateStats() {
     `;
   }
 }
+
+// 날짜 문자열을 밀리초 타임스탬프로 변환 (빠른 날짜일수록 작은 값)
+function parseDateToTimestamp(dateStr) {
+  if (!dateStr || typeof dateStr !== "string") return Infinity;
+  const cleaned = dateStr.trim();
+  if (!cleaned) return Infinity;
+
+  // YYYY.MM.DD or YYYY-MM-DD or YYYY/MM/DD (공백 허용)
+  const match = cleaned.match(/^(\d{4})[.\-\/\s]+(\d{1,2})[.\-\/\s]+(\d{1,2})/);
+  if (match) {
+    const y = parseInt(match[1], 10);
+    const m = parseInt(match[2], 10) - 1;
+    const d = parseInt(match[3], 10);
+    const dateObj = new Date(y, m, d);
+    if (!isNaN(dateObj.getTime())) {
+      return dateObj.getTime();
+    }
+  }
+
+  const parsed = Date.parse(cleaned.replace(/[.-]/g, "/"));
+  return isNaN(parsed) ? Infinity : parsed;
+}
+
+// 영상 목록을 게시일자가 빠른 순(과거순/오름차순)으로 정렬하고 displayOrder를 0부터 순차 부여
+function sortVideosByDateAsc(videos) {
+  if (!Array.isArray(videos)) return videos;
+  videos.sort((a, b) => {
+    const timeA = parseDateToTimestamp(a.date);
+    const timeB = parseDateToTimestamp(b.date);
+    if (timeA !== timeB) {
+      return timeA - timeB; // 빠른 날짜가 먼저 (오름차순)
+    }
+    // 날짜가 동일할 경우 기존 displayOrder 순서 유지
+    const orderA = a.displayOrder != null ? a.displayOrder : 999999;
+    const orderB = b.displayOrder != null ? b.displayOrder : 999999;
+    if (orderA !== orderB) {
+      return orderA - orderB;
+    }
+    return (a.id || "").localeCompare(b.id || "");
+  });
+
+  // 0부터 순차적으로 displayOrder 재부여
+  videos.forEach((v, idx) => {
+    v.displayOrder = idx;
+  });
+
+  return videos;
+}
+

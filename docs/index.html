@@ -233,14 +233,26 @@
           />
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-zinc-300 mb-1">날짜</label>
-          <input 
-            type="text" 
-            id="video-form-date" 
-            value="2026.09.08" 
-            class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
-          />
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">업로드 날짜</label>
+            <input 
+              type="text" 
+              id="video-form-date" 
+              value="2026.09.08" 
+              placeholder="예: 2026.09.08"
+              class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">영상 길이</label>
+            <input 
+              type="text" 
+              id="video-form-duration" 
+              placeholder="예: 1:11:11, 14:20" 
+              class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors font-mono"
+            />
+          </div>
         </div>
 
         <div class="pt-4 flex items-center justify-end gap-2 border-t border-zinc-800 mt-6">

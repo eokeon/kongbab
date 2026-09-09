@@ -346,7 +346,8 @@ function renderMemberVideos(container) {
   `;
 
   const admin = isAdmin();
-  let videosHtml = displayedVideos.map(video => {
+  let videosHtml = displayedVideos.map((video, vIndex) => {
+    const videoNum = vIndex + 1;
     const thumbUrl = getYoutubeThumbnail(video.url);
     const isFull = isFullVideo(video);
     const dragAttrs = admin ? `
@@ -382,6 +383,10 @@ function renderMemberVideos(container) {
               <span>${isFull ? '📹 풀 영상' : '🎬 편집 영상'}</span>
             </div>
 
+            <div class="absolute top-2.5 right-2.5 bg-zinc-950/90 border border-zinc-700/80 backdrop-blur-md text-amber-300 text-xs font-black px-2.5 py-1 rounded-lg shadow-md z-10 flex items-center gap-0.5 select-none font-mono" title="${videoNum}번째 영상">
+              <span>${videoNum}번</span>
+            </div>
+
             <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 z-10">
               <div class="w-14 h-14 rounded-2xl bg-red-600 text-white flex items-center justify-center shadow-2xl transform group-hover:scale-110 transition-transform flex-shrink-0">
                 <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
@@ -392,28 +397,41 @@ function renderMemberVideos(container) {
               </span>
             </div>
 
-            <div class="absolute bottom-2 right-2 bg-black/85 backdrop-blur-sm text-[11px] font-semibold text-zinc-300 px-2 py-0.5 rounded z-10">
-              ${video.date || "영상"}
+            ${video.date ? `
+              <div class="absolute bottom-2 left-2 bg-black/85 backdrop-blur-sm text-[11px] font-medium text-zinc-300 px-2 py-0.5 rounded-md z-10 flex items-center gap-1 select-none shadow-sm">
+                <svg class="w-3 h-3 text-zinc-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <span>${video.date}</span>
+              </div>
+            ` : `
+              <div class="absolute bottom-2 left-2 bg-black/85 backdrop-blur-sm text-[11px] font-medium text-zinc-400 px-2 py-0.5 rounded-md z-10 flex items-center gap-1 select-none shadow-sm">
+                <span>날짜 미지정</span>
+              </div>
+            `}
+
+            <div class="absolute bottom-2 right-2 bg-black/90 backdrop-blur-sm text-[11px] font-bold font-mono text-zinc-100 px-2 py-0.5 rounded-md z-10 shadow-sm flex items-center gap-1 select-none">
+              ${video.duration ? `<span>${video.duration}</span>` : `<span>영상</span>`}
             </div>
           </a>
 
-          <div class="p-5">
-            <a 
-              href="${video.url}" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              draggable="false"
-              onclick="if (isDraggingCard) { event.preventDefault(); return false; }"
-              class="block text-base font-bold text-white hover:text-red-400 transition-colors line-clamp-2 leading-snug cursor-pointer mb-2"
-              title="${video.title}"
-            >
-              ${video.title}
-            </a>
-            ${video.description ? `
-              <p class="text-xs text-zinc-400 line-clamp-2 leading-relaxed mb-2">
-                ${video.description}
-              </p>
-            ` : ''}
+          <div class="p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <a 
+                href="${video.url}" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                draggable="false"
+                onclick="if (isDraggingCard) { event.preventDefault(); return false; }"
+                class="block text-base font-bold text-white hover:text-red-400 transition-colors line-clamp-2 leading-snug cursor-pointer mb-2"
+                title="${video.title}"
+              >
+                ${video.title}
+              </a>
+              ${video.description ? `
+                <p class="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                  ${video.description}
+                </p>
+              ` : ''}
+            </div>
           </div>
         </div>
 
@@ -521,6 +539,12 @@ function renderMemberVideos(container) {
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             <span>+ 영상 추가</span>
           </button>
+          ${(allVideos.length > 1) ? `
+            <button onclick="sortMemberVideosByDate()" class="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white text-xs font-bold transition-all border border-zinc-700/80 cursor-pointer shadow-md" title="모든 영상을 게시일자가 빠른 순(1번부터)으로 재정렬">
+              <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              <span>📅 날짜순 정렬</span>
+            </button>
+          ` : ''}
         ` : ''}
       </div>
     </div>

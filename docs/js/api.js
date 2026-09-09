@@ -278,6 +278,22 @@ async function syncAllStreamersToDb(streamersList) {
   return null;
 }
 
+function formatIsoDuration(iso) {
+  if (!iso) return "";
+  const match = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return "";
+  const hours = parseInt(match[1] || 0, 10);
+  const minutes = parseInt(match[2] || 0, 10);
+  const seconds = parseInt(match[3] || 0, 10);
+  const secStr = String(seconds).padStart(2, '0');
+  if (hours > 0) {
+    const minStr = String(minutes).padStart(2, '0');
+    return `${hours}:${minStr}:${secStr}`;
+  } else {
+    return `${minutes}:${secStr}`;
+  }
+}
+
 async function apiGetYouTubeInfo(url) {
   if (!url) return { success: false, message: "URL이 없습니다." };
 
@@ -300,25 +316,28 @@ async function apiGetYouTubeInfo(url) {
   const videoId = typeof extractYoutubeId === "function" ? extractYoutubeId(url) : null;
   if (!videoId) return { success: false, message: "유효한 유튜브 ID가 아닙니다." };
 
-  // 사용자 로컬 API 키가 있다면 사용
-  const localKey = localStorage.getItem("youtube_api_key");
+  // 사용자 로컬 API 키 또는 기본 등록 키 사용
+  const localKey = localStorage.getItem("youtube_api_key") || "AIzaSyAyY4g9-iwjwQNXb5F9Xx0LLGtLUEpowl8";
   if (localKey) {
     try {
-      const apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${localKey.trim()}`;
+      const apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoId}&key=${localKey.trim()}`;
       const res = await fetch(apiUrl);
       if (res.ok) {
         const data = await res.json();
         if (data.items && data.items.length > 0) {
           const snip = data.items[0].snippet;
+          const cd = data.items[0].contentDetails;
           let pubDate = "";
           if (snip.publishedAt) {
             pubDate = snip.publishedAt.substring(0, 10).replace(/-/g, ".");
           }
+          const duration = cd ? formatIsoDuration(cd.duration) : "";
           return {
             success: true,
             videoId: videoId,
             title: snip.title || "",
             publishedDate: pubDate,
+            duration: duration,
             channelTitle: snip.channelTitle || "",
             thumbnailUrl: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
             source: "api_client"
@@ -383,7 +402,15 @@ function applyStreamersToKongbabData(dbStreamers) {
     }
 
     const videosList = Array.isArray(s.videos) ? [...s.videos] : [];
-    videosList.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
+    videosList.sort((a, b) => {
+      const orderA = a.displayOrder != null ? a.displayOrder : 999999;
+      const orderB = b.displayOrder != null ? b.displayOrder : 999999;
+      if (orderA !== orderB) return orderA - orderB;
+      const timeA = typeof parseDateToTimestamp === "function" ? parseDateToTimestamp(a.date) : 0;
+      const timeB = typeof parseDateToTimestamp === "function" ? parseDateToTimestamp(b.date) : 0;
+      if (timeA !== timeB) return timeA - timeB;
+      return (a.id || "").localeCompare(b.id || "");
+    });
 
     const memberObj = {
       id: s.id,

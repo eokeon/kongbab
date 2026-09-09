@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
@@ -28,6 +29,23 @@ public class YouTubeService {
     );
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+
+    public static String formatDuration(String isoDuration) {
+        if (isoDuration == null || isoDuration.isBlank()) return "";
+        try {
+            Duration d = Duration.parse(isoDuration);
+            long hours = d.toHours();
+            int minutes = d.toMinutesPart();
+            int seconds = d.toSecondsPart();
+            if (hours > 0) {
+                return String.format("%d:%02d:%02d", hours, minutes, seconds);
+            } else {
+                return String.format("%d:%02d", minutes, seconds);
+            }
+        } catch (Exception e) {
+            return "";
+        }
+    }
 
     public YouTubeService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
@@ -65,7 +83,7 @@ public class YouTubeService {
         // 1. YouTube Data API v3 시도 (API 키가 등록되어 있는 경우)
         if (apiKey != null && !apiKey.isBlank() && !apiKey.equalsIgnoreCase("YOUR_API_KEY")) {
             try {
-                String apiUrl = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + videoId + "&key=" + apiKey.trim();
+                String apiUrl = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=" + videoId + "&key=" + apiKey.trim();
                 String responseBody = restClient.get()
                         .uri(apiUrl)
                         .retrieve()
@@ -74,10 +92,15 @@ public class YouTubeService {
                 JsonNode root = objectMapper.readTree(responseBody);
                 JsonNode items = root.path("items");
                 if (items.isArray() && items.size() > 0) {
-                    JsonNode snippet = items.get(0).path("snippet");
+                    JsonNode item = items.get(0);
+                    JsonNode snippet = item.path("snippet");
+                    JsonNode contentDetails = item.path("contentDetails");
+
                     String title = snippet.path("title").asText("");
                     String channelTitle = snippet.path("channelTitle").asText("");
                     String publishedAtRaw = snippet.path("publishedAt").asText("");
+                    String durationRaw = contentDetails.path("duration").asText("");
+                    String duration = formatDuration(durationRaw);
 
                     String publishedDate = "";
                     if (!publishedAtRaw.isBlank()) {
@@ -91,7 +114,7 @@ public class YouTubeService {
                         }
                     }
 
-                    return YouTubeInfoDto.builder()
+                    YouTubeInfoDto info = YouTubeInfoDto.builder()
                             .success(true)
                             .videoId(videoId)
                             .title(title)
@@ -101,8 +124,12 @@ public class YouTubeService {
                             .source("api")
                             .message("YouTube Data API로 정보를 성공적으로 가져왔습니다.")
                             .build();
+                    try {
+                        info.setDuration(duration);
+                    } catch (Throwable ignored) {}
+                    return info;
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 log.warn("YouTube Data API v3 호출 실패 (videoId: {}): {}", videoId, e.getMessage());
             }
         }

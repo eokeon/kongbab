@@ -95,6 +95,7 @@ function openVideoModal(mode = 'add', videoId = null) {
   const formUrl = document.getElementById("video-form-url");
   const formTitle = document.getElementById("video-form-title");
   const formDate = document.getElementById("video-form-date");
+  const formDuration = document.getElementById("video-form-duration");
   const radioClip = document.querySelector('input[name="video-form-type"][value="clip"]');
   const radioFull = document.querySelector('input[name="video-form-type"][value="full"]');
 
@@ -108,6 +109,7 @@ function openVideoModal(mode = 'add', videoId = null) {
     formUrl.value = video.url || "";
     formTitle.value = video.title || "";
     formDate.value = video.date || getTodayDateString();
+    if (formDuration) formDuration.value = video.duration || "";
     if (isFullVideo(video)) {
       if (radioFull) radioFull.checked = true;
     } else {
@@ -121,6 +123,7 @@ function openVideoModal(mode = 'add', videoId = null) {
     formUrl.value = "";
     formTitle.value = "";
     formDate.value = getTodayDateString();
+    if (formDuration) formDuration.value = "";
     if (state.currentVideoTab === 'full') {
       if (radioFull) radioFull.checked = true;
     } else {
@@ -201,10 +204,11 @@ async function fetchAndFillYouTubeInfo(url, forceOverwrite = false) {
   const subtextEl = document.getElementById("video-modal-thumb-subtext");
   const titleInput = document.getElementById("video-form-title");
   const dateInput = document.getElementById("video-form-date");
+  const durationInput = document.getElementById("video-form-duration");
 
   if (btnText) btnText.textContent = "조회 중...";
   if (statusEl) {
-    statusEl.textContent = "⏳ 유튜브 영상 정보(제목, 날짜) 불러오는 중...";
+    statusEl.textContent = "⏳ 유튜브 영상 정보(제목, 날짜, 영상 길이) 불러오는 중...";
     statusEl.className = "text-xs text-amber-400 font-medium";
   }
 
@@ -220,9 +224,13 @@ async function fetchAndFillYouTubeInfo(url, forceOverwrite = false) {
       if (dateInput && info.publishedDate && (forceOverwrite || !dateInput.value.trim() || dateInput.value === getTodayDateString())) {
         dateInput.value = info.publishedDate;
       }
+      if (durationInput && info.duration && (forceOverwrite || !durationInput.value.trim())) {
+        durationInput.value = info.duration;
+      }
 
       if (statusEl) {
-        statusEl.textContent = `✓ 제목 및 업로드 날짜 자동 입력 완료 (${info.publishedDate || '성공'})`;
+        const durText = info.duration ? ` · 길이: ${info.duration}` : "";
+        statusEl.textContent = `✓ 제목, 업로드 날짜, 영상 길이 자동 입력 완료 (${info.publishedDate || '성공'}${durText})`;
         statusEl.className = "text-xs text-emerald-400 font-medium";
       }
 
@@ -230,12 +238,13 @@ async function fetchAndFillYouTubeInfo(url, forceOverwrite = false) {
         let sub = "";
         if (info.channelTitle) sub += `채널: ${info.channelTitle}`;
         if (info.publishedDate) sub += (sub ? " | " : "") + `업로드: ${info.publishedDate}`;
+        if (info.duration) sub += (sub ? " | " : "") + `길이: ${info.duration}`;
         if (sub) {
           subtextEl.textContent = sub;
           subtextEl.classList.remove("hidden");
         }
       }
-      showToast("✓ 유튜브 정보(제목, 날짜)를 불러왔습니다.");
+      showToast(`✓ 유튜브 정보(제목, 날짜${info.duration ? `, 길이 ${info.duration}` : ""})를 불러왔습니다.`);
     } else {
       lastFetchedYoutubeId = null;
       if (statusEl) {
@@ -285,6 +294,8 @@ function handleSaveVideo(e) {
   const url = document.getElementById("video-form-url").value.trim();
   const title = document.getElementById("video-form-title").value.trim();
   const date = document.getElementById("video-form-date").value.trim() || getTodayDateString();
+  const durationInput = document.getElementById("video-form-duration");
+  const duration = durationInput ? durationInput.value.trim() : "";
   const formDesc = document.getElementById("video-form-desc");
   const desc = formDesc ? formDesc.value.trim() : "";
   const typeRadio = document.querySelector('input[name="video-form-type"]:checked');
@@ -307,9 +318,12 @@ function handleSaveVideo(e) {
         title,
         videoType,
         date,
+        duration,
         description: desc
       };
-      savedVideo = state.currentMember.videos[idx];
+      // 수정된 날짜에 맞춰 정렬 유지
+      sortVideosByDateAsc(state.currentMember.videos);
+      savedVideo = state.currentMember.videos.find(v => v.id === editingVideoId);
       showToast("✓ 영상이 수정되었습니다.");
       createBackupSnapshot(`영상 수정: ${state.currentMember.name} - ${title}`);
     }
@@ -320,15 +334,21 @@ function handleSaveVideo(e) {
       url,
       videoType,
       date,
+      duration,
       description: desc
     };
-    state.currentMember.videos.unshift(newVideo);
+    state.currentMember.videos.push(newVideo);
+    // 기본 정렬: 게시일자 빠른 순(오름차순) -> 1번이 가장 빠른 날짜
+    sortVideosByDateAsc(state.currentMember.videos);
     savedVideo = newVideo;
-    showToast("✓ 영상이 등록되었습니다.");
+    showToast("✓ 영상이 등록되었습니다. (게시일자 빠른 순 정렬)");
     createBackupSnapshot(`영상 추가: ${state.currentMember.name} - ${title}`);
   }
 
-  if (savedVideo) {
+  // 변경된 displayOrder 전체 동기화 및 DB 저장
+  if (typeof syncAllStreamersToDb === "function") {
+    syncAllStreamersToDb(extractAllStreamersFromKongbabData());
+  } else if (savedVideo) {
     saveVideoToDb(state.currentMember.id, savedVideo);
   }
 
@@ -351,7 +371,13 @@ function deleteVideo(videoId) {
 
   const deletedTitle = target ? target.title : "";
   state.currentMember.videos = state.currentMember.videos.filter(v => v.id !== videoId);
+  // 남은 영상들 displayOrder 재부여
+  state.currentMember.videos.forEach((v, idx) => { v.displayOrder = idx; });
   deleteVideoFromDb(videoId);
+
+  if (typeof syncAllStreamersToDb === "function") {
+    syncAllStreamersToDb(extractAllStreamersFromKongbabData());
+  }
 
   persistData();
   updateStats();
@@ -361,6 +387,32 @@ function deleteVideo(videoId) {
   const container = document.getElementById("main-content");
   if (container) renderMemberVideos(container);
 }
+
+async function sortMemberVideosByDate() {
+  if (!isAdmin()) return;
+  if (!state.currentMember?.videos || state.currentMember.videos.length <= 1) {
+    showToast("정렬할 영상이 2개 이상 필요합니다.");
+    return;
+  }
+
+  if (!confirm(`"${state.currentMember.streamer}"의 모든 영상을 게시일자가 빠른 순(1번부터)으로 재정렬하시겠습니까?`)) {
+    return;
+  }
+
+  sortVideosByDateAsc(state.currentMember.videos);
+  persistData();
+
+  if (typeof syncAllStreamersToDb === "function") {
+    await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
+  }
+
+  createBackupSnapshot(`영상 날짜순 정렬: ${state.currentMember.name}`);
+  showToast("✓ 게시일자가 빠른 순서(1번부터)로 정렬되었습니다.");
+
+  const container = document.getElementById("main-content");
+  if (container) renderMemberVideos(container);
+}
+
 
 let editingMemberId = null;
 
