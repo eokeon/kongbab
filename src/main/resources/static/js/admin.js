@@ -136,6 +136,12 @@ function openVideoModal(mode = 'add', videoId = null) {
     modal.classList.remove("hidden");
     modal.classList.add("flex");
     document.body.style.overflow = "hidden";
+    lastFetchedYoutubeId = null;
+    const subtextEl = document.getElementById("video-modal-thumb-subtext");
+    if (subtextEl) {
+      subtextEl.textContent = "";
+      subtextEl.classList.add("hidden");
+    }
     if (formUrl) setTimeout(() => formUrl.focus(), 50);
   }
 }
@@ -148,20 +154,130 @@ function closeVideoModal() {
     document.body.style.overflow = "";
   }
   editingVideoId = null;
+  lastFetchedYoutubeId = null;
+  if (youtubeFetchDebounceTimer) {
+    clearTimeout(youtubeFetchDebounceTimer);
+    youtubeFetchDebounceTimer = null;
+  }
+}
+
+let youtubeFetchDebounceTimer = null;
+let lastFetchedYoutubeId = null;
+
+function handleVideoUrlInput(url) {
+  previewVideoModalThumb(url);
+
+  const videoId = extractYoutubeId(url);
+  if (!videoId) {
+    lastFetchedYoutubeId = null;
+    return;
+  }
+
+  // 같은 ID면 중복 호출 방지
+  if (videoId === lastFetchedYoutubeId) return;
+
+  clearTimeout(youtubeFetchDebounceTimer);
+  youtubeFetchDebounceTimer = setTimeout(() => {
+    // 신규 추가 중이거나 제목이 비어있는 경우 자동 입력
+    const titleInput = document.getElementById("video-form-title");
+    const isAddingNew = !editingVideoId;
+    const shouldOverwrite = isAddingNew || (titleInput && !titleInput.value.trim());
+    fetchAndFillYouTubeInfo(url, shouldOverwrite);
+  }, 400);
+}
+
+async function triggerFetchYouTubeInfo() {
+  const urlInput = document.getElementById("video-form-url");
+  if (!urlInput || !urlInput.value.trim()) {
+    showToast("유튜브 URL을 먼저 입력해주세요.");
+    return;
+  }
+  await fetchAndFillYouTubeInfo(urlInput.value.trim(), true);
+}
+
+async function fetchAndFillYouTubeInfo(url, forceOverwrite = false) {
+  const videoId = extractYoutubeId(url);
+  if (!videoId) return;
+
+  const btnText = document.getElementById("btn-fetch-youtube-text");
+  const statusEl = document.getElementById("video-modal-thumb-status");
+  const subtextEl = document.getElementById("video-modal-thumb-subtext");
+  const titleInput = document.getElementById("video-form-title");
+  const dateInput = document.getElementById("video-form-date");
+
+  if (btnText) btnText.textContent = "가져오는 중...";
+  if (statusEl) {
+    statusEl.textContent = "⏳ 유튜브 영상 정보 조회 중...";
+    statusEl.className = "text-xs text-amber-400 font-medium";
+  }
+
+  try {
+    const info = await apiGetYouTubeInfo(url);
+    lastFetchedYoutubeId = videoId;
+
+    if (info && info.success) {
+      if (titleInput && (forceOverwrite || !titleInput.value.trim())) {
+        titleInput.value = info.title || "";
+      }
+      if (dateInput && info.publishedDate && (forceOverwrite || !dateInput.value.trim() || dateInput.value === getTodayDateString())) {
+        dateInput.value = info.publishedDate;
+      }
+
+      if (statusEl) {
+        if (info.source === "api" || info.source === "api_client") {
+          statusEl.textContent = "✓ 제목 및 업로드 날짜 자동 완성 (YouTube API)";
+        } else {
+          statusEl.textContent = "✓ 영상 제목 자동 입력 완료";
+        }
+        statusEl.className = "text-xs text-emerald-400 font-medium";
+      }
+
+      if (subtextEl) {
+        let sub = "";
+        if (info.channelTitle) sub += `채널: ${info.channelTitle}`;
+        if (info.publishedDate) sub += (sub ? " | " : "") + `업로드: ${info.publishedDate}`;
+        if (sub) {
+          subtextEl.textContent = sub;
+          subtextEl.classList.remove("hidden");
+        }
+      }
+      showToast("✓ 유튜브 정보를 불러왔습니다.");
+    } else {
+      if (statusEl) {
+        statusEl.textContent = "✓ 썸네일 인식 완료";
+        statusEl.className = "text-xs text-zinc-400 font-medium";
+      }
+    }
+  } catch (err) {
+    console.error("유튜브 정보 자동 완성 실패:", err);
+    if (statusEl) {
+      statusEl.textContent = "✓ 썸네일 인식 완료";
+      statusEl.className = "text-xs text-zinc-400 font-medium";
+    }
+  } finally {
+    if (btnText) btnText.textContent = "정보 가져오기";
+  }
 }
 
 function previewVideoModalThumb(url) {
   const previewBox = document.getElementById("video-modal-thumb-preview");
   const thumbImg = document.getElementById("video-modal-thumb-img");
+  const statusEl = document.getElementById("video-modal-thumb-status");
+  const subtextEl = document.getElementById("video-modal-thumb-subtext");
   const videoId = extractYoutubeId(url);
 
   if (videoId && previewBox && thumbImg) {
     thumbImg.src = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
     previewBox.classList.remove("hidden");
     previewBox.classList.add("flex");
+    if (statusEl && !statusEl.textContent.includes("자동")) {
+      statusEl.textContent = "✓ 유튜브 썸네일 인식 성공";
+      statusEl.className = "text-xs text-emerald-400 font-medium";
+    }
   } else if (previewBox) {
     previewBox.classList.add("hidden");
     previewBox.classList.remove("flex");
+    if (subtextEl) subtextEl.classList.add("hidden");
   }
 }
 

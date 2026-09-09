@@ -164,6 +164,81 @@ async function syncAllStreamersToDb(streamersList) {
   return null;
 }
 
+async function apiGetYouTubeInfo(url) {
+  if (!url) return { success: false, message: "URL이 없습니다." };
+
+  // 1. 백엔드 Spring Boot API 호출 시도
+  try {
+    const res = await fetch(`${API_BASE}/api/youtube/info?url=${encodeURIComponent(url)}`, {
+      cache: "no-store"
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.success) {
+        return data;
+      }
+    }
+  } catch (e) {
+    console.warn("백엔드 YouTube API 조회 실패, 프론트 대체 조회 진행:", e);
+  }
+
+  // 2. 백엔드 오프라인 시 프론트엔드 직접 대체 조회
+  const videoId = typeof extractYoutubeId === "function" ? extractYoutubeId(url) : null;
+  if (!videoId) return { success: false, message: "유효한 유튜브 ID가 아닙니다." };
+
+  // 사용자 로컬 API 키가 있다면 사용
+  const localKey = localStorage.getItem("youtube_api_key");
+  if (localKey) {
+    try {
+      const apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${localKey.trim()}`;
+      const res = await fetch(apiUrl);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.items && data.items.length > 0) {
+          const snip = data.items[0].snippet;
+          let pubDate = "";
+          if (snip.publishedAt) {
+            pubDate = snip.publishedAt.substring(0, 10).replace(/-/g, ".");
+          }
+          return {
+            success: true,
+            videoId: videoId,
+            title: snip.title || "",
+            publishedDate: pubDate,
+            channelTitle: snip.channelTitle || "",
+            thumbnailUrl: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+            source: "api_client"
+          };
+        }
+      }
+    } catch (e) {
+      console.warn("프론트엔드 YouTube API 직접 호출 실패:", e);
+    }
+  }
+
+  // 3. oEmbed 공개 API 직접 호출 (API 키 없이 제목 추출)
+  try {
+    const oembedRes = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
+    if (oembedRes.ok) {
+      const oembedData = await oembedRes.json();
+      return {
+        success: true,
+        videoId: videoId,
+        title: oembedData.title || "",
+        publishedDate: typeof getTodayDateString === "function" ? getTodayDateString() : "",
+        channelTitle: oembedData.author_name || "",
+        thumbnailUrl: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+        source: "oembed_client"
+      };
+    }
+  } catch (e) {
+    console.error("oEmbed 직접 조회 실패:", e);
+  }
+
+  return { success: false, message: "유튜브 정보를 불러올 수 없습니다." };
+}
+
+
 function applyStreamersToKongbabData(dbStreamers) {
   if (!Array.isArray(dbStreamers)) return;
 
