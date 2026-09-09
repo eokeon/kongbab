@@ -2,9 +2,11 @@ package com.kongbab.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kongbab.controller.AuthController;
+import com.kongbab.service.AdminTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -12,9 +14,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@RequiredArgsConstructor
 public class AdminAuthInterceptor implements HandlerInterceptor {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final AdminTokenService adminTokenService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -31,13 +35,18 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        // 그 외 POST, DELETE 등 데이터 변경 API는 관리자 세션 필수
+        // 1. 기존 메모리 세션 검증
         HttpSession session = request.getSession(false);
         if (session != null) {
             Object user = session.getAttribute(AuthController.SESSION_USER_KEY);
             if ("admin".equals(user)) {
                 return true;
             }
+        }
+
+        // 2. 서버 재시작 후 세션 유실 대비: 영구 토큰(쿠키 또는 Authorization 헤더)으로 자동 복구
+        if (adminTokenService.validateAndRestoreSession(request, response)) {
+            return true;
         }
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

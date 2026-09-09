@@ -4,7 +4,9 @@ import com.kongbab.domain.AdminLoginLog;
 import com.kongbab.dto.AuthResponse;
 import com.kongbab.dto.LoginRequest;
 import com.kongbab.repository.AdminLoginLogRepository;
+import com.kongbab.service.AdminTokenService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,9 +23,10 @@ public class AuthController {
 
     public static final String SESSION_USER_KEY = "KONGBAB_USER";
     public static final String SESSION_LOGIN_TIME_KEY = "KONGBAB_LOGIN_TIME";
-    public static final int SESSION_TIMEOUT_SECONDS = 3600; // 1시간 (60분)
+    public static final int SESSION_TIMEOUT_SECONDS = (int) (AdminTokenService.TOKEN_VALIDITY_MILLIS / 1000L); // 30일
 
     private final AdminLoginLogRepository adminLoginLogRepository;
+    private final AdminTokenService adminTokenService;
 
     @Value("${kongbab.admin.username:admin}")
     private String adminUsername;
@@ -33,8 +36,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request, 
-                                             HttpServletRequest httpRequest, 
-                                             HttpSession session) {
+                                              HttpServletRequest httpRequest, 
+                                              HttpServletResponse httpResponse,
+                                              HttpSession session) {
         String clientIp = getClientIp(httpRequest);
         String userAgent = httpRequest.getHeader("User-Agent");
         if (userAgent != null && userAgent.length() > 500) {
@@ -68,13 +72,18 @@ public class AuthController {
             session.setAttribute(SESSION_USER_KEY, "admin");
             session.setAttribute(SESSION_LOGIN_TIME_KEY, now);
 
+            // 서버 재시작 후에도 로그인 유지를 위한 영구 토큰 및 쿠키 발급
+            String token = adminTokenService.generateToken("admin");
+            adminTokenService.addTokenCookie(httpResponse, token);
+
             return ResponseEntity.ok(AuthResponse.builder()
                     .success(true)
                     .role("admin")
                     .username(adminUsername)
                     .loginTime(now)
                     .expiresInSeconds((long) SESSION_TIMEOUT_SECONDS)
-                    .message("로그인되었습니다. (1시간 동안 로그인 유지)")
+                    .token(token)
+                    .message("로그인되었습니다. (서버 재시작 후에도 로그인 유지)")
                     .build());
         }
 
@@ -87,13 +96,15 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<AuthResponse> logout(HttpServletRequest request) {
+    public ResponseEntity<AuthResponse> logout(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.removeAttribute(SESSION_USER_KEY);
             session.removeAttribute(SESSION_LOGIN_TIME_KEY);
             session.invalidate();
         }
+        adminTokenService.removeTokenCookie(response);
+
         return ResponseEntity.ok(AuthResponse.builder()
                 .success(true)
                 .role("guest")
@@ -103,27 +114,35 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<AuthResponse> getCurrentUser(HttpSession session) {
-        Object user = session.getAttribute(SESSION_USER_KEY);
-        if (user != null && "admin".equals(user.toString())) {
-            Long loginTime = (Long) session.getAttribute(SESSION_LOGIN_TIME_KEY);
-            long now = System.currentTimeMillis();
-            long maxDurationMillis = SESSION_TIMEOUT_SECONDS * 1000L;
+    public ResponseEntity<AuthResponse> getCurrentUser(HttpServletRequest request,
+                                                      HttpServletResponse response,
+                                                      HttpSession session) {
+        // 서버 재시작으로 세션이 비어있는 경우, 쿠키나 헤더의 토큰으로 세션 복구 시도
+        adminTokenService.validateAndRestoreSession(request, response);
 
-            if (loginTime != null && (now - loginTime) < maxDurationMillis) {
-                long remainingSeconds = (maxDurationMillis - (now - loginTime)) / 1000L;
+        HttpSession currentSession = request.getSession(false);
+        if (currentSession != null) {
+            Object user = currentSession.getAttribute(SESSION_USER_KEY);
+            if (user != null && "admin".equals(user.toString())) {
+                Long loginTime = (Long) currentSession.getAttribute(SESSION_LOGIN_TIME_KEY);
+                long now = System.currentTimeMillis();
+                if (loginTime == null) loginTime = now;
+
+                String token = adminTokenService.extractToken(request);
+                if (token == null) {
+                    token = adminTokenService.generateToken("admin");
+                    adminTokenService.addTokenCookie(response, token);
+                }
+
                 return ResponseEntity.ok(AuthResponse.builder()
                         .success(true)
                         .role("admin")
                         .username(adminUsername)
                         .loginTime(loginTime)
-                        .expiresInSeconds(remainingSeconds)
-                        .message("관리자 로그인 상태입니다. (남은 시간: " + (remainingSeconds / 60) + "분)")
+                        .expiresInSeconds((long) SESSION_TIMEOUT_SECONDS)
+                        .token(token)
+                        .message("관리자 로그인 상태입니다. (서버 재시작 후에도 유지)")
                         .build());
-            } else {
-                session.removeAttribute(SESSION_USER_KEY);
-                session.removeAttribute(SESSION_LOGIN_TIME_KEY);
-                session.invalidate();
             }
         }
 
@@ -136,9 +155,12 @@ public class AuthController {
     }
 
     @GetMapping("/logs")
-    public ResponseEntity<List<AdminLoginLog>> getLoginLogs(HttpSession session) {
-        Object user = session.getAttribute(SESSION_USER_KEY);
-        if (user == null || !"admin".equals(user.toString())) {
+    public ResponseEntity<List<AdminLoginLog>> getLoginLogs(HttpServletRequest request,
+                                                            HttpServletResponse response,
+                                                            HttpSession session) {
+        adminTokenService.validateAndRestoreSession(request, response);
+        HttpSession currentSession = request.getSession(false);
+        if (currentSession == null || !"admin".equals(String.valueOf(currentSession.getAttribute(SESSION_USER_KEY)))) {
             return ResponseEntity.status(401).build();
         }
         return ResponseEntity.ok(adminLoginLogRepository.findTop20ByOrderByLoginTimeDesc());

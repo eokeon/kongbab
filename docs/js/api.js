@@ -2,14 +2,28 @@ const API_BASE = (window.location.protocol === "file:" || window.location.port =
   ? "http://localhost:8080" 
   : "";
 
+function getAuthHeaders() {
+  const headers = {};
+  const token = localStorage.getItem("kongbab_admin_token");
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  return headers;
+}
+
 async function apiLogin(username, password) {
   try {
     const res = await fetch(`${API_BASE}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ username, password })
     });
-    return await res.json();
+    const data = await res.json();
+    if (data && data.success && data.token) {
+      localStorage.setItem("kongbab_admin_token", data.token);
+    }
+    return data;
   } catch (e) {
     console.error("로그인 요청 실패:", e);
     return { success: false, message: "백엔드 서버와 통신할 수 없습니다." };
@@ -18,7 +32,12 @@ async function apiLogin(username, password) {
 
 async function apiLogout() {
   try {
-    const res = await fetch(`${API_BASE}/api/auth/logout`, { method: "POST" });
+    localStorage.removeItem("kongbab_admin_token");
+    const res = await fetch(`${API_BASE}/api/auth/logout`, { 
+      method: "POST",
+      credentials: "include",
+      headers: getAuthHeaders()
+    });
     return await res.json();
   } catch (e) {
     console.error("로그아웃 요청 실패:", e);
@@ -28,9 +47,17 @@ async function apiLogout() {
 
 async function apiGetMe() {
   try {
-    const res = await fetch(`${API_BASE}/api/auth/me`, { cache: "no-store" });
+    const res = await fetch(`${API_BASE}/api/auth/me`, { 
+      cache: "no-store",
+      credentials: "include",
+      headers: getAuthHeaders()
+    });
     if (res.ok) {
-      return await res.json();
+      const data = await res.json();
+      if (data && data.success && data.role === "admin" && data.token) {
+        localStorage.setItem("kongbab_admin_token", data.token);
+      }
+      return data;
     }
   } catch (e) {
     console.warn("세션 사용자 조회 실패:", e);
@@ -40,7 +67,11 @@ async function apiGetMe() {
 
 async function apiGetLoginLogs() {
   try {
-    const res = await fetch(`${API_BASE}/api/auth/logs`, { cache: "no-store" });
+    const res = await fetch(`${API_BASE}/api/auth/logs`, { 
+      cache: "no-store",
+      credentials: "include",
+      headers: getAuthHeaders()
+    });
     if (res.ok) {
       return await res.json();
     }
@@ -70,17 +101,9 @@ async function fetchStreamersFromDb() {
       const staticData = await staticRes.json();
       if (staticData) {
         if (Array.isArray(staticData.categories) && staticData.categories.length > 0) {
-          KONGBAB_DATA.categories = staticData.categories;
-          persistData();
-          console.log("GitHub Pages 백업 포맷 데이터 로드 성공");
-          return "STATIC_CATEGORIES_LOADED";
+          applyStreamersToKongbabData(extractAllStreamersFromStatic(staticData));
         }
-        if (Array.isArray(staticData.streamers) && staticData.streamers.length > 0) {
-          return staticData.streamers;
-        }
-        if (Array.isArray(staticData) && staticData.length > 0) {
-          return staticData;
-        }
+        return staticData;
       }
     }
   } catch (err) {
@@ -90,11 +113,42 @@ async function fetchStreamersFromDb() {
   return null;
 }
 
+function extractAllStreamersFromStatic(staticData) {
+  const result = [];
+  if (!staticData || !Array.isArray(staticData.categories)) return result;
+
+  staticData.categories.forEach(cat => {
+    if (cat.hasSubgroups && Array.isArray(cat.groups)) {
+      cat.groups.forEach(g => {
+        if (Array.isArray(g.members)) {
+          g.members.forEach(m => {
+            result.push({
+              ...m,
+              category: cat.id,
+              subgroup: g.id
+            });
+          });
+        }
+      });
+    } else if (Array.isArray(cat.members)) {
+      cat.members.forEach(m => {
+        result.push({
+          ...m,
+          category: cat.id,
+          subgroup: null
+        });
+      });
+    }
+  });
+  return result;
+}
+
 async function saveStreamerToDb(dto) {
   try {
     const res = await fetch(`${API_BASE}/api/streamers`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
       body: JSON.stringify(dto)
     });
     if (res.ok) {
@@ -109,7 +163,9 @@ async function saveStreamerToDb(dto) {
 async function deleteStreamerFromDb(streamerId) {
   try {
     const res = await fetch(`${API_BASE}/api/streamers/${encodeURIComponent(streamerId)}`, {
-      method: "DELETE"
+      method: "DELETE",
+      credentials: "include",
+      headers: getAuthHeaders()
     });
     if (res.ok) {
       return await res.json();
@@ -124,7 +180,8 @@ async function saveVideoToDb(streamerId, videoDto) {
   try {
     const res = await fetch(`${API_BASE}/api/streamers/${encodeURIComponent(streamerId)}/videos`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
       body: JSON.stringify(videoDto)
     });
     if (res.ok) {
@@ -139,7 +196,9 @@ async function saveVideoToDb(streamerId, videoDto) {
 async function deleteVideoFromDb(videoId) {
   try {
     const res = await fetch(`${API_BASE}/api/videos/${encodeURIComponent(videoId)}`, {
-      method: "DELETE"
+      method: "DELETE",
+      credentials: "include",
+      headers: getAuthHeaders()
     });
     if (res.ok) {
       return await res.json();
@@ -154,7 +213,8 @@ async function syncAllStreamersToDb(streamersList) {
   try {
     const res = await fetch(`${API_BASE}/api/streamers/sync`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
       body: JSON.stringify(streamersList)
     });
     if (res.ok) {

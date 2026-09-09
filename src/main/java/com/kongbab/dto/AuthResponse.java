@@ -18,4 +18,5 @@ public class AuthResponse {
     private String message;
     private Long loginTime;
     private Long expiresInSeconds;
+    private String token;
 }
