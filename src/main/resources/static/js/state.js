@@ -4,17 +4,17 @@ const DEFAULT_CATEGORIES = [
   {
     id: "gang", name: "갱단", emoji: "💀", badge: "GANG", icon: "skull", color: "red", hasSubgroups: true,
     groups: [
-      { id: "gang-nonghyup", name: "농협", emoji: "🌾", members: [] },
-      { id: "gang-goldmoon", name: "골드문", emoji: "🌙", members: [] },
-      { id: "gang-blackrose", name: "흑장미", emoji: "🌹", members: [] },
+      { id: "gang-bigdick", name: "빅딕", emoji: "🍌", bgImage: "assets/bigdick.webp", members: [] },
       { id: "gang-oompa", name: "움파룸파", emoji: "😜", members: [] },
       { id: "gang-sangryeon", name: "상련", emoji: "👠", members: [] },
-      { id: "gang-bigdick", name: "빅딕", emoji: "🍌", bgImage: "assets/bigdick.webp", members: [] },
+      { id: "gang-goldmoon", name: "골드문", emoji: "🌙", members: [] },
+      { id: "gang-nonghyup", name: "농협", emoji: "🌾", members: [] },
+      { id: "gang-girlbang", name: "GIRL BANG", emoji: "🐷", members: [] },
+      { id: "gang-blackrose", name: "흑장미", emoji: "🌹", members: [] },
       { id: "gang-doremifa", name: "도레미파", emoji: "🎹", members: [] },
+      { id: "gang-metalunion", name: "금속노조", emoji: "⛏️", members: [] },
       { id: "gang-adventure", name: "어드벤처", emoji: "🐯", members: [] },
       { id: "gang-kgaeng", name: "깨갱", emoji: "🐶", members: [] },
-      { id: "gang-metalunion", name: "금속노조", emoji: "⛏️", members: [] },
-      { id: "gang-girlbang", name: "GIRL BANG", emoji: "🐷", members: [] },
       { id: "gang-streetcat", name: "길고양이 연합", emoji: "😺", members: [] }
     ]
   },

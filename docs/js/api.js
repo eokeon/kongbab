@@ -98,8 +98,24 @@ async function fetchCategoryStructure() {
       }
     }
   } catch (e) {
-    console.warn("서버 카테고리/조직 구조 조회 실패 (로컬 캐시 사용):", e);
+    console.warn("서버 카테고리/조직 구조 조회 실패 (정적 파일 탐색):", e);
   }
+
+  // GitHub Pages 정적 배포 fallback (streamers.json 에서 카테고리/조직 구조 동기화)
+  try {
+    const staticRes = await fetch(`./streamers.json?t=${Date.now()}`);
+    if (staticRes.ok) {
+      const staticData = await staticRes.json();
+      if (staticData && Array.isArray(staticData.categories) && staticData.categories.length > 0) {
+        if (typeof applyCategoryStructure === "function") {
+          applyCategoryStructure(staticData.categories);
+        }
+        persistData();
+        return staticData.categories;
+      }
+    }
+  } catch (err) {}
+
   return null;
 }
 
@@ -153,9 +169,15 @@ async function fetchStreamersFromDb() {
       const staticData = await staticRes.json();
       if (staticData) {
         if (Array.isArray(staticData.categories) && staticData.categories.length > 0) {
+          if (typeof applyCategoryStructure === "function") {
+            applyCategoryStructure(staticData.categories);
+          }
           applyStreamersToKongbabData(extractAllStreamersFromStatic(staticData));
+          persistData();
+          return "STATIC_CATEGORIES_LOADED";
+        } else if (Array.isArray(staticData)) {
+          return staticData;
         }
-        return staticData;
       }
     }
   } catch (err) {

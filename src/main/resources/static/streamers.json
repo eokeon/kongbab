@@ -1,1243 +1,1679 @@
-[ {
-  "id" : "pol-1",
-  "name" : "김윤성",
-  "streamer" : "김뿡",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "경찰청장",
-  "badgeColor" : "bg-blue-600",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 0,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-2",
-  "name" : "강 / 강반장 / 강전규 / 김사복",
-  "streamer" : "사모장",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "부청장",
-  "badgeColor" : "bg-indigo-600",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 1,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-3",
-  "name" : "꽃거지",
-  "streamer" : "꽃빈",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 2,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-4",
-  "name" : "나비리",
-  "streamer" : "나나양",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 3,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-5",
-  "name" : "김폭설 / 김폭염",
-  "streamer" : "눈꽃",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 4,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-6",
-  "name" : "김맹군",
-  "streamer" : "단군",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 5,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-7",
-  "name" : "담유잉",
-  "streamer" : "담유이",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 6,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-8",
-  "name" : "김영균 / 김동균",
-  "streamer" : "댕균",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 7,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-9",
-  "name" : "악당",
-  "streamer" : "델로략국",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 8,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-10",
-  "name" : "성말순",
-  "streamer" : "둥그레",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 9,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-11",
-  "name" : "로보캅",
-  "streamer" : "로보 문릿",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 10,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-12",
-  "name" : "맹숙희",
-  "streamer" : "맹숙",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 11,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-13",
-  "name" : "미도바",
-  "streamer" : "미도미도 마요",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 12,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-14",
-  "name" : "미채린",
-  "streamer" : "미치르 메르헨",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 13,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-15",
-  "name" : "박기인",
-  "streamer" : "바뀐",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 14,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-16",
-  "name" : "배준식",
-  "streamer" : "뱅",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 15,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-17",
-  "name" : "뵤순경",
-  "streamer" : "뵤오",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 16,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-18",
-  "name" : "엄충수 / 계충식 / 엄엄엄",
-  "streamer" : "씨랙",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 17,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-19",
-  "name" : "김우유",
-  "streamer" : "아야 AYA",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 18,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-20",
-  "name" : "어왜요",
-  "streamer" : "오화요",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 19,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-21",
-  "name" : "유연희",
-  "streamer" : "연리",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 20,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-22",
-  "name" : "김세빈",
-  "streamer" : "연비니",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 21,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-23",
-  "name" : "필석호",
-  "streamer" : "인간젤리",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 22,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-24",
-  "name" : "한예린",
-  "streamer" : "채현찌",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 23,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-25",
-  "name" : "차수현",
-  "streamer" : "초승달",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 24,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-26",
-  "name" : "나견차",
-  "streamer" : "쿠레나이 나츠키",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 25,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-27",
-  "name" : "박정의 / 밥좀우 / 피닉스박",
-  "streamer" : "피닉스박",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 26,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-28",
-  "name" : "햄재민",
-  "streamer" : "햄쿠비",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 27,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-29",
-  "name" : "강레나",
-  "streamer" : "달콤레나",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 28,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-30",
-  "name" : "정상화",
-  "streamer" : "명예훈장",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 29,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-31",
-  "name" : "메네라",
-  "streamer" : "키리키리꼬키리",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 30,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-32",
-  "name" : "시고르자브냥이",
-  "streamer" : "진덕춘",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 31,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-33",
-  "name" : "김다미",
-  "streamer" : "새담",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 32,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-34",
-  "name" : "엄현자",
-  "streamer" : "콩천",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 33,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "pol-35",
-  "name" : "단백질소나타",
-  "streamer" : "연주하는곰탱",
-  "category" : "police",
-  "subgroup" : null,
-  "role" : "",
-  "badgeColor" : "bg-zinc-800",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 34,
-  "affiliations" : "[{\"category\":\"police\",\"subgroup\":null}]",
-  "videos" : [ ]
-}, {
-  "id" : "gang-bd-1",
-  "name" : "장지환 / 장두광 / 거지환",
-  "streamer" : "괴물쥐",
-  "category" : "gang",
-  "subgroup" : "gang-bigdick",
-  "role" : "보스",
-  "badgeColor" : "bg-red-600",
-  "avatar" : "https://yt3.googleusercontent.com/ytc/AIdro_n2j3w7B8DpULUI9Z-GIFO2HVj487vk_hKU9Epsab-Q6qo=s120-c-k-c0x00ffffff-no-rj",
-  "displayOrder" : 35,
-  "affiliations" : "[{\"category\":\"gang\",\"subgroup\":\"gang-bigdick\"}]",
-  "videos" : [ {
-    "id" : "v-mtuew1y4j16h",
-    "title" : "건실한 RP | GTA 5 : 콩밥특별시 DAY 1",
-    "url" : "https://youtu.be/i0Rr3PJ88sE?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
-    "videoType" : "full",
-    "date" : "2025.05.26",
-    "duration" : "7:58:47",
-    "description" : "",
-    "displayOrder" : 0
-  }, {
-    "id" : "v-mtu7qjwqoo2g",
-    "title" : "건실하게 버는 남자",
-    "url" : "https://youtu.be/bAhjQf1WP4A?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
-    "videoType" : "clip",
-    "date" : "2025.05.27",
-    "duration" : "30:25",
-    "description" : "",
-    "displayOrder" : 1
-  }, {
-    "id" : "v-mtuew9vzbh8c",
-    "title" : "광질 좀 해볼까~ | GTA 5 : 콩밥특별시 DAY 2-1",
-    "url" : "https://youtu.be/lliOR2kztLQ?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
-    "videoType" : "full",
-    "date" : "2025.05.27",
-    "duration" : "6:02:21",
-    "description" : "",
-    "displayOrder" : 2
-  }, {
-    "id" : "v-mtuewg9ld4q8",
-    "title" : "택시 부르신 분? | GTA 5 : 콩밥특별시 DAY 2-2",
-    "url" : "https://youtu.be/iu3pkSfZ1pw?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
-    "videoType" : "full",
-    "date" : "2025.05.27",
-    "duration" : "6:42:39",
-    "description" : "",
-    "displayOrder" : 3
-  }, {
-    "id" : "v-mtue97pwf6ok",
-    "title" : "평등을 말하다",
-    "url" : "https://www.youtube.com/watch?v=MjA_pG_5-40&list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs&index=2&pp=iAQB",
-    "videoType" : "clip",
-    "date" : "2025.05.28",
-    "duration" : "23:12",
-    "description" : "",
-    "displayOrder" : 4
-  }, {
-    "id" : "v-mtue9vdijt9m",
-    "title" : "노가다꾼의 삶",
-    "url" : "https://youtu.be/uk3YEx3KtRg?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
-    "videoType" : "clip",
-    "date" : "2025.05.29",
-    "duration" : "26:16",
-    "description" : "",
-    "displayOrder" : 5
-  }, {
-    "id" : "v-mtuewm7u1up5",
-    "title" : "권력을 얻은 남자 | GTA 5 : 콩밥특별시 DAY 3",
-    "url" : "https://youtu.be/VLws67LCoys?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
-    "videoType" : "full",
-    "date" : "2025.05.29",
-    "duration" : "11:37:08",
-    "description" : "",
-    "displayOrder" : 6
-  }, {
-    "id" : "v-mtuews6utd2t",
-    "title" : "칼부림 전문가 | GTA 5 : 콩밥특별시 DAY 4",
-    "url" : "https://youtu.be/TLOiL3YHCgo?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
-    "videoType" : "full",
-    "date" : "2025.05.29",
-    "duration" : "7:43:17",
-    "description" : "",
-    "displayOrder" : 7
-  }, {
-    "id" : "v-mtuenld8asf9",
-    "title" : "비정상 택시가 난무하는 세상",
-    "url" : "https://youtu.be/TPLm7xBWGjU?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
-    "videoType" : "clip",
-    "date" : "2025.05.30",
-    "duration" : "24:24",
-    "description" : "",
-    "displayOrder" : 8
-  }, {
-    "id" : "v-mtuewz3kvmnh",
-    "title" : "경매하는 녀석들 | GTA 5 : 콩밥특별시 DAY 5",
-    "url" : "https://youtu.be/ZHyC9M4n8x0?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
-    "videoType" : "full",
-    "date" : "2025.05.30",
-    "duration" : "7:32:50",
-    "description" : "",
-    "displayOrder" : 9
-  }, {
-    "id" : "v-mtueqmyzgbrl",
-    "title" : "위대한 Gang이 될 사람",
-    "url" : "https://youtu.be/mkDS0xcfZw4?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
-    "videoType" : "clip",
-    "date" : "2025.05.31",
-    "duration" : "28:01",
-    "description" : "",
-    "displayOrder" : 10
-  }, {
-    "id" : "v-mtuerwflwayr",
-    "title" : "가자 얘들아",
-    "url" : "https://youtu.be/CNBYzXnYCrY?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
-    "videoType" : "clip",
-    "date" : "2025.06.01",
-    "duration" : "27:12",
-    "description" : "",
-    "displayOrder" : 11
-  }, {
-    "id" : "v-mtuex4t1pv0k",
-    "title" : "보석상 털러 왔습니다 | GTA 5 : 콩밥특별시 DAY 6",
-    "url" : "https://youtu.be/RI0RnRucHR4?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
-    "videoType" : "full",
-    "date" : "2025.06.01",
-    "duration" : "7:53:31",
-    "description" : "",
-    "displayOrder" : 12
-  }, {
-    "id" : "v-mtues4d07n01",
-    "title" : "폼 때문에 살고 폼 때문에 죽고",
-    "url" : "https://youtu.be/2E83QTQeDEs?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
-    "videoType" : "clip",
-    "date" : "2025.06.02",
-    "duration" : "25:34",
-    "description" : "",
-    "displayOrder" : 13
-  }, {
-    "id" : "v-mtuethmtbt8p",
-    "title" : "똑똑히 기억해라",
-    "url" : "https://youtu.be/JOYiPMAuKFo?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
-    "videoType" : "clip",
-    "date" : "2025.06.03",
-    "duration" : "24:23",
-    "description" : "",
-    "displayOrder" : 14
-  }, {
-    "id" : "v-mtueto6pbf61",
-    "title" : "가진 보석 다 내놔",
-    "url" : "https://youtu.be/mWDrvIXdgiw?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
-    "videoType" : "clip",
-    "date" : "2025.06.04",
-    "duration" : "26:52",
-    "description" : "",
-    "displayOrder" : 15
-  }, {
-    "id" : "v-mtuex9rry55a",
-    "title" : "니네 오늘 좀 맞자 | GTA 5 : 콩밥특별시 DAY 7",
-    "url" : "https://youtu.be/H3X9273CY3Y?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
-    "videoType" : "full",
-    "date" : "2025.06.04",
-    "duration" : "5:45:02",
-    "description" : "",
-    "displayOrder" : 16
-  }, {
-    "id" : "v-mtuexg80wciy",
-    "title" : "제5공익국 | GTA 5 : 콩밥특별시 DAY 8",
-    "url" : "https://youtu.be/BEPuJD2oGOQ?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
-    "videoType" : "full",
-    "date" : "2025.06.05",
-    "duration" : "6:51:15",
-    "description" : "",
-    "displayOrder" : 17
-  }, {
-    "id" : "v-mtuetv1lw34o",
-    "title" : "거꾸로 도는 세상",
-    "url" : "https://youtu.be/QtznK8SgGrs?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
-    "videoType" : "clip",
-    "date" : "2025.06.06",
-    "duration" : "22:20",
-    "description" : "",
-    "displayOrder" : 18
-  }, {
-    "id" : "v-mtueu474tise",
-    "title" : "꽃피듯 살아온 인생",
-    "url" : "https://youtu.be/DGikiwxOxq0?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
-    "videoType" : "clip",
-    "date" : "2025.06.07",
-    "duration" : "20:44",
-    "description" : "",
-    "displayOrder" : 19
-  } ]
-}, {
-  "id" : "gang-bd-2",
-  "name" : "래퍼핑",
-  "streamer" : "핑맨",
-  "category" : "gang",
-  "subgroup" : "gang-bigdick",
-  "role" : "리더",
-  "badgeColor" : "bg-red-600",
-  "avatar" : "https://yt3.googleusercontent.com/MpDiCuOTT8w7-3dFxzFhSN8mtsd0r8XZ1ZOZ1I1RjiSDz00ePfmLaPDDBjQYi4fRld5tbqJf=s120-c-k-c0x00ffffff-no-rj",
-  "displayOrder" : 36,
-  "affiliations" : "[{\"category\":\"gang\",\"subgroup\":\"gang-bigdick\"}]",
-  "videos" : [ {
-    "id" : "v-mtuf88ysaugq",
-    "title" : "콩밥특별시 : 래퍼핑",
-    "url" : "https://youtu.be/OLqExY4LDaI?list=PLfY0PR2bGDTrZ3_22bPBXhxIAALqV4E3D",
-    "videoType" : "clip",
-    "date" : "2025.06.04",
-    "duration" : "9:31",
-    "description" : "",
-    "displayOrder" : 0
-  }, {
-    "id" : "v-mtuf8r2c6il4",
-    "title" : "콩밥특별시 : 빅딕",
-    "url" : "https://youtu.be/2vqQtbDV-Jw?list=PLfY0PR2bGDTrZ3_22bPBXhxIAALqV4E3D",
-    "videoType" : "clip",
-    "date" : "2025.06.08",
-    "duration" : "16:34",
-    "description" : "",
-    "displayOrder" : 1
-  }, {
-    "id" : "v-mtuf8eelwr26",
-    "title" : "콩밥특별시 : 범죄도시",
-    "url" : "https://youtu.be/F3uYVs9uafE?list=PLfY0PR2bGDTrZ3_22bPBXhxIAALqV4E3D",
-    "videoType" : "clip",
-    "date" : "2025.06.09",
-    "duration" : "10:47",
-    "description" : "",
-    "displayOrder" : 2
-  }, {
-    "id" : "v-mtuf8l71rsik",
-    "title" : "콩밥특별시 : 호스트바",
-    "url" : "https://youtu.be/VYAinNrIW5E?list=PLfY0PR2bGDTrZ3_22bPBXhxIAALqV4E3D",
-    "videoType" : "clip",
-    "date" : "2025.06.10",
-    "duration" : "22:22",
-    "description" : "",
-    "displayOrder" : 3
-  }, {
-    "id" : "v-mtuf8xdr0h8o",
-    "title" : "콩밥특별시 : 흑막",
-    "url" : "https://youtu.be/yzxjTxtZIIA?list=PLfY0PR2bGDTrZ3_22bPBXhxIAALqV4E3D",
-    "videoType" : "clip",
-    "date" : "2025.06.17",
-    "duration" : "22:32",
-    "description" : "",
-    "displayOrder" : 4
-  }, {
-    "id" : "v-mtuf990dwq9b",
-    "title" : "콩밥특별시 : 빅딕 부활",
-    "url" : "https://youtu.be/PzgxHxRVxwk?list=PLfY0PR2bGDTrZ3_22bPBXhxIAALqV4E3D",
-    "videoType" : "clip",
-    "date" : "2025.06.22",
-    "duration" : "10:55",
-    "description" : "",
-    "displayOrder" : 5
-  }, {
-    "id" : "v-mtuf928a2p1f",
-    "title" : "콩밥특별시 래퍼핑 극장판",
-    "url" : "https://youtu.be/AFDdyQSeit8?list=PLfY0PR2bGDTrZ3_22bPBXhxIAALqV4E3D",
-    "videoType" : "clip",
-    "date" : "2025.06.28",
-    "duration" : "18:03",
-    "description" : "",
-    "displayOrder" : 6
-  } ]
-}, {
-  "id" : "gang-bd-4",
-  "name" : "김실망",
-  "streamer" : "실프",
-  "category" : "gang",
-  "subgroup" : "gang-bigdick",
-  "role" : "조직원",
-  "badgeColor" : "bg-zinc-700",
-  "avatar" : "https://yt3.googleusercontent.com/10Kxrhk_XT85525o0OWvRwWjMfdpC2llmB47GAvq0o-Jnx-jV3XcTTuPQm8a6a0Bx-RoK9fdgVw=s120-c-k-c0x00ffffff-no-rj",
-  "displayOrder" : 37,
-  "affiliations" : "[{\"category\":\"gang\",\"subgroup\":\"gang-bigdick\"}]",
-  "videos" : [ {
-    "id" : "v-mtugo30k2me6n-0",
-    "title" : "이상한 사람들만 타는 택시 [콩밥특별시 1편]",
-    "url" : "https://www.youtube.com/watch?v=RIF1rFWsP1I&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
-    "videoType" : "clip",
-    "date" : "2025.05.27",
-    "duration" : "28:22",
-    "description" : "",
-    "displayOrder" : 0
-  }, {
-    "id" : "v-mtugozzcjg4ej-13",
-    "title" : "콩밥특별시 1일차 : 30년 경력의 택시기사 김실망(30) [ GTA5 콩밥특별시 ]",
-    "url" : "https://www.youtube.com/watch?v=SiFCedpHr0E&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
-    "videoType" : "full",
-    "date" : "2025.05.27",
-    "duration" : "8:20:18",
-    "description" : "",
-    "displayOrder" : 1
-  }, {
-    "id" : "v-mtugo30kzeh5i-1",
-    "title" : "경찰+갱+화류계의 러브콜을 받는 남자 [콩밥특별시 2편]",
-    "url" : "https://www.youtube.com/watch?v=Tz2d4iWbt6M&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
-    "videoType" : "clip",
-    "date" : "2025.05.28",
-    "duration" : "31:01",
-    "description" : "",
-    "displayOrder" : 2
-  }, {
-    "id" : "v-mtugo30kjwrxu-2",
-    "title" : "🍌그들 안에는 용이 산다🍌 [콩밥특별시 3편]",
-    "url" : "https://www.youtube.com/watch?v=GcwVXyUS3aA&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
-    "videoType" : "clip",
-    "date" : "2025.05.29",
-    "duration" : "24:40",
-    "description" : "",
-    "displayOrder" : 3
-  }, {
-    "id" : "v-mtugozzc1y6wi-12",
-    "title" : "콩밥특별시 2일차 : 수많은 러브콜을 받는 택시기사 [ GTA5 콩밥특별시 ]",
-    "url" : "https://www.youtube.com/watch?v=hyu2FRQp6ZQ&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
-    "videoType" : "full",
-    "date" : "2025.05.29",
-    "duration" : "13:49:36",
-    "description" : "",
-    "displayOrder" : 4
-  }, {
-    "id" : "v-mtugozzcr0svx-11",
-    "title" : "콩밥특별시 3일차 : 갱이 되어버린 택시기사 [ GTA5 콩밥특별시 ]",
-    "url" : "https://www.youtube.com/watch?v=9uTZ1LegTdM&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
-    "videoType" : "full",
-    "date" : "2025.05.29",
-    "duration" : "8:44:27",
-    "description" : "",
-    "displayOrder" : 5
-  }, {
-    "id" : "v-mtugo30kmtk6u-3",
-    "title" : "경찰서에서 또.. 마주치네요? [콩밥특별시 4편]",
-    "url" : "https://www.youtube.com/watch?v=_SiEaxb2-4Q&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
-    "videoType" : "clip",
-    "date" : "2025.05.30",
-    "duration" : "24:39",
-    "description" : "",
-    "displayOrder" : 6
-  }, {
-    "id" : "v-mtugozzcaq3au-10",
-    "title" : "콩밥특별시 4일차 : 장난 전화를 좋아하는 택시기사 [ GTA5 콩밥특별시 ]",
-    "url" : "https://www.youtube.com/watch?v=dKq6qCrgKeA&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
-    "videoType" : "full",
-    "date" : "2025.05.30",
-    "duration" : "10:58:13",
-    "description" : "",
-    "displayOrder" : 7
-  }, {
-    "id" : "v-mtugozzc3pa8w-9",
-    "title" : "콩밥특별시 5일차 : 가이드 잘 해주는 택시기사 [ GTA5 콩밥특별시 ]",
-    "url" : "https://www.youtube.com/watch?v=Mui2HTwTDmQ&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
-    "videoType" : "full",
-    "date" : "2025.05.31",
-    "duration" : "12:42:14",
-    "description" : "",
-    "displayOrder" : 8
-  }, {
-    "id" : "v-mtugo30kronly-4",
-    "title" : "장난전화 하다가 보스한테 걸린 실망 [콩밥특별시 5편]",
-    "url" : "https://www.youtube.com/watch?v=p8nFVVjg7Mo&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
-    "videoType" : "clip",
-    "date" : "2025.06.01",
-    "duration" : "29:27",
-    "description" : "",
-    "displayOrder" : 9
-  }, {
-    "id" : "v-mtugozzcvcje7-8",
-    "title" : "콩밥특별시 6일차 : 흥선수가 되어버린 (전)택시기사 [ GTA5 콩밥특별시 ]",
-    "url" : "https://www.youtube.com/watch?v=kLb1Q5vtAgo&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
-    "videoType" : "full",
-    "date" : "2025.06.02",
-    "duration" : "11:14:31",
-    "description" : "",
-    "displayOrder" : 10
-  }, {
-    "id" : "v-mtugo30kv2m2l-5",
-    "title" : "장난전화에서 시작된 ㅈ대로의 아버지 [콩밥특별시 6편]",
-    "url" : "https://www.youtube.com/watch?v=pn6598Dlm2s&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
-    "videoType" : "clip",
-    "date" : "2025.06.03",
-    "duration" : "35:08",
-    "description" : "",
-    "displayOrder" : 11
-  }, {
-    "id" : "v-mtugozzclkq6j-7",
-    "title" : "콩밥특별시 7일차 :  총 쏘는 게 좋은 (전)택시기사 [ GTA5 콩밥특별시 ]",
-    "url" : "https://www.youtube.com/watch?v=L95BDE6eqqM&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
-    "videoType" : "full",
-    "date" : "2025.06.03",
-    "duration" : "10:18:23",
-    "description" : "",
-    "displayOrder" : 12
-  }, {
-    "id" : "v-mtugozzcg2uas-6",
-    "title" : "콩밥특별시 8일차 : 보스가 죽어버린 갱단원 [ GTA5 콩밥특별시 ]",
-    "url" : "https://www.youtube.com/watch?v=OabrpvxZp5Y&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
-    "videoType" : "full",
-    "date" : "2025.06.04",
-    "duration" : "10:38:55",
-    "description" : "",
-    "displayOrder" : 13
-  }, {
-    "id" : "v-mtugo30kjmab5-6",
-    "title" : "데이트 그리고 김실장 [콩밥특별시 7편]",
-    "url" : "https://www.youtube.com/watch?v=2ZaNKfRJCq4&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
-    "videoType" : "clip",
-    "date" : "2025.06.05",
-    "duration" : "28:56",
-    "description" : "",
-    "displayOrder" : 14
-  }, {
-    "id" : "v-mtugozzchhg6c-5",
-    "title" : "콩밥특별시 9일차 : 외과교수(아님)가 되어버린 경호원 [ GTA5 콩밥특별시 ]",
-    "url" : "https://www.youtube.com/watch?v=VcT7QPGRDNQ&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
-    "videoType" : "full",
-    "date" : "2025.06.06",
-    "duration" : "10:36:37",
-    "description" : "",
-    "displayOrder" : 15
-  }, {
-    "id" : "v-mtugo30kmjf88-7",
-    "title" : "첫 날 매출 2억의 사나이 [콩밥특별시 8편]",
-    "url" : "https://www.youtube.com/watch?v=sqI5UjKNBkA&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
-    "videoType" : "clip",
-    "date" : "2025.06.07",
-    "duration" : "28:50",
-    "description" : "",
-    "displayOrder" : 16
-  }, {
-    "id" : "v-mtugozzcbt2c1-4",
-    "title" : "콩밥특별시 10일차 : 다시 갱이 된 외과교수(아님) [ GTA5 콩밥특별시 ]",
-    "url" : "https://www.youtube.com/watch?v=F5H3ozrSqoU&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
-    "videoType" : "full",
-    "date" : "2025.06.07",
-    "duration" : "10:26:13",
-    "description" : "",
-    "displayOrder" : 17
-  }, {
-    "id" : "v-mtugozzc3mg8b-3",
-    "title" : "콩밥특별시 11일차 : 진짜 의사가 되어 버린 외과교수 [ GTA5 콩밥특별시 ]",
-    "url" : "https://www.youtube.com/watch?v=KZWOQ4Fa8Wg&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
-    "videoType" : "full",
-    "date" : "2025.06.08",
-    "duration" : "10:48:53",
-    "description" : "",
-    "displayOrder" : 18
-  }, {
-    "id" : "v-mtugo30k92zqa-8",
-    "title" : "누군 달달한테 누군 짖고... [콩밥특별시 9편]",
-    "url" : "https://www.youtube.com/watch?v=P-o8rlEYebY&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
-    "videoType" : "clip",
-    "date" : "2025.06.09",
-    "duration" : "39:03",
-    "description" : "",
-    "displayOrder" : 19
-  }, {
-    "id" : "v-mtugozzclr966-2",
-    "title" : "콩밥특별시 12일차 : 갱 전쟁에서 승리한 천재 외과의 [ GTA5 콩밥특별시 ]",
-    "url" : "https://www.youtube.com/watch?v=3J1Ilxw91b0&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
-    "videoType" : "full",
-    "date" : "2025.06.09",
-    "duration" : "8:54:57",
-    "description" : "",
-    "displayOrder" : 20
-  }, {
-    "id" : "v-mtugozzcldtup-1",
-    "title" : "콩밥특별시 13일차 : 경찰과 갱의 전쟁이 일어난 콩밥특별시 [ GTA5 콩밥특별시 ]",
-    "url" : "https://www.youtube.com/watch?v=9Wv0r0Glmto&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
-    "videoType" : "full",
-    "date" : "2025.06.10",
-    "duration" : "7:49:28",
-    "description" : "",
-    "displayOrder" : 21
-  }, {
-    "id" : "v-mtugo30kdw0z8-9",
-    "title" : "안녕 장지환...그리고 빅딕의 해체 [콩밥특별시 10편]",
-    "url" : "https://www.youtube.com/watch?v=fnE-npWERGc&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
-    "videoType" : "clip",
-    "date" : "2025.06.11",
-    "duration" : "28:31",
-    "description" : "",
-    "displayOrder" : 22
-  }, {
-    "id" : "v-mtugozzcn83gu-0",
-    "title" : "콩밥특별시 14일차 -완- : 콩밥특별시에 남은 김실망 [ GTA5 콩밥특별시 ]",
-    "url" : "https://www.youtube.com/watch?v=mFAmI9kwxFw&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
-    "videoType" : "full",
-    "date" : "2025.06.11",
-    "duration" : "9:07:35",
-    "description" : "",
-    "displayOrder" : 23
-  }, {
-    "id" : "v-mtugo30ksj84b-10",
-    "title" : "조현병rp 외과의 김실망 교수입니다 [콩밥특별시 11편]",
-    "url" : "https://www.youtube.com/watch?v=9gi2vBB27Ws&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
-    "videoType" : "clip",
-    "date" : "2025.06.13",
-    "duration" : "51:19",
-    "description" : "",
-    "displayOrder" : 24
-  }, {
-    "id" : "v-mtugo30ks8687-11",
-    "title" : "정상화씨.. 레드중위의 첫 키스는 제가 가져갑니다 [콩밥특별시 12편]",
-    "url" : "https://www.youtube.com/watch?v=9DaBdE-mtbQ&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
-    "videoType" : "clip",
-    "date" : "2025.06.16",
-    "duration" : "43:30",
-    "description" : "",
-    "displayOrder" : 25
-  }, {
-    "id" : "v-mtugo30kzdpif-12",
-    "title" : "인공호흡에 이어 수술까지 집도하는 천재 외과의 [콩밥특별시 13편]",
-    "url" : "https://www.youtube.com/watch?v=XBIs19BQ-T8&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
-    "videoType" : "clip",
-    "date" : "2025.06.19",
-    "duration" : "39:47",
-    "description" : "",
-    "displayOrder" : 26
-  }, {
-    "id" : "v-mtugo30k2z9wd-13",
-    "title" : "화자 누님~ 지면 어금니 뽑을게요? [콩밥 특별시 14편]",
-    "url" : "https://www.youtube.com/watch?v=jRW0nc2VlQ4&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
-    "videoType" : "clip",
-    "date" : "2025.06.22",
-    "duration" : "39:57",
-    "description" : "",
-    "displayOrder" : 27
-  }, {
-    "id" : "v-mtugo30kplxos-14",
-    "title" : "분노에 가득 찬 시민들과 EMS [콩밥특별시 15편]",
-    "url" : "https://www.youtube.com/watch?v=cRX-24h65j8&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
-    "videoType" : "clip",
-    "date" : "2025.06.24",
-    "duration" : "50:01",
-    "description" : "",
-    "displayOrder" : 28
-  }, {
-    "id" : "v-mtufzuexogyc",
-    "title" : "김실망의 삶 [콩밥특별시 몰아보기]",
-    "url" : "https://youtu.be/eVLiGNNIOGU",
-    "videoType" : "binge",
-    "date" : "2025.06.27",
-    "duration" : "7:46:18",
-    "description" : "",
-    "displayOrder" : 29
-  } ]
-}, {
-  "id" : "gang-bd-5",
-  "name" : "김윤구",
-  "streamer" : "해마티엘",
-  "category" : "gang",
-  "subgroup" : "gang-bigdick",
-  "role" : "조직원",
-  "badgeColor" : "bg-zinc-700",
-  "avatar" : "https://yt3.googleusercontent.com/h34O2U-7lwtRdhwTItX64c9X3-N_NZwT9j7EEodIKkfH6gJKzPUKElfFmHBA2HwPeimjVRi0=s120-c-k-c0x00ffffff-no-rj",
-  "displayOrder" : 38,
-  "affiliations" : "[{\"category\":\"gang\",\"subgroup\":\"gang-bigdick\"}]",
-  "videos" : [ {
-    "id" : "v-mtug1uy32rk9",
-    "title" : "한 편으로 몰아보는 김윤구의 이야기 – 콩밥특별시 극장판",
-    "url" : "https://youtu.be/WWS1SSQ_aN8",
-    "videoType" : "binge",
-    "date" : "2025.07.21",
-    "duration" : "2:58:23",
-    "description" : "",
-    "displayOrder" : 0
-  } ]
-}, {
-  "id" : "gang-bd-3",
-  "name" : "김모치",
-  "streamer" : "모치즈키 카에데",
-  "category" : "gang",
-  "subgroup" : "gang-bigdick",
-  "role" : "조직원",
-  "badgeColor" : "bg-zinc-700",
-  "avatar" : "https://yt3.googleusercontent.com/8oHiEHC_CwrQawea5pkTh7Qn8euVigdOLTFvXo1jiD6gmHbLXqyfL5y5BGOI79RpkgQ687ZZWA=s120-c-k-c0x00ffffff-no-rj",
-  "displayOrder" : 39,
-  "affiliations" : "[{\"category\":\"gang\",\"subgroup\":\"gang-bigdick\"}]",
-  "videos" : [ {
-    "id" : "v-mtugn2tkdz4k1-0",
-    "title" : "순수하게 사람 담구기 | 콩밥특별시 김모치 1화",
-    "url" : "https://www.youtube.com/watch?v=ohgvY4FtDDc&list=PLw7ga-4dSiKdc5A3TGPCqL6kqkc_cwb6x",
-    "videoType" : "clip",
-    "date" : "2025.06.05",
-    "duration" : "9:29",
-    "description" : "",
-    "displayOrder" : 0
-  }, {
-    "id" : "v-mtugn2tkno69t-1",
-    "title" : "착취당하는 외노자 | 콩밥특별시 김모치 2화",
-    "url" : "https://www.youtube.com/watch?v=vXLpvEDBu6A&list=PLw7ga-4dSiKdc5A3TGPCqL6kqkc_cwb6x",
-    "videoType" : "clip",
-    "date" : "2025.06.11",
-    "duration" : "9:48",
-    "description" : "",
-    "displayOrder" : 1
-  }, {
-    "id" : "v-mtugn2tk6sdls-2",
-    "title" : "빅딕 창설 | 콩밥특별시 김모치 3화",
-    "url" : "https://www.youtube.com/watch?v=uxTNqr5gIYk&list=PLw7ga-4dSiKdc5A3TGPCqL6kqkc_cwb6x",
-    "videoType" : "clip",
-    "date" : "2025.06.15",
-    "duration" : "13:02",
-    "description" : "",
-    "displayOrder" : 2
-  }, {
-    "id" : "v-mtugn2tk717ir-3",
-    "title" : "빈집털이 (안비었음) | 콩밥 특별시 김모치 4화",
-    "url" : "https://www.youtube.com/watch?v=UGcCJYB7gjI&list=PLw7ga-4dSiKdc5A3TGPCqL6kqkc_cwb6x",
-    "videoType" : "clip",
-    "date" : "2025.06.18",
-    "duration" : "9:56",
-    "description" : "",
-    "displayOrder" : 3
-  }, {
-    "id" : "v-mtugn2tky9pez-4",
-    "title" : "빅딕의 해체 | 콩밥 특별시 김모치 5화",
-    "url" : "https://www.youtube.com/watch?v=xA2m8QXCEHo&list=PLw7ga-4dSiKdc5A3TGPCqL6kqkc_cwb6x",
-    "videoType" : "clip",
-    "date" : "2025.07.05",
-    "duration" : "14:14",
-    "description" : "",
-    "displayOrder" : 4
-  }, {
-    "id" : "v-mtugqux3xy6g8-0",
-    "title" : "콩밥특별시 테토녀 김모치의 삶 1일차(1) (풀영상) | 2025.05.25",
-    "url" : "https://www.youtube.com/watch?v=m7uDFn9Y45M&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
-    "videoType" : "full",
-    "date" : "2025.05.29",
-    "duration" : "2:59:34",
-    "description" : "",
-    "displayOrder" : 5
-  }, {
-    "id" : "v-mtugqux3oj4f1-1",
-    "title" : "콩밥특별시 테토녀 김모치의 삶 1일차(2) (풀영상) | 2025.05.25",
-    "url" : "https://www.youtube.com/watch?v=RCfFub5ojUY&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
-    "videoType" : "full",
-    "date" : "2025.05.29",
-    "duration" : "7:12:55",
-    "description" : "",
-    "displayOrder" : 6
-  }, {
-    "id" : "v-mtugqux3ebkpw-2",
-    "title" : "콩밥특별시 외노자 김모치의 삶 2일차 (풀영상) | 2025.05.26",
-    "url" : "https://www.youtube.com/watch?v=aPt1uRg9c7U&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
-    "videoType" : "full",
-    "date" : "2025.05.30",
-    "duration" : "14:29:16",
-    "description" : "",
-    "displayOrder" : 7
-  }, {
-    "id" : "v-mtugqux3n1gqh-3",
-    "title" : "콩밥특별시 갱스터 김모치의 삶 3일차 (풀영상) | 2025.05.27",
-    "url" : "https://www.youtube.com/watch?v=Yncat3QDDAg&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
-    "videoType" : "full",
-    "date" : "2025.05.30",
-    "duration" : "13:26:23",
-    "description" : "",
-    "displayOrder" : 8
-  }, {
-    "id" : "v-mtugqux3n5kr0-4",
-    "title" : "콩밥특별시 갱스터 김모치의 삶 4일차 (풀영상) | 2025.05.28",
-    "url" : "https://www.youtube.com/watch?v=rosmb3fqqJA&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
-    "videoType" : "full",
-    "date" : "2025.05.31",
-    "duration" : "9:42:18",
-    "description" : "",
-    "displayOrder" : 9
-  }, {
-    "id" : "v-mtugqux31kxrs-5",
-    "title" : "콩밥특별시 갱스터 김모치의 삶 5일차 (풀영상) | 2025.05.29",
-    "url" : "https://www.youtube.com/watch?v=WXhYdMhK-KU&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
-    "videoType" : "full",
-    "date" : "2025.05.31",
-    "duration" : "10:10:00",
-    "description" : "",
-    "displayOrder" : 10
-  }, {
-    "id" : "v-mtugqux38fe33-6",
-    "title" : "콩밥특별시 성형한 갱스터 김모치의 삶 7일차 (풀영상) | 2025.06.01",
-    "url" : "https://www.youtube.com/watch?v=xN0hafSPN1w&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
-    "videoType" : "full",
-    "date" : "2025.06.04",
-    "duration" : "12:27:12",
-    "description" : "",
-    "displayOrder" : 11
-  }, {
-    "id" : "v-mtugqux3xlv9n-7",
-    "title" : "콩밥특별시 성형한 갱스터 김모치의 삶 8일차 (풀영상) | 2025.06.02",
-    "url" : "https://www.youtube.com/watch?v=_yta0pYOxww&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
-    "videoType" : "full",
-    "date" : "2025.06.04",
-    "duration" : "12:36:47",
-    "description" : "",
-    "displayOrder" : 12
-  }, {
-    "id" : "v-mtugqux3swyb6-8",
-    "title" : "콩밥특별시 용병 김모치의 삶 9일차 (풀영상) | 2025.06.03",
-    "url" : "https://www.youtube.com/watch?v=2gerDQgUFrU&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
-    "videoType" : "full",
-    "date" : "2025.06.04",
-    "duration" : "12:40:46",
-    "description" : "",
-    "displayOrder" : 13
-  }, {
-    "id" : "v-mtugqux3o9d9n-9",
-    "title" : "콩밥특별시 용병 김모치의 삶 10일차 (풀영상) | 2025.06.04",
-    "url" : "https://www.youtube.com/watch?v=Fj0lGJM8e_8&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
-    "videoType" : "full",
-    "date" : "2025.06.05",
-    "duration" : "11:03:07",
-    "description" : "",
-    "displayOrder" : 14
-  }, {
-    "id" : "v-mtugqux3v4y01-10",
-    "title" : "콩밥특별시 용병 김모치의 삶 11일차 (풀영상) | 2025.06.05",
-    "url" : "https://www.youtube.com/watch?v=auDfLi5PVXY&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
-    "videoType" : "full",
-    "date" : "2025.06.06",
-    "duration" : "10:15:40",
-    "description" : "",
-    "displayOrder" : 15
-  }, {
-    "id" : "v-mtugqux3v4x1d-11",
-    "title" : "콩밥특별시 용병 김모치의 삶 12일차 (풀영상) | 2025.06.06",
-    "url" : "https://www.youtube.com/watch?v=YZPCiMz6Uvw&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
-    "videoType" : "full",
-    "date" : "2025.06.08",
-    "duration" : "11:56:10",
-    "description" : "",
-    "displayOrder" : 16
-  }, {
-    "id" : "v-mtugqux34vmkt-12",
-    "title" : "콩밥특별시 13일차 김모치 -완- (풀영상) | 2025.06.07",
-    "url" : "https://www.youtube.com/watch?v=8pOY4AB7V88&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
-    "videoType" : "full",
-    "date" : "2025.06.09",
-    "duration" : "10:38:41",
-    "description" : "",
-    "displayOrder" : 17
-  }, {
-    "id" : "v-mtugqux3q8whm-13",
-    "title" : "콩밥특별시 14일차 에필로그 (풀영상) | 2025.06.08",
-    "url" : "https://www.youtube.com/watch?v=41CU1zEX12c&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
-    "videoType" : "full",
-    "date" : "2025.06.09",
-    "duration" : "9:01:54",
-    "description" : "",
-    "displayOrder" : 18
-  }, {
-    "id" : "v-mtugqux31w57o-14",
-    "title" : "유입설명회 + 콩밥 클립 보기 I 2025.06.12",
-    "url" : "https://www.youtube.com/watch?v=buv7cGLu3NM&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
-    "videoType" : "full",
-    "date" : "2025.06.13",
-    "duration" : "5:30:37",
-    "description" : "",
-    "displayOrder" : 19
-  } ]
-}, {
-  "id" : "gang-bd-6",
-  "name" : "나루호도에비덴뿌라",
-  "streamer" : "새우새우",
-  "category" : "gang",
-  "subgroup" : "gang-bigdick",
-  "role" : "조직원",
-  "badgeColor" : "bg-zinc-700",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 40,
-  "affiliations" : "[{\"category\":\"gang\",\"subgroup\":\"gang-bigdick\"}]",
-  "videos" : [ ]
-}, {
-  "id" : "gang-bd-7",
-  "name" : "민해리",
-  "streamer" : "민네",
-  "category" : "gang",
-  "subgroup" : "gang-bigdick",
-  "role" : "조직원",
-  "badgeColor" : "bg-zinc-700",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 41,
-  "affiliations" : "[{\"category\":\"gang\",\"subgroup\":\"gang-bigdick\"}]",
-  "videos" : [ ]
-}, {
-  "id" : "gang-bd-8",
-  "name" : "아카콩",
-  "streamer" : "아카캉",
-  "category" : "gang",
-  "subgroup" : "gang-bigdick",
-  "role" : "조직원",
-  "badgeColor" : "bg-zinc-700",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 42,
-  "affiliations" : "[{\"category\":\"gang\",\"subgroup\":\"gang-bigdick\"}]",
-  "videos" : [ ]
-}, {
-  "id" : "gang-bd-9",
-  "name" : "코코팜",
-  "streamer" : "야코코",
-  "category" : "gang",
-  "subgroup" : "gang-bigdick",
-  "role" : "조직원",
-  "badgeColor" : "bg-zinc-700",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 43,
-  "affiliations" : "[{\"category\":\"gang\",\"subgroup\":\"gang-bigdick\"}]",
-  "videos" : [ ]
-}, {
-  "id" : "gang-bd-10",
-  "name" : "춘윅",
-  "streamer" : "츠밍",
-  "category" : "gang",
-  "subgroup" : "gang-bigdick",
-  "role" : "조직원",
-  "badgeColor" : "bg-zinc-700",
-  "avatar" : "assets/default-avatar.svg",
-  "displayOrder" : 44,
-  "affiliations" : "[{\"category\":\"gang\",\"subgroup\":\"gang-bigdick\"}]",
-  "videos" : [ ]
-} ]
+﻿{
+  "appName": "kongbab-gta-rp",
+  "version": "1.0",
+  "createdAt": "2026.09.10 04:00:10",
+  "reason": "재생목록 일괄 등록: 김모치 (15개)",
+  "stats": {
+    "totalCategories": 6,
+    "totalMembers": 45,
+    "totalVideos": 78
+  },
+  "categories": [
+    {
+      "id": "police",
+      "name": "경찰",
+      "emoji": "👮‍♂️",
+      "badge": "POLICE",
+      "icon": "shield",
+      "color": "blue",
+      "hasSubgroups": false,
+      "members": [
+        {
+          "id": "pol-1",
+          "name": "김윤성",
+          "streamer": "김뿡",
+          "role": "경찰청장",
+          "badgeColor": "bg-blue-600",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 0,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-2",
+          "name": "강 / 강반장 / 강전규 / 김사복",
+          "streamer": "사모장",
+          "role": "부청장",
+          "badgeColor": "bg-indigo-600",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 1,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-3",
+          "name": "꽃거지",
+          "streamer": "꽃빈",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 2,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-4",
+          "name": "나비리",
+          "streamer": "나나양",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 3,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-5",
+          "name": "김폭설 / 김폭염",
+          "streamer": "눈꽃",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 4,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-6",
+          "name": "김맹군",
+          "streamer": "단군",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 5,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-7",
+          "name": "담유잉",
+          "streamer": "담유이",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 6,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-8",
+          "name": "김영균 / 김동균",
+          "streamer": "댕균",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 7,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-9",
+          "name": "악당",
+          "streamer": "델로략국",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 8,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-10",
+          "name": "성말순",
+          "streamer": "둥그레",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 9,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-11",
+          "name": "로보캅",
+          "streamer": "로보 문릿",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 10,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-12",
+          "name": "맹숙희",
+          "streamer": "맹숙",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 11,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-13",
+          "name": "미도바",
+          "streamer": "미도미도 마요",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 12,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-14",
+          "name": "미채린",
+          "streamer": "미치르 메르헨",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 13,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-15",
+          "name": "박기인",
+          "streamer": "바뀐",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 14,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-16",
+          "name": "배준식",
+          "streamer": "뱅",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 15,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-17",
+          "name": "뵤순경",
+          "streamer": "뵤오",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 16,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-18",
+          "name": "엄충수 / 계충식 / 엄엄엄",
+          "streamer": "씨랙",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 17,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-19",
+          "name": "김우유",
+          "streamer": "아야 AYA",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 18,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-20",
+          "name": "어왜요",
+          "streamer": "오화요",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 19,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-21",
+          "name": "유연희",
+          "streamer": "연리",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 20,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-22",
+          "name": "김세빈",
+          "streamer": "연비니",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 21,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-23",
+          "name": "필석호",
+          "streamer": "인간젤리",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 22,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-24",
+          "name": "한예린",
+          "streamer": "채현찌",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 23,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-25",
+          "name": "차수현",
+          "streamer": "초승달",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 24,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-26",
+          "name": "나견차",
+          "streamer": "쿠레나이 나츠키",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 25,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-27",
+          "name": "박정의 / 밥좀우 / 피닉스박",
+          "streamer": "피닉스박",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 26,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-28",
+          "name": "햄재민",
+          "streamer": "햄쿠비",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 27,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-29",
+          "name": "강레나",
+          "streamer": "달콤레나",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 28,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-30",
+          "name": "정상화",
+          "streamer": "명예훈장",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 29,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-31",
+          "name": "메네라",
+          "streamer": "키리키리꼬키리",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 30,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-32",
+          "name": "시고르자브냥이",
+          "streamer": "진덕춘",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 31,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-33",
+          "name": "김다미",
+          "streamer": "새담",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 32,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-34",
+          "name": "엄현자",
+          "streamer": "콩천",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 33,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "id": "pol-35",
+          "name": "단백질소나타",
+          "streamer": "연주하는곰탱",
+          "role": "",
+          "badgeColor": "bg-zinc-800",
+          "avatar": "assets/default-avatar.svg",
+          "displayOrder": 34,
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "police",
+              "subgroup": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ems",
+      "name": "EMS",
+      "emoji": "🚑",
+      "badge": "중증외상센터",
+      "icon": "cross",
+      "color": "teal",
+      "hasSubgroups": false,
+      "members": []
+    },
+    {
+      "id": "gang",
+      "name": "갱단",
+      "emoji": "💀",
+      "badge": "GANG",
+      "icon": "skull",
+      "color": "red",
+      "hasSubgroups": true,
+      "groups": [
+        {
+          "id": "gang-bigdick",
+          "name": "빅딕",
+          "emoji": "🍌",
+          "bgImage": "assets/bigdick.webp",
+          "members": [
+            {
+              "id": "gang-bd-1",
+              "name": "장지환 / 장두광 / 거지환",
+              "streamer": "괴물쥐",
+              "role": "보스",
+              "badgeColor": "bg-red-600",
+              "avatar": "https://yt3.googleusercontent.com/ytc/AIdro_n2j3w7B8DpULUI9Z-GIFO2HVj487vk_hKU9Epsab-Q6qo=s120-c-k-c0x00ffffff-no-rj",
+              "displayOrder": 35,
+              "videos": [
+                {
+                  "id": "v-mtuew1y4j16h",
+                  "title": "건실한 RP | GTA 5 : 콩밥특별시 DAY 1",
+                  "url": "https://youtu.be/i0Rr3PJ88sE?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
+                  "videoType": "full",
+                  "date": "2025.05.26",
+                  "duration": "7:58:47",
+                  "description": "",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mtu7qjwqoo2g",
+                  "title": "건실하게 버는 남자",
+                  "url": "https://youtu.be/bAhjQf1WP4A?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
+                  "videoType": "clip",
+                  "date": "2025.05.27",
+                  "duration": "30:25",
+                  "description": "",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mtuew9vzbh8c",
+                  "title": "광질 좀 해볼까~ | GTA 5 : 콩밥특별시 DAY 2-1",
+                  "url": "https://youtu.be/lliOR2kztLQ?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
+                  "videoType": "full",
+                  "date": "2025.05.27",
+                  "duration": "6:02:21",
+                  "description": "",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mtuewg9ld4q8",
+                  "title": "택시 부르신 분? | GTA 5 : 콩밥특별시 DAY 2-2",
+                  "url": "https://youtu.be/iu3pkSfZ1pw?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
+                  "videoType": "full",
+                  "date": "2025.05.27",
+                  "duration": "6:42:39",
+                  "description": "",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mtue97pwf6ok",
+                  "title": "평등을 말하다",
+                  "url": "https://www.youtube.com/watch?v=MjA_pG_5-40&list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs&index=2&pp=iAQB",
+                  "videoType": "clip",
+                  "date": "2025.05.28",
+                  "duration": "23:12",
+                  "description": "",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mtue9vdijt9m",
+                  "title": "노가다꾼의 삶",
+                  "url": "https://youtu.be/uk3YEx3KtRg?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
+                  "videoType": "clip",
+                  "date": "2025.05.29",
+                  "duration": "26:16",
+                  "description": "",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mtuewm7u1up5",
+                  "title": "권력을 얻은 남자 | GTA 5 : 콩밥특별시 DAY 3",
+                  "url": "https://youtu.be/VLws67LCoys?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
+                  "videoType": "full",
+                  "date": "2025.05.29",
+                  "duration": "11:37:08",
+                  "description": "",
+                  "displayOrder": 6
+                },
+                {
+                  "id": "v-mtuews6utd2t",
+                  "title": "칼부림 전문가 | GTA 5 : 콩밥특별시 DAY 4",
+                  "url": "https://youtu.be/TLOiL3YHCgo?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
+                  "videoType": "full",
+                  "date": "2025.05.29",
+                  "duration": "7:43:17",
+                  "description": "",
+                  "displayOrder": 7
+                },
+                {
+                  "id": "v-mtuenld8asf9",
+                  "title": "비정상 택시가 난무하는 세상",
+                  "url": "https://youtu.be/TPLm7xBWGjU?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
+                  "videoType": "clip",
+                  "date": "2025.05.30",
+                  "duration": "24:24",
+                  "description": "",
+                  "displayOrder": 8
+                },
+                {
+                  "id": "v-mtuewz3kvmnh",
+                  "title": "경매하는 녀석들 | GTA 5 : 콩밥특별시 DAY 5",
+                  "url": "https://youtu.be/ZHyC9M4n8x0?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
+                  "videoType": "full",
+                  "date": "2025.05.30",
+                  "duration": "7:32:50",
+                  "description": "",
+                  "displayOrder": 9
+                },
+                {
+                  "id": "v-mtueqmyzgbrl",
+                  "title": "위대한 Gang이 될 사람",
+                  "url": "https://youtu.be/mkDS0xcfZw4?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
+                  "videoType": "clip",
+                  "date": "2025.05.31",
+                  "duration": "28:01",
+                  "description": "",
+                  "displayOrder": 10
+                },
+                {
+                  "id": "v-mtuerwflwayr",
+                  "title": "가자 얘들아",
+                  "url": "https://youtu.be/CNBYzXnYCrY?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
+                  "videoType": "clip",
+                  "date": "2025.06.01",
+                  "duration": "27:12",
+                  "description": "",
+                  "displayOrder": 11
+                },
+                {
+                  "id": "v-mtuex4t1pv0k",
+                  "title": "보석상 털러 왔습니다 | GTA 5 : 콩밥특별시 DAY 6",
+                  "url": "https://youtu.be/RI0RnRucHR4?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
+                  "videoType": "full",
+                  "date": "2025.06.01",
+                  "duration": "7:53:31",
+                  "description": "",
+                  "displayOrder": 12
+                },
+                {
+                  "id": "v-mtues4d07n01",
+                  "title": "폼 때문에 살고 폼 때문에 죽고",
+                  "url": "https://youtu.be/2E83QTQeDEs?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
+                  "videoType": "clip",
+                  "date": "2025.06.02",
+                  "duration": "25:34",
+                  "description": "",
+                  "displayOrder": 13
+                },
+                {
+                  "id": "v-mtuethmtbt8p",
+                  "title": "똑똑히 기억해라",
+                  "url": "https://youtu.be/JOYiPMAuKFo?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
+                  "videoType": "clip",
+                  "date": "2025.06.03",
+                  "duration": "24:23",
+                  "description": "",
+                  "displayOrder": 14
+                },
+                {
+                  "id": "v-mtueto6pbf61",
+                  "title": "가진 보석 다 내놔",
+                  "url": "https://youtu.be/mWDrvIXdgiw?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
+                  "videoType": "clip",
+                  "date": "2025.06.04",
+                  "duration": "26:52",
+                  "description": "",
+                  "displayOrder": 15
+                },
+                {
+                  "id": "v-mtuex9rry55a",
+                  "title": "니네 오늘 좀 맞자 | GTA 5 : 콩밥특별시 DAY 7",
+                  "url": "https://youtu.be/H3X9273CY3Y?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
+                  "videoType": "full",
+                  "date": "2025.06.04",
+                  "duration": "5:45:02",
+                  "description": "",
+                  "displayOrder": 16
+                },
+                {
+                  "id": "v-mtuexg80wciy",
+                  "title": "제5공익국 | GTA 5 : 콩밥특별시 DAY 8",
+                  "url": "https://youtu.be/BEPuJD2oGOQ?list=PLHELqq6961UsTYkyza2E-0A8C2Bfze1uH",
+                  "videoType": "full",
+                  "date": "2025.06.05",
+                  "duration": "6:51:15",
+                  "description": "",
+                  "displayOrder": 17
+                },
+                {
+                  "id": "v-mtuetv1lw34o",
+                  "title": "거꾸로 도는 세상",
+                  "url": "https://youtu.be/QtznK8SgGrs?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
+                  "videoType": "clip",
+                  "date": "2025.06.06",
+                  "duration": "22:20",
+                  "description": "",
+                  "displayOrder": 18
+                },
+                {
+                  "id": "v-mtueu474tise",
+                  "title": "꽃피듯 살아온 인생",
+                  "url": "https://youtu.be/DGikiwxOxq0?list=PLzw48D--UxsGmgYVTB5iu2MNdhkHW1gXs",
+                  "videoType": "clip",
+                  "date": "2025.06.07",
+                  "duration": "20:44",
+                  "description": "",
+                  "displayOrder": 19
+                }
+              ],
+              "affiliations": [
+                {
+                  "category": "gang",
+                  "subgroup": "gang-bigdick"
+                }
+              ]
+            },
+            {
+              "id": "gang-bd-2",
+              "name": "래퍼핑",
+              "streamer": "핑맨",
+              "role": "리더",
+              "badgeColor": "bg-red-600",
+              "avatar": "https://yt3.googleusercontent.com/MpDiCuOTT8w7-3dFxzFhSN8mtsd0r8XZ1ZOZ1I1RjiSDz00ePfmLaPDDBjQYi4fRld5tbqJf=s120-c-k-c0x00ffffff-no-rj",
+              "displayOrder": 36,
+              "videos": [
+                {
+                  "id": "v-mtuf88ysaugq",
+                  "title": "콩밥특별시 : 래퍼핑",
+                  "url": "https://youtu.be/OLqExY4LDaI?list=PLfY0PR2bGDTrZ3_22bPBXhxIAALqV4E3D",
+                  "videoType": "clip",
+                  "date": "2025.06.04",
+                  "duration": "9:31",
+                  "description": "",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mtuf8r2c6il4",
+                  "title": "콩밥특별시 : 빅딕",
+                  "url": "https://youtu.be/2vqQtbDV-Jw?list=PLfY0PR2bGDTrZ3_22bPBXhxIAALqV4E3D",
+                  "videoType": "clip",
+                  "date": "2025.06.08",
+                  "duration": "16:34",
+                  "description": "",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mtuf8eelwr26",
+                  "title": "콩밥특별시 : 범죄도시",
+                  "url": "https://youtu.be/F3uYVs9uafE?list=PLfY0PR2bGDTrZ3_22bPBXhxIAALqV4E3D",
+                  "videoType": "clip",
+                  "date": "2025.06.09",
+                  "duration": "10:47",
+                  "description": "",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mtuf8l71rsik",
+                  "title": "콩밥특별시 : 호스트바",
+                  "url": "https://youtu.be/VYAinNrIW5E?list=PLfY0PR2bGDTrZ3_22bPBXhxIAALqV4E3D",
+                  "videoType": "clip",
+                  "date": "2025.06.10",
+                  "duration": "22:22",
+                  "description": "",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mtuf8xdr0h8o",
+                  "title": "콩밥특별시 : 흑막",
+                  "url": "https://youtu.be/yzxjTxtZIIA?list=PLfY0PR2bGDTrZ3_22bPBXhxIAALqV4E3D",
+                  "videoType": "clip",
+                  "date": "2025.06.17",
+                  "duration": "22:32",
+                  "description": "",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mtuf990dwq9b",
+                  "title": "콩밥특별시 : 빅딕 부활",
+                  "url": "https://youtu.be/PzgxHxRVxwk?list=PLfY0PR2bGDTrZ3_22bPBXhxIAALqV4E3D",
+                  "videoType": "clip",
+                  "date": "2025.06.22",
+                  "duration": "10:55",
+                  "description": "",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mtuf928a2p1f",
+                  "title": "콩밥특별시 래퍼핑 극장판",
+                  "url": "https://youtu.be/AFDdyQSeit8?list=PLfY0PR2bGDTrZ3_22bPBXhxIAALqV4E3D",
+                  "videoType": "clip",
+                  "date": "2025.06.28",
+                  "duration": "18:03",
+                  "description": "",
+                  "displayOrder": 6
+                }
+              ],
+              "affiliations": [
+                {
+                  "category": "gang",
+                  "subgroup": "gang-bigdick"
+                }
+              ]
+            },
+            {
+              "id": "gang-bd-4",
+              "name": "김실망",
+              "streamer": "실프",
+              "role": "조직원",
+              "badgeColor": "bg-zinc-700",
+              "avatar": "https://yt3.googleusercontent.com/10Kxrhk_XT85525o0OWvRwWjMfdpC2llmB47GAvq0o-Jnx-jV3XcTTuPQm8a6a0Bx-RoK9fdgVw=s120-c-k-c0x00ffffff-no-rj",
+              "displayOrder": 37,
+              "videos": [
+                {
+                  "id": "v-mtugo30k2me6n-0",
+                  "title": "이상한 사람들만 타는 택시 [콩밥특별시 1편]",
+                  "url": "https://www.youtube.com/watch?v=RIF1rFWsP1I&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
+                  "videoType": "clip",
+                  "date": "2025.05.27",
+                  "duration": "28:22",
+                  "description": "",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mtugozzcjg4ej-13",
+                  "title": "콩밥특별시 1일차 : 30년 경력의 택시기사 김실망(30) [ GTA5 콩밥특별시 ]",
+                  "url": "https://www.youtube.com/watch?v=SiFCedpHr0E&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
+                  "videoType": "full",
+                  "date": "2025.05.27",
+                  "duration": "8:20:18",
+                  "description": "",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mtugo30kzeh5i-1",
+                  "title": "경찰+갱+화류계의 러브콜을 받는 남자 [콩밥특별시 2편]",
+                  "url": "https://www.youtube.com/watch?v=Tz2d4iWbt6M&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
+                  "videoType": "clip",
+                  "date": "2025.05.28",
+                  "duration": "31:01",
+                  "description": "",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mtugo30kjwrxu-2",
+                  "title": "🍌그들 안에는 용이 산다🍌 [콩밥특별시 3편]",
+                  "url": "https://www.youtube.com/watch?v=GcwVXyUS3aA&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
+                  "videoType": "clip",
+                  "date": "2025.05.29",
+                  "duration": "24:40",
+                  "description": "",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mtugozzc1y6wi-12",
+                  "title": "콩밥특별시 2일차 : 수많은 러브콜을 받는 택시기사 [ GTA5 콩밥특별시 ]",
+                  "url": "https://www.youtube.com/watch?v=hyu2FRQp6ZQ&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
+                  "videoType": "full",
+                  "date": "2025.05.29",
+                  "duration": "13:49:36",
+                  "description": "",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mtugozzcr0svx-11",
+                  "title": "콩밥특별시 3일차 : 갱이 되어버린 택시기사 [ GTA5 콩밥특별시 ]",
+                  "url": "https://www.youtube.com/watch?v=9uTZ1LegTdM&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
+                  "videoType": "full",
+                  "date": "2025.05.29",
+                  "duration": "8:44:27",
+                  "description": "",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mtugo30kmtk6u-3",
+                  "title": "경찰서에서 또.. 마주치네요? [콩밥특별시 4편]",
+                  "url": "https://www.youtube.com/watch?v=_SiEaxb2-4Q&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
+                  "videoType": "clip",
+                  "date": "2025.05.30",
+                  "duration": "24:39",
+                  "description": "",
+                  "displayOrder": 6
+                },
+                {
+                  "id": "v-mtugozzcaq3au-10",
+                  "title": "콩밥특별시 4일차 : 장난 전화를 좋아하는 택시기사 [ GTA5 콩밥특별시 ]",
+                  "url": "https://www.youtube.com/watch?v=dKq6qCrgKeA&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
+                  "videoType": "full",
+                  "date": "2025.05.30",
+                  "duration": "10:58:13",
+                  "description": "",
+                  "displayOrder": 7
+                },
+                {
+                  "id": "v-mtugozzc3pa8w-9",
+                  "title": "콩밥특별시 5일차 : 가이드 잘 해주는 택시기사 [ GTA5 콩밥특별시 ]",
+                  "url": "https://www.youtube.com/watch?v=Mui2HTwTDmQ&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
+                  "videoType": "full",
+                  "date": "2025.05.31",
+                  "duration": "12:42:14",
+                  "description": "",
+                  "displayOrder": 8
+                },
+                {
+                  "id": "v-mtugo30kronly-4",
+                  "title": "장난전화 하다가 보스한테 걸린 실망 [콩밥특별시 5편]",
+                  "url": "https://www.youtube.com/watch?v=p8nFVVjg7Mo&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
+                  "videoType": "clip",
+                  "date": "2025.06.01",
+                  "duration": "29:27",
+                  "description": "",
+                  "displayOrder": 9
+                },
+                {
+                  "id": "v-mtugozzcvcje7-8",
+                  "title": "콩밥특별시 6일차 : 흥선수가 되어버린 (전)택시기사 [ GTA5 콩밥특별시 ]",
+                  "url": "https://www.youtube.com/watch?v=kLb1Q5vtAgo&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
+                  "videoType": "full",
+                  "date": "2025.06.02",
+                  "duration": "11:14:31",
+                  "description": "",
+                  "displayOrder": 10
+                },
+                {
+                  "id": "v-mtugo30kv2m2l-5",
+                  "title": "장난전화에서 시작된 ㅈ대로의 아버지 [콩밥특별시 6편]",
+                  "url": "https://www.youtube.com/watch?v=pn6598Dlm2s&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
+                  "videoType": "clip",
+                  "date": "2025.06.03",
+                  "duration": "35:08",
+                  "description": "",
+                  "displayOrder": 11
+                },
+                {
+                  "id": "v-mtugozzclkq6j-7",
+                  "title": "콩밥특별시 7일차 :  총 쏘는 게 좋은 (전)택시기사 [ GTA5 콩밥특별시 ]",
+                  "url": "https://www.youtube.com/watch?v=L95BDE6eqqM&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
+                  "videoType": "full",
+                  "date": "2025.06.03",
+                  "duration": "10:18:23",
+                  "description": "",
+                  "displayOrder": 12
+                },
+                {
+                  "id": "v-mtugozzcg2uas-6",
+                  "title": "콩밥특별시 8일차 : 보스가 죽어버린 갱단원 [ GTA5 콩밥특별시 ]",
+                  "url": "https://www.youtube.com/watch?v=OabrpvxZp5Y&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
+                  "videoType": "full",
+                  "date": "2025.06.04",
+                  "duration": "10:38:55",
+                  "description": "",
+                  "displayOrder": 13
+                },
+                {
+                  "id": "v-mtugo30kjmab5-6",
+                  "title": "데이트 그리고 김실장 [콩밥특별시 7편]",
+                  "url": "https://www.youtube.com/watch?v=2ZaNKfRJCq4&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
+                  "videoType": "clip",
+                  "date": "2025.06.05",
+                  "duration": "28:56",
+                  "description": "",
+                  "displayOrder": 14
+                },
+                {
+                  "id": "v-mtugozzchhg6c-5",
+                  "title": "콩밥특별시 9일차 : 외과교수(아님)가 되어버린 경호원 [ GTA5 콩밥특별시 ]",
+                  "url": "https://www.youtube.com/watch?v=VcT7QPGRDNQ&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
+                  "videoType": "full",
+                  "date": "2025.06.06",
+                  "duration": "10:36:37",
+                  "description": "",
+                  "displayOrder": 15
+                },
+                {
+                  "id": "v-mtugo30kmjf88-7",
+                  "title": "첫 날 매출 2억의 사나이 [콩밥특별시 8편]",
+                  "url": "https://www.youtube.com/watch?v=sqI5UjKNBkA&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
+                  "videoType": "clip",
+                  "date": "2025.06.07",
+                  "duration": "28:50",
+                  "description": "",
+                  "displayOrder": 16
+                },
+                {
+                  "id": "v-mtugozzcbt2c1-4",
+                  "title": "콩밥특별시 10일차 : 다시 갱이 된 외과교수(아님) [ GTA5 콩밥특별시 ]",
+                  "url": "https://www.youtube.com/watch?v=F5H3ozrSqoU&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
+                  "videoType": "full",
+                  "date": "2025.06.07",
+                  "duration": "10:26:13",
+                  "description": "",
+                  "displayOrder": 17
+                },
+                {
+                  "id": "v-mtugozzc3mg8b-3",
+                  "title": "콩밥특별시 11일차 : 진짜 의사가 되어 버린 외과교수 [ GTA5 콩밥특별시 ]",
+                  "url": "https://www.youtube.com/watch?v=KZWOQ4Fa8Wg&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
+                  "videoType": "full",
+                  "date": "2025.06.08",
+                  "duration": "10:48:53",
+                  "description": "",
+                  "displayOrder": 18
+                },
+                {
+                  "id": "v-mtugo30k92zqa-8",
+                  "title": "누군 달달한테 누군 짖고... [콩밥특별시 9편]",
+                  "url": "https://www.youtube.com/watch?v=P-o8rlEYebY&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
+                  "videoType": "clip",
+                  "date": "2025.06.09",
+                  "duration": "39:03",
+                  "description": "",
+                  "displayOrder": 19
+                },
+                {
+                  "id": "v-mtugozzclr966-2",
+                  "title": "콩밥특별시 12일차 : 갱 전쟁에서 승리한 천재 외과의 [ GTA5 콩밥특별시 ]",
+                  "url": "https://www.youtube.com/watch?v=3J1Ilxw91b0&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
+                  "videoType": "full",
+                  "date": "2025.06.09",
+                  "duration": "8:54:57",
+                  "description": "",
+                  "displayOrder": 20
+                },
+                {
+                  "id": "v-mtugozzcldtup-1",
+                  "title": "콩밥특별시 13일차 : 경찰과 갱의 전쟁이 일어난 콩밥특별시 [ GTA5 콩밥특별시 ]",
+                  "url": "https://www.youtube.com/watch?v=9Wv0r0Glmto&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
+                  "videoType": "full",
+                  "date": "2025.06.10",
+                  "duration": "7:49:28",
+                  "description": "",
+                  "displayOrder": 21
+                },
+                {
+                  "id": "v-mtugo30kdw0z8-9",
+                  "title": "안녕 장지환...그리고 빅딕의 해체 [콩밥특별시 10편]",
+                  "url": "https://www.youtube.com/watch?v=fnE-npWERGc&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
+                  "videoType": "clip",
+                  "date": "2025.06.11",
+                  "duration": "28:31",
+                  "description": "",
+                  "displayOrder": 22
+                },
+                {
+                  "id": "v-mtugozzcn83gu-0",
+                  "title": "콩밥특별시 14일차 -완- : 콩밥특별시에 남은 김실망 [ GTA5 콩밥특별시 ]",
+                  "url": "https://www.youtube.com/watch?v=mFAmI9kwxFw&list=PLQ-k44Glzn47YTOnGSE0v86akr8MniRJh",
+                  "videoType": "full",
+                  "date": "2025.06.11",
+                  "duration": "9:07:35",
+                  "description": "",
+                  "displayOrder": 23
+                },
+                {
+                  "id": "v-mtugo30ksj84b-10",
+                  "title": "조현병rp 외과의 김실망 교수입니다 [콩밥특별시 11편]",
+                  "url": "https://www.youtube.com/watch?v=9gi2vBB27Ws&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
+                  "videoType": "clip",
+                  "date": "2025.06.13",
+                  "duration": "51:19",
+                  "description": "",
+                  "displayOrder": 24
+                },
+                {
+                  "id": "v-mtugo30ks8687-11",
+                  "title": "정상화씨.. 레드중위의 첫 키스는 제가 가져갑니다 [콩밥특별시 12편]",
+                  "url": "https://www.youtube.com/watch?v=9DaBdE-mtbQ&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
+                  "videoType": "clip",
+                  "date": "2025.06.16",
+                  "duration": "43:30",
+                  "description": "",
+                  "displayOrder": 25
+                },
+                {
+                  "id": "v-mtugo30kzdpif-12",
+                  "title": "인공호흡에 이어 수술까지 집도하는 천재 외과의 [콩밥특별시 13편]",
+                  "url": "https://www.youtube.com/watch?v=XBIs19BQ-T8&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
+                  "videoType": "clip",
+                  "date": "2025.06.19",
+                  "duration": "39:47",
+                  "description": "",
+                  "displayOrder": 26
+                },
+                {
+                  "id": "v-mtugo30k2z9wd-13",
+                  "title": "화자 누님~ 지면 어금니 뽑을게요? [콩밥 특별시 14편]",
+                  "url": "https://www.youtube.com/watch?v=jRW0nc2VlQ4&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
+                  "videoType": "clip",
+                  "date": "2025.06.22",
+                  "duration": "39:57",
+                  "description": "",
+                  "displayOrder": 27
+                },
+                {
+                  "id": "v-mtugo30kplxos-14",
+                  "title": "분노에 가득 찬 시민들과 EMS [콩밥특별시 15편]",
+                  "url": "https://www.youtube.com/watch?v=cRX-24h65j8&list=PLpyT2G0KgWczVC7pPFGW3JKs36krONcbp",
+                  "videoType": "clip",
+                  "date": "2025.06.24",
+                  "duration": "50:01",
+                  "description": "",
+                  "displayOrder": 28
+                },
+                {
+                  "id": "v-mtufzuexogyc",
+                  "title": "김실망의 삶 [콩밥특별시 몰아보기]",
+                  "url": "https://youtu.be/eVLiGNNIOGU",
+                  "videoType": "binge",
+                  "date": "2025.06.27",
+                  "duration": "7:46:18",
+                  "description": "",
+                  "displayOrder": 29
+                }
+              ],
+              "affiliations": [
+                {
+                  "category": "gang",
+                  "subgroup": "gang-bigdick"
+                }
+              ]
+            },
+            {
+              "id": "gang-bd-5",
+              "name": "김윤구",
+              "streamer": "해마티엘",
+              "role": "조직원",
+              "badgeColor": "bg-zinc-700",
+              "avatar": "https://yt3.googleusercontent.com/h34O2U-7lwtRdhwTItX64c9X3-N_NZwT9j7EEodIKkfH6gJKzPUKElfFmHBA2HwPeimjVRi0=s120-c-k-c0x00ffffff-no-rj",
+              "displayOrder": 38,
+              "videos": [
+                {
+                  "id": "v-mtug1uy32rk9",
+                  "title": "한 편으로 몰아보는 김윤구의 이야기 – 콩밥특별시 극장판",
+                  "url": "https://youtu.be/WWS1SSQ_aN8",
+                  "videoType": "binge",
+                  "date": "2025.07.21",
+                  "duration": "2:58:23",
+                  "description": "",
+                  "displayOrder": 0
+                }
+              ],
+              "affiliations": [
+                {
+                  "category": "gang",
+                  "subgroup": "gang-bigdick"
+                }
+              ]
+            },
+            {
+              "id": "gang-bd-3",
+              "name": "김모치",
+              "streamer": "모치즈키 카에데",
+              "role": "조직원",
+              "badgeColor": "bg-zinc-700",
+              "avatar": "https://yt3.googleusercontent.com/8oHiEHC_CwrQawea5pkTh7Qn8euVigdOLTFvXo1jiD6gmHbLXqyfL5y5BGOI79RpkgQ687ZZWA=s120-c-k-c0x00ffffff-no-rj",
+              "displayOrder": 39,
+              "videos": [
+                {
+                  "id": "v-mtugn2tkdz4k1-0",
+                  "title": "순수하게 사람 담구기 | 콩밥특별시 김모치 1화",
+                  "url": "https://www.youtube.com/watch?v=ohgvY4FtDDc&list=PLw7ga-4dSiKdc5A3TGPCqL6kqkc_cwb6x",
+                  "videoType": "clip",
+                  "date": "2025.06.05",
+                  "duration": "9:29",
+                  "description": "",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mtugn2tkno69t-1",
+                  "title": "착취당하는 외노자 | 콩밥특별시 김모치 2화",
+                  "url": "https://www.youtube.com/watch?v=vXLpvEDBu6A&list=PLw7ga-4dSiKdc5A3TGPCqL6kqkc_cwb6x",
+                  "videoType": "clip",
+                  "date": "2025.06.11",
+                  "duration": "9:48",
+                  "description": "",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mtugn2tk6sdls-2",
+                  "title": "빅딕 창설 | 콩밥특별시 김모치 3화",
+                  "url": "https://www.youtube.com/watch?v=uxTNqr5gIYk&list=PLw7ga-4dSiKdc5A3TGPCqL6kqkc_cwb6x",
+                  "videoType": "clip",
+                  "date": "2025.06.15",
+                  "duration": "13:02",
+                  "description": "",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mtugn2tk717ir-3",
+                  "title": "빈집털이 (안비었음) | 콩밥 특별시 김모치 4화",
+                  "url": "https://www.youtube.com/watch?v=UGcCJYB7gjI&list=PLw7ga-4dSiKdc5A3TGPCqL6kqkc_cwb6x",
+                  "videoType": "clip",
+                  "date": "2025.06.18",
+                  "duration": "9:56",
+                  "description": "",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mtugn2tky9pez-4",
+                  "title": "빅딕의 해체 | 콩밥 특별시 김모치 5화",
+                  "url": "https://www.youtube.com/watch?v=xA2m8QXCEHo&list=PLw7ga-4dSiKdc5A3TGPCqL6kqkc_cwb6x",
+                  "videoType": "clip",
+                  "date": "2025.07.05",
+                  "duration": "14:14",
+                  "description": "",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mtugqux3xy6g8-0",
+                  "title": "콩밥특별시 테토녀 김모치의 삶 1일차(1) (풀영상) | 2025.05.25",
+                  "url": "https://www.youtube.com/watch?v=m7uDFn9Y45M&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
+                  "videoType": "full",
+                  "date": "2025.05.29",
+                  "duration": "2:59:34",
+                  "description": "",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mtugqux3oj4f1-1",
+                  "title": "콩밥특별시 테토녀 김모치의 삶 1일차(2) (풀영상) | 2025.05.25",
+                  "url": "https://www.youtube.com/watch?v=RCfFub5ojUY&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
+                  "videoType": "full",
+                  "date": "2025.05.29",
+                  "duration": "7:12:55",
+                  "description": "",
+                  "displayOrder": 6
+                },
+                {
+                  "id": "v-mtugqux3ebkpw-2",
+                  "title": "콩밥특별시 외노자 김모치의 삶 2일차 (풀영상) | 2025.05.26",
+                  "url": "https://www.youtube.com/watch?v=aPt1uRg9c7U&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
+                  "videoType": "full",
+                  "date": "2025.05.30",
+                  "duration": "14:29:16",
+                  "description": "",
+                  "displayOrder": 7
+                },
+                {
+                  "id": "v-mtugqux3n1gqh-3",
+                  "title": "콩밥특별시 갱스터 김모치의 삶 3일차 (풀영상) | 2025.05.27",
+                  "url": "https://www.youtube.com/watch?v=Yncat3QDDAg&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
+                  "videoType": "full",
+                  "date": "2025.05.30",
+                  "duration": "13:26:23",
+                  "description": "",
+                  "displayOrder": 8
+                },
+                {
+                  "id": "v-mtugqux3n5kr0-4",
+                  "title": "콩밥특별시 갱스터 김모치의 삶 4일차 (풀영상) | 2025.05.28",
+                  "url": "https://www.youtube.com/watch?v=rosmb3fqqJA&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
+                  "videoType": "full",
+                  "date": "2025.05.31",
+                  "duration": "9:42:18",
+                  "description": "",
+                  "displayOrder": 9
+                },
+                {
+                  "id": "v-mtugqux31kxrs-5",
+                  "title": "콩밥특별시 갱스터 김모치의 삶 5일차 (풀영상) | 2025.05.29",
+                  "url": "https://www.youtube.com/watch?v=WXhYdMhK-KU&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
+                  "videoType": "full",
+                  "date": "2025.05.31",
+                  "duration": "10:10:00",
+                  "description": "",
+                  "displayOrder": 10
+                },
+                {
+                  "id": "v-mtugqux38fe33-6",
+                  "title": "콩밥특별시 성형한 갱스터 김모치의 삶 7일차 (풀영상) | 2025.06.01",
+                  "url": "https://www.youtube.com/watch?v=xN0hafSPN1w&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
+                  "videoType": "full",
+                  "date": "2025.06.04",
+                  "duration": "12:27:12",
+                  "description": "",
+                  "displayOrder": 11
+                },
+                {
+                  "id": "v-mtugqux3xlv9n-7",
+                  "title": "콩밥특별시 성형한 갱스터 김모치의 삶 8일차 (풀영상) | 2025.06.02",
+                  "url": "https://www.youtube.com/watch?v=_yta0pYOxww&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
+                  "videoType": "full",
+                  "date": "2025.06.04",
+                  "duration": "12:36:47",
+                  "description": "",
+                  "displayOrder": 12
+                },
+                {
+                  "id": "v-mtugqux3swyb6-8",
+                  "title": "콩밥특별시 용병 김모치의 삶 9일차 (풀영상) | 2025.06.03",
+                  "url": "https://www.youtube.com/watch?v=2gerDQgUFrU&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
+                  "videoType": "full",
+                  "date": "2025.06.04",
+                  "duration": "12:40:46",
+                  "description": "",
+                  "displayOrder": 13
+                },
+                {
+                  "id": "v-mtugqux3o9d9n-9",
+                  "title": "콩밥특별시 용병 김모치의 삶 10일차 (풀영상) | 2025.06.04",
+                  "url": "https://www.youtube.com/watch?v=Fj0lGJM8e_8&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
+                  "videoType": "full",
+                  "date": "2025.06.05",
+                  "duration": "11:03:07",
+                  "description": "",
+                  "displayOrder": 14
+                },
+                {
+                  "id": "v-mtugqux3v4y01-10",
+                  "title": "콩밥특별시 용병 김모치의 삶 11일차 (풀영상) | 2025.06.05",
+                  "url": "https://www.youtube.com/watch?v=auDfLi5PVXY&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
+                  "videoType": "full",
+                  "date": "2025.06.06",
+                  "duration": "10:15:40",
+                  "description": "",
+                  "displayOrder": 15
+                },
+                {
+                  "id": "v-mtugqux3v4x1d-11",
+                  "title": "콩밥특별시 용병 김모치의 삶 12일차 (풀영상) | 2025.06.06",
+                  "url": "https://www.youtube.com/watch?v=YZPCiMz6Uvw&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
+                  "videoType": "full",
+                  "date": "2025.06.08",
+                  "duration": "11:56:10",
+                  "description": "",
+                  "displayOrder": 16
+                },
+                {
+                  "id": "v-mtugqux34vmkt-12",
+                  "title": "콩밥특별시 13일차 김모치 -완- (풀영상) | 2025.06.07",
+                  "url": "https://www.youtube.com/watch?v=8pOY4AB7V88&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
+                  "videoType": "full",
+                  "date": "2025.06.09",
+                  "duration": "10:38:41",
+                  "description": "",
+                  "displayOrder": 17
+                },
+                {
+                  "id": "v-mtugqux3q8whm-13",
+                  "title": "콩밥특별시 14일차 에필로그 (풀영상) | 2025.06.08",
+                  "url": "https://www.youtube.com/watch?v=41CU1zEX12c&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
+                  "videoType": "full",
+                  "date": "2025.06.09",
+                  "duration": "9:01:54",
+                  "description": "",
+                  "displayOrder": 18
+                },
+                {
+                  "id": "v-mtugqux31w57o-14",
+                  "title": "유입설명회 + 콩밥 클립 보기 I 2025.06.12",
+                  "url": "https://www.youtube.com/watch?v=buv7cGLu3NM&list=PLGCHwHEFzbawY30AuZ-wbMtTS-eo2BksK",
+                  "videoType": "full",
+                  "date": "2025.06.13",
+                  "duration": "5:30:37",
+                  "description": "",
+                  "displayOrder": 19
+                }
+              ],
+              "affiliations": [
+                {
+                  "category": "gang",
+                  "subgroup": "gang-bigdick"
+                }
+              ]
+            },
+            {
+              "id": "gang-bd-6",
+              "name": "나루호도에비덴뿌라",
+              "streamer": "새우새우",
+              "role": "조직원",
+              "badgeColor": "bg-zinc-700",
+              "avatar": "assets/default-avatar.svg",
+              "displayOrder": 40,
+              "videos": [],
+              "affiliations": [
+                {
+                  "category": "gang",
+                  "subgroup": "gang-bigdick"
+                }
+              ]
+            },
+            {
+              "id": "gang-bd-7",
+              "name": "민해리",
+              "streamer": "민네",
+              "role": "조직원",
+              "badgeColor": "bg-zinc-700",
+              "avatar": "assets/default-avatar.svg",
+              "displayOrder": 41,
+              "videos": [],
+              "affiliations": [
+                {
+                  "category": "gang",
+                  "subgroup": "gang-bigdick"
+                }
+              ]
+            },
+            {
+              "id": "gang-bd-8",
+              "name": "아카콩",
+              "streamer": "아카캉",
+              "role": "조직원",
+              "badgeColor": "bg-zinc-700",
+              "avatar": "assets/default-avatar.svg",
+              "displayOrder": 42,
+              "videos": [],
+              "affiliations": [
+                {
+                  "category": "gang",
+                  "subgroup": "gang-bigdick"
+                }
+              ]
+            },
+            {
+              "id": "gang-bd-9",
+              "name": "코코팜",
+              "streamer": "야코코",
+              "role": "조직원",
+              "badgeColor": "bg-zinc-700",
+              "avatar": "assets/default-avatar.svg",
+              "displayOrder": 43,
+              "videos": [],
+              "affiliations": [
+                {
+                  "category": "gang",
+                  "subgroup": "gang-bigdick"
+                }
+              ]
+            },
+            {
+              "id": "gang-bd-10",
+              "name": "춘윅",
+              "streamer": "츠밍",
+              "role": "조직원",
+              "badgeColor": "bg-zinc-700",
+              "avatar": "assets/default-avatar.svg",
+              "displayOrder": 44,
+              "videos": [],
+              "affiliations": [
+                {
+                  "category": "gang",
+                  "subgroup": "gang-bigdick"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "gang-oompa",
+          "name": "움파룸파",
+          "emoji": "😜",
+          "members": []
+        },
+        {
+          "id": "gang-sangryeon",
+          "name": "상련",
+          "emoji": "👠",
+          "members": []
+        },
+        {
+          "id": "gang-goldmoon",
+          "name": "골드문",
+          "emoji": "🌙",
+          "members": []
+        },
+        {
+          "id": "gang-nonghyup",
+          "name": "농협",
+          "emoji": "🌾",
+          "members": []
+        },
+        {
+          "id": "gang-girlbang",
+          "name": "GIRL BANG",
+          "emoji": "🐷",
+          "members": []
+        },
+        {
+          "id": "gang-blackrose",
+          "name": "흑장미",
+          "emoji": "🌹",
+          "members": []
+        },
+        {
+          "id": "gang-doremifa",
+          "name": "도레미파",
+          "emoji": "🎹",
+          "members": []
+        },
+        {
+          "id": "gang-metalunion",
+          "name": "금속노조",
+          "emoji": "⛏️",
+          "members": []
+        },
+        {
+          "id": "gang-adventure",
+          "name": "어드벤처",
+          "emoji": "🐯",
+          "members": []
+        },
+        {
+          "id": "gang-kgaeng",
+          "name": "깨갱",
+          "emoji": "🐶",
+          "members": []
+        },
+        {
+          "id": "gang-streetcat",
+          "name": "길고양이 연합",
+          "emoji": "😺",
+          "members": []
+        }
+      ]
+    },
+    {
+      "id": "business",
+      "name": "사업체",
+      "emoji": "🏢",
+      "badge": "BUSINESS",
+      "icon": "building",
+      "color": "amber",
+      "hasSubgroups": true,
+      "groups": [
+        {
+          "id": "biz-yastation",
+          "name": "야스테이션",
+          "emoji": "🔧",
+          "members": []
+        },
+        {
+          "id": "biz-lux",
+          "name": "LUX 클럽",
+          "emoji": "🎭",
+          "members": []
+        },
+        {
+          "id": "biz-young31",
+          "name": "영써티원",
+          "emoji": "🍔",
+          "members": []
+        },
+        {
+          "id": "biz-koi",
+          "name": "KOI 레스토랑",
+          "emoji": "💌",
+          "members": []
+        }
+      ]
+    },
+    {
+      "id": "press",
+      "name": "기자",
+      "emoji": "📰",
+      "badge": "KBTBS",
+      "icon": "camera",
+      "color": "sky",
+      "hasSubgroups": false,
+      "members": []
+    },
+    {
+      "id": "citizen",
+      "name": "시민",
+      "emoji": "👥",
+      "badge": "CITIZEN",
+      "icon": "users",
+      "color": "purple",
+      "hasSubgroups": false,
+      "members": []
+    }
+  ]
+}

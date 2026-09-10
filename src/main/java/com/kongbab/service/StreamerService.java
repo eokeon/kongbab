@@ -231,10 +231,23 @@ public class StreamerService {
 
     public void exportStaticJson() {
         try {
-            List<StreamerDto> all = getAllStreamers();
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            String json = mapper.writeValueAsString(all);
+            String json = null;
+            Path backupPath = Paths.get("D:", "\uBC31\uC5C5 \uD30C\uC77C", "KONGBAB_BACKUPS_JSON", "backup.json");
+            if (Files.exists(backupPath)) {
+                try {
+                    String backupContent = Files.readString(backupPath, StandardCharsets.UTF_8);
+                    if (backupContent != null && backupContent.contains("\"categories\"")) {
+                        json = backupContent;
+                    }
+                } catch (Exception ignored) {}
+            }
+
+            if (json == null) {
+                List<StreamerDto> all = getAllStreamers();
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.enable(SerializationFeature.INDENT_OUTPUT);
+                json = mapper.writeValueAsString(all);
+            }
 
             // static 및 docs, build 폴더의 streamers.json 동시 갱신
             List<Path> targets = List.of(
@@ -250,7 +263,7 @@ public class StreamerService {
                 } catch (Exception ignored) {}
             }
 
-            log.info("정적 streamers.json 자동 갱신 완료 (총 {}명)", all.size());
+            log.info("정적 streamers.json 자동 갱신 완료");
         } catch (Exception e) {
             log.error("streamers.json 저장 실패", e);
         }

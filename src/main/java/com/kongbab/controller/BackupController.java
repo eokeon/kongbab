@@ -248,7 +248,20 @@ public class BackupController {
             if (!streamerDtoList.isEmpty()) {
                 streamerService.syncStreamers(streamerDtoList);
             }
-            streamerService.exportStaticJson();
+
+            // 복원된 전체 백업 json을 static 및 docs의 streamers.json에도 즉시 동기화
+            List<Path> targets = List.of(
+                    Paths.get("src", "main", "resources", "static", "streamers.json"),
+                    Paths.get("build", "resources", "main", "static", "streamers.json"),
+                    Paths.get("docs", "streamers.json")
+            );
+            for (Path p : targets) {
+                try {
+                    if (Files.exists(p.getParent())) {
+                        Files.writeString(p, jsonContent, StandardCharsets.UTF_8);
+                    }
+                } catch (Exception ignored) {}
+            }
 
             res.put("success", true);
             res.put("message", "백업 데이터가 성공적으로 복원되었습니다.");
@@ -296,6 +309,20 @@ public class BackupController {
 
             Files.writeString(backupPath, payload, StandardCharsets.UTF_8);
             Files.writeString(latestPath, payload, StandardCharsets.UTF_8);
+
+            // static 및 docs, build 폴더의 streamers.json에도 최신 백업 데이터(순서 포함) 자동 동기화
+            List<Path> targets = List.of(
+                    Paths.get("src", "main", "resources", "static", "streamers.json"),
+                    Paths.get("build", "resources", "main", "static", "streamers.json"),
+                    Paths.get("docs", "streamers.json")
+            );
+            for (Path p : targets) {
+                try {
+                    if (Files.exists(p.getParent())) {
+                        Files.writeString(p, payload, StandardCharsets.UTF_8);
+                    }
+                } catch (Exception ignored) {}
+            }
 
             cleanOldBackups(dir);
 
