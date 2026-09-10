@@ -118,7 +118,7 @@ function openVideoModal(mode = 'add', videoId = null) {
     } else {
       if (radioClip) radioClip.checked = true;
     }
-    previewVideoModalThumb(video.url);
+    previewVideoModalThumb(video.url, video.thumbnailUrl);
   } else {
     modalTitle.textContent = "영상 추가";
     modalSubtitle.textContent = `${state.currentMember.streamer} (${state.currentMember.name})의 새 영상 등록`;
@@ -141,7 +141,8 @@ function openVideoModal(mode = 'add', videoId = null) {
     modal.classList.remove("hidden");
     modal.classList.add("flex");
     document.body.style.overflow = "hidden";
-    lastFetchedYoutubeId = null;
+    lastFetchedVideoKey = null;
+    lastFetchedVideoInfo = null;
     const subtextEl = document.getElementById("video-modal-thumb-subtext");
     if (subtextEl) {
       subtextEl.textContent = "";
@@ -159,50 +160,59 @@ function closeVideoModal() {
     document.body.style.overflow = "";
   }
   editingVideoId = null;
-  lastFetchedYoutubeId = null;
-  if (youtubeFetchDebounceTimer) {
-    clearTimeout(youtubeFetchDebounceTimer);
-    youtubeFetchDebounceTimer = null;
+  lastFetchedVideoKey = null;
+  lastFetchedVideoInfo = null;
+  if (videoFetchDebounceTimer) {
+    clearTimeout(videoFetchDebounceTimer);
+    videoFetchDebounceTimer = null;
   }
 }
 
-let youtubeFetchDebounceTimer = null;
-let lastFetchedYoutubeId = null;
+let videoFetchDebounceTimer = null;
+let lastFetchedVideoKey = null;
+let lastFetchedVideoInfo = null;
 
 function handleVideoUrlInput(url) {
   previewVideoModalThumb(url);
 
-  const videoId = extractYoutubeId(url);
-  if (!videoId) {
-    lastFetchedYoutubeId = null;
+  const ytId = typeof extractYoutubeId === "function" ? extractYoutubeId(url) : null;
+  const chzzkNo = typeof extractChzzkVideoNo === "function" ? extractChzzkVideoNo(url) : null;
+  const videoKey = ytId || chzzkNo;
+
+  if (!videoKey) {
+    lastFetchedVideoKey = null;
     return;
   }
 
-  // 같은 ID면 중복 호출 방지
-  if (videoId === lastFetchedYoutubeId) return;
+  // 같은 ID/번호면 중복 호출 방지
+  if (videoKey === lastFetchedVideoKey) return;
 
-  clearTimeout(youtubeFetchDebounceTimer);
-  youtubeFetchDebounceTimer = setTimeout(() => {
+  clearTimeout(videoFetchDebounceTimer);
+  videoFetchDebounceTimer = setTimeout(() => {
     // 신규 추가 중이거나 제목이 비어있는 경우 자동 입력
     const titleInput = document.getElementById("video-form-title");
     const isAddingNew = !editingVideoId;
     const shouldOverwrite = isAddingNew || (titleInput && !titleInput.value.trim());
-    fetchAndFillYouTubeInfo(url, shouldOverwrite);
+    fetchAndFillVideoInfo(url, shouldOverwrite);
   }, 400);
 }
 
 async function triggerFetchYouTubeInfo() {
   const urlInput = document.getElementById("video-form-url");
   if (!urlInput || !urlInput.value.trim()) {
-    showToast("유튜브 URL을 먼저 입력해주세요.");
+    showToast("영상 URL을 먼저 입력해주세요.");
     return;
   }
-  await fetchAndFillYouTubeInfo(urlInput.value.trim(), true);
+  await fetchAndFillVideoInfo(urlInput.value.trim(), true);
 }
 
-async function fetchAndFillYouTubeInfo(url, forceOverwrite = false) {
-  const videoId = extractYoutubeId(url);
-  if (!videoId) return;
+async function fetchAndFillVideoInfo(url, forceOverwrite = false) {
+  const isChzzk = typeof isChzzkUrl === "function" && isChzzkUrl(url);
+  const videoKey = isChzzk
+    ? (typeof extractChzzkVideoNo === "function" ? extractChzzkVideoNo(url) : null)
+    : (typeof extractYoutubeId === "function" ? extractYoutubeId(url) : null);
+
+  if (!videoKey) return;
 
   const btnText = document.getElementById("btn-fetch-youtube-text");
   const statusEl = document.getElementById("video-modal-thumb-status");
@@ -210,18 +220,23 @@ async function fetchAndFillYouTubeInfo(url, forceOverwrite = false) {
   const titleInput = document.getElementById("video-form-title");
   const dateInput = document.getElementById("video-form-date");
   const durationInput = document.getElementById("video-form-duration");
+  const thumbImg = document.getElementById("video-modal-thumb-img");
+  const previewBox = document.getElementById("video-modal-thumb-preview");
+
+  const platformName = isChzzk ? "치지직" : "유튜브";
 
   if (btnText) btnText.textContent = "조회 중...";
   if (statusEl) {
-    statusEl.textContent = "⏳ 유튜브 영상 정보(제목, 날짜, 영상 길이) 불러오는 중...";
+    statusEl.textContent = `⏳ ${platformName} 영상 정보(제목, 날짜, 영상 길이) 불러오는 중...`;
     statusEl.className = "text-xs text-amber-400 font-medium";
   }
 
   try {
-    const info = await apiGetYouTubeInfo(url);
+    const info = isChzzk ? await apiGetChzzkInfo(url) : await apiGetYouTubeInfo(url);
 
     if (info && info.success) {
-      lastFetchedYoutubeId = videoId;
+      lastFetchedVideoKey = videoKey;
+      lastFetchedVideoInfo = info;
 
       if (titleInput && info.title && (forceOverwrite || !titleInput.value.trim())) {
         titleInput.value = info.title;
@@ -233,9 +248,22 @@ async function fetchAndFillYouTubeInfo(url, forceOverwrite = false) {
         durationInput.value = info.duration;
       }
 
+      // 치지직 영상인 경우 풀영상(full)으로 기본 선택 (신규 추가 시)
+      if (isChzzk && !editingVideoId) {
+        const fullRadio = document.querySelector('input[name="video-form-type"][value="full"]');
+        if (fullRadio) fullRadio.checked = true;
+      }
+
+      // 썸네일 표시 갱신
+      if (info.thumbnailUrl && thumbImg && previewBox) {
+        thumbImg.src = info.thumbnailUrl;
+        previewBox.classList.remove("hidden");
+        previewBox.classList.add("flex");
+      }
+
       if (statusEl) {
         const durText = info.duration ? ` · 길이: ${info.duration}` : "";
-        statusEl.textContent = `✓ 제목, 업로드 날짜, 영상 길이 자동 입력 완료 (${info.publishedDate || '성공'}${durText})`;
+        statusEl.textContent = `✓ [${platformName}] 제목, 업로드 날짜, 영상 길이 자동 입력 완료 (${info.publishedDate || '성공'}${durText})`;
         statusEl.className = "text-xs text-emerald-400 font-medium";
       }
 
@@ -249,40 +277,67 @@ async function fetchAndFillYouTubeInfo(url, forceOverwrite = false) {
           subtextEl.classList.remove("hidden");
         }
       }
-      showToast(`✓ 유튜브 정보(제목, 날짜${info.duration ? `, 길이 ${info.duration}` : ""})를 불러왔습니다.`);
+      showToast(`✓ ${platformName} 정보(제목, 날짜${info.duration ? `, 길이 ${info.duration}` : ""})를 불러왔습니다.`);
     } else {
-      lastFetchedYoutubeId = null;
+      lastFetchedVideoKey = null;
+      const failMsg = (info && info.message) || `${platformName} 영상 정보 자동 조회 실패`;
       if (statusEl) {
-        statusEl.textContent = "✓ 썸네일 인식 완료 (영상 정보 자동 조회 실패)";
-        statusEl.className = "text-xs text-zinc-400 font-medium";
+        statusEl.textContent = `❌ ${failMsg}`;
+        statusEl.className = "text-xs text-rose-400 font-medium";
       }
+      showToast(`❌ ${failMsg}`);
     }
   } catch (err) {
-    console.error("유튜브 정보 자동 완성 실패:", err);
-    lastFetchedYoutubeId = null;
+    console.error(`${platformName} 정보 자동 완성 실패:`, err);
+    lastFetchedVideoKey = null;
     if (statusEl) {
-      statusEl.textContent = "✓ 썸네일 인식 완료";
-      statusEl.className = "text-xs text-zinc-400 font-medium";
+      statusEl.textContent = `❌ ${platformName} 정보 조회 중 오류가 발생했습니다.`;
+      statusEl.className = "text-xs text-rose-400 font-medium";
     }
+    showToast(`❌ ${platformName} 정보 조회 중 오류가 발생했습니다.`);
   } finally {
     if (btnText) btnText.textContent = "정보 가져오기";
   }
 }
 
-function previewVideoModalThumb(url) {
+// 기존 함수명 호환
+async function fetchAndFillYouTubeInfo(url, forceOverwrite = false) {
+  return fetchAndFillVideoInfo(url, forceOverwrite);
+}
+
+function previewVideoModalThumb(url, fallbackThumb = "") {
   const previewBox = document.getElementById("video-modal-thumb-preview");
   const thumbImg = document.getElementById("video-modal-thumb-img");
   const statusEl = document.getElementById("video-modal-thumb-status");
   const subtextEl = document.getElementById("video-modal-thumb-subtext");
-  const videoId = extractYoutubeId(url);
 
-  if (videoId && previewBox && thumbImg) {
-    thumbImg.src = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+  const ytId = typeof extractYoutubeId === "function" ? extractYoutubeId(url) : null;
+  const chzzkNo = typeof extractChzzkVideoNo === "function" ? extractChzzkVideoNo(url) : null;
+
+  if (ytId && previewBox && thumbImg) {
+    thumbImg.src = `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`;
     previewBox.classList.remove("hidden");
     previewBox.classList.add("flex");
     if (statusEl && !statusEl.textContent.includes("자동")) {
       statusEl.textContent = "✓ 유튜브 썸네일 인식 성공";
       statusEl.className = "text-xs text-emerald-400 font-medium";
+    }
+  } else if (chzzkNo && previewBox && thumbImg) {
+    previewBox.classList.remove("hidden");
+    previewBox.classList.add("flex");
+    const thumbSrc = (lastFetchedVideoInfo && lastFetchedVideoInfo.thumbnailUrl) || fallbackThumb;
+    if (thumbSrc) {
+      thumbImg.src = thumbSrc;
+      if (statusEl && !statusEl.textContent.includes("자동")) {
+        statusEl.textContent = "✓ 치지직 썸네일 인식 성공";
+        statusEl.className = "text-xs text-emerald-400 font-medium";
+      }
+    } else {
+      thumbImg.src = "assets/default-thumbnail.svg";
+      if (statusEl && !statusEl.textContent.includes("자동")) {
+        statusEl.textContent = "⏳ 치지직 영상 정보 조회 중...";
+        statusEl.className = "text-xs text-amber-400 font-medium";
+      }
     }
   } else if (previewBox) {
     previewBox.classList.add("hidden");
@@ -313,6 +368,10 @@ function handleSaveVideo(e) {
 
   if (!state.currentMember.videos) state.currentMember.videos = [];
 
+  const thumbnailUrl = (lastFetchedVideoInfo && lastFetchedVideoInfo.url === url && lastFetchedVideoInfo.thumbnailUrl)
+    ? lastFetchedVideoInfo.thumbnailUrl
+    : (editingVideoId ? (state.currentMember.videos.find(v => v.id === editingVideoId)?.thumbnailUrl || '') : '');
+
   let savedVideo = null;
   if (editingVideoId) {
     const idx = state.currentMember.videos.findIndex(v => v.id === editingVideoId);
@@ -324,7 +383,8 @@ function handleSaveVideo(e) {
         videoType,
         date,
         duration,
-        description: desc
+        description: desc,
+        ...(thumbnailUrl ? { thumbnailUrl } : {})
       };
       // 수정된 날짜에 맞춰 정렬 유지
       sortVideosByDateAsc(state.currentMember.videos);
@@ -340,7 +400,8 @@ function handleSaveVideo(e) {
       videoType,
       date,
       duration,
-      description: desc
+      description: desc,
+      ...(thumbnailUrl ? { thumbnailUrl } : {})
     };
     state.currentMember.videos.push(newVideo);
     // 기본 정렬: 게시일자 빠른 순(오름차순) -> 1번이 가장 빠른 날짜

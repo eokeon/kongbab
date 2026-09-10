@@ -35,6 +35,9 @@ public class Video {
     @Column(length = 1000)
     private String description;
 
+    @Column(length = 1000)
+    private String thumbnailUrl;
+
     private Integer displayOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)

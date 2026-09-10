@@ -5,7 +5,7 @@ const DEFAULT_CATEGORIES = [
     id: "gang", name: "갱단", emoji: "💀", badge: "GANG", icon: "skull", color: "red", hasSubgroups: true,
     groups: [
       { id: "gang-bigdick", name: "빅딕", emoji: "🍌", bgImage: "assets/bigdick.webp", members: [] },
-      { id: "gang-oompa", name: "움파룸파", emoji: "😜", members: [] },
+      { id: "gang-oompa", name: "움파룸파", emoji: "😜", bgImage: "assets/움파룸파.webp", members: [] },
       { id: "gang-sangryeon", name: "상련", emoji: "👠", members: [] },
       { id: "gang-goldmoon", name: "골드문", emoji: "🌙", members: [] },
       { id: "gang-nonghyup", name: "농협", emoji: "🌾", members: [] },
@@ -258,6 +258,21 @@ function extractYoutubeId(url) {
   return (match && match[2] && match[2].length === 11) ? match[2] : null;
 }
 
+function isChzzkUrl(url) {
+  if (!url) return false;
+  return /chzzk\.naver\.com/i.test(String(url));
+}
+
+function extractChzzkVideoNo(url) {
+  if (!url) return null;
+  const str = String(url).trim();
+  if (/^\d+$/.test(str)) {
+    return str;
+  }
+  const match = str.match(/chzzk\.naver\.com\/video\/(\d+)/i);
+  return match ? match[1] : null;
+}
+
 function getYoutubeThumbnail(url) {
   const id = extractYoutubeId(url);
   return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "assets/default-thumbnail.svg";
@@ -309,6 +324,11 @@ function updateStats() {
   const statEl = document.getElementById("header-stats");
   if (statEl) {
     statEl.innerHTML = `
+      <span class="inline-flex items-center gap-1.5 font-bold text-amber-400 group-hover:text-amber-300 transition-colors">
+        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
+        <span>통계</span>
+      </span>
+      <span class="text-zinc-700">|</span>
       <span class="inline-flex items-center gap-1.5"><strong class="text-white">${totalMembers}</strong>명 인원</span>
       <span class="text-zinc-700">|</span>
       <span class="inline-flex items-center gap-1.5"><strong class="text-red-400">${totalVideos}</strong>개 영상</span>

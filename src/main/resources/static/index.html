@@ -74,7 +74,7 @@
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div class="mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-zinc-800/80 pb-5">
       <div id="category-tabs" class="flex flex-wrap items-center gap-2"></div>
-      <div id="header-stats" class="text-xs text-zinc-400 flex items-center gap-2.5 bg-zinc-900/60 px-4 py-2 rounded-xl border border-zinc-800/60 flex-shrink-0"></div>
+      <div id="header-stats" onclick="openLeaderboardModal()" title="전체 종합 통계 보기 (클릭)" class="text-xs text-zinc-400 flex items-center gap-2.5 bg-zinc-900/80 hover:bg-zinc-800/90 px-4 py-2 rounded-xl border border-zinc-800 hover:border-amber-500/50 flex-shrink-0 cursor-pointer transition-all shadow-md group select-none"></div>
     </div>
 
     <section id="main-content" class="animate-fade-in"></section>
@@ -161,7 +161,7 @@
       <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-5">
         <div>
           <h3 id="video-modal-title" class="text-xl font-bold text-white">영상 추가</h3>
-          <p id="video-modal-subtitle" class="text-xs text-zinc-400 mt-0.5">인원의 유튜브 영상을 등록합니다</p>
+          <p id="video-modal-subtitle" class="text-xs text-zinc-400 mt-0.5">인원의 유튜브 또는 치지직 영상을 등록합니다</p>
         </div>
         <button onclick="closeVideoModal()" class="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors flex-shrink-0">✕</button>
       </div>
@@ -170,12 +170,12 @@
         <input type="hidden" id="video-form-id" value="" />
 
         <div>
-          <label class="block text-xs font-semibold text-zinc-300 mb-1">유튜브 URL <span class="text-red-500">*</span></label>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">영상 URL (유튜브 / 치지직) <span class="text-red-500">*</span></label>
           <div class="flex gap-2">
             <input 
               type="text" 
               id="video-form-url" 
-              placeholder="https://www.youtube.com/watch?v=..." 
+              placeholder="https://www.youtube.com/watch?v=... 또는 https://chzzk.naver.com/video/..." 
               required
               oninput="handleVideoUrlInput(this.value)"
               onpaste="setTimeout(() => handleVideoUrlInput(this.value), 50)"
@@ -187,14 +187,14 @@
               id="btn-fetch-youtube-info" 
               onclick="triggerFetchYouTubeInfo()" 
               class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-zinc-200 rounded-xl text-xs font-medium transition-colors flex items-center gap-1.5 whitespace-nowrap flex-shrink-0 cursor-pointer"
-              title="영상 정보(제목, 날짜) 자동 가져오기"
+              title="영상 정보(제목, 날짜, 길이) 자동 가져오기"
             >
               <svg class="w-3.5 h-3.5 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
               <span id="btn-fetch-youtube-text">정보 가져오기</span>
             </button>
           </div>
           <p class="text-[11px] text-zinc-500 mt-1.5 leading-relaxed">
-            💡 유튜브 링크를 붙여넣으면 썸네일, 제목, 업로드 날짜가 자동으로 입력됩니다.
+            💡 유튜브 또는 치지직 영상 링크를 붙여넣으면 썸네일, 제목, 업로드 날짜, 영상 길이가 자동으로 입력됩니다.
           </p>
         </div>
 
@@ -808,12 +808,46 @@
     </div>
   </div>
 
-  <script src="./js/state.js?v=20260910_03"></script>
-  <script src="./js/api.js?v=20260910_03"></script>
-  <script src="./js/drag-drop.js?v=20260910_03"></script>
-  <script src="./js/backup.js?v=20260910_03"></script>
-  <script src="./js/admin.js?v=20260910_03"></script>
-  <script src="./js/render.js?v=20260910_03"></script>
-  <script src="./js/app.js?v=20260910_03"></script>
+  <!-- Leaderboard & Statistics Modal -->
+  <div id="leaderboard-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-5 select-none" draggable="false" onclick="if(event.target === this) closeLeaderboardModal()">
+    <div class="bg-zinc-950 border border-zinc-800 rounded-3xl w-full max-w-5xl h-[92vh] sm:h-[88vh] max-h-[900px] shadow-2xl flex flex-col overflow-hidden animate-scale-in" onclick="event.stopPropagation()">
+      <!-- 모달 헤더 -->
+      <div class="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-zinc-800 bg-zinc-900/90 flex-shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow">
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1c1.8-.31 3.25-1.55 3.61-3.06C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg sm:text-xl font-black text-white flex items-center gap-2">
+              <span>콩밥 아카이브 종합 통계</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">명예의 전당</span>
+            </h3>
+            <p class="text-xs text-zinc-400 mt-0.5">스트리머별 플레이타임 통계 및 전체 아카이브 종합 분석</p>
+          </div>
+        </div>
+        <button 
+          type="button" 
+          onclick="closeLeaderboardModal()" 
+          class="w-9 h-9 rounded-xl bg-zinc-800/80 hover:bg-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+          title="닫기 (ESC)"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- 모달 바디 (스크롤 영역) -->
+      <div id="leaderboard-modal-content" class="flex-1 overflow-y-auto p-4 sm:p-6 select-text">
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/state.js?v=20260910_10"></script>
+  <script src="./js/api.js?v=20260910_04"></script>
+  <script src="./js/drag-drop.js?v=20260910_04"></script>
+  <script src="./js/backup.js?v=20260910_04"></script>
+  <script src="./js/admin.js?v=20260910_04"></script>
+  <script src="./js/render.js?v=20260910_10"></script>
+  <script src="./js/leaderboard.js?v=20260910_12"></script>
+  <script src="./js/app.js?v=20260910_04"></script>
 </body>
 </html>

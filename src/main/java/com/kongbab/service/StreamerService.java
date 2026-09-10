@@ -122,6 +122,7 @@ public class StreamerService {
         video.setDate(dto.getDate());
         video.setDuration(dto.getDuration());
         video.setDescription(dto.getDescription());
+        video.setThumbnailUrl(dto.getThumbnailUrl());
         if (dto.getDisplayOrder() != null) {
             video.setDisplayOrder(dto.getDisplayOrder());
         }
@@ -224,6 +225,7 @@ public class StreamerService {
                     v.setDate(vDto.getDate());
                     v.setDuration(vDto.getDuration());
                     v.setDescription(vDto.getDescription());
+                    v.setThumbnailUrl(vDto.getThumbnailUrl());
                     v.setDisplayOrder(vDto.getDisplayOrder() != null ? vDto.getDisplayOrder() : vOrder++);
                     v.setStreamer(streamer);
                     keptVideos.add(v);

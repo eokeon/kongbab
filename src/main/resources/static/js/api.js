@@ -1,6 +1,9 @@
-const API_BASE = (window.location.protocol === "file:" || window.location.port === "63342") 
-  ? "http://localhost:8080" 
-  : "";
+const API_BASE = (
+  window.location.protocol === "file:" || 
+  window.location.port === "63342" || 
+  (window.location.hostname === "localhost" && window.location.port !== "8080") ||
+  (window.location.hostname === "127.0.0.1" && window.location.port !== "8080")
+) ? "http://localhost:8080" : "";
 
 function getAuthHeaders() {
   const headers = {};
@@ -317,6 +320,44 @@ function formatIsoDuration(iso) {
     return `${hours}:${minStr}:${secStr}`;
   } else {
     return `${minutes}:${secStr}`;
+  }
+}
+
+async function apiGetChzzkInfo(url) {
+  if (!url) return { success: false, message: "URL이 없습니다." };
+  const videoNo = typeof extractChzzkVideoNo === "function" ? extractChzzkVideoNo(url) : null;
+  if (!videoNo) return { success: false, message: "유효한 치지직 영상 링크 또는 번호가 아닙니다." };
+
+  // 1. 백엔드 Spring Boot API 호출
+  try {
+    const res = await fetch(`${API_BASE}/api/chzzk/info?url=${encodeURIComponent(url)}`, {
+      cache: "no-store"
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.success) {
+        return data;
+      }
+      return { success: false, message: (data && data.message) || "치지직 영상 정보 조회 실패" };
+    } else if (res.status === 404) {
+      return { 
+        success: false, 
+        message: "치지직 API(404)를 찾을 수 없습니다. IntelliJ에서 Spring Boot 서버를 '재시작(Rerun)'해주세요!" 
+      };
+    }
+  } catch (e) {
+    console.warn("백엔드 Chzzk API 조회 실패:", e);
+  }
+
+  return { success: false, message: "치지직 영상 정보를 불러올 수 없습니다. 스프링 부트 서버 상태를 확인해주세요." };
+}
+
+async function apiGetVideoInfo(url) {
+  if (!url) return { success: false, message: "URL이 없습니다." };
+  if (typeof isChzzkUrl === "function" && isChzzkUrl(url)) {
+    return await apiGetChzzkInfo(url);
+  } else {
+    return await apiGetYouTubeInfo(url);
   }
 }
 

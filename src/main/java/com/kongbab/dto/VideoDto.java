@@ -17,6 +17,7 @@ public class VideoDto {
     private String duration;
     private String description;
     private Integer displayOrder;
+    private String thumbnailUrl;
 
     public static VideoDto fromEntity(Video entity) {
         if (entity == null) return null;
@@ -29,6 +30,7 @@ public class VideoDto {
                 .duration(entity.getDuration())
                 .description(entity.getDescription())
                 .displayOrder(entity.getDisplayOrder())
+                .thumbnailUrl(entity.getThumbnailUrl())
                 .build();
     }
 }
