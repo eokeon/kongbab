@@ -46,7 +46,7 @@ public class StreamerService {
     }
 
     @Transactional
-    public StreamerDto saveStreamer(StreamerDto dto) {
+    public synchronized StreamerDto saveStreamer(StreamerDto dto) {
         Streamer streamer = null;
         if (dto.getId() != null && !dto.getId().isBlank()) {
             streamer = findStreamerEntity(dto.getId()).orElse(null);
@@ -71,6 +71,12 @@ public class StreamerService {
         streamer.setAffiliations(dto.getAffiliations());
         if (dto.getDisplayOrder() != null) {
             streamer.setDisplayOrder(dto.getDisplayOrder());
+        }
+        if (dto.getSubscriberCount() != null) {
+            streamer.setSubscriberCount(dto.getSubscriberCount());
+        }
+        if (dto.getYoutubeUrl() != null) {
+            streamer.setYoutubeUrl(dto.getYoutubeUrl());
         }
 
         Streamer saved = streamerRepository.save(streamer);
@@ -143,7 +149,7 @@ public class StreamerService {
     }
 
     @Transactional
-    public List<StreamerDto> syncStreamers(List<StreamerDto> dtoList) {
+    public synchronized List<StreamerDto> syncStreamers(List<StreamerDto> dtoList) {
         if (dtoList == null || dtoList.isEmpty()) {
             return Collections.emptyList();
         }
@@ -177,6 +183,12 @@ public class StreamerService {
             streamer.setAvatar(dto.getAvatar());
             streamer.setAffiliations(dto.getAffiliations());
             streamer.setDisplayOrder(dto.getDisplayOrder());
+            if (dto.getSubscriberCount() != null) {
+                streamer.setSubscriberCount(dto.getSubscriberCount());
+            }
+            if (dto.getYoutubeUrl() != null) {
+                streamer.setYoutubeUrl(dto.getYoutubeUrl());
+            }
 
             if (dto.getVideos() != null) {
                 List<Video> currentVideos = streamer.getVideos();

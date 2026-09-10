@@ -402,6 +402,12 @@ public class BackupController {
             dto.setBadgeColor(m.has("badgeColor") ? m.get("badgeColor").asText() : "bg-zinc-800");
             dto.setAvatar(m.has("avatar") ? m.get("avatar").asText() : "assets/default-avatar.svg");
             dto.setDisplayOrder(m.has("displayOrder") ? m.get("displayOrder").asInt() : defaultOrder);
+            if (m.has("subscriberCount") && !m.get("subscriberCount").isNull()) {
+                dto.setSubscriberCount(m.get("subscriberCount").asText());
+            }
+            if (m.has("youtubeUrl") && !m.get("youtubeUrl").isNull()) {
+                dto.setYoutubeUrl(m.get("youtubeUrl").asText());
+            }
 
             if (m.has("affiliations")) {
                 dto.setAffiliations(m.get("affiliations").toString());

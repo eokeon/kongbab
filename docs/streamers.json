@@ -1,12 +1,12 @@
-﻿{
+{
   "appName": "kongbab-gta-rp",
   "version": "1.0",
-  "createdAt": "2026.09.10 04:00:10",
-  "reason": "재생목록 일괄 등록: 김모치 (15개)",
+  "createdAt": "2026.09.10 19:49:18",
+  "reason": "유튜브 구독자 수 일괄 갱신 (9명)",
   "stats": {
     "totalCategories": 6,
     "totalMembers": 45,
-    "totalVideos": 78
+    "totalVideos": 143
   },
   "categories": [
     {
@@ -26,6 +26,8 @@
           "badgeColor": "bg-blue-600",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 0,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -42,6 +44,8 @@
           "badgeColor": "bg-indigo-600",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 1,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -58,6 +62,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 2,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -74,6 +80,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 3,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -90,6 +98,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 4,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -106,6 +116,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 5,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -122,6 +134,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 6,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -138,6 +152,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 7,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -154,6 +170,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 8,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -170,6 +188,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 9,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -186,6 +206,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 10,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -202,6 +224,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 11,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -218,6 +242,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 12,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -234,6 +260,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 13,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -250,6 +278,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 14,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -266,6 +296,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 15,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -282,6 +314,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 16,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -298,6 +332,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 17,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -314,6 +350,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 18,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -330,6 +368,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 19,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -346,6 +386,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 20,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -362,6 +404,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 21,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -378,6 +422,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 22,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -394,6 +440,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 23,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -410,6 +458,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 24,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -426,6 +476,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 25,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -442,6 +494,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 26,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -458,6 +512,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 27,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -474,6 +530,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 28,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -490,6 +548,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 29,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -506,6 +566,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 30,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -522,6 +584,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 31,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -538,6 +602,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 32,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -554,6 +620,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 33,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -570,6 +638,8 @@
           "badgeColor": "bg-zinc-800",
           "avatar": "assets/default-avatar.svg",
           "displayOrder": 34,
+          "subscriberCount": "",
+          "youtubeUrl": "",
           "videos": [],
           "affiliations": [
             {
@@ -607,12 +677,14 @@
           "members": [
             {
               "id": "gang-bd-1",
-              "name": "장지환 / 장두광 / 거지환",
-              "streamer": "괴물쥐",
-              "role": "보스",
-              "badgeColor": "bg-red-600",
-              "avatar": "https://yt3.googleusercontent.com/ytc/AIdro_n2j3w7B8DpULUI9Z-GIFO2HVj487vk_hKU9Epsab-Q6qo=s120-c-k-c0x00ffffff-no-rj",
+              "name": "u{C7A5}u{C9C0}u{D658}",
+              "streamer": "u{AD34}u{BB3C}u{C950}",
+              "role": "",
+              "badgeColor": "bg-blue-600",
+              "avatar": "assets/default-avatar.svg",
               "displayOrder": 35,
+              "subscriberCount": "121만 명",
+              "youtubeUrl": "https://www.youtube.com/@u{AD34}u{BB3C}u{C950}",
               "videos": [
                 {
                   "id": "v-mtuew1y4j16h",
@@ -830,6 +902,8 @@
               "badgeColor": "bg-red-600",
               "avatar": "https://yt3.googleusercontent.com/MpDiCuOTT8w7-3dFxzFhSN8mtsd0r8XZ1ZOZ1I1RjiSDz00ePfmLaPDDBjQYi4fRld5tbqJf=s120-c-k-c0x00ffffff-no-rj",
               "displayOrder": 36,
+              "subscriberCount": "57.8만 명",
+              "youtubeUrl": "",
               "videos": [
                 {
                   "id": "v-mtuf88ysaugq",
@@ -913,10 +987,12 @@
               "id": "gang-bd-4",
               "name": "김실망",
               "streamer": "실프",
-              "role": "조직원",
+              "role": "",
               "badgeColor": "bg-zinc-700",
               "avatar": "https://yt3.googleusercontent.com/10Kxrhk_XT85525o0OWvRwWjMfdpC2llmB47GAvq0o-Jnx-jV3XcTTuPQm8a6a0Bx-RoK9fdgVw=s120-c-k-c0x00ffffff-no-rj",
               "displayOrder": 37,
+              "subscriberCount": "19.5만 명",
+              "youtubeUrl": "",
               "videos": [
                 {
                   "id": "v-mtugo30k2me6n-0",
@@ -1230,10 +1306,12 @@
               "id": "gang-bd-5",
               "name": "김윤구",
               "streamer": "해마티엘",
-              "role": "조직원",
+              "role": "",
               "badgeColor": "bg-zinc-700",
               "avatar": "https://yt3.googleusercontent.com/h34O2U-7lwtRdhwTItX64c9X3-N_NZwT9j7EEodIKkfH6gJKzPUKElfFmHBA2HwPeimjVRi0=s120-c-k-c0x00ffffff-no-rj",
               "displayOrder": 38,
+              "subscriberCount": "7.2만 명",
+              "youtubeUrl": "",
               "videos": [
                 {
                   "id": "v-mtug1uy32rk9",
@@ -1257,10 +1335,12 @@
               "id": "gang-bd-3",
               "name": "김모치",
               "streamer": "모치즈키 카에데",
-              "role": "조직원",
+              "role": "",
               "badgeColor": "bg-zinc-700",
               "avatar": "https://yt3.googleusercontent.com/8oHiEHC_CwrQawea5pkTh7Qn8euVigdOLTFvXo1jiD6gmHbLXqyfL5y5BGOI79RpkgQ687ZZWA=s120-c-k-c0x00ffffff-no-rj",
               "displayOrder": 39,
+              "subscriberCount": "6.6만 명",
+              "youtubeUrl": "",
               "videos": [
                 {
                   "id": "v-mtugn2tkdz4k1-0",
@@ -1474,11 +1554,44 @@
               "id": "gang-bd-6",
               "name": "나루호도에비덴뿌라",
               "streamer": "새우새우",
-              "role": "조직원",
+              "role": "",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/_aa2OpD-XsvACA7GgvrtQuaPkZq7pZUGKvyKM6z3iVqBSiZjzvmLwvnhJzyMONarm1CDx9eT=s120-c-k-c0x00ffffff-no-rj",
               "displayOrder": 40,
-              "videos": [],
+              "subscriberCount": "8만 명",
+              "youtubeUrl": "",
+              "videos": [
+                {
+                  "id": "v-mtvcpl9wymk2",
+                  "title": "멤버 구독자 수 총합 \"267만\".. 이 거물들이랑 갱을 하라고요? 【콩밥특별시 1화】",
+                  "url": "https://youtu.be/U9QqnaTQBqI",
+                  "videoType": "clip",
+                  "date": "2025.07.17",
+                  "duration": "11:09",
+                  "description": "",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mtvcpti9dxig",
+                  "title": "이 도시 무력 최강 갱 \"빅딕\"의 덴뿌라입니다 【콩밥특별시 2화】",
+                  "url": "https://youtu.be/SoKAs1u8gJA",
+                  "videoType": "clip",
+                  "date": "2025.08.09",
+                  "duration": "11:42",
+                  "description": "",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mtvcry92zl63",
+                  "title": "덴뿌라, 6번 무전으로.",
+                  "url": "https://youtu.be/YA0ks9WmDrs",
+                  "videoType": "clip",
+                  "date": "2025.09.10",
+                  "duration": "13:04",
+                  "description": "",
+                  "displayOrder": 2
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",
@@ -1490,11 +1603,134 @@
               "id": "gang-bd-7",
               "name": "민해리",
               "streamer": "민네",
-              "role": "조직원",
+              "role": "",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/d0cluRmRok5B-zJJyfUmMVGoKyViIQ_RKBtNe0D4UjBB2kVblUJh1j9DbSoZBoECDeAXayCE=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 41,
-              "videos": [],
+              "subscriberCount": "1.8만 명",
+              "youtubeUrl": "",
+              "videos": [
+                {
+                  "id": "v-mtvd5a5fd8c3",
+                  "title": "주먹으로 시작한 입주 첫 날《GTA5 콩밥특별시-1-》",
+                  "url": "https://youtu.be/o819pqNDj10",
+                  "videoType": "full",
+                  "date": "2025.05.28",
+                  "duration": "8:09:19",
+                  "description": "",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mtvd5fl3jq12",
+                  "title": "진짜 콩밥 먹으러 구금 됐습니다《GTA5 콩밥특별시-2-》",
+                  "url": "https://youtu.be/NSkCuW8KMSQ",
+                  "videoType": "full",
+                  "date": "2025.05.28",
+                  "duration": "9:16:52",
+                  "description": "",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mtvd5lf9hsk1",
+                  "title": "빅ㄷ.... 바나나갱 활동 시작🍌《GTA5 콩밥특별시-3-》",
+                  "url": "https://youtu.be/cl82GotGExw",
+                  "videoType": "full",
+                  "date": "2025.05.28",
+                  "duration": "8:43:14",
+                  "description": "",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mtvd5rbtl45l",
+                  "title": "돈. 이 세상은 돈이 전부다《GTA5 콩밥특별시-4-》",
+                  "url": "https://youtu.be/71suOthUbyE",
+                  "videoType": "full",
+                  "date": "2025.05.30",
+                  "duration": "8:35:03",
+                  "description": "",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mtvd5uvmg19a",
+                  "title": "13억 가치의 아지트는 우리의 것《GTA5 콩밥특별시-5-》",
+                  "url": "https://youtu.be/mDDw_3s-_4U",
+                  "videoType": "full",
+                  "date": "2025.05.30",
+                  "duration": "9:22:14",
+                  "description": "",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mtvd5z05wfhs",
+                  "title": "보석상이 업데이트 됐지만....《GTA5 콩밥특별시-6-》",
+                  "url": "https://youtu.be/JGJ3ivxAQt4",
+                  "videoType": "full",
+                  "date": "2025.06.02",
+                  "duration": "4:15:59",
+                  "description": "",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mtvd665mftry",
+                  "title": "함께있다면 뭐든 즐거워《GTA5 콩밥특별시-7-》",
+                  "url": "https://youtu.be/1hWni0ylLtg",
+                  "videoType": "full",
+                  "date": "2025.06.02",
+                  "duration": "10:16:54",
+                  "description": "",
+                  "displayOrder": 6
+                },
+                {
+                  "id": "v-mtvd6d7xo8n8",
+                  "title": "어느 평범했을 날《GTA5 콩밥특별시-8-》",
+                  "url": "https://youtu.be/IEDJ8uLntmc",
+                  "videoType": "full",
+                  "date": "2025.06.03",
+                  "duration": "9:22:16",
+                  "description": "",
+                  "displayOrder": 7
+                },
+                {
+                  "id": "v-mtvd6gwtxzxi",
+                  "title": "모두 도착《GTA5 콩밥특별시-엔딩-》",
+                  "url": "https://youtu.be/oLdnBuHpjw8",
+                  "videoType": "full",
+                  "date": "2025.06.09",
+                  "duration": "7:46:02",
+                  "description": "",
+                  "displayOrder": 8
+                },
+                {
+                  "id": "v-mtvd3a0mq81v",
+                  "title": "첫날부터 남친이 생기다 [콩밥특별시 1화]",
+                  "url": "https://youtu.be/2w9FYfMyw4E",
+                  "videoType": "clip",
+                  "date": "2025.06.12",
+                  "duration": "10:51",
+                  "description": "",
+                  "displayOrder": 9
+                },
+                {
+                  "id": "v-mtvd3gd8tfzq",
+                  "title": "가장 뜨거웠던 갱의 탄생🍌 [콩밥특별시 2화]",
+                  "url": "https://youtu.be/OXlJTvVgbRo",
+                  "videoType": "clip",
+                  "date": "2025.06.17",
+                  "duration": "10:02",
+                  "description": "",
+                  "displayOrder": 10
+                },
+                {
+                  "id": "v-mtvd3l6lz40b",
+                  "title": "더 열심히 사랑할 걸 그랬어 [콩밥특별시 3화]",
+                  "url": "https://youtu.be/qv_DsFm2AKc",
+                  "videoType": "clip",
+                  "date": "2025.06.23",
+                  "duration": "18:15",
+                  "description": "",
+                  "displayOrder": 11
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",
@@ -1506,11 +1742,64 @@
               "id": "gang-bd-8",
               "name": "아카콩",
               "streamer": "아카캉",
-              "role": "조직원",
+              "role": "",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/22RAHXxC1uETHtstGdHQ-Jz0iYybtZRGXRIQxd9NinF4zByflh1x-t-df6cGkmTvcStx1_f6gg=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 42,
-              "videos": [],
+              "subscriberCount": "37.4만 명",
+              "youtubeUrl": "",
+              "videos": [
+                {
+                  "id": "v-mtvd9duxgza0",
+                  "title": "아카콩, 전설의 시작 [콩밥특별시 1부]",
+                  "url": "https://youtu.be/aVMiuGFP6fg",
+                  "videoType": "clip",
+                  "date": "2025.06.12",
+                  "duration": "11:23",
+                  "description": "",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mtvd9i3v74gl",
+                  "title": "13억의 \"전설\", 빅딕 아카콩의 시작 [콩밥특별시 2부]",
+                  "url": "https://youtu.be/AfL6X0GSZu8",
+                  "videoType": "clip",
+                  "date": "2025.06.14",
+                  "duration": "14:32",
+                  "description": "",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mtvd9m9aibvc",
+                  "title": "빅딕의 영원한 보스는 장지환 뿐 [아카콩 콩밥특별시 3부]",
+                  "url": "https://youtu.be/-55ZdYPYoPE",
+                  "videoType": "clip",
+                  "date": "2025.06.21",
+                  "duration": "23:08",
+                  "description": "",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mtvd9pxpt2eh",
+                  "title": "나의 아저씨, 정상화 [콩밥특별시 아카콩 4부]",
+                  "url": "https://youtu.be/qp0y0sVUlR0",
+                  "videoType": "clip",
+                  "date": "2025.06.27",
+                  "duration": "26:41",
+                  "description": "",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mtvd9tgu6ayz",
+                  "title": "그동안 감사했습니다, 아카콩 -완- [콩밥특별시 5부 完]",
+                  "url": "https://youtu.be/cWtwdR-kCX8",
+                  "videoType": "clip",
+                  "date": "2025.07.05",
+                  "duration": "23:20",
+                  "description": "",
+                  "displayOrder": 4
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",
@@ -1522,11 +1811,244 @@
               "id": "gang-bd-9",
               "name": "코코팜",
               "streamer": "야코코",
-              "role": "조직원",
+              "role": "",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/esE3TJPUIjG3y22QYpKLOTcEWLmWymJfPlUQu0oIfkUETQjtczV4YCXaPhrCvptcy5bqtnL-=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 43,
-              "videos": [],
+              "subscriberCount": "21만 명",
+              "youtubeUrl": "",
+              "videos": [
+                {
+                  "id": "v-mtvde6lzjrhk",
+                  "title": "콩밥특별시 1일차 코코팜 다시보기 ［2025-05-25 / GTA5］",
+                  "url": "https://youtu.be/Yymqiu9Q770",
+                  "videoType": "full",
+                  "date": "2025.05.30",
+                  "duration": "13:12:53",
+                  "description": "",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mtvdeed0h7f7",
+                  "title": "콩밥특별시 2일차 코코팜 다시보기 ［2025-05-25 / GTA5］",
+                  "url": "https://youtu.be/Lr5Ybeq8FEM",
+                  "videoType": "full",
+                  "date": "2025.05.30",
+                  "duration": "13:36:32",
+                  "description": "",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mtvdenge8lal",
+                  "title": "콩밥특별시 3일차 코코팜 다시보기 ［2025-05-27 / GTA5］",
+                  "url": "https://youtu.be/DKH5ojTpPBY",
+                  "videoType": "full",
+                  "date": "2025.05.30",
+                  "duration": "12:54:21",
+                  "description": "",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mtvdeuzkgtx1",
+                  "title": "콩밥특별시 4일차 코코팜 다시보기(1) ［2025-05-28 / GTA5］",
+                  "url": "https://youtu.be/B1motrFOnn4",
+                  "videoType": "full",
+                  "date": "2025.05.31",
+                  "duration": "1:49:15",
+                  "description": "",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mtvdezmha70e",
+                  "title": "콩밥특별시 4일차 코코팜 다시보기(2) ［2025-05-28 / GTA5］",
+                  "url": "https://youtu.be/oXOCFlUsJiQ",
+                  "videoType": "full",
+                  "date": "2025.05.31",
+                  "duration": "12:06:16",
+                  "description": "",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mtvdf35eunu5",
+                  "title": "콩밥특별시 5일차 코코팜 다시보기 ［2025-05-29 / GTA5］",
+                  "url": "https://youtu.be/TgyKCG-sJsw",
+                  "videoType": "full",
+                  "date": "2025.06.01",
+                  "duration": "13:53:22",
+                  "description": "",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mtvdf6yj5uu5",
+                  "title": "콩밥특별시 6일차 코코팜 다시보기 ［2025-05-31 / GTA5］",
+                  "url": "https://youtu.be/2vff5KBBB2E",
+                  "videoType": "full",
+                  "date": "2025.06.01",
+                  "duration": "14:05:10",
+                  "description": "",
+                  "displayOrder": 6
+                },
+                {
+                  "id": "v-mtvdfoonbwq5",
+                  "title": "콩밥특별시 7일차 코코팜 다시보기 ［2025-06-01 / GTA5］",
+                  "url": "https://youtu.be/AxmVdMwp880",
+                  "videoType": "full",
+                  "date": "2025.06.04",
+                  "duration": "13:54:24",
+                  "description": "",
+                  "displayOrder": 7
+                },
+                {
+                  "id": "v-mtvdgh7bjd8m",
+                  "title": "콩밥특별시 8일차 코코팜 다시보기 ［2025-06-02 / GTA5］",
+                  "url": "https://youtu.be/30mPaQ9kyYI",
+                  "videoType": "full",
+                  "date": "2025.06.04",
+                  "duration": "10:06:25",
+                  "description": "",
+                  "displayOrder": 8
+                },
+                {
+                  "id": "v-mtvdgle81tla",
+                  "title": "콩밥특별시 9일차 코코팜 다시보기 ［2025-06-03 / GTA5］",
+                  "url": "https://youtu.be/KxqZ1mUlRF8",
+                  "videoType": "full",
+                  "date": "2025.06.04",
+                  "duration": "9:22:59",
+                  "description": "",
+                  "displayOrder": 9
+                },
+                {
+                  "id": "v-mtvdgshrh5e5",
+                  "title": "콩밥특별시 10일차 코코팜 다시보기 ［2025-06-04 / GTA5］",
+                  "url": "https://youtu.be/p3mwMG4N-s0",
+                  "videoType": "full",
+                  "date": "2025.06.05",
+                  "duration": "10:48:48",
+                  "description": "",
+                  "displayOrder": 10
+                },
+                {
+                  "id": "v-mtvdc9hyn0z1",
+                  "title": "이 여자, 시작부터 장지환의 엉덩이를 때려준다 【콩밥특별시 코코팜 1부】",
+                  "url": "https://youtu.be/u_VGDWcpxrk",
+                  "videoType": "clip",
+                  "date": "2025.06.08",
+                  "duration": "20:52",
+                  "description": "",
+                  "displayOrder": 11
+                },
+                {
+                  "id": "v-mtvdh04259xz",
+                  "title": "콩밥특별시 11일차 코코팜 다시보기 ［2025-06-05 / GTA5］",
+                  "url": "https://youtu.be/BAvkeQulaoY",
+                  "videoType": "full",
+                  "date": "2025.06.08",
+                  "duration": "10:02:47",
+                  "description": "",
+                  "displayOrder": 12
+                },
+                {
+                  "id": "v-mtvdh3674skx",
+                  "title": "콩밥특별시 12일차 코코팜 다시보기 ［2025-06-06 / GTA5］",
+                  "url": "https://youtu.be/-KWf5cKsV64",
+                  "videoType": "full",
+                  "date": "2025.06.09",
+                  "duration": "7:43:37",
+                  "description": "",
+                  "displayOrder": 13
+                },
+                {
+                  "id": "v-mtvdcdj9wqzk",
+                  "title": "넌 이제 내 노예다ㅋ 【콩밥특별시 코코팜 2부】",
+                  "url": "https://youtu.be/RuPfwETjv1g",
+                  "videoType": "clip",
+                  "date": "2025.06.10",
+                  "duration": "18:26",
+                  "description": "",
+                  "displayOrder": 14
+                },
+                {
+                  "id": "v-mtvdh6du126v",
+                  "title": "콩밥특별시 13일차 코코팜 다시보기 ［2025-06-07 / GTA5］",
+                  "url": "https://youtu.be/QDkh2x6k2pk",
+                  "videoType": "full",
+                  "date": "2025.06.10",
+                  "duration": "7:51:57",
+                  "description": "",
+                  "displayOrder": 15
+                },
+                {
+                  "id": "v-mtvdh9pbl8a7",
+                  "title": "콩밥특별시 14일차 코코팜 다시보기 ［2025-06-08 / GTA5］",
+                  "url": "https://youtu.be/xhtkmYLPDy8",
+                  "videoType": "full",
+                  "date": "2025.06.11",
+                  "duration": "8:19:00",
+                  "description": "",
+                  "displayOrder": 16
+                },
+                {
+                  "id": "v-mtvdch1ee7md",
+                  "title": "얘들아 3번 아지트로 【콩밥특별시 코코팜 3부】",
+                  "url": "https://youtu.be/4u4tDfgloNk",
+                  "videoType": "clip",
+                  "date": "2025.06.13",
+                  "duration": "22:13",
+                  "description": "",
+                  "displayOrder": 17
+                },
+                {
+                  "id": "v-mtvdcke69f28",
+                  "title": "언니... 화났어? 오빠 나 무서워...❤️ 【콩밥특별시 코코팜 4부】",
+                  "url": "https://youtu.be/aCFZG-cevQY",
+                  "videoType": "clip",
+                  "date": "2025.06.17",
+                  "duration": "26:45",
+                  "description": "",
+                  "displayOrder": 18
+                },
+                {
+                  "id": "v-mtvdco9ie69l",
+                  "title": "지환오빠... 죽으면 안돼... 빅딕의 해체❓❗ 【콩밥특별시 코코팜 5부】",
+                  "url": "https://youtu.be/orbtEa9lJ7g",
+                  "videoType": "clip",
+                  "date": "2025.06.22",
+                  "duration": "22:38",
+                  "description": "",
+                  "displayOrder": 19
+                },
+                {
+                  "id": "v-mtvdcsi5ihzz",
+                  "title": "＂ 6번 무전으로 ＂ 【콩밥특별시 코코팜 6부】",
+                  "url": "https://youtu.be/fLLqjs5qa_Q",
+                  "videoType": "clip",
+                  "date": "2025.06.26",
+                  "duration": "29:48",
+                  "description": "",
+                  "displayOrder": 20
+                },
+                {
+                  "id": "v-mtvdcx0bqppb",
+                  "title": "빅딕 은행털이...💰 그리고 갱 서열정리 NO.1은...❓❗  【콩밥특별시 코코팜 7부】",
+                  "url": "https://youtu.be/4LIMgwsKE3Y",
+                  "videoType": "clip",
+                  "date": "2025.07.02",
+                  "duration": "20:09",
+                  "description": "",
+                  "displayOrder": 21
+                },
+                {
+                  "id": "v-mtvdd4ttfbnv",
+                  "title": "얘들아 고생했다... 【콩밥특별시 코코팜 8부 -완-】",
+                  "url": "https://youtu.be/JT50iwN7ykw",
+                  "videoType": "clip",
+                  "date": "2025.07.05",
+                  "duration": "21:57",
+                  "description": "",
+                  "displayOrder": 22
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",
@@ -1538,11 +2060,234 @@
               "id": "gang-bd-10",
               "name": "춘윅",
               "streamer": "츠밍",
-              "role": "조직원",
+              "role": "",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/ppJDh5iuLBPhXWzzy4TeEyh5hV82XAPNYeTKdRWAuGlEYLZRNASd17biKwFmnJYpXRxMnKNH=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 44,
-              "videos": [],
+              "subscriberCount": "5.5만 명",
+              "youtubeUrl": "https://www.youtube.com/@%EC%B8%A0%EB%B0%8D",
+              "videos": [
+                {
+                  "id": "v-mtvdlaqk26xl",
+                  "title": "[2025 05 25] 콩밥서버 대기",
+                  "url": "https://youtu.be/ysgY3LxczUY",
+                  "videoType": "full",
+                  "date": "2025.06.13",
+                  "duration": "59:11",
+                  "description": "",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mtvdxbvaa38nn-0",
+                  "title": "[2025 05 25] 콩밥 서버 1-1/오버워치",
+                  "url": "https://www.youtube.com/watch?v=brNEZvtso6M&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.13",
+                  "duration": "5:24:52",
+                  "description": "",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mtvdxbva8mzff-1",
+                  "title": "[2025 05 25] 콩밥서버 1-2",
+                  "url": "https://www.youtube.com/watch?v=c_6kl2uikTs&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.13",
+                  "duration": "8:37:43",
+                  "description": "",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mtvdxbvakex2k-2",
+                  "title": "[2025 05 26] 콩밥서버2",
+                  "url": "https://www.youtube.com/watch?v=Ap1fvEe4M_o&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.13",
+                  "duration": "7:28:06",
+                  "description": "",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mtvdxbvazs56r-3",
+                  "title": "2025 05 26 콩밥서버2-2",
+                  "url": "https://www.youtube.com/watch?v=wse77J0LE9Y&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.13",
+                  "duration": "7:46:55",
+                  "description": "",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mtvdxbva22psv-4",
+                  "title": "[2025 05 28] 콩밥서버3-1",
+                  "url": "https://www.youtube.com/watch?v=vwWDlp2aDYo&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.19",
+                  "duration": "9:13:57",
+                  "description": "",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mtvdxbvau5wps-5",
+                  "title": "[2025 05 28] 콩밥서버 3-2",
+                  "url": "https://www.youtube.com/watch?v=SwViowWP-X4&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.19",
+                  "duration": "5:01:16",
+                  "description": "",
+                  "displayOrder": 6
+                },
+                {
+                  "id": "v-mtvdxbva17728-6",
+                  "title": "[2025 05 29] 콩밥서버 4-1",
+                  "url": "https://www.youtube.com/watch?v=i3C_8C9VqT4&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.19",
+                  "duration": "6:19:57",
+                  "description": "",
+                  "displayOrder": 7
+                },
+                {
+                  "id": "v-mtvdxbvaq1495-7",
+                  "title": "[2025 05 29] 콩밥서버 4-2",
+                  "url": "https://www.youtube.com/watch?v=LVXB1G-_IRM&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.19",
+                  "duration": "7:52:29",
+                  "description": "",
+                  "displayOrder": 8
+                },
+                {
+                  "id": "v-mtvdxbva7qwqp-8",
+                  "title": "[2025 05 31] 콩밥서버 5-1",
+                  "url": "https://www.youtube.com/watch?v=tqpVO3lYcac&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.19",
+                  "duration": "8:11:09",
+                  "description": "",
+                  "displayOrder": 9
+                },
+                {
+                  "id": "v-mtvdxbva514qq-9",
+                  "title": "[2025 05 31] 콩밥서버 5-2",
+                  "url": "https://www.youtube.com/watch?v=gqN4nwU2IqA&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.19",
+                  "duration": "6:53:34",
+                  "description": "",
+                  "displayOrder": 10
+                },
+                {
+                  "id": "v-mtvdxbva3379i-10",
+                  "title": "[2025 06 01] 콩밥서버 6-2",
+                  "url": "https://www.youtube.com/watch?v=ziCJMj6qlG8&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.22",
+                  "duration": "6:51:12",
+                  "description": "",
+                  "displayOrder": 11
+                },
+                {
+                  "id": "v-mtvdxbvaxsqc0-11",
+                  "title": "[2025 06 01] 콩밥서버 6-1",
+                  "url": "https://www.youtube.com/watch?v=KACkDW4l4_A&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.22",
+                  "duration": "7:09:12",
+                  "description": "",
+                  "displayOrder": 12
+                },
+                {
+                  "id": "v-mtvdxbvao38vb-12",
+                  "title": "[2025 06 02] 콩밥서버 7-1",
+                  "url": "https://www.youtube.com/watch?v=hBK4yWyTqm4&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.27",
+                  "duration": "7:47:26",
+                  "description": "",
+                  "displayOrder": 13
+                },
+                {
+                  "id": "v-mtvdxbva2y3qj-13",
+                  "title": "[2025 06 02] 콩밥서버 7-2",
+                  "url": "https://www.youtube.com/watch?v=OWSG3OLInUs&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.27",
+                  "duration": "6:05:10",
+                  "description": "",
+                  "displayOrder": 14
+                },
+                {
+                  "id": "v-mtvdxbvaocyfl-14",
+                  "title": "[2025 06 03] 콩밥서버 8-1",
+                  "url": "https://www.youtube.com/watch?v=YiQc3a4RM0A&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.27",
+                  "duration": "6:28:04",
+                  "description": "",
+                  "displayOrder": 15
+                },
+                {
+                  "id": "v-mtvdxbvan8jpo-15",
+                  "title": "[2025 06 03] 콩밥서버 8-2",
+                  "url": "https://www.youtube.com/watch?v=JrapF_d2Zos&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.27",
+                  "duration": "5:42:14",
+                  "description": "",
+                  "displayOrder": 16
+                },
+                {
+                  "id": "v-mtvdxbvacgn1p-16",
+                  "title": "[2025 06 04] 콩밥서버 9-1",
+                  "url": "https://www.youtube.com/watch?v=T5RNhnQp494&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.27",
+                  "duration": "7:35:00",
+                  "description": "",
+                  "displayOrder": 17
+                },
+                {
+                  "id": "v-mtvdxbvaiigaz-17",
+                  "title": "[2025 06 04] 콩밥서버 9-2",
+                  "url": "https://www.youtube.com/watch?v=fALQhYuDEJY&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.06.27",
+                  "duration": "6:33:04",
+                  "description": "",
+                  "displayOrder": 18
+                },
+                {
+                  "id": "v-mtvdxbvahjm08-18",
+                  "title": "[2025 06 07] 콩밥서버 10-1",
+                  "url": "https://www.youtube.com/watch?v=c8jz0L5yGUc&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.07.01",
+                  "duration": "6:22:23",
+                  "description": "",
+                  "displayOrder": 19
+                },
+                {
+                  "id": "v-mtvdxbvau69q8-19",
+                  "title": "[2025 06 07] 콩밥서버 10-2",
+                  "url": "https://www.youtube.com/watch?v=BOOsYOSR84k&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.07.01",
+                  "duration": "6:02:33",
+                  "description": "",
+                  "displayOrder": 20
+                },
+                {
+                  "id": "v-mtvdxbvaomoga-20",
+                  "title": "[2025 06 08] 콩밥서버 11",
+                  "url": "https://www.youtube.com/watch?v=SMJJqQ562sE&list=PLVdPwtovegS43F_n5HGqhIfCFYgu8pLwk",
+                  "videoType": "full",
+                  "date": "2025.07.01",
+                  "duration": "9:18:53",
+                  "description": "",
+                  "displayOrder": 21
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",

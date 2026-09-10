@@ -5,10 +5,10 @@ function renderHeaderAuth() {
   if (isAdmin()) {
     container.innerHTML = `
       <div class="flex items-center gap-2">
-        <div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-950/70 border border-amber-600/50 text-amber-300 text-xs font-bold shadow-sm" title="어드민 로그인 상태 (1시간 이내 자동 유지)">
+        <button onclick="openAdminSettingsModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-950/80 hover:bg-amber-900 border border-amber-600/60 text-amber-300 text-xs font-bold shadow-sm transition-all cursor-pointer group" title="어드민 설정 (유튜브 구독자 갱신 등)">
           <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-          <span>🛡️ 어드민 </span>
-        </div>
+          <span>🛡️ 어드민</span>
+        </button>
         <button onclick="openBackupModal()" class="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white text-xs font-semibold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer" title="DB / 백업 관리 센터 (즉시 저장, 백업 기록, 불러오기)">
           <span>💾 백업 관리</span>
         </button>
@@ -112,8 +112,10 @@ function renderEmptyState(emoji, title) {
 
 function renderMemberCard(member, dragType, clickFn) {
   const videoCount = (member.videos || []).length;
+  const hasVideos = videoCount > 0;
   const isDualRole = Array.isArray(member.affiliations) && member.affiliations.length > 1;
   const admin = isAdmin();
+  const cachedSub = typeof getCachedSubscriber === "function" ? getCachedSubscriber(member.id) : null;
   const dragAttrs = admin ? `
       draggable="true"
       data-drag-type="${dragType}"
@@ -146,9 +148,17 @@ function renderMemberCard(member, dragType, clickFn) {
           
           <div class="flex-1 min-w-0">
             <div class="flex items-center justify-between gap-2">
-              <h4 class="text-xl font-bold text-white group-hover:text-amber-400 transition-colors truncate min-w-0 flex-1" title="${member.streamer}">
-                ${member.streamer}
-              </h4>
+              <div class="flex items-center gap-2 flex-1 min-w-0 flex-wrap">
+                <h4 class="text-xl font-bold text-white group-hover:text-amber-400 transition-colors truncate" title="${member.streamer}">
+                  ${member.streamer}
+                </h4>
+                ${member.subscriberCount ? `
+                  <span class="inline-flex items-center gap-1 text-[11px] font-bold text-red-300 bg-red-950/80 border border-red-700/50 px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="유튜브 채널 구독자 수">
+                    <svg class="w-3 h-3 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    <span>${member.subscriberCount}</span>
+                  </span>
+                ` : ''}
+              </div>
               ${isAdmin() ? `
                 <div class="flex items-center gap-1.5 ml-2 flex-shrink-0 card-header-actions" onclick="event.stopPropagation()">
                   <button onclick="openMemberModal('edit', '${member.id}')" title="수정" class="p-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white text-xs cursor-pointer flex-shrink-0">✏️</button>
@@ -156,7 +166,7 @@ function renderMemberCard(member, dragType, clickFn) {
                 </div>
               ` : ''}
             </div>
-            <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+            <div class="flex items-center gap-2 mt-1 flex-wrap">
               <p class="text-sm font-medium text-amber-400/90 flex items-center gap-1.5" title="RP 캐릭터: ${member.name}">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                 <span>${member.name}</span>
@@ -318,6 +328,12 @@ function renderGroupMembers(container) {
     ? members.map(m => renderMemberCard(m, 'group-member', 'selectGroupMember')).join("")
     : renderEmptyState(group.emoji || '👥', "등록된 인원이 없습니다.");
 
+  // 갱단('gang') 및 사업체('business') 카테고리인 경우에만 소속 인원 구독자 수 총합 계산
+  const isTargetCategory = cat && (cat.id === "gang" || cat.id === "business");
+  const totalSubscribers = isTargetCategory && typeof calculateGroupTotalSubscribers === "function"
+    ? calculateGroupTotalSubscribers(members)
+    : null;
+
   container.innerHTML = `
     <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
@@ -331,6 +347,12 @@ function renderGroupMembers(container) {
             <span>${group.emoji || ''}</span>
             <span>${group.name}</span>
           </h2>
+          ${totalSubscribers ? `
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-950/80 border border-red-700/50 text-red-300 text-sm font-bold shadow-md shadow-red-950/30" title="${group.name} 소속 인원 유튜브 총 구독자 수 합계">
+              <svg class="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              <span>총 구독자 ${totalSubscribers}</span>
+            </span>
+          ` : ''}
           ${isAdmin() ? `
             <button onclick="openMemberModal('add', null, '${cat.id}', '${group.id}')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-all shadow-lg shadow-amber-500/20 cursor-pointer">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
@@ -580,7 +602,15 @@ function renderMemberVideos(container) {
               <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-300">소속: ${affiliationsText}</span>
               ${Array.isArray(member.affiliations) && member.affiliations.length > 1 ? `<span class="text-xs font-bold px-2 py-0.5 rounded-md bg-amber-950/80 border border-amber-500/50 text-amber-300">겸직 중</span>` : ''}
             </div>
-            <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">${member.streamer}</h2>
+            <div class="flex items-center gap-3 flex-wrap">
+              <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">${member.streamer}</h2>
+              ${member.subscriberCount ? `
+                <span class="inline-flex items-center gap-1.5 text-xs font-bold text-red-300 bg-red-950/80 border border-red-700/50 px-2.5 py-1 rounded-lg shadow-sm" title="유튜브 채널 구독자 수">
+                  <svg class="w-3.5 h-3.5 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                  <span>${member.subscriberCount}</span>
+                </span>
+              ` : ''}
+            </div>
             <p class="text-amber-400 text-base font-semibold mt-1">RP 캐릭터: ${member.name}</p>
             ${isAdmin() ? `
               <div class="flex items-center gap-2 mt-3">

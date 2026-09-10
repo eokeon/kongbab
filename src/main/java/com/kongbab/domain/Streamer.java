@@ -43,6 +43,11 @@ public class Streamer {
 
     private Integer displayOrder;
 
+    private String subscriberCount;
+
+    @Column(length = 500)
+    private String youtubeUrl;
+
     @Column(columnDefinition = "TEXT")
     private String affiliations;
 

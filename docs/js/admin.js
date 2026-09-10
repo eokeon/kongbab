@@ -623,6 +623,13 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
     formAvatar.value = primaryMember.avatar || "";
     previewMemberAvatar(primaryMember.avatar);
 
+    const formYoutube = document.getElementById("member-form-youtube");
+    if (formYoutube) {
+      let yVal = primaryMember.youtubeUrl || "";
+      try { yVal = decodeURIComponent(yVal); } catch(e) {}
+      formYoutube.value = yVal;
+    }
+
     // 기존 소속 체크박스 복원
     allLocs.forEach(loc => {
       const catCheck = document.getElementById(`aff-check-${loc.category.id}`);
@@ -662,6 +669,9 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
     formRole.value = "";
     formAvatar.value = "";
     previewMemberAvatar("");
+
+    const formYoutube = document.getElementById("member-form-youtube");
+    if (formYoutube) formYoutube.value = "";
 
     const targetCatId = prefillCatId || state.currentCategory || "police";
     const catCheck = document.getElementById(`aff-check-${targetCatId}`);
@@ -713,7 +723,7 @@ function previewMemberAvatar(url) {
   if (preview) preview.src = getMemberAvatar(url);
 }
 
-function handleSaveMember(e) {
+async function handleSaveMember(e) {
   if (e) e.preventDefault();
   if (!isAdmin()) return;
 
@@ -722,6 +732,7 @@ function handleSaveMember(e) {
   const role = document.getElementById("member-form-role").value.trim();
   const badgeColor = document.getElementById("member-form-badge").value;
   let avatar = document.getElementById("member-form-avatar").value.trim();
+  const youtubeUrl = document.getElementById("member-form-youtube")?.value.trim() || "";
 
   if (!name || !streamer) {
     alert("이름과 스트리머명을 모두 입력해주세요.");
@@ -748,12 +759,15 @@ function handleSaveMember(e) {
     }
 
     const memberObj = allLocs[0].member;
-    memberObj.name = name;
-    memberObj.streamer = streamer;
-    memberObj.role = role;
-    memberObj.badgeColor = badgeColor;
-    memberObj.avatar = avatar;
-    memberObj.affiliations = selectedAffiliations;
+    allLocs.forEach(loc => {
+      loc.member.name = name;
+      loc.member.streamer = streamer;
+      loc.member.role = role;
+      loc.member.badgeColor = badgeColor;
+      loc.member.avatar = avatar;
+      loc.member.youtubeUrl = youtubeUrl;
+      loc.member.affiliations = selectedAffiliations;
+    });
 
     // 1) 이전 소속 중 선택 해제된 곳에서 제거
     allLocs.forEach(loc => {
@@ -795,7 +809,7 @@ function handleSaveMember(e) {
       }
     });
 
-    saveStreamerToDb({
+    await saveStreamerToDb({
       id: memberObj.id,
       name,
       streamer,
@@ -805,6 +819,8 @@ function handleSaveMember(e) {
       affiliations: JSON.stringify(selectedAffiliations),
       badgeColor,
       avatar,
+      youtubeUrl,
+      subscriberCount: memberObj.subscriberCount || "",
       displayOrder: memberObj.displayOrder ?? 0
     });
 
@@ -820,6 +836,8 @@ function handleSaveMember(e) {
       role,
       badgeColor,
       avatar,
+      youtubeUrl,
+      subscriberCount: "",
       displayOrder: 0,
       affiliations: selectedAffiliations,
       videos: []
@@ -842,7 +860,7 @@ function handleSaveMember(e) {
       }
     });
 
-    saveStreamerToDb({
+    await saveStreamerToDb({
       id: newMember.id,
       name,
       streamer,
@@ -852,6 +870,8 @@ function handleSaveMember(e) {
       affiliations: JSON.stringify(selectedAffiliations),
       badgeColor,
       avatar,
+      youtubeUrl,
+      subscriberCount: "",
       displayOrder: 0
     });
 
@@ -1018,6 +1038,9 @@ function openPlaylistModal() {
   const targetTab = (state.currentVideoTab === 'binge' || state.currentVideoTab === 'full') ? state.currentVideoTab : 'clip';
   const radio = document.querySelector(`input[name="playlist-form-type"][value="${targetTab}"]`);
   if (radio) radio.checked = true;
+
+  const keepOrderCheck = document.getElementById("playlist-keep-order");
+  if (keepOrderCheck) keepOrderCheck.checked = true;
 
   if (modal) {
     modal.classList.remove("hidden");
@@ -1303,6 +1326,13 @@ function sortPlaylistPreview(direction) {
   showToast(direction === 'asc' ? "과거순(날짜 빠른 순)으로 정렬되었습니다." : "최신순으로 정렬되었습니다.");
 }
 
+function reversePlaylistPreview() {
+  if (!loadedPlaylistVideos || loadedPlaylistVideos.length <= 1) return;
+  loadedPlaylistVideos.reverse();
+  renderPlaylistPreviewList();
+  showToast("🔄 목록 순서가 역순으로 뒤집혔습니다.");
+}
+
 function clearPlaylistPreview() {
   if (!loadedPlaylistVideos || loadedPlaylistVideos.length === 0) return;
   if (!confirm("불러온 영상을 모두 제외하시겠습니까?")) return;
@@ -1525,5 +1555,146 @@ async function handleBatchImportPlaylist(e) {
   showToast(msg);
   createBackupSnapshot(`재생목록 일괄 등록: ${state.currentMember.name} (${addedCount}개)`);
 }
+
+// ==========================================
+// 어드민 설정 모달 및 유튜브 구독자 일괄 갱신
+// ==========================================
+
+let isSyncingSubscribers = false;
+
+function openAdminSettingsModal() {
+  if (!isAdmin()) {
+    alert("어드민 전용 기능입니다.");
+    return;
+  }
+
+  const modal = document.getElementById("admin-settings-modal");
+  if (!modal) return;
+
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+  document.body.style.overflow = "hidden";
+
+  // 등록된 유튜브 링크가 있거나 영상이 있는 대상 인원수 계산
+  const allMembers = typeof extractAllStreamersFromKongbabData === "function" 
+    ? extractAllStreamersFromKongbabData() 
+    : [];
+  const targetCount = allMembers.filter(m => (m.youtubeUrl && m.youtubeUrl.trim()) || (m.videos && m.videos.length > 0)).length;
+
+  const targetCountEl = document.getElementById("admin-sub-target-count");
+  if (targetCountEl) {
+    targetCountEl.textContent = `${targetCount}명`;
+  }
+
+  if (!isSyncingSubscribers) {
+    const progressBar = document.getElementById("admin-sub-progress-bar");
+    const progressText = document.getElementById("admin-sub-progress-text");
+    const logBox = document.getElementById("admin-sub-log-box");
+    const btn = document.getElementById("admin-sub-sync-btn");
+
+    if (progressBar) progressBar.style.width = "0%";
+    if (progressText) progressText.textContent = `대기 중 (대상: ${targetCount}명)`;
+    if (logBox) {
+      logBox.innerHTML = `<div class="text-zinc-500 text-xs italic">갱신 준비 완료. 아래 [구독자 수 일괄 갱신 시작] 버튼을 눌러주세요.</div>`;
+    }
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `
+        <svg class="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        <span>유튜브 구독자 수 일괄 갱신 시작</span>
+      `;
+    }
+  }
+}
+
+function closeAdminSettingsModal() {
+  if (isSyncingSubscribers) {
+    if (!confirm("현재 유튜브 구독자 갱신이 진행 중입니다. 정말 닫으시겠습니까?")) {
+      return;
+    }
+  }
+
+  const modal = document.getElementById("admin-settings-modal");
+  if (modal) {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+    document.body.style.overflow = "";
+  }
+}
+
+async function startSubscriberSync() {
+  if (isSyncingSubscribers) return;
+
+  const btn = document.getElementById("admin-sub-sync-btn");
+  const progressBar = document.getElementById("admin-sub-progress-bar");
+  const progressText = document.getElementById("admin-sub-progress-text");
+  const logBox = document.getElementById("admin-sub-log-box");
+
+  isSyncingSubscribers = true;
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `
+      <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <span>구독자 수 조회 및 갱신 중...</span>
+    `;
+  }
+  if (logBox) logBox.innerHTML = "";
+
+  try {
+    const updatedCount = await executeSubscriberSync((current, total, streamerName, status) => {
+      const pct = Math.round((current / total) * 100);
+      if (progressBar) progressBar.style.width = `${pct}%`;
+      if (progressText) progressText.textContent = `${pct}% (${current}/${total}명)`;
+
+      if (logBox) {
+        const line = document.createElement("div");
+        line.className = "text-xs py-0.5 font-mono flex items-center justify-between gap-2";
+        const isSuccess = status.startsWith("성공");
+        line.innerHTML = `
+          <div class="truncate">
+            <span class="text-zinc-500">[${current}/${total}]</span>
+            <span class="text-zinc-200 font-medium ml-1">${streamerName}</span>
+          </div>
+          <span class="flex-shrink-0 ${isSuccess ? 'text-emerald-400 font-bold' : 'text-zinc-400'}">${status}</span>
+        `;
+        logBox.appendChild(line);
+        logBox.scrollTop = logBox.scrollHeight;
+      }
+    });
+
+    if (logBox) {
+      const finishLine = document.createElement("div");
+      finishLine.className = "text-xs py-2 font-bold text-emerald-400 border-t border-zinc-800 mt-2";
+      finishLine.textContent = `🎉 일괄 갱신 완료! 총 ${updatedCount}명의 구독자 수가 백업 및 DB에 저장되었습니다.`;
+      logBox.appendChild(finishLine);
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    showToast(`🎉 유튜브 구독자 수 일괄 갱신 완료 (${updatedCount}명)`);
+    if (typeof renderContent === "function") renderContent();
+  } catch (err) {
+    console.error("구독자 갱신 오류:", err);
+    if (logBox) {
+      const errLine = document.createElement("div");
+      errLine.className = "text-xs py-2 font-bold text-red-400 border-t border-zinc-800 mt-2";
+      errLine.textContent = `❌ 오류 발생: ${err.message || err}`;
+      logBox.appendChild(errLine);
+    }
+    showToast("⚠️ 구독자 갱신 중 오류가 발생했습니다.");
+  } finally {
+    isSyncingSubscribers = false;
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `
+        <svg class="w-4 h-4 text-emerald-400 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        <span>구독자 수 일괄 재갱신</span>
+      `;
+    }
+  }
+}
+
 
 

@@ -343,6 +343,7 @@
               <span class="text-[11px] font-semibold text-zinc-400">정렬:</span>
               <button type="button" onclick="sortPlaylistPreview('asc')" class="px-2 py-1 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white rounded-lg text-[11px] font-semibold border border-zinc-800 hover:border-zinc-600 transition-colors cursor-pointer" title="과거순 (날짜 빠른 순)">📅 과거순</button>
               <button type="button" onclick="sortPlaylistPreview('desc')" class="px-2 py-1 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white rounded-lg text-[11px] font-semibold border border-zinc-800 hover:border-zinc-600 transition-colors cursor-pointer" title="최신순 (날짜 늦은 순)">📅 최신순</button>
+              <button type="button" onclick="reversePlaylistPreview()" class="px-2 py-1 bg-zinc-900 hover:bg-zinc-800 text-amber-300 hover:text-amber-200 rounded-lg text-[11px] font-semibold border border-amber-500/40 hover:border-amber-500 transition-colors cursor-pointer" title="현재 목록 순서 역순으로 뒤집기">🔄 순서 뒤집기</button>
               <button type="button" onclick="clearPlaylistPreview()" class="px-2 py-1 bg-red-950/50 hover:bg-red-900/80 text-red-300 hover:text-white rounded-lg text-[11px] font-semibold border border-red-800/40 transition-colors cursor-pointer ml-1" title="불러온 영상 전체 비우기">전체 비우기</button>
             </div>
           </div>
@@ -360,7 +361,7 @@
               <input type="checkbox" id="playlist-keep-order" checked class="rounded border-zinc-700 text-amber-500 focus:ring-0 w-3.5 h-3.5">
               <span class="text-zinc-200 font-semibold">현재 모달 목록 순서 그대로 등록</span>
             </label>
-            <label class="flex items-center gap-1.5 cursor-pointer">
+            <label class="flex items-center gap-1.5 cursor-pointer ml-auto">
               <input type="checkbox" id="playlist-skip-duplicates" checked class="rounded border-zinc-700 text-amber-500 focus:ring-0 w-3.5 h-3.5">
               <span class="text-zinc-300 font-medium">이미 등록된 영상 제외</span>
             </label>
@@ -539,6 +540,25 @@
           </p>
         </div>
 
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1.5 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              <span>스트리머 유튜브 링크 <span class="text-zinc-500 font-normal">(채널 또는 영상 주소)</span></span>
+            </span>
+            <span class="text-[10px] text-amber-400 font-bold bg-amber-950/80 border border-amber-600/50 px-2 py-0.5 rounded">⭐ 구독자 조회 1순위</span>
+          </label>
+          <input 
+            type="text" 
+            id="member-form-youtube" 
+            placeholder="예: https://www.youtube.com/@채널핸들 또는 채널/영상 링크" 
+            class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
+          />
+          <p class="text-[11px] text-zinc-500 mt-1.5 leading-relaxed">
+            💡 채널 주소(@핸들, /channel/UC...)나 대표 영상을 입력해두면, 등록된 영상 목록보다 <strong>이 링크를 최우선(1순위)</strong>으로 유튜브 구독자 수를 조회합니다.
+          </p>
+        </div>
+
         <div class="pt-4 flex items-center justify-end gap-2 border-t border-zinc-800 mt-6">
           <button 
             type="button" 
@@ -709,12 +729,91 @@
     </div>
   </div>
 
-  <script src="./js/state.js?v=20260910_01"></script>
-  <script src="./js/api.js?v=20260910_01"></script>
-  <script src="./js/drag-drop.js?v=20260910_01"></script>
-  <script src="./js/backup.js?v=20260910_01"></script>
-  <script src="./js/admin.js?v=20260910_01"></script>
-  <script src="./js/render.js?v=20260910_01"></script>
-  <script src="./js/app.js?v=20260910_01"></script>
+  <!-- 어드민 설정 모달 (유튜브 구독자 일괄 갱신 등) -->
+  <div id="admin-settings-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4 select-none" draggable="false" onclick="if(event.target === this) closeAdminSettingsModal()">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 flex flex-col select-none" draggable="false">
+      <!-- 헤더 -->
+      <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-5">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-950/80 border border-amber-600/50 flex items-center justify-center text-xl shadow-md">
+            🛡️
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+              <span>어드민 설정 센터</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-500/40 font-bold">관리자 도구</span>
+            </h3>
+            <p class="text-xs text-zinc-400 mt-0.5">유튜브 구독자 수 수동 일괄 갱신 및 사이트 관리 설정</p>
+          </div>
+        </div>
+        <button onclick="closeAdminSettingsModal()" class="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors flex-shrink-0">✕</button>
+      </div>
+
+      <!-- 안내 및 현황 카드 -->
+      <div class="bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-4 mb-5 space-y-3">
+        <div class="flex items-center justify-between text-xs flex-wrap gap-2">
+          <span class="text-zinc-300 flex items-center gap-1.5 font-bold">
+            <span>📺</span>
+            <span>유튜브 구독자 수 일괄 갱신 기준</span>
+          </span>
+          <span class="text-xs px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 font-semibold">
+            조회 대상: <strong id="admin-sub-target-count" class="text-amber-400">0명</strong>
+          </span>
+        </div>
+        <p class="text-xs text-zinc-400 leading-relaxed">
+          • 조회 우선순위: <span class="text-amber-400 font-bold">1순위 스트리머 유튜브 링크</span>(정보 수정 입력값) ➔ <span class="text-zinc-300">2순위 편집 영상 1번</span> ➔ <span class="text-zinc-300">3순위 몰아보기 1번</span> ➔ <span class="text-zinc-300">4순위 풀영상 1번</span> 순서로 유튜브 공식 채널 구독자 수를 조회합니다.
+        </p>
+      </div>
+
+      <!-- 실행 섹션 -->
+      <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-4 mb-4">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+            <span>⚡</span>
+            <span>진행 상황</span>
+          </span>
+          <span id="admin-sub-progress-text" class="text-xs font-mono font-semibold text-amber-400">대기 중</span>
+        </div>
+
+        <!-- 프로그레스 바 -->
+        <div class="w-full h-2.5 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800 mb-4">
+          <div id="admin-sub-progress-bar" class="h-full bg-gradient-to-r from-red-600 via-amber-500 to-emerald-500 rounded-full transition-all duration-300" style="width: 0%;"></div>
+        </div>
+
+        <!-- 로그 출력 창 -->
+        <div id="admin-sub-log-box" class="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3 h-40 overflow-y-auto font-mono text-xs space-y-1">
+          <div class="text-zinc-500 italic">갱신 준비 완료. 아래 [유튜브 구독자 수 일괄 갱신 시작] 버튼을 눌러주세요.</div>
+        </div>
+      </div>
+
+      <!-- 모달 하단 버튼 -->
+      <div class="pt-4 border-t border-zinc-800 flex items-center justify-between gap-3">
+        <button 
+          type="button" 
+          onclick="closeAdminSettingsModal()" 
+          class="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+        >
+          닫기
+        </button>
+        <button 
+          type="button" 
+          id="admin-sub-sync-btn"
+          onclick="startSubscriberSync()" 
+          class="px-5 py-2.5 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white text-xs font-bold rounded-xl transition-all shadow-lg shadow-red-600/25 cursor-pointer flex items-center gap-2"
+        >
+          <svg class="w-4 h-4 text-white fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          <span>유튜브 구독자 수 일괄 갱신 시작</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/state.js?v=20260910_03"></script>
+  <script src="./js/api.js?v=20260910_03"></script>
+  <script src="./js/drag-drop.js?v=20260910_03"></script>
+  <script src="./js/backup.js?v=20260910_03"></script>
+  <script src="./js/admin.js?v=20260910_03"></script>
+  <script src="./js/render.js?v=20260910_03"></script>
+  <script src="./js/app.js?v=20260910_03"></script>
 </body>
 </html>
