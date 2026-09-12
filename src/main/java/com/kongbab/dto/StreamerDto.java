@@ -19,6 +19,7 @@ public class StreamerDto {
     private String category;
     private String subgroup;
     private String role;
+    private String swatRole;
     private String badgeColor;
     private String avatar;
     private Integer displayOrder;
@@ -37,6 +38,7 @@ public class StreamerDto {
                 .category(entity.getCategory())
                 .subgroup(entity.getSubgroup())
                 .role(entity.getRole())
+                .swatRole(entity.getSwatRole())
                 .badgeColor(entity.getBadgeColor())
                 .avatar(entity.getAvatar())
                 .displayOrder(entity.getDisplayOrder())

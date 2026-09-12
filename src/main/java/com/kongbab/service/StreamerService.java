@@ -66,6 +66,7 @@ public class StreamerService {
         streamer.setCategory(dto.getCategory());
         streamer.setSubgroup(dto.getSubgroup());
         streamer.setRole(dto.getRole());
+        streamer.setSwatRole(dto.getSwatRole());
         streamer.setBadgeColor(dto.getBadgeColor());
         streamer.setAvatar(dto.getAvatar());
         streamer.setAffiliations(dto.getAffiliations());
@@ -180,6 +181,7 @@ public class StreamerService {
             streamer.setCategory(dto.getCategory());
             streamer.setSubgroup(dto.getSubgroup());
             streamer.setRole(dto.getRole());
+            streamer.setSwatRole(dto.getSwatRole());
             streamer.setBadgeColor(dto.getBadgeColor());
             streamer.setAvatar(dto.getAvatar());
             streamer.setAffiliations(dto.getAffiliations());

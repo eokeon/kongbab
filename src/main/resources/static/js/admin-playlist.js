@@ -93,7 +93,47 @@ function formatIsoDateToKst(isoDateStr) {
 
 async function apiGetPlaylistInfo(urlOrId) {
   const playlistId = extractPlaylistId(urlOrId);
-  if (!playlistId) return { success: false, message: "유효한 재생목록 링크 또는 ID가 아닙니다." };
+  if (!playlistId) {
+    // 재생목록 ID가 없는 경우: 여러 개 또는 단일 유튜브 영상 링크를 입력했는지 확인하여 일괄 지원
+    const matches = String(urlOrId).match(/https?:\/\/[^\s,'"<>]+/g) || [];
+    const videoIds = Array.from(new Set(matches.map(u => typeof extractYoutubeId === "function" ? extractYoutubeId(u) : null).filter(Boolean)));
+    if (videoIds.length === 0) {
+      const directId = typeof extractYoutubeId === "function" ? extractYoutubeId(urlOrId) : null;
+      if (directId) videoIds.push(directId);
+    }
+
+    if (videoIds.length > 0) {
+      const apiKey = "AIzaSyAyY4g9-iwjwQNXb5F9Xx0LLGtLUEpowl8";
+      const fetchedVideos = [];
+      for (let i = 0; i < videoIds.length; i += 50) {
+        const chunk = videoIds.slice(i, i + 50);
+        try {
+          const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${chunk.join(",")}&key=${apiKey}`);
+          if (vRes.ok) {
+            const vData = await vRes.json();
+            (vData.items || []).forEach(item => {
+              fetchedVideos.push({
+                videoId: item.id,
+                title: item.snippet?.title || "유튜브 영상",
+                url: `https://www.youtube.com/watch?v=${item.id}`,
+                publishedDate: typeof formatIsoDateToKst === "function" ? formatIsoDateToKst(item.snippet?.publishedAt) : (item.snippet?.publishedAt ? item.snippet.publishedAt.substring(0, 10).replace(/-/g, ".") : ""),
+                channelTitle: item.snippet?.channelTitle || "",
+                thumbnailUrl: item.snippet?.thumbnails?.medium?.url || `https://img.youtube.com/vi/${item.id}/hqdefault.jpg`,
+                duration: typeof formatIsoDuration === "function" ? formatIsoDuration(item.contentDetails?.duration) : ""
+              });
+            });
+          }
+        } catch (err) {
+          console.warn("영상 일괄 정보 조회 실패:", err);
+        }
+      }
+      if (fetchedVideos.length > 0) {
+        return { success: true, videos: fetchedVideos, playlistId: null };
+      }
+    }
+
+    return { success: false, message: "유효한 재생목록 링크 또는 영상 링크가 아닙니다." };
+  }
 
   let videos = [];
 

@@ -105,11 +105,11 @@ function openAdminSettingsModal() {
   modal.classList.add("flex");
   document.body.style.overflow = "hidden";
 
-  // 등록된 유튜브 링크가 있거나 영상이 있는 대상 인원수 계산
+  // 등록된 유튜브 링크(youtubeUrl)가 있는 대상 인원수 계산
   const allMembers = typeof extractAllStreamersFromKongbabData === "function" 
     ? extractAllStreamersFromKongbabData() 
     : [];
-  const targetCount = allMembers.filter(m => (m.youtubeUrl && m.youtubeUrl.trim()) || (m.videos && m.videos.length > 0)).length;
+  const targetCount = allMembers.filter(m => m.youtubeUrl && m.youtubeUrl.trim()).length;
 
   const targetCountEl = document.getElementById("admin-sub-target-count");
   if (targetCountEl) {

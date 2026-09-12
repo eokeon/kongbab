@@ -7,29 +7,57 @@ let currentLeaderboardTab = 'total'; // 'total' | 'clip' | 'full' | 'binge' | 'c
 let leaderboardSearchQuery = '';
 
 // 전체 멤버 목록 및 통계 데이터 추출
+// 전체 멤버 목록 및 통계 데이터 추출 (고유 스트리머 기준 중복 제거 및 겸직 소속 병합)
 function getAllMembersWithLeaderboardStats() {
-  const list = [];
-  if (!KONGBAB_DATA || !KONGBAB_DATA.categories) return list;
+  if (!KONGBAB_DATA || !KONGBAB_DATA.categories) return [];
+
+  const memberMap = new Map();
 
   KONGBAB_DATA.categories.forEach(cat => {
+    const processMember = (m, group) => {
+      if (!m) return;
+      const key = m.id || (m.streamer && m.name ? `${m.streamer}_${m.name}` : m.name);
+      if (!key) return;
+
+      if (!memberMap.has(key)) {
+        memberMap.set(key, computeMemberLeaderboardStats(m, cat, group));
+      } else {
+        // 이미 등록된 멤버인 경우 (겸직 등으로 여러 카테고리에 속한 경우)
+        // 통계 수치는 중복 합산하지 않고, 소속 명칭만 보강 병합
+        const existing = memberMap.get(key);
+        const currentAffName = group ? `${group.emoji || ''} ${group.name}`.trim() : `${cat.emoji || ''} ${cat.name}`.trim();
+        if (currentAffName && existing.displayAffiliation && !existing.displayAffiliation.includes(currentAffName)) {
+          existing.displayAffiliation = `${existing.displayAffiliation} · ${currentAffName}`;
+        }
+      }
+    };
+
     if (!cat.hasSubgroups) {
-      (cat.members || []).forEach(m => {
-        list.push(computeMemberLeaderboardStats(m, cat, null));
-      });
+      (cat.members || []).forEach(m => processMember(m, null));
     } else {
       (cat.groups || []).forEach(g => {
-        (g.members || []).forEach(m => {
-          list.push(computeMemberLeaderboardStats(m, cat, g));
-        });
+        (g.members || []).forEach(m => processMember(m, g));
       });
     }
   });
 
-  return list;
+  return Array.from(memberMap.values());
 }
 
 function computeMemberLeaderboardStats(m, cat, group) {
-  const videos = (m.videos || []).filter(v => v && v.url && v.url !== "undefined" && v.url.trim() !== "");
+  // 유효한 비디오 필터링 (동일 URL 중복 등록 방지)
+  const seenUrls = new Set();
+  const rawVideos = (m.videos || []).filter(v => v && v.url && v.url !== "undefined" && v.url.trim() !== "");
+  const videos = [];
+  rawVideos.forEach(v => {
+    const vKey = (v.url || v.id || '').trim().toLowerCase();
+    if (vKey && !seenUrls.has(vKey)) {
+      seenUrls.add(vKey);
+      videos.push(v);
+    } else if (!vKey) {
+      videos.push(v);
+    }
+  });
   
   const clipVideos = videos.filter(v => typeof getVideoType === "function" ? getVideoType(v) === 'clip' : true);
   const fullVideos = videos.filter(v => typeof getVideoType === "function" ? getVideoType(v) === 'full' : false);
@@ -45,6 +73,24 @@ function computeMemberLeaderboardStats(m, cat, group) {
   const bingeSec = bingeVideos.reduce((sum, v) => sum + (typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0), 0);
   const totalSec = clipSec + fullSec + bingeSec;
 
+  // 소속 텍스트 생성 (겸직 다중 소속 반영)
+  let displayAffiliation = group ? `${group.emoji || ''} ${group.name}`.trim() : `${cat.emoji || ''} ${cat.name}`.trim();
+  if (Array.isArray(m.affiliations) && m.affiliations.length > 1 && KONGBAB_DATA && Array.isArray(KONGBAB_DATA.categories)) {
+    const allNames = m.affiliations.map(a => {
+      const c = KONGBAB_DATA.categories.find(cItem => cItem.id === a.category);
+      if (!c) return a.category;
+      if (c.hasSubgroups) {
+        const g = (c.groups || []).find(grp => grp.id === a.subgroup);
+        return g ? `${g.emoji || ''} ${g.name}`.trim() : `${c.emoji || ''} ${c.name}`.trim();
+      }
+      return `${c.emoji || ''} ${c.name}`.trim();
+    });
+    const uniqueAffs = Array.from(new Set(allNames.filter(Boolean)));
+    if (uniqueAffs.length > 0) {
+      displayAffiliation = uniqueAffs.join(' · ');
+    }
+  }
+
   return {
     ...m,
     catId: cat.id,
@@ -55,6 +101,8 @@ function computeMemberLeaderboardStats(m, cat, group) {
     groupId: group ? group.id : null,
     groupName: group ? group.name : null,
     groupEmoji: group ? (group.emoji || '') : '',
+    displayAffiliation,
+    streamerName: m.streamer || m.streamerName || '',
     totalCount,
     clipCount,
     fullCount,
@@ -70,20 +118,58 @@ function computeMemberLeaderboardStats(m, cat, group) {
   };
 }
 
-// 전체 종합 메트릭 계산
+// 전체 종합 메트릭 계산 (고유 스트리머 및 고유 비디오 기준 중복 집계 방지)
 function computeGlobalMetrics(members) {
-  const totalMembers = members.length;
-  const totalVideos = members.reduce((sum, m) => sum + m.totalCount, 0);
-  const totalSec = members.reduce((sum, m) => sum + m.totalSec, 0);
+  // 1. 혹시 모를 멤버 중복 방지 (동일 ID 또는 고유 스트리머 식별자 기준)
+  const uniqueMembers = [];
+  const seenMemberKeys = new Set();
+  (members || []).forEach(m => {
+    if (!m) return;
+    const key = m.id || (m.streamer && m.name ? `${m.streamer}_${m.name}` : m.name);
+    if (key && !seenMemberKeys.has(key)) {
+      seenMemberKeys.add(key);
+      uniqueMembers.push(m);
+    } else if (!key) {
+      uniqueMembers.push(m);
+    }
+  });
 
-  const totalClipCount = members.reduce((sum, m) => sum + m.clipCount, 0);
-  const totalClipSec = members.reduce((sum, m) => sum + m.clipSec, 0);
+  const totalMembers = uniqueMembers.length;
+  const totalVideos = uniqueMembers.reduce((sum, m) => sum + (m.totalCount || 0), 0);
+  const totalSec = uniqueMembers.reduce((sum, m) => sum + (m.totalSec || 0), 0);
 
-  const totalFullCount = members.reduce((sum, m) => sum + m.fullCount, 0);
-  const totalFullSec = members.reduce((sum, m) => sum + m.fullSec, 0);
+  const totalClipCount = uniqueMembers.reduce((sum, m) => sum + (m.clipCount || 0), 0);
+  const totalClipSec = uniqueMembers.reduce((sum, m) => sum + (m.clipSec || 0), 0);
 
-  const totalBingeCount = members.reduce((sum, m) => sum + m.bingeCount, 0);
-  const totalBingeSec = members.reduce((sum, m) => sum + m.bingeSec, 0);
+  const totalFullCount = uniqueMembers.reduce((sum, m) => sum + (m.fullCount || 0), 0);
+  const totalFullSec = uniqueMembers.reduce((sum, m) => sum + (m.fullSec || 0), 0);
+
+  const totalBingeCount = uniqueMembers.reduce((sum, m) => sum + (m.bingeCount || 0), 0);
+  const totalBingeSec = uniqueMembers.reduce((sum, m) => sum + (m.bingeSec || 0), 0);
+
+  // 전체 소속 인원 총합 구독자수 계산 (중복 스트리머/유튜브 채널 중복 집계 방지)
+  const seenSubKeys = new Set();
+  let totalSubCount = 0;
+  uniqueMembers.forEach(m => {
+    const ytKey = (m.youtubeUrl && typeof m.youtubeUrl === 'string' && m.youtubeUrl.trim())
+      ? m.youtubeUrl.trim().toLowerCase().replace(/\/+$/, '')
+      : null;
+    const streamerKey = (m.streamer && typeof m.streamer === 'string' && m.streamer.trim())
+      ? m.streamer.trim().toLowerCase()
+      : null;
+    const key = ytKey || streamerKey || m.id || m.name;
+    if (key && !seenSubKeys.has(key)) {
+      seenSubKeys.add(key);
+      const count = typeof parseSubscriberCount === "function" ? parseSubscriberCount(m.subscriberCount) : 0;
+      if (count > 0) {
+        totalSubCount += count;
+      }
+    }
+  });
+
+  const totalSubStr = typeof formatSubscriberCount === "function" && totalSubCount > 0
+    ? formatSubscriberCount(totalSubCount)
+    : (totalSubCount > 0 ? `${totalSubCount.toLocaleString()}명` : "0명");
 
   return {
     totalMembers,
@@ -99,6 +185,8 @@ function computeGlobalMetrics(members) {
     totalBingeCount,
     totalBingeSec,
     totalBingeDurStr: typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(totalBingeSec) : "0분",
+    totalSubCount,
+    totalSubStr,
   };
 }
 
@@ -221,7 +309,10 @@ function renderGlobalStatsCards(globalStats) {
       </div>
       <div>
         <div class="text-xl sm:text-2xl font-bold text-white tracking-tight">${globalStats.totalMembers}명</div>
-        <div class="text-[11px] text-zinc-500 mt-0.5">활동 스트리머</div>
+        <div class="text-[11px] text-zinc-400 mt-0.5 flex items-center gap-1 truncate" title="전체 스트리머 총합 구독자 수: ${globalStats.totalSubStr}">
+          <svg class="w-3 h-3 text-red-500 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          <span class="truncate">총 구독자 <span class="text-white font-bold">${globalStats.totalSubStr}</span></span>
+        </div>
       </div>
     </div>
 
@@ -256,11 +347,11 @@ function renderGlobalStatsCards(globalStats) {
           <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
           <span>편집 영상</span>
         </span>
-        <span class="text-zinc-500 text-[10px]">${globalStats.totalClipCount}개</span>
+        <span class="text-white font-semibold text-[10px]">${globalStats.totalClipCount}개</span>
       </div>
       <div>
         <div class="text-sm sm:text-base font-bold text-red-400 tracking-tight leading-tight">${globalStats.totalClipDurStr}</div>
-        <div class="text-[11px] text-zinc-500 mt-0.5">총 ${globalStats.totalClipCount}개 등록됨</div>
+        <div class="text-[11px] text-white mt-0.5 font-medium">총 ${globalStats.totalClipCount}개 등록됨</div>
       </div>
     </div>
 
@@ -271,11 +362,11 @@ function renderGlobalStatsCards(globalStats) {
           <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
           <span>풀 영상</span>
         </span>
-        <span class="text-zinc-500 text-[10px]">${globalStats.totalFullCount}개</span>
+        <span class="text-white font-semibold text-[10px]">${globalStats.totalFullCount}개</span>
       </div>
       <div>
         <div class="text-sm sm:text-base font-bold text-indigo-400 tracking-tight leading-tight">${globalStats.totalFullDurStr}</div>
-        <div class="text-[11px] text-zinc-500 mt-0.5">총 ${globalStats.totalFullCount}개 등록됨</div>
+        <div class="text-[11px] text-white mt-0.5 font-medium">총 ${globalStats.totalFullCount}개 등록됨</div>
       </div>
     </div>
 
@@ -286,11 +377,11 @@ function renderGlobalStatsCards(globalStats) {
           <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
           <span>몰아보기</span>
         </span>
-        <span class="text-zinc-500 text-[10px]">${globalStats.totalBingeCount}개</span>
+        <span class="text-white font-semibold text-[10px]">${globalStats.totalBingeCount}개</span>
       </div>
       <div>
         <div class="text-sm sm:text-base font-bold text-amber-300 tracking-tight leading-tight">${globalStats.totalBingeDurStr}</div>
-        <div class="text-[11px] text-zinc-500 mt-0.5">총 ${globalStats.totalBingeCount}개 등록됨</div>
+        <div class="text-[11px] text-white mt-0.5 font-medium">총 ${globalStats.totalBingeCount}개 등록됨</div>
       </div>
     </div>
   `;
@@ -378,10 +469,12 @@ function renderLeaderboardDynamicContent() {
     sortedMembers = sortedMembers.filter(m => {
       const nameMatch = (m.name || '').toLowerCase().includes(leaderboardSearchQuery);
       const roleMatch = (m.role || '').toLowerCase().includes(leaderboardSearchQuery);
+      const swatRoleMatch = (m.swatRole || '').toLowerCase().includes(leaderboardSearchQuery);
       const streamerMatch = (m.streamerName || '').toLowerCase().includes(leaderboardSearchQuery);
       const catMatch = (m.catName || '').toLowerCase().includes(leaderboardSearchQuery);
       const groupMatch = (m.groupName || '').toLowerCase().includes(leaderboardSearchQuery);
-      return nameMatch || roleMatch || streamerMatch || catMatch || groupMatch;
+      const affMatch = (m.displayAffiliation || '').toLowerCase().includes(leaderboardSearchQuery);
+      return nameMatch || roleMatch || swatRoleMatch || streamerMatch || catMatch || groupMatch || affMatch;
     });
   }
 
@@ -420,23 +513,36 @@ function renderLeaderboardDynamicContent() {
 
   // 포디움 렌더링
   if (showPodium) {
+    const top2Role = [top2.role, top2.swatRole].filter(Boolean).join(' · ');
+    const top1Role = [top1.role, top1.swatRole].filter(Boolean).join(' · ');
+    const top3Role = [top3.role, top3.swatRole].filter(Boolean).join(' · ');
+
+    const top2Aff = top2.displayAffiliation || (top2.groupName ? `${top2.groupEmoji || ''} ${top2.groupName}` : `${top2.catEmoji || ''} ${top2.catBadge}`);
+    const top1Aff = top1.displayAffiliation || (top1.groupName ? `${top1.groupEmoji || ''} ${top1.groupName}` : `${top1.catEmoji || ''} ${top1.catBadge}`);
+    const top3Aff = top3.displayAffiliation || (top3.groupName ? `${top3.groupEmoji || ''} ${top3.groupName}` : `${top3.catEmoji || ''} ${top3.catBadge}`);
+
     html += `
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-6 pt-2">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-6 pt-3">
         <!-- 2위 🥈 -->
         <div 
           onclick="selectMemberFromLeaderboard('${top2.catId}', '${top2.groupId || ''}', '${top2.name}')"
-          class="order-2 md:order-1 bg-gradient-to-b from-zinc-900/90 to-zinc-950 border border-zinc-800/90 hover:border-zinc-600 rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-lg group relative"
+          class="podium-card order-2 md:order-1 w-full bg-gradient-to-b from-zinc-900/90 to-zinc-950 border border-zinc-800/90 hover:border-zinc-500 rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer shadow-lg hover:shadow-zinc-500/15 group relative"
         >
-          <div class="absolute -top-3 w-7 h-7 rounded-full bg-zinc-400/20 border border-zinc-400 flex items-center justify-center text-sm shadow">🥈</div>
-          <div class="relative w-16 h-16 rounded-full overflow-hidden border-2 border-zinc-400/40 my-2 group-hover:scale-105 transition-transform bg-zinc-800">
-            <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top2) : (top2.profileImage || 'assets/default-avatar.png')}" onerror="this.src='assets/default-avatar.png'" class="w-full h-full object-cover" />
+          <div class="podium-badge -top-3 w-7 h-7 rounded-full bg-zinc-400/20 border border-zinc-400 flex items-center justify-center text-sm shadow">🥈</div>
+          <div class="relative my-2">
+            <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-zinc-400/60 group-hover:border-zinc-300 transition-colors duration-300 ease-out bg-zinc-800 shadow-md" style="mask-image: -webkit-radial-gradient(white, black); -webkit-mask-image: -webkit-radial-gradient(white, black);">
+              <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top2) : (top2.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" class="podium-avatar-img w-full h-full object-cover" />
+            </div>
+            ${typeof getSwatBadgeHtml === 'function' ? getSwatBadgeHtml(top2.swatRole, 'sm') : ''}
           </div>
-          <h4 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors flex items-center gap-1 mt-1">
-            <span>${top2.name}</span>
+          <h4 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors flex items-center gap-1 mt-1 truncate max-w-full">
+            <span>${top2.streamerName || top2.name}</span>
           </h4>
-          <p class="text-xs text-zinc-400 mb-2">${top2.role || top2.streamerName || '-'}</p>
-          <div class="text-xs font-semibold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 mb-3 border border-zinc-700/50">
-            ${top2.groupName ? `${top2.groupEmoji || ''} ${top2.groupName}` : `${top2.catEmoji || ''} ${top2.catBadge}`}
+          <p class="text-xs text-zinc-300 mb-2 truncate max-w-full" title="${top2.name}">
+            <span>${top2.name}</span>${top2Role ? ` <span class="text-zinc-500 text-[11px]">(${top2Role})</span>` : ''}
+          </p>
+          <div class="text-xs font-semibold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 mb-3 border border-zinc-700/50 truncate max-w-[90%]" title="${top2Aff}">
+            ${top2Aff}
           </div>
           <div class="w-full pt-2 border-t border-zinc-800 flex flex-col items-center">
             <span class="text-base font-bold text-white">${getTabMetric(top2).valStr}</span>
@@ -447,18 +553,23 @@ function renderLeaderboardDynamicContent() {
         <!-- 1위 🥇 -->
         <div 
           onclick="selectMemberFromLeaderboard('${top1.catId}', '${top1.groupId || ''}', '${top1.name}')"
-          class="order-1 md:order-2 bg-gradient-to-b from-amber-950/30 via-zinc-900 to-zinc-950 border-2 border-amber-500/60 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center text-center cursor-pointer transition-all duration-200 hover:-translate-y-1.5 shadow-xl shadow-amber-500/10 group relative"
+          class="podium-card order-1 md:order-2 w-full bg-gradient-to-b from-amber-950/30 via-zinc-900 to-zinc-950 border-2 border-amber-500/60 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center text-center cursor-pointer shadow-xl shadow-amber-500/10 hover:shadow-amber-500/25 group relative"
         >
-          <div class="absolute -top-4 w-9 h-9 rounded-full bg-amber-500 text-black font-bold flex items-center justify-center text-base shadow-lg shadow-amber-500/40">👑</div>
-          <div class="relative w-20 h-20 rounded-full overflow-hidden border-2 border-amber-400 my-2 group-hover:scale-105 transition-transform bg-zinc-800 shadow-md">
-            <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top1) : (top1.profileImage || 'assets/default-avatar.png')}" onerror="this.src='assets/default-avatar.png'" class="w-full h-full object-cover" />
+          <div class="podium-badge -top-4 w-9 h-9 rounded-full bg-amber-500 text-black font-bold flex items-center justify-center text-base shadow-lg shadow-amber-500/40">👑</div>
+          <div class="relative my-2">
+            <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-amber-400 group-hover:border-amber-300 transition-colors duration-300 ease-out bg-zinc-800 shadow-md" style="mask-image: -webkit-radial-gradient(white, black); -webkit-mask-image: -webkit-radial-gradient(white, black);">
+              <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top1) : (top1.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" class="podium-avatar-img w-full h-full object-cover" />
+            </div>
+            ${typeof getSwatBadgeHtml === 'function' ? getSwatBadgeHtml(top1.swatRole, 'sm') : ''}
           </div>
-          <h4 class="text-lg font-bold text-white group-hover:text-amber-400 transition-colors flex items-center gap-1.5 mt-1">
-            <span>${top1.name}</span>
+          <h4 class="text-lg font-bold text-white group-hover:text-amber-400 transition-colors flex items-center gap-1.5 mt-1 truncate max-w-full">
+            <span>${top1.streamerName || top1.name}</span>
           </h4>
-          <p class="text-xs text-amber-200/80 font-medium mb-2">${top1.role || top1.streamerName || '-'}</p>
-          <div class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 mb-3 border border-amber-500/30">
-            ${top1.groupName ? `${top1.groupEmoji || ''} ${top1.groupName}` : `${top1.catEmoji || ''} ${top1.catBadge}`}
+          <p class="text-xs text-amber-200/90 font-medium mb-2 truncate max-w-full" title="${top1.name}">
+            <span>${top1.name}</span>${top1Role ? ` <span class="text-amber-400/80 text-[11px]">(${top1Role})</span>` : ''}
+          </p>
+          <div class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 mb-3 border border-amber-500/30 truncate max-w-[90%]" title="${top1Aff}">
+            ${top1Aff}
           </div>
           <div class="w-full pt-2.5 border-t border-zinc-800 flex flex-col items-center">
             <span class="text-xl font-bold text-amber-400 tracking-tight">${getTabMetric(top1).valStr}</span>
@@ -469,18 +580,23 @@ function renderLeaderboardDynamicContent() {
         <!-- 3위 🥉 -->
         <div 
           onclick="selectMemberFromLeaderboard('${top3.catId}', '${top3.groupId || ''}', '${top3.name}')"
-          class="order-3 bg-gradient-to-b from-zinc-900/90 to-zinc-950 border border-zinc-800/90 hover:border-zinc-600 rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-lg group relative"
+          class="podium-card order-3 md:order-3 w-full bg-gradient-to-b from-zinc-900/90 to-zinc-950 border border-zinc-800/90 hover:border-amber-600/80 rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer shadow-lg hover:shadow-amber-600/15 group relative"
         >
-          <div class="absolute -top-3 w-7 h-7 rounded-full bg-amber-700/20 border border-amber-700 flex items-center justify-center text-sm shadow">🥉</div>
-          <div class="relative w-16 h-16 rounded-full overflow-hidden border-2 border-amber-700/40 my-2 group-hover:scale-105 transition-transform bg-zinc-800">
-            <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top3) : (top3.profileImage || 'assets/default-avatar.png')}" onerror="this.src='assets/default-avatar.png'" class="w-full h-full object-cover" />
+          <div class="podium-badge -top-3 w-7 h-7 rounded-full bg-amber-700/20 border border-amber-700 flex items-center justify-center text-sm shadow">🥉</div>
+          <div class="relative my-2">
+            <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-amber-700/60 group-hover:border-amber-500 transition-colors duration-300 ease-out bg-zinc-800 shadow-md" style="mask-image: -webkit-radial-gradient(white, black); -webkit-mask-image: -webkit-radial-gradient(white, black);">
+              <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top3) : (top3.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" class="podium-avatar-img w-full h-full object-cover" />
+            </div>
+            ${typeof getSwatBadgeHtml === 'function' ? getSwatBadgeHtml(top3.swatRole, 'sm') : ''}
           </div>
-          <h4 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors flex items-center gap-1 mt-1">
-            <span>${top3.name}</span>
+          <h4 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors flex items-center gap-1 mt-1 truncate max-w-full">
+            <span>${top3.streamerName || top3.name}</span>
           </h4>
-          <p class="text-xs text-zinc-400 mb-2">${top3.role || top3.streamerName || '-'}</p>
-          <div class="text-xs font-semibold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 mb-3 border border-zinc-700/50">
-            ${top3.groupName ? `${top3.groupEmoji || ''} ${top3.groupName}` : `${top3.catEmoji || ''} ${top3.catBadge}`}
+          <p class="text-xs text-zinc-300 mb-2 truncate max-w-full" title="${top3.name}">
+            <span>${top3.name}</span>${top3Role ? ` <span class="text-zinc-500 text-[11px]">(${top3Role})</span>` : ''}
+          </p>
+          <div class="text-xs font-semibold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 mb-3 border border-zinc-700/50 truncate max-w-[90%]" title="${top3Aff}">
+            ${top3Aff}
           </div>
           <div class="w-full pt-2 border-t border-zinc-800 flex flex-col items-center">
             <span class="text-base font-bold text-white">${getTabMetric(top3).valStr}</span>
@@ -520,9 +636,11 @@ function renderLeaderboardDynamicContent() {
           else if (rank === 2) medalBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-zinc-400/20 text-zinc-300 font-bold text-xs border border-zinc-400/40">🥈</span>`;
           else if (rank === 3) medalBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-800/20 text-amber-500 font-bold text-xs border border-amber-700/40">🥉</span>`;
 
-          const groupLabel = m.groupName 
+          const groupLabel = m.displayAffiliation || (m.groupName 
             ? `${m.groupEmoji || ''} ${m.groupName}` 
-            : `${m.catEmoji || ''} ${m.catBadge}`;
+            : `${m.catEmoji || ''} ${m.catBadge}`);
+
+          const mRole = [m.role, m.swatRole].filter(Boolean).join(' · ');
 
           return `
             <div 
@@ -536,24 +654,26 @@ function renderLeaderboardDynamicContent() {
 
               <!-- 프로필 및 인원 정보 -->
               <div class="flex-1 px-3 flex items-center gap-3 min-w-0">
-                <img 
-                  src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(m) : (m.profileImage || 'assets/default-avatar.png')}" 
-                  onerror="this.src='assets/default-avatar.png'" 
-                  class="w-10 h-10 rounded-full object-cover border border-zinc-700 bg-zinc-800 flex-shrink-0 group-hover:scale-105 transition-transform"
-                />
+                <div class="relative flex-shrink-0">
+                  <img 
+                    src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(m) : (m.avatar || 'assets/default-avatar.svg')}" 
+                    onerror="this.src='assets/default-avatar.svg'" 
+                    class="w-10 h-10 rounded-full object-cover border border-zinc-700 bg-zinc-800 flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
+                  />
+                  ${typeof getSwatBadgeHtml === 'function' ? getSwatBadgeHtml(m.swatRole, 'sm') : ''}
+                </div>
                 <div class="min-w-0 flex-1">
                   <div class="flex items-center gap-2">
-                    <span class="font-bold text-sm text-white group-hover:text-amber-400 transition-colors truncate">${m.name}</span>
-                    ${m.streamerName && m.streamerName !== m.name ? `<span class="text-[11px] text-zinc-500 truncate">(${m.streamerName})</span>` : ''}
+                    <span class="font-bold text-sm text-white group-hover:text-amber-400 transition-colors truncate">${m.streamerName || m.name}</span>
                   </div>
                   <div class="text-xs text-zinc-400 truncate">
-                    ${m.role || '-'}
+                    <span class="text-amber-400/90 font-medium">${m.name}</span>${mRole ? ` <span class="text-zinc-500 text-[11px]">(${mRole})</span>` : ''}
                   </div>
                 </div>
               </div>
 
               <!-- 소속 그룹 / 카테고리 -->
-              <div class="hidden sm:block w-36 px-2 text-left truncate flex-shrink-0">
+              <div class="hidden sm:block w-36 px-2 text-left truncate flex-shrink-0" title="${groupLabel}">
                 <span class="inline-block text-xs text-zinc-400 bg-zinc-800/60 px-2 py-0.5 rounded-md border border-zinc-700/40 truncate max-w-full">
                   ${groupLabel}
                 </span>
@@ -565,7 +685,7 @@ function renderLeaderboardDynamicContent() {
                   ${metric.valStr}
                 </div>
                 <div class="flex items-center justify-end gap-2 mt-1">
-                  <span class="text-[11px] text-zinc-500">${metric.subStr}</span>
+                  <span class="text-[11px] text-zinc-300 font-medium">${metric.subStr}</span>
                   <div class="w-16 sm:w-20 bg-zinc-800 rounded-full h-1.5 overflow-hidden hidden sm:block">
                     <div class="bg-amber-400 h-full rounded-full transition-all duration-300" style="width: ${percent}%;"></div>
                   </div>

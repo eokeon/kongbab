@@ -16,7 +16,8 @@ function renderSearchResults(container) {
           if (
             member.name.toLowerCase().includes(q) ||
             member.streamer.toLowerCase().includes(q) ||
-            (member.role && member.role.toLowerCase().includes(q))
+            (member.role && member.role.toLowerCase().includes(q)) ||
+            (member.swatRole && member.swatRole.toLowerCase().includes(q))
           ) {
             results.push({ type: 'member', data: member, group, category: cat });
           }
@@ -32,7 +33,8 @@ function renderSearchResults(container) {
         if (
           member.name.toLowerCase().includes(q) ||
           member.streamer.toLowerCase().includes(q) ||
-          (member.role && member.role.toLowerCase().includes(q))
+          (member.role && member.role.toLowerCase().includes(q)) ||
+          (member.swatRole && member.swatRole.toLowerCase().includes(q))
         ) {
           results.push({ type: 'member', data: member, group: null, category: cat });
         }
@@ -122,14 +124,18 @@ function renderSearchResults(container) {
     } else if (item.type === 'member') {
       const m = item.data;
       const groupName = item.group ? item.group.name : item.category.name;
+      const roleText = [m.role, m.swatRole].filter(Boolean).join(' · ');
       html += `
         <div onclick="selectMemberFromSearch('${item.category.id}', ${item.group ? `'${item.group.id}'` : 'null'}, '${m.id}')" class="bg-zinc-900 border border-zinc-800 hover:border-amber-400/50 rounded-2xl p-5 cursor-pointer transition-all hover:-translate-y-1">
           <div class="flex items-center gap-3.5 mb-3">
-            <img src="${getMemberAvatar(m)}" class="w-14 h-14 rounded-2xl object-cover border border-zinc-700" />
+            <div class="relative flex-shrink-0">
+              <img src="${getMemberAvatar(m)}" class="w-14 h-14 rounded-2xl object-cover border border-zinc-700" />
+              ${typeof getSwatBadgeHtml === 'function' ? getSwatBadgeHtml(m.swatRole, 'sm') : ''}
+            </div>
             <div>
               <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">[인원] ${groupName}</span>
               <h4 class="text-lg font-bold text-white mt-1">${m.streamer}</h4>
-              <p class="text-xs text-amber-400 font-medium">${m.name}${m.role ? ` (${m.role})` : ''}</p>
+              <p class="text-xs text-amber-400 font-medium">${m.name}${roleText ? ` (${roleText})` : ''}</p>
             </div>
           </div>
           <div class="pt-3 border-t border-zinc-800 flex justify-between items-center text-xs text-zinc-500">

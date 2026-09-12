@@ -36,6 +36,8 @@ public class Streamer {
 
     private String role;
 
+    private String swatRole;
+
     private String badgeColor;
 
     @Column(length = 1000)

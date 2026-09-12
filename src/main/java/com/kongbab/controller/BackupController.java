@@ -83,6 +83,9 @@ public class BackupController {
             Path candidatePath = Files.exists(latestPath) ? latestPath : (Files.exists(staticPath) ? staticPath : null);
             if (candidatePath != null) {
                 String content = Files.readString(candidatePath, StandardCharsets.UTF_8);
+                if (content != null && content.startsWith("\uFEFF")) {
+                    content = content.substring(1);
+                }
                 JsonNode root = objectMapper.readTree(content);
                 JsonNode categories = null;
                 if (root.has("categories") && root.get("categories").isArray() && root.get("categories").size() > 0) {
@@ -230,6 +233,9 @@ public class BackupController {
                 return ResponseEntity.badRequest().body(res);
             }
 
+            if (jsonContent != null && jsonContent.startsWith("\uFEFF")) {
+                jsonContent = jsonContent.substring(1);
+            }
             JsonNode root = objectMapper.readTree(jsonContent);
             JsonNode categoriesNode = root.has("categories") ? root.get("categories") : (root.isArray() ? root : null);
 
@@ -399,6 +405,7 @@ public class BackupController {
             dto.setCategory(catId);
             dto.setSubgroup(gId);
             dto.setRole(m.has("role") ? m.get("role").asText() : "");
+            dto.setSwatRole(m.has("swatRole") ? m.get("swatRole").asText() : "");
             dto.setBadgeColor(m.has("badgeColor") ? m.get("badgeColor").asText() : "bg-zinc-800");
             dto.setAvatar(m.has("avatar") ? m.get("avatar").asText() : "assets/default-avatar.svg");
             dto.setDisplayOrder(m.has("displayOrder") ? m.get("displayOrder").asInt() : defaultOrder);

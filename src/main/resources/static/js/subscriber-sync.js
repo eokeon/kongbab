@@ -1,24 +1,7 @@
 // ==========================================
 // 유튜브 구독자 수 관리 및 수동 일괄 갱신 모듈
+// (오직 인원 정보의 유튜브 링크(youtubeUrl)만 기준)
 // ==========================================
-
-// 구독자 조회 기준 영상 선정:
-// 1순위: 편집 영상 1번 ➔ 2순위: 몰아보기 1번 ➔ 3순위: 풀 영상 1번 ➔ 4순위: 첫 영상
-function getRepresentativeVideoForSubscriber(member) {
-  if (!member || !Array.isArray(member.videos) || member.videos.length === 0) return null;
-  const videos = member.videos;
-
-  const clip = videos.find(v => (typeof getVideoType === "function" ? getVideoType(v) : (v.videoType || v.type)) === 'clip');
-  if (clip && (clip.url || clip.videoId)) return clip;
-
-  const binge = videos.find(v => (typeof getVideoType === "function" ? getVideoType(v) : (v.videoType || v.type)) === 'binge');
-  if (binge && (binge.url || binge.videoId)) return binge;
-
-  const full = videos.find(v => (typeof getVideoType === "function" ? getVideoType(v) : (v.videoType || v.type)) === 'full');
-  if (full && (full.url || full.videoId)) return full;
-
-  return videos[0];
-}
 
 function formatSubscriberCount(countStr) {
   if (!countStr) return null;
@@ -92,51 +75,39 @@ function parseYouTubeTarget(urlOrStr) {
     return { type: "channelId", value: channelMatch[1] };
   }
 
-  // 2) 영상 링크인 경우 videoId 추출
-  const videoId = typeof extractYoutubeId === "function" ? extractYoutubeId(str) : null;
-  if (videoId) {
-    return { type: "videoId", value: videoId };
-  }
-
-  // 3) 핸들(@handle): /@something 또는 @something (한글, 영문, 특수문자 지원)
+  // 2) 핸들(@handle): /@something 또는 @something (한글, 영문, 숫자, 특수기호 대응)
   const handleMatch = str.match(/@([^\/\s?#&]+)/);
   if (handleMatch) {
-    return { type: "handle", value: handleMatch[1].trim() };
+    return { type: "handle", value: "@" + handleMatch[1].trim() };
   }
 
-  // 4) 사용자명 (/user/username 또는 /c/username)
+  // 3) 사용자명 (/user/username 또는 /c/username)
   const userMatch = str.match(/(?:user|c)\/([^\/\s?#&]+)/i);
   if (userMatch) {
     return { type: "username", value: userMatch[1].trim() };
   }
 
-  // 5) 일반 검색어(단순 채널명 텍스트 등)
+  // 4) 혹시 인원 정보의 유튜브 링크란에 영상 URL(watch?v= 또는 youtu.be/)을 직접 넣은 경우
+  const videoId = typeof extractYoutubeId === "function" ? extractYoutubeId(str) : null;
+  if (videoId) {
+    return { type: "videoId", value: videoId };
+  }
+
+  // 5) 일반 텍스트 (단순 핸들이나 채널명 텍스트)
   if (!str.startsWith("http://") && !str.startsWith("https://") && !str.includes("/")) {
+    if (str.startsWith("@")) {
+      return { type: "handle", value: str };
+    }
     return { type: "search", value: str };
   }
 
   return null;
 }
 
-// 구독자 조회를 위한 타깃 식별자 (⭐ 1순위: 정보 수정의 member.youtubeUrl ➔ 2순위: 등록된 영상 1번)
+// 구독자 조회를 위한 타깃 식별자 (오직 인원 정보에 등록된 youtubeUrl만 사용, 영상 fallback 일절 없음)
 function getSubscriberLookupTarget(member) {
-  if (!member) return null;
-
-  // ⭐ 1순위: 정보 수정 모달에 입력된 스트리머 유튜브 링크
-  if (member.youtubeUrl && member.youtubeUrl.trim()) {
-    const parsed = parseYouTubeTarget(member.youtubeUrl);
-    if (parsed) return parsed;
-  }
-
-  // 2순위: 등록된 영상 목록 (편집 1번 ➔ 몰아보기 1번 ➔ 풀영상 1번 ➔ 첫 영상)
-  const targetVideo = getRepresentativeVideoForSubscriber(member);
-  if (targetVideo) {
-    const url = targetVideo.url || (targetVideo.videoId ? `https://www.youtube.com/watch?v=${targetVideo.videoId}` : "");
-    const vId = typeof extractYoutubeId === "function" ? extractYoutubeId(url) : null;
-    if (vId) return { type: "videoId", value: vId };
-  }
-
-  return null;
+  if (!member || !member.youtubeUrl || !member.youtubeUrl.trim()) return null;
+  return parseYouTubeTarget(member.youtubeUrl);
 }
 
 async function fetchMemberSubscriberFromYouTube(member) {
@@ -206,11 +177,11 @@ async function fetchMemberSubscriberFromYouTube(member) {
   return null;
 }
 
-// 관리자가 모달에서 수동으로 실행하는 유튜브 구독자 수 일괄 갱신 (유튜브 링크 최우선 + 50개 단위 배치 초고속 처리)
+// 관리자가 모달에서 수동으로 실행하는 유튜브 구독자 수 일괄 갱신 (오직 인원 정보의 유튜브 링크 기준)
 async function executeSubscriberSync(onProgress) {
   const allMembers = extractAllStreamersFromKongbabData();
-  // 대상: 유튜브 링크가 있거나 등록된 영상이 있는 인원 전체
-  const targets = allMembers.filter(m => (m.youtubeUrl && m.youtubeUrl.trim()) || (m.videos && m.videos.length > 0));
+  // 대상: 오직 인원 정보에 유튜브 링크(youtubeUrl)가 등록된 인원만 대상 (영상 기준 fallback 완전 제거)
+  const targets = allMembers.filter(m => m.youtubeUrl && m.youtubeUrl.trim());
   if (targets.length === 0) return 0;
 
   const apiKey = localStorage.getItem("youtube_api_key") || "AIzaSyAyY4g9-iwjwQNXb5F9Xx0LLGtLUEpowl8";
@@ -218,169 +189,163 @@ async function executeSubscriberSync(onProgress) {
     throw new Error("유튜브 API 키가 설정되지 않았습니다.");
   }
 
-  // 1단계: 각 멤버별 최우선 타깃(1순위: youtubeUrl, 2순위: 영상) 결정
+  // 1단계: 각 멤버별 인원 정보의 유튜브 링크 분석
   const targetItems = [];
   for (const m of targets) {
     const target = getSubscriberLookupTarget(m);
-    targetItems.push({ member: m, target });
+    if (target) {
+      targetItems.push({ member: m, target });
+    }
   }
 
   let updatedCount = 0;
   let processedCount = 0;
 
-  // 2단계: 50개씩 청크(배치)로 묶어 일괄 요청
-  const CHUNK_SIZE = 50;
-  for (let i = 0; i < targetItems.length; i += CHUNK_SIZE) {
-    const chunk = targetItems.slice(i, i + CHUNK_SIZE);
-    
-    // videoId 수집 (영상에서 channelId 조회용)
-    const videoTargets = chunk.filter(item => item.target && item.target.type === "videoId");
-    const videoIds = Array.from(new Set(videoTargets.map(item => item.target.value)));
-    const videoToChannelMap = new Map();
+  // 캐시 맵 (중복 요청 방지)
+  const subCountCache = new Map();
 
-    if (videoIds.length > 0) {
-      try {
-        const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoIds.join(",")}&key=${apiKey.trim()}`);
-        if (vRes.ok) {
-          const vData = await vRes.json();
-          (vData.items || []).forEach(vItem => {
-            if (vItem.id && vItem.snippet?.channelId) {
-              videoToChannelMap.set(vItem.id, vItem.snippet.channelId);
-            }
-          });
-        }
-      } catch (err) {
-        console.warn("[YouTube Batch] 영상 정보 일괄 조회 오류:", err);
-      }
-    }
+  // 1단계: 채널 ID 일괄 사전 조회 (YouTube API 배치 part=statistics&id=c1,c2...)
+  const directChannelIds = targetItems
+    .filter(item => item.target && item.target.type === "channelId")
+    .map(item => item.target.value);
+  
+  // videoId가 있는 경우 channelId 추출
+  const videoTargets = targetItems.filter(item => item.target && item.target.type === "videoId");
+  const videoIds = Array.from(new Set(videoTargets.map(item => item.target.value)));
+  const videoToChannelMap = new Map();
 
-    // channelToSubMap 생성
-    const channelToSubMap = new Map();
-    // 직접 channelId를 가진 것들과, videoId로부터 얻은 channelId 수집
-    const directChannelIds = chunk
-      .filter(item => item.target && item.target.type === "channelId")
-      .map(item => item.target.value);
-    
-    const resolvedChannelIds = Array.from(videoToChannelMap.values());
-    const allChannelIds = Array.from(new Set([...directChannelIds, ...resolvedChannelIds]));
-
-    if (allChannelIds.length > 0) {
-      try {
-        const cRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${allChannelIds.join(",")}&key=${apiKey.trim()}`);
-        if (cRes.ok) {
-          const cData = await cRes.json();
-          (cData.items || []).forEach(cItem => {
-            const stats = cItem.statistics;
-            if (stats && !stats.hiddenSubscriberCount && stats.subscriberCount) {
-              const formatted = formatSubscriberCount(stats.subscriberCount);
-              if (formatted) channelToSubMap.set(cItem.id, formatted);
-            }
-          });
-        }
-      } catch (err) {
-        console.warn("[YouTube Batch] 채널 구독자 일괄 조회 오류:", err);
-      }
-    }
-
-    // handle(@handle) 및 search/username 타입 처리 (한글 핸들 & 채널명 검색 fallback 지원)
-    const specialTargets = chunk.filter(item => item.target && (item.target.type === "handle" || item.target.type === "username" || item.target.type === "search"));
-    for (const sItem of specialTargets) {
-      const t = sItem.target;
-      const cleanVal = t.value.replace(/^@+/, "");
-      let foundSub = null;
-
-      if (t.type === "handle") {
-        // 1) 공식 forHandle API 시도
-        try {
-          const hRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&forHandle=${encodeURIComponent('@' + cleanHandle)}&key=${apiKey.trim()}`);
-          if (hRes.ok) {
-            const hData = await hRes.json();
-            const stats = hData.items?.[0]?.statistics;
-            if (stats && !stats.hiddenSubscriberCount && stats.subscriberCount) {
-              foundSub = formatSubscriberCount(stats.subscriberCount);
-            }
+  if (videoIds.length > 0) {
+    try {
+      const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoIds.join(",")}&key=${apiKey.trim()}`);
+      if (vRes.ok) {
+        const vData = await vRes.json();
+        (vData.items || []).forEach(vItem => {
+          if (vItem.id && vItem.snippet?.channelId) {
+            videoToChannelMap.set(vItem.id, vItem.snippet.channelId);
           }
-        } catch (err) {}
+        });
       }
+    } catch (err) {
+      console.warn("[YouTube Batch] 영상 정보 일괄 조회 오류:", err);
+    }
+  }
 
-      // 2) forHandle 실패 시 또는 search/username인 경우 채널 검색 fallback
-      if (!foundSub) {
-        try {
-          const sRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${encodeURIComponent(cleanVal)}&key=${apiKey.trim()}`);
-          if (sRes.ok) {
-            const sData = await sRes.json();
-            const chId = sData.items?.[0]?.id?.channelId || sData.items?.[0]?.snippet?.channelId;
-            if (chId) {
-              // 이미 조회된 채널 캐시 확인
-              if (channelToSubMap.has(chId)) {
-                foundSub = channelToSubMap.get(chId);
-              } else {
-                const cRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${chId}&key=${apiKey.trim()}`);
-                if (cRes.ok) {
-                  const cData = await cRes.json();
-                  const stats = cData.items?.[0]?.statistics;
-                  if (stats && !stats.hiddenSubscriberCount && stats.subscriberCount) {
-                    foundSub = formatSubscriberCount(stats.subscriberCount);
-                    channelToSubMap.set(chId, foundSub);
+  const allChannelIds = Array.from(new Set([...directChannelIds, ...videoToChannelMap.values()]));
+  for (let i = 0; i < allChannelIds.length; i += 50) {
+    const chunk = allChannelIds.slice(i, i + 50);
+    try {
+      const cRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${chunk.join(",")}&key=${apiKey.trim()}`);
+      if (cRes.ok) {
+        const cData = await cRes.json();
+        (cData.items || []).forEach(cItem => {
+          const stats = cItem.statistics;
+          if (stats && !stats.hiddenSubscriberCount && stats.subscriberCount) {
+            const formatted = formatSubscriberCount(stats.subscriberCount);
+            if (formatted) subCountCache.set(cItem.id, formatted);
+          }
+        });
+      }
+    } catch (err) {
+      console.warn("[YouTube Batch] 채널 구독자 일괄 조회 오류:", err);
+    }
+  }
+
+  // 2단계: 각 스트리머별 실시간 순차 조회 및 진행률 갱신 (실시간 퍼센티지 & 로그 반영)
+  for (let idx = 0; idx < targetItems.length; idx++) {
+    const item = targetItems[idx];
+    const m = item.member;
+    const t = item.target;
+    let subStr = null;
+
+    if (t) {
+      if (t.type === "channelId") {
+        subStr = subCountCache.get(t.value) || null;
+      } else if (t.type === "videoId") {
+        const chId = videoToChannelMap.get(t.value);
+        if (chId) subStr = subCountCache.get(chId) || null;
+      } else if (t.type === "handle" || t.type === "username" || t.type === "search") {
+        const cleanHandle = t.value.replace(/^@+/, "");
+        if (subCountCache.has(t.value)) {
+          subStr = subCountCache.get(t.value);
+        } else if (subCountCache.has(`@${cleanHandle}`)) {
+          subStr = subCountCache.get(`@${cleanHandle}`);
+        } else if (subCountCache.has(cleanHandle)) {
+          subStr = subCountCache.get(cleanHandle);
+        } else {
+          // 1) 공식 forHandle API 시도
+          if (t.type === "handle") {
+            try {
+              const hRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&forHandle=${encodeURIComponent('@' + cleanHandle)}&key=${apiKey.trim()}`);
+              if (hRes.ok) {
+                const hData = await hRes.json();
+                const stats = hData.items?.[0]?.statistics;
+                if (stats && !stats.hiddenSubscriberCount && stats.subscriberCount) {
+                  subStr = formatSubscriberCount(stats.subscriberCount);
+                }
+              }
+            } catch (err) {}
+          }
+
+          // 2) forHandle 실패 시 또는 search/username인 경우 채널 검색 fallback
+          if (!subStr) {
+            try {
+              const sRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${encodeURIComponent(cleanHandle)}&key=${apiKey.trim()}`);
+              if (sRes.ok) {
+                const sData = await sRes.json();
+                const chId = sData.items?.[0]?.id?.channelId || sData.items?.[0]?.snippet?.channelId;
+                if (chId) {
+                  if (subCountCache.has(chId)) {
+                    subStr = subCountCache.get(chId);
+                  } else {
+                    const cRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${chId}&key=${apiKey.trim()}`);
+                    if (cRes.ok) {
+                      const cData = await cRes.json();
+                      const stats = cData.items?.[0]?.statistics;
+                      if (stats && !stats.hiddenSubscriberCount && stats.subscriberCount) {
+                        subStr = formatSubscriberCount(stats.subscriberCount);
+                        subCountCache.set(chId, subStr);
+                      }
+                    }
                   }
                 }
               }
-            }
+            } catch (err) {}
           }
-        } catch (err) {}
-      }
 
-      if (foundSub) {
-        if (t.type === "handle") {
-          channelToSubMap.set(`@${cleanVal}`, foundSub);
-        } else {
-          channelToSubMap.set(t.value, foundSub);
+          if (subStr) {
+            subCountCache.set(t.value, subStr);
+            subCountCache.set(`@${cleanHandle}`, subStr);
+            subCountCache.set(cleanHandle, subStr);
+          }
         }
       }
     }
 
-    // 3단계: 결과 반영 및 실시간 알림
-    for (const item of chunk) {
-      processedCount++;
-      const m = item.member;
-      const t = item.target;
-      let subStr = null;
+    processedCount++;
 
-      if (t) {
-        if (t.type === "channelId") {
-          subStr = channelToSubMap.get(t.value);
-        } else if (t.type === "videoId") {
-          const chId = videoToChannelMap.get(t.value);
-          if (chId) subStr = channelToSubMap.get(chId);
-        } else if (t.type === "handle") {
-          const cleanVal = t.value.replace(/^@+/, "");
-          subStr = channelToSubMap.get(`@${cleanVal}`);
-        } else if (t.type === "search" || t.type === "username") {
-          subStr = channelToSubMap.get(t.value);
-        }
-      }
-
-      if (subStr) {
-        m.subscriberCount = subStr;
-        KONGBAB_DATA.categories.forEach(cat => {
-          if (cat.hasSubgroups) {
-            (cat.groups || []).forEach(g => {
-              (g.members || []).forEach(mem => {
-                if (mem.id === m.id) mem.subscriberCount = subStr;
-              });
-            });
-          } else {
-            (cat.members || []).forEach(mem => {
+    if (subStr) {
+      m.subscriberCount = subStr;
+      KONGBAB_DATA.categories.forEach(cat => {
+        if (cat.hasSubgroups) {
+          (cat.groups || []).forEach(g => {
+            (g.members || []).forEach(mem => {
               if (mem.id === m.id) mem.subscriberCount = subStr;
             });
-          }
-        });
-        updatedCount++;
-        if (onProgress) onProgress(processedCount, targetItems.length, m.streamer, `성공 (${subStr})`);
-      } else {
-        if (onProgress) onProgress(processedCount, targetItems.length, m.streamer, "조회 실패/비공개");
-      }
+          });
+        } else {
+          (cat.members || []).forEach(mem => {
+            if (mem.id === m.id) mem.subscriberCount = subStr;
+          });
+        }
+      });
+      updatedCount++;
+      if (onProgress) onProgress(processedCount, targetItems.length, m.streamer, `성공 (${subStr})`);
+    } else {
+      if (onProgress) onProgress(processedCount, targetItems.length, m.streamer, "조회 실패/비공개");
     }
+
+    // 브라우저 렌더링 갱신을 위해 틱 양보
+    await new Promise(resolve => setTimeout(resolve, 30));
   }
 
   persistData();

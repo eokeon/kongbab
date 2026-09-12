@@ -1,3 +1,95 @@
+// 경찰 계급별 전용 색상 및 공통 직책 뱃지 색상 판별
+function getMemberRoleBadgeClass(member, categoryHint = null) {
+  if (!member || !member.role) return "";
+  const role = member.role.trim();
+
+  const isPolice = categoryHint === 'police' || 
+    member.category === 'police' || 
+    (Array.isArray(member.affiliations) && member.affiliations.some(a => a.category === 'police')) ||
+    ["순경", "경장", "경사", "경위", "경정", "청장", "부청장", "서장", "팀장", "교육생"].some(r => role.includes(r));
+
+  if (isPolice) {
+    if (role.includes("부청장")) return "bg-red-600 text-white";
+    if (role.includes("청장")) return "bg-red-900 text-white border border-red-700/60";
+    if (role.includes("서장") || role.includes("경정") || role.includes("경감")) return "bg-red-600 text-white";
+    if (role.includes("경위")) return "bg-white text-zinc-950 font-bold border border-zinc-300 shadow-sm";
+    if (role.includes("경사")) return "bg-orange-400 text-zinc-950 font-bold";
+    if (role.includes("경장")) return "bg-pink-500 text-white";
+    if (role.includes("팀장")) return "bg-emerald-600 text-white";
+    if (role.includes("순경")) return "bg-blue-600 text-white";
+    if (role.includes("교육생")) return "bg-yellow-400 text-zinc-950 font-bold";
+    if (role.includes("가이드")) return "bg-emerald-600 text-white";
+  }
+
+  if (member.badgeColor === 'bg-white') {
+    return "bg-white text-zinc-950 font-bold border border-zinc-300 shadow-sm";
+  }
+
+  return `${member.badgeColor || 'bg-zinc-800'} text-white`;
+}
+
+// 특공대 및 추가 직책 대각선 뱃지 렌더링 (프로필 왼쪽 위 대각선)
+function getSwatBadgeHtml(swatRole, size = 'md') {
+  if (!swatRole) return '';
+  const isLeader = swatRole === '특공대장';
+  const isGuide = swatRole.includes('가이드');
+
+  let colorClasses = '';
+  if (isGuide) {
+    // 가이드 전용 색상 (에메랄드/초록 + 선명한 검정 텍스트)
+    if (size === 'lg') {
+      colorClasses = 'bg-emerald-400 text-zinc-950 border border-emerald-200 shadow-xl shadow-emerald-500/25';
+    } else if (size === 'sm') {
+      colorClasses = 'bg-emerald-400 text-zinc-950 border border-emerald-200 shadow';
+    } else {
+      colorClasses = 'bg-emerald-400 text-zinc-950 border border-emerald-200 shadow-md';
+    }
+  } else if (isLeader) {
+    // 특공대장 (화사한 파스텔 하늘색)
+    if (size === 'lg') {
+      colorClasses = 'bg-sky-300 text-zinc-950 border border-white shadow-xl shadow-sky-400/30';
+    } else if (size === 'sm') {
+      colorClasses = 'bg-sky-300 text-zinc-950 border border-white shadow';
+    } else {
+      colorClasses = 'bg-sky-300 text-zinc-950 border border-white shadow-lg shadow-sky-400/30';
+    }
+  } else {
+    // 특공대원 및 기타 추가 직책 (선명한 하늘색)
+    if (size === 'lg') {
+      colorClasses = 'bg-sky-400 text-zinc-950 border border-sky-200 shadow-lg shadow-sky-500/25';
+    } else if (size === 'sm') {
+      colorClasses = 'bg-sky-400 text-zinc-950 border border-sky-200 shadow';
+    } else {
+      colorClasses = 'bg-sky-400 text-zinc-950 border border-sky-200 shadow-md';
+    }
+  }
+
+  const roleText = swatRole.replace(/\(.*?\)/g, '').trim();
+
+  if (size === 'lg') {
+    return `
+      <span class="absolute -top-2.5 -left-2.5 z-20 text-xs font-black px-2.5 py-1 rounded-xl ${colorClasses} -rotate-12 flex items-center justify-center whitespace-nowrap select-none tracking-tight" title="추가 직책: ${roleText}">
+        <span>${roleText}</span>
+      </span>
+    `;
+  }
+
+  if (size === 'sm') {
+    return `
+      <span class="absolute -top-1.5 -left-1.5 z-20 text-[9px] font-black px-1.5 py-0.5 rounded-md ${colorClasses} -rotate-12 flex items-center justify-center whitespace-nowrap select-none tracking-tight" title="추가 직책: ${roleText}">
+        <span>${roleText}</span>
+      </span>
+    `;
+  }
+
+  // md size (카드 아바타)
+  return `
+    <span class="absolute -top-2 -left-2 z-20 text-[9.5px] font-black px-2 py-0.5 rounded-md ${colorClasses} -rotate-12 flex items-center justify-center whitespace-nowrap select-none tracking-tight" title="추가 직책: ${roleText}">
+      <span>${roleText}</span>
+    </span>
+  `;
+}
+
 function renderHeaderAuth() {
   const container = document.getElementById("header-auth");
   if (!container) return;
@@ -167,14 +259,15 @@ function renderMemberCard(member, dragType, clickFn) {
     >
       <div>
         <div class="flex items-start gap-4 mb-4">
-          <div class="relative">
+          <div class="relative flex-shrink-0">
             <img 
               src="${getMemberAvatar(member)}" 
               alt="${member.name}" 
               draggable="false"
               class="w-16 h-16 rounded-2xl object-cover border-2 border-zinc-700 group-hover:border-amber-400 transition-colors shadow-md"
             />
-            ${member.role ? `<span class="absolute -bottom-1 -right-1 text-[10px] font-bold px-1.5 py-0.5 rounded ${member.badgeColor || 'bg-zinc-800'} text-white shadow">${member.role}</span>` : ''}
+            ${getSwatBadgeHtml(member.swatRole, 'md')}
+            ${member.role ? `<span class="absolute -bottom-1 -right-1 text-[10px] font-bold px-1.5 py-0.5 rounded ${getMemberRoleBadgeClass(member, 'police')} shadow">${member.role}</span>` : ''}
           </div>
           
           <div class="flex-1 min-w-0">
@@ -289,7 +382,6 @@ function renderGroupVideoStats(members) {
           <span>소속 인원</span>
         </p>
         <p class="text-sm sm:text-[15px] font-bold text-white tracking-tight leading-snug my-0.5">${memberList.length}명</p>
-        <p class="text-xs text-zinc-500 font-medium whitespace-nowrap mt-0.5 leading-none">활동 중</p>
       </div>
     </div>
   `;
@@ -345,7 +437,7 @@ function renderSubgroupList(container, cat) {
         ondragend="handleCardDragEnd(event)"
     ` : `draggable="false"`;
     const cursorClass = admin ? "cursor-grab active:cursor-grabbing" : "cursor-pointer";
-    const bgImage = typeof getGroupBgImage === "function" ? getGroupBgImage(group) : (group.bgImage || (group.id === "gang-bigdick" || group.name === "빅딕" ? "assets/bigdick.webp" : null));
+    const bgImage = typeof getGroupBgImage === "function" ? getGroupBgImage(group) : (group.bgImage || (group.id === "gang-bigdick" || group.name === "빅딕" ? "assets/빅딕.webp" : null));
 
     if (bgImage) {
       return `
@@ -435,7 +527,7 @@ function renderGroupMembers(container) {
   const cat = getCurrentCategory();
   const group = state.currentGroup;
   const members = group.members || [];
-  const bgImage = typeof getGroupBgImage === "function" ? getGroupBgImage(group) : (group.bgImage || (group.id === "gang-bigdick" || group.name === "빅딕" ? "assets/bigdick.webp" : null));
+  const bgImage = typeof getGroupBgImage === "function" ? getGroupBgImage(group) : (group.bgImage || (group.id === "gang-bigdick" || group.name === "빅딕" ? "assets/빅딕.webp" : null));
   const membersHtml = members.length > 0
     ? members.map(m => renderMemberCard(m, 'group-member', 'selectGroupMember')).join("")
     : renderEmptyState(group.emoji || '👥', "등록된 인원이 없습니다.");
@@ -706,10 +798,13 @@ function renderMemberVideos(container) {
       ${backButtonHtml}
       <div class="bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-950 border border-zinc-800 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-2xl relative overflow-hidden">
         <div class="flex items-center gap-6 relative z-10">
-          <img src="${getMemberAvatar(member)}" alt="${member.name}" class="w-24 h-24 md:w-28 md:h-28 rounded-3xl object-cover border-4 border-zinc-800 shadow-2xl" />
+          <div class="relative flex-shrink-0">
+            <img src="${getMemberAvatar(member)}" alt="${member.name}" class="w-24 h-24 md:w-28 md:h-28 rounded-3xl object-cover border-4 border-zinc-800 shadow-2xl" />
+            ${getSwatBadgeHtml(member.swatRole, 'lg')}
+          </div>
           <div>
             <div class="flex items-center gap-2.5 mb-1.5 flex-wrap">
-              ${member.role ? `<span class="text-xs font-bold px-2.5 py-1 rounded-md ${member.badgeColor || 'bg-red-700'} text-white">${member.role}</span>` : ''}
+              ${member.role ? `<span class="text-xs font-bold px-2.5 py-1 rounded-md ${getMemberRoleBadgeClass(member, 'police')}">${member.role}</span>` : ''}
               <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-300">소속: ${affiliationsText}</span>
               ${Array.isArray(member.affiliations) && member.affiliations.length > 1 ? `<span class="text-xs font-bold px-2 py-0.5 rounded-md bg-amber-950/80 border border-amber-500/50 text-amber-300">겸직 중</span>` : ''}
             </div>

@@ -92,12 +92,60 @@ function handleAffiliationCheckboxChange() {
     }
   }
 
+  // 경찰 선택 시에만 특공대 입력 필드 표시, 그 외는 원래대로 1열 단일 필드 표시
+  const policeChecked = !!document.getElementById("aff-check-police")?.checked;
+  const swatContainer = document.getElementById("member-form-swat-container");
+  const roleRow = document.getElementById("member-form-role-row");
+  if (swatContainer && roleRow) {
+    if (policeChecked) {
+      swatContainer.classList.remove("hidden");
+      roleRow.className = "grid grid-cols-1 sm:grid-cols-2 gap-3";
+    } else {
+      swatContainer.classList.add("hidden");
+      roleRow.className = "grid grid-cols-1 gap-3";
+    }
+  }
+
   updateSelectedAffiliationCount();
+}
+
+// 직위/계급 입력 시 직책 뱃지 색상 자동 선택 (경찰 계급 및 공통 보스 등)
+function handleRoleInputForPoliceColor(roleVal) {
+  if (!roleVal) return;
+  const badgeSelect = document.getElementById("member-form-badge");
+  if (!badgeSelect) return;
+  const r = roleVal.trim();
+  const policeChecked = !!document.getElementById("aff-check-police")?.checked;
+  if (policeChecked) {
+    if (r.includes("부청장") || r.includes("서장") || r.includes("경정") || r.includes("경감")) {
+      badgeSelect.value = "bg-red-600";
+    } else if (r.includes("청장")) {
+      badgeSelect.value = "bg-red-900";
+    } else if (r.includes("경위")) {
+      badgeSelect.value = "bg-white";
+    } else if (r.includes("경사")) {
+      badgeSelect.value = "bg-orange-400";
+    } else if (r.includes("경장")) {
+      badgeSelect.value = "bg-pink-500";
+    } else if (r.includes("팀장")) {
+      badgeSelect.value = "bg-emerald-600";
+    } else if (r.includes("순경")) {
+      badgeSelect.value = "bg-blue-600";
+    } else if (r.includes("교육생")) {
+      badgeSelect.value = "bg-yellow-400";
+    }
+  } else {
+    if (r.includes("보스")) {
+      badgeSelect.value = "bg-red-600";
+    } else if (r.includes("가이드")) {
+      badgeSelect.value = "bg-emerald-600";
+    }
+  }
 }
 
 function getSelectedAffiliations() {
   const affs = [];
-  const directCats = ["police", "ems", "press", "citizen"];
+  const directCats = ["police", "ems", "press", "citizen", "guide"];
   directCats.forEach(catId => {
     const chk = document.getElementById(`aff-check-${catId}`);
     if (chk && chk.checked) {
@@ -176,6 +224,7 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
   const formName = document.getElementById("member-form-name");
   const formStreamer = document.getElementById("member-form-streamer");
   const formRole = document.getElementById("member-form-role");
+  const formSwat = document.getElementById("member-form-swat");
   const formBadge = document.getElementById("member-form-badge");
   const formAvatar = document.getElementById("member-form-avatar");
 
@@ -183,7 +232,7 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
   document.querySelectorAll('input[name="member-aff-category"], input[name="aff-gang-group"], input[name="aff-business-group"]').forEach(chk => {
     chk.checked = false;
   });
-  ["aff-check-police", "aff-check-ems", "aff-check-press", "aff-check-citizen", "aff-check-gang", "aff-check-business"].forEach(id => {
+  ["aff-check-police", "aff-check-ems", "aff-check-press", "aff-check-citizen", "aff-check-guide", "aff-check-gang", "aff-check-business"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.checked = false;
   });
@@ -202,6 +251,7 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
     formName.value = primaryMember.name || "";
     formStreamer.value = primaryMember.streamer || "";
     formRole.value = primaryMember.role || "";
+    if (formSwat) formSwat.value = primaryMember.swatRole || "";
     formBadge.value = primaryMember.badgeColor || "bg-blue-600";
     formAvatar.value = primaryMember.avatar || "";
     previewMemberAvatar(primaryMember.avatar);
@@ -250,6 +300,7 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
     formName.value = "";
     formStreamer.value = "";
     formRole.value = "";
+    if (formSwat) formSwat.value = "";
     formAvatar.value = "";
     previewMemberAvatar("");
 
@@ -276,7 +327,8 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
       gang: "bg-red-600",
       business: "bg-amber-600",
       press: "bg-sky-600",
-      citizen: "bg-purple-600"
+      citizen: "bg-purple-600",
+      guide: "bg-emerald-600"
     };
     formBadge.value = defaultBadges[targetCatId] || "bg-blue-600";
 
@@ -306,6 +358,66 @@ function previewMemberAvatar(url) {
   if (preview) preview.src = getMemberAvatar(url);
 }
 
+/**
+ * 유튜브 링크 입력창에 URL 붙여넣기 시 한글 퍼센트 인코딩(%EC%A3...)을 즉시 읽기 쉬운 한글로 자동 디코딩
+ */
+function cleanYoutubeUrlInput(inputEl) {
+  if (!inputEl || !inputEl.value) return;
+  const val = inputEl.value.trim();
+  if (val.includes("%")) {
+    try {
+      const decoded = decodeURIComponent(val);
+      if (decoded !== val) {
+        inputEl.value = decoded;
+      }
+    } catch (e) {
+      try {
+        inputEl.value = decodeURI(val);
+      } catch (err) {}
+    }
+  }
+}
+
+function handleYoutubeUrlPaste(e) {
+  const clipboardData = e.clipboardData || window.clipboardData;
+  if (!clipboardData) {
+    setTimeout(() => cleanYoutubeUrlInput(e.target), 10);
+    return;
+  }
+  const pastedText = clipboardData.getData("text");
+  if (!pastedText) return;
+
+  if (pastedText.includes("%")) {
+    e.preventDefault();
+    let decoded = pastedText.trim();
+    try {
+      decoded = decodeURIComponent(pastedText.trim());
+    } catch (err) {
+      try { decoded = decodeURI(pastedText.trim()); } catch (e2) {}
+    }
+
+    const input = e.target;
+    let inserted = false;
+    try {
+      inserted = document.execCommand && document.execCommand("insertText", false, decoded);
+    } catch (err2) {
+      inserted = false;
+    }
+
+    if (!inserted) {
+      const start = input.selectionStart || 0;
+      const end = input.selectionEnd || 0;
+      const val = input.value;
+      input.value = val.substring(0, start) + decoded + val.substring(end);
+      const newPos = start + decoded.length;
+      input.selectionStart = newPos;
+      input.selectionEnd = newPos;
+    }
+
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+}
+
 async function handleSaveMember(e) {
   if (e) e.preventDefault();
   if (!isAdmin()) return;
@@ -313,9 +425,13 @@ async function handleSaveMember(e) {
   const name = document.getElementById("member-form-name").value.trim();
   const streamer = document.getElementById("member-form-streamer").value.trim();
   const role = document.getElementById("member-form-role").value.trim();
+  const swatRole = document.getElementById("member-form-swat")?.value.trim() || "";
   const badgeColor = document.getElementById("member-form-badge").value;
   let avatar = document.getElementById("member-form-avatar").value.trim();
-  const youtubeUrl = document.getElementById("member-form-youtube")?.value.trim() || "";
+  let youtubeUrl = document.getElementById("member-form-youtube")?.value.trim() || "";
+  try {
+    youtubeUrl = decodeURIComponent(youtubeUrl);
+  } catch (e) {}
 
   if (!name || !streamer) {
     alert("이름과 스트리머명을 모두 입력해주세요.");
@@ -326,6 +442,22 @@ async function handleSaveMember(e) {
   if (selectedAffiliations.length === 0) {
     alert("소속을 최소 하나 이상 선택해주세요 (경찰, EMS, 갱단 등).");
     return;
+  }
+
+  const hasPoliceAffiliation = selectedAffiliations.some(a => a.category === 'police');
+  const finalSwatRole = hasPoliceAffiliation ? swatRole : "";
+
+  let finalBadgeColor = badgeColor;
+  if (hasPoliceAffiliation && role) {
+    const r = role.trim();
+    if (r.includes("부청장") || r.includes("서장") || r.includes("경정")) finalBadgeColor = "bg-red-600";
+    else if (r.includes("청장")) finalBadgeColor = "bg-red-900";
+    else if (r.includes("경위")) finalBadgeColor = "bg-white";
+    else if (r.includes("경사")) finalBadgeColor = "bg-orange-400";
+    else if (r.includes("경장")) finalBadgeColor = "bg-pink-500";
+    else if (r.includes("팀장")) finalBadgeColor = "bg-emerald-600";
+    else if (r.includes("순경")) finalBadgeColor = "bg-blue-600";
+    else if (r.includes("교육생")) finalBadgeColor = "bg-yellow-400";
   }
 
   if (!avatar || avatar.includes("images.unsplash.com")) {
@@ -346,7 +478,8 @@ async function handleSaveMember(e) {
       loc.member.name = name;
       loc.member.streamer = streamer;
       loc.member.role = role;
-      loc.member.badgeColor = badgeColor;
+      loc.member.swatRole = finalSwatRole;
+      loc.member.badgeColor = finalBadgeColor;
       loc.member.avatar = avatar;
       loc.member.youtubeUrl = youtubeUrl;
       loc.member.affiliations = selectedAffiliations;
@@ -397,10 +530,11 @@ async function handleSaveMember(e) {
       name,
       streamer,
       role,
+      swatRole: finalSwatRole,
       category: primaryAff.category,
       subgroup: primaryAff.subgroup,
       affiliations: JSON.stringify(selectedAffiliations),
-      badgeColor,
+      badgeColor: finalBadgeColor,
       avatar,
       youtubeUrl,
       subscriberCount: memberObj.subscriberCount || "",
@@ -417,7 +551,8 @@ async function handleSaveMember(e) {
       name,
       streamer,
       role,
-      badgeColor,
+      swatRole: finalSwatRole,
+      badgeColor: finalBadgeColor,
       avatar,
       youtubeUrl,
       subscriberCount: "",
@@ -448,10 +583,11 @@ async function handleSaveMember(e) {
       name,
       streamer,
       role,
+      swatRole: finalSwatRole,
       category: primaryAff.category,
       subgroup: primaryAff.subgroup,
       affiliations: JSON.stringify(selectedAffiliations),
-      badgeColor,
+      badgeColor: finalBadgeColor,
       avatar,
       youtubeUrl,
       subscriberCount: "",
@@ -576,3 +712,13 @@ function executeDeleteMember(memberId, password = "kongbab1234") {
   renderContent();
   showToast(`🗑️ '${targetName}' 인원이 삭제되었습니다.`);
 }
+
+function quickSetSwatRole(val) {
+  const el = document.getElementById("member-form-swat");
+  if (el) {
+    el.value = val;
+    el.focus();
+  }
+}
+window.quickSetSwatRole = quickSetSwatRole;
+

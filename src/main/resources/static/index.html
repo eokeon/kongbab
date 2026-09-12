@@ -23,7 +23,7 @@
       }
     }
   </script>
-  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/style.css?v=20260912_03">
 </head>
 <body class="bg-[#09090b] text-zinc-100 min-h-screen flex flex-col selection:bg-red-500 selection:text-white">
 
@@ -31,7 +31,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20 gap-4">
         <div class="flex items-center gap-3.5 cursor-pointer" onclick="selectCategory('police')">
-          <div class="w-11 h-11 rounded-2xl bg-zinc-950 border border-zinc-700/60 shadow-lg shadow-black/40 overflow-hidden bg-cover bg-center flex-shrink-0 transition-transform hover:scale-105 duration-200" style="background-image: url('assets/kongbab.webp');" title="콩밥특별시"></div>
+          <div class="w-11 h-11 rounded-2xl bg-zinc-950 border border-zinc-700/60 shadow-lg shadow-black/40 overflow-hidden bg-cover bg-center flex-shrink-0 transition-transform hover:scale-105 duration-200" style="background-image: url('assets/콩밥.webp');" title="콩밥특별시"></div>
           <div>
             <div class="flex items-center gap-2">
               <span class="text-xl font-black tracking-tight text-white">콩밥특별시</span>
@@ -157,8 +157,9 @@
   </div>
 
   <div id="video-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4 select-none" draggable="false">
-    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 flex flex-col select-none" draggable="false">
-      <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-5">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-xl min-h-[580px] max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 flex flex-col select-none" draggable="false">
+      <!-- 헤더 -->
+      <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-4">
         <div>
           <h3 id="video-modal-title" class="text-xl font-bold text-white">영상 추가</h3>
           <p id="video-modal-subtitle" class="text-xs text-zinc-400 mt-0.5">인원의 유튜브 또는 치지직 영상을 등록합니다</p>
@@ -166,10 +167,31 @@
         <button onclick="closeVideoModal()" class="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors flex-shrink-0">✕</button>
       </div>
 
-      <form onsubmit="handleSaveVideo(event)" class="space-y-4">
-        <input type="hidden" id="video-form-id" value="" />
+      <!-- 모드 전환 탭 (신규 추가 시 표시) -->
+      <div id="video-modal-mode-tabs" class="flex items-center gap-1.5 p-1 bg-zinc-950 rounded-2xl border border-zinc-800 mb-4 select-none">
+        <button 
+          type="button" 
+          id="btn-video-mode-single" 
+          onclick="switchVideoModalMode('single')" 
+          class="flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all bg-zinc-800 text-white shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
+        >
+          <span>🔗 단일 영상 추가</span>
+        </button>
+        <button 
+          type="button" 
+          id="btn-video-mode-multi" 
+          onclick="switchVideoModalMode('multi')" 
+          class="flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white flex items-center justify-center gap-1.5 cursor-pointer"
+        >
+          <span>📑 여러 개 링크 일괄 등록</span>
+        </button>
+      </div>
 
-        <div>
+      <!-- 1. 단일 영상 등록 폼 -->
+      <form id="video-single-form" onsubmit="handleSaveVideo(event)" class="flex-1 flex flex-col justify-between">
+        <input type="hidden" id="video-form-id" value="" />
+        <div class="space-y-4">
+          <div>
           <label class="block text-xs font-semibold text-zinc-300 mb-1">영상 URL (유튜브 / 치지직) <span class="text-red-500">*</span></label>
           <div class="flex gap-2">
             <input 
@@ -193,9 +215,6 @@
               <span id="btn-fetch-youtube-text">정보 가져오기</span>
             </button>
           </div>
-          <p class="text-[11px] text-zinc-500 mt-1.5 leading-relaxed">
-            💡 유튜브 또는 치지직 영상 링크를 붙여넣으면 썸네일, 제목, 업로드 날짜, 영상 길이가 자동으로 입력됩니다.
-          </p>
         </div>
 
         <div id="video-modal-thumb-preview" class="hidden items-center gap-3 bg-zinc-950 p-2.5 rounded-xl border border-zinc-800 select-none">
@@ -256,8 +275,9 @@
             />
           </div>
         </div>
+        </div>
 
-        <div class="pt-4 flex items-center justify-end gap-2 border-t border-zinc-800 mt-6">
+        <div class="pt-4 flex items-center justify-end gap-2 border-t border-zinc-800 mt-auto">
           <button 
             type="button" 
             onclick="closeVideoModal()" 
@@ -273,6 +293,105 @@
           </button>
         </div>
       </form>
+
+      <!-- 2. 여러 개 링크 일괄 등록 폼 (다중 등록 모드) -->
+      <div id="video-multi-form" class="hidden flex-1 flex flex-col justify-between">
+        <div class="space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-xs font-semibold text-zinc-300">
+                여러 영상 URL 붙여넣기 <span class="text-red-500">*</span>
+              </label>
+              <span class="text-[11px] text-zinc-400">한 줄에 하나씩 여러 개 링크 입력</span>
+            </div>
+            <textarea 
+              id="video-multi-urls" 
+              rows="4" 
+              placeholder="https://www.youtube.com/watch?v=...&#10;https://youtu.be/...&#10;https://chzzk.naver.com/video/..." 
+              onpaste="handleMultiUrlsPaste(event)"
+              class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors font-mono leading-relaxed resize-y"
+            ></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1.5">영상 구분 <span class="text-red-500">*</span></label>
+            <div class="grid grid-cols-3 gap-2">
+              <label class="flex items-center gap-1.5 p-2.5 bg-zinc-950 border border-zinc-800 rounded-xl cursor-pointer hover:border-zinc-700">
+                <input type="radio" name="video-multi-type" value="clip" checked class="text-red-600 focus:ring-0">
+                <span class="text-xs text-zinc-200 font-bold">🎬 편집 영상</span>
+              </label>
+              <label class="flex items-center gap-1.5 p-2.5 bg-zinc-950 border border-zinc-800 rounded-xl cursor-pointer hover:border-zinc-700">
+                <input type="radio" name="video-multi-type" value="full" class="text-indigo-600 focus:ring-0">
+                <span class="text-xs text-zinc-200 font-bold">📹 풀 영상</span>
+              </label>
+              <label class="flex items-center gap-1.5 p-2.5 bg-zinc-950 border border-zinc-800 rounded-xl cursor-pointer hover:border-zinc-700">
+                <input type="radio" name="video-multi-type" value="binge" class="text-amber-500 focus:ring-0">
+                <span class="text-xs text-zinc-200 font-bold">🍿 몰아보기</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button 
+              type="button" 
+              id="btn-fetch-multi-videos" 
+              onclick="handleFetchMultiVideos()" 
+              class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-zinc-200 rounded-xl text-xs font-medium transition-colors flex items-center gap-1.5 whitespace-nowrap flex-shrink-0 cursor-pointer"
+              title="영상 목록 정보(제목, 날짜, 길이) 자동 가져오기"
+            >
+              <svg class="w-3.5 h-3.5 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              <span id="btn-fetch-multi-text">정보 가져오기</span>
+            </button>
+            <span id="video-multi-fetch-status" class="text-xs font-medium text-emerald-400 hidden"></span>
+          </div>
+
+          <!-- 재생목록 스타일의 영상 미리보기 리스트 -->
+          <div id="video-multi-preview-container" class="hidden space-y-2.5 pt-3 border-t border-zinc-800">
+            <div class="flex items-center justify-between text-xs font-bold text-zinc-300">
+              <div class="flex items-center gap-2">
+                <label class="flex items-center gap-1.5 cursor-pointer select-none">
+                  <input type="checkbox" id="video-multi-select-all" checked onchange="toggleAllMultiVideos(this.checked)" class="rounded border-zinc-700 text-red-600 focus:ring-0 w-3.5 h-3.5 cursor-pointer">
+                  <span>전체 선택 (<span id="video-multi-selected-count">0</span>/<span id="video-multi-total-count">0</span>)</span>
+                </label>
+              </div>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="reverseMultiVideos()" class="text-[11px] text-zinc-400 hover:text-white px-2 py-1 rounded bg-zinc-800 hover:bg-zinc-700 transition-colors cursor-pointer">
+                  ⇅ 순서 반전
+                </button>
+              </div>
+            </div>
+
+            <div id="video-multi-preview-list" class="max-h-64 overflow-y-auto space-y-1.5 pr-1 divide-y divide-zinc-800/40"></div>
+
+            <div class="text-[11px] text-zinc-400 bg-zinc-900/60 p-2.5 rounded-xl border border-zinc-800/50 flex items-center justify-between flex-wrap gap-2">
+              <span class="text-zinc-400 font-medium">추가한 순서 그대로 목록 맨 뒤에 등록됩니다.</span>
+              <label class="flex items-center gap-1.5 cursor-pointer ml-auto">
+                <input type="checkbox" id="video-multi-skip-duplicates" checked class="rounded border-zinc-700 text-red-600 focus:ring-0 w-3.5 h-3.5 cursor-pointer">
+                <span class="text-zinc-300 font-medium">이미 등록된 영상 건너뛰기</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 flex items-center justify-end gap-2 border-t border-zinc-800 mt-auto">
+          <button 
+            type="button" 
+            onclick="closeVideoModal()" 
+            class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+          >
+            취소
+          </button>
+          <button 
+            type="button" 
+            id="btn-submit-multi-videos" 
+            onclick="submitMultiVideos()" 
+            disabled 
+            class="px-5 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-40 disabled:pointer-events-none text-white text-xs font-bold rounded-xl transition-colors cursor-pointer shadow-md shadow-red-600/30 flex items-center gap-1.5"
+          >
+            <span>일괄 등록하기</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -413,8 +532,8 @@
             <span id="member-form-selected-summary" class="text-[11px] text-zinc-400 font-medium truncate max-w-[220px] text-right">선택됨: 없음</span>
           </div>
 
-          <!-- 6개 카테고리 체크박스 그리드 -->
-          <div class="grid grid-cols-3 gap-2">
+          <!-- 카테고리 체크박스 그리드 -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
             <label class="flex items-center gap-2 p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-blue-500/60 cursor-pointer transition-all select-none">
               <input type="checkbox" id="aff-check-police" value="police" onchange="handleAffiliationCheckboxChange()" class="rounded border-zinc-700 text-blue-600 focus:ring-0 cursor-pointer w-4 h-4">
               <span class="text-xs font-semibold text-zinc-200">👮‍♂️ 경찰</span>
@@ -433,6 +552,11 @@
             <label class="flex items-center gap-2 p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-purple-500/60 cursor-pointer transition-all select-none">
               <input type="checkbox" id="aff-check-citizen" value="citizen" onchange="handleAffiliationCheckboxChange()" class="rounded border-zinc-700 text-purple-600 focus:ring-0 cursor-pointer w-4 h-4">
               <span class="text-xs font-semibold text-zinc-200">👥 시민</span>
+            </label>
+
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-emerald-500/60 cursor-pointer transition-all select-none">
+              <input type="checkbox" id="aff-check-guide" value="guide" onchange="handleAffiliationCheckboxChange()" class="rounded border-zinc-700 text-emerald-600 focus:ring-0 cursor-pointer w-4 h-4">
+              <span class="text-xs font-semibold text-zinc-200">🧭 가이드</span>
             </label>
 
             <label class="flex items-center gap-2 p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-red-500/60 cursor-pointer transition-all select-none">
@@ -488,31 +612,72 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-zinc-300 mb-1">직책 / 역할 <span class="text-zinc-500 font-normal">(선택)</span></label>
+        <div id="member-form-role-row" class="grid grid-cols-1 gap-3">
+          <div id="member-form-role-container">
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">
+              직위 / 직책 <span class="text-zinc-500 font-normal">(계급 · 직위)</span>
+            </label>
             <input 
               type="text" 
               id="member-form-role" 
-              placeholder="예: 경찰청장, 부청장 (미입력 시 직책 미표시)" 
-              class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
+              placeholder="예: 순경, 경장, 경사, 경위, 보스" 
+              oninput="handleRoleInputForPoliceColor(this.value)"
+              class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-blue-500 transition-colors"
             />
           </div>
-          <div>
-            <label class="block text-xs font-semibold text-zinc-300 mb-1">직책 뱃지 테마</label>
-            <select 
-              id="member-form-badge" 
-              class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500"
-            >
-              <option value="bg-blue-600">🔵 파랑 (경찰/공직)</option>
-              <option value="bg-cyan-600">🔷 시안 (순찰/팀장)</option>
-              <option value="bg-teal-600">🟢 청록 (EMS/의료)</option>
-              <option value="bg-red-600">🔴 빨강 (갱단/화력)</option>
-              <option value="bg-amber-600">🟡 황금 (사업체/대표)</option>
-              <option value="bg-purple-600">🟣 보라 (클럽/시민)</option>
-              <option value="bg-zinc-700">⚪ 회색 (일반/조직원)</option>
-            </select>
+          <div id="member-form-swat-container" class="hidden">
+            <label class="block text-xs font-semibold text-zinc-300 mb-1 flex items-center justify-between">
+              <span class="flex items-center gap-1.5">
+                <span class="text-zinc-200">특공대 (경찰특공대)</span>
+              </span>
+              <span class="text-zinc-500 font-normal text-[11px]">(선택)</span>
+            </label>
+            <input 
+              type="text" 
+              id="member-form-swat" 
+              placeholder="예: 특공대장, 특공대원, 가이드" 
+              class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-sky-500 transition-colors"
+            />
+            <div class="flex items-center gap-1.5 mt-1.5 flex-wrap">
+              <button type="button" onclick="quickSetSwatRole('특공대장')" class="px-2.5 py-1 rounded-md bg-sky-300 hover:bg-sky-200 text-zinc-950 border border-white text-xs transition-colors cursor-pointer font-black flex items-center shadow-sm">
+                <span>특공대장</span>
+              </button>
+              <button type="button" onclick="quickSetSwatRole('특공대원')" class="px-2.5 py-1 rounded-md bg-sky-400 hover:bg-sky-300 text-zinc-950 border border-sky-200 text-xs transition-colors cursor-pointer font-black flex items-center shadow-sm">
+                <span>특공대원</span>
+              </button>
+              <button type="button" onclick="quickSetSwatRole('가이드')" class="px-2.5 py-1 rounded-md bg-emerald-400 hover:bg-emerald-300 text-zinc-950 border border-emerald-200 text-xs transition-colors cursor-pointer font-black flex items-center shadow-sm">
+                <span>가이드</span>
+              </button>
+              <button type="button" onclick="quickSetSwatRole('')" class="px-2 py-1 rounded-md bg-zinc-800/60 hover:bg-zinc-700 text-xs text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer" title="특공대/추가직책 입력 지우기">지우기</button>
+            </div>
           </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">직책 뱃지 색상</label>
+          <select 
+            id="member-form-badge" 
+            class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500"
+          >
+            <optgroup label="경찰 계급 전용 색상">
+              <option value="bg-red-900">🔴 진한빨강 (청장)</option>
+              <option value="bg-red-600">🔴 빨강 (부청장 · 서장 · 경정 · 경감)</option>
+              <option value="bg-white">⚪ 흰색 (경위)</option>
+              <option value="bg-orange-400">🟠 연한주황 (경사)</option>
+              <option value="bg-pink-500">🌸 핑크 (경장)</option>
+              <option value="bg-emerald-600">🟢 초록 (팀장)</option>
+              <option value="bg-blue-600">🔵 파란색 (순경)</option>
+              <option value="bg-yellow-400">🟡 노란색 (교육생)</option>
+            </optgroup>
+            <optgroup label="기타 / 공통">
+              <option value="bg-red-600">🔴 빨강 (보스)</option>
+              <option value="bg-emerald-600">🟢 초록 (가이드)</option>
+              <option value="bg-amber-600">🟡 황금 (사업체/대표)</option>
+              <option value="bg-teal-600">🟢 청록 (EMS/의료)</option>
+              <option value="bg-purple-600">🟣 보라 (시민/클럽)</option>
+              <option value="bg-zinc-700">⚪ 회색 (일반/조직원)</option>
+            </optgroup>
+          </select>
         </div>
 
         <div>
@@ -535,9 +700,6 @@
               alt="아바타 미리보기"
             />
           </div>
-          <p class="text-[11px] text-zinc-500 mt-1.5 leading-relaxed">
-            💡 유튜브 프로필 사진 우클릭 ➔ <b>[이미지 주소 복사]</b> 후 여기에 붙여넣으시면 됩니다.
-          </p>
         </div>
 
         <div>
@@ -546,17 +708,16 @@
               <svg class="w-3.5 h-3.5 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
               <span>스트리머 유튜브 링크 <span class="text-zinc-500 font-normal">(채널 또는 영상 주소)</span></span>
             </span>
-            <span class="text-[10px] text-amber-400 font-bold bg-amber-950/80 border border-amber-600/50 px-2 py-0.5 rounded">⭐ 구독자 조회 1순위</span>
           </label>
           <input 
             type="text" 
             id="member-form-youtube" 
             placeholder="예: https://www.youtube.com/@채널핸들 또는 채널/영상 링크" 
+            oninput="cleanYoutubeUrlInput(this)"
+            onpaste="handleYoutubeUrlPaste(event)"
+            onchange="cleanYoutubeUrlInput(this)"
             class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-red-500 transition-colors"
           />
-          <p class="text-[11px] text-zinc-500 mt-1.5 leading-relaxed">
-            💡 채널 주소(@핸들, /channel/UC...)나 대표 영상을 입력해두면, 등록된 영상 목록보다 <strong>이 링크를 최우선(1순위)</strong>으로 유튜브 구독자 수를 조회합니다.
-          </p>
         </div>
 
         <div class="pt-4 flex items-center justify-end gap-2 border-t border-zinc-800 mt-6">
@@ -836,7 +997,7 @@
       </div>
 
       <!-- 모달 바디 (스크롤 영역) -->
-      <div id="leaderboard-modal-content" class="flex-1 overflow-y-auto p-4 sm:p-6 select-text">
+      <div id="leaderboard-modal-content" class="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 select-text" style="scrollbar-gutter: stable;">
       </div>
     </div>
   </div>
@@ -852,7 +1013,7 @@
   <script src="./js/admin.js?v=20260911_01"></script>
   <script src="./js/render.js?v=20260911_01"></script>
   <script src="./js/navigation.js?v=20260911_01"></script>
-  <script src="./js/leaderboard.js?v=20260911_01"></script>
+  <script src="./js/leaderboard.js?v=20260912_03"></script>
   <script src="./js/app.js?v=20260911_01"></script>
 </body>
 </html>

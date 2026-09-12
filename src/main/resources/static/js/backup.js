@@ -68,13 +68,25 @@ function createBackupSnapshot(actionReason = "데이터 변경", showFeedback = 
   const now = new Date();
   const displayTime = formatDisplayTimestamp(now);
 
-  let totalMembers = 0;
+  const uniqueMembers = new Map();
   let totalVideos = 0;
-  KONGBAB_DATA.categories.forEach(cat => {
-    const mems = getCategoryMembers(cat);
-    totalMembers += mems.length;
-    mems.forEach(m => { totalVideos += (m.videos || []).length; });
-  });
+  if (KONGBAB_DATA && KONGBAB_DATA.categories) {
+    KONGBAB_DATA.categories.forEach(cat => {
+      const mems = getCategoryMembers(cat);
+      mems.forEach(m => {
+        if (!m) return;
+        const mKey = m.id || (m.streamer && m.name ? `${m.streamer}_${m.name}` : m.name);
+        if (!mKey) return;
+        if (!uniqueMembers.has(mKey)) {
+          uniqueMembers.set(mKey, m);
+          const validVideos = (m.videos || []).filter(v => v && v.url && v.url !== "undefined" && v.url.trim() !== "");
+          totalVideos += validVideos.length;
+        }
+      });
+    });
+  }
+
+  const totalMembers = uniqueMembers.size;
 
   const payload = {
     appName: "kongbab-gta-rp",
@@ -82,7 +94,7 @@ function createBackupSnapshot(actionReason = "데이터 변경", showFeedback = 
     createdAt: displayTime,
     reason: actionReason,
     stats: {
-      totalCategories: KONGBAB_DATA.categories.length,
+      totalCategories: KONGBAB_DATA && KONGBAB_DATA.categories ? KONGBAB_DATA.categories.length : 0,
       totalMembers,
       totalVideos
     },

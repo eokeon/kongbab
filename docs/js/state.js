@@ -4,9 +4,9 @@ const DEFAULT_CATEGORIES = [
   {
     id: "gang", name: "갱단", emoji: "💀", badge: "GANG", icon: "skull", color: "red", hasSubgroups: true,
     groups: [
-      { id: "gang-bigdick", name: "빅딕", emoji: "🍌", bgImage: "assets/bigdick.webp", members: [] },
+      { id: "gang-bigdick", name: "빅딕", emoji: "🍌", bgImage: "assets/빅딕.webp", members: [] },
       { id: "gang-oompa", name: "움파룸파", emoji: "😜", bgImage: "assets/움파룸파.webp", members: [] },
-      { id: "gang-sangryeon", name: "상련", emoji: "👠", members: [] },
+      { id: "gang-sangryeon", name: "상련", emoji: "👠", bgImage: "assets/상련.webp", members: [] },
       { id: "gang-goldmoon", name: "골드문", emoji: "🌙", members: [] },
       { id: "gang-nonghyup", name: "농협", emoji: "🌾", members: [] },
       { id: "gang-girlbang", name: "GIRL BANG", emoji: "🐷", members: [] },
@@ -28,7 +28,8 @@ const DEFAULT_CATEGORIES = [
     ]
   },
   { id: "press", name: "기자", emoji: "📰", badge: "KBTBS", icon: "camera", color: "sky", hasSubgroups: false, members: [] },
-  { id: "citizen", name: "시민", emoji: "👥", badge: "CITIZEN", icon: "users", color: "purple", hasSubgroups: false, members: [] }
+  { id: "citizen", name: "시민", emoji: "👥", badge: "CITIZEN", icon: "users", color: "purple", hasSubgroups: false, members: [] },
+  { id: "guide", name: "가이드", emoji: "🧭", badge: "GUIDE", icon: "compass", color: "emerald", hasSubgroups: false, members: [] }
 ];
 
 const KONGBAB_DATA = {
@@ -193,6 +194,11 @@ const COLOR_THEMES = {
     badge: "bg-purple-950/80 text-purple-300 border-purple-700/50",
     glow: "hover:shadow-[0_0_20px_rgba(168,85,247,0.25)]",
     activeTab: "bg-purple-600 text-white shadow-lg shadow-purple-600/30"
+  },
+  emerald: {
+    badge: "bg-emerald-950/80 text-emerald-300 border-emerald-700/50",
+    glow: "hover:shadow-[0_0_20px_rgba(16,185,129,0.25)]",
+    activeTab: "bg-emerald-600 text-white shadow-lg shadow-emerald-600/30"
   }
 };
 
@@ -203,6 +209,7 @@ const SVG_ICONS = {
   building: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5m-4 0h4"></path></svg>`,
   camera: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>`,
   users: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm6 3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"></path></svg>`,
+  compass: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm3.5 6.5-2.12 5.66a.5.5 0 0 1-.29.29L7.5 16.5l2.12-5.66a.5.5 0 0 1 .29-.29z"/></svg>`,
   youtube: `<svg class="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`,
   external: `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>`,
   chevronRight: `<svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>`,
@@ -210,14 +217,18 @@ const SVG_ICONS = {
 };
 
 const GROUP_BACKGROUND_IMAGES = {
-  "gang-bigdick": "assets/bigdick.webp"
+  "gang-bigdick": "assets/빅딕.webp",
+  "gang-oompa": "assets/움파룸파.webp",
+  "gang-sangryeon": "assets/상련.webp"
 };
 
 function getGroupBgImage(group) {
   if (!group) return null;
   if (group.bgImage) return group.bgImage;
   if (GROUP_BACKGROUND_IMAGES[group.id]) return GROUP_BACKGROUND_IMAGES[group.id];
-  if (group.name === "빅딕") return "assets/bigdick.webp";
+  if (group.name === "빅딕") return "assets/빅딕.webp";
+  if (group.name === "움파룸파") return "assets/움파룸파.webp";
+  if (group.name === "상련") return "assets/상련.webp";
   return null;
 }
 
@@ -284,6 +295,32 @@ function getTodayDateString() {
   return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())}`;
 }
 
+function formatIsoDateToKst(isoDateStr) {
+  if (!isoDateStr) return "";
+  try {
+    const d = new Date(isoDateStr);
+    if (isNaN(d.getTime())) return "";
+    const parts = new Intl.DateTimeFormat('ko-KR', {
+      timeZone: 'Asia/Seoul',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).formatToParts(d);
+    const y = parts.find(p => p.type === 'year')?.value;
+    const m = parts.find(p => p.type === 'month')?.value;
+    const day = parts.find(p => p.type === 'day')?.value;
+    if (y && m && day) {
+      return `${y}.${m}.${day}`;
+    }
+    return d.toISOString().substring(0, 10).replace(/-/g, ".");
+  } catch (e) {
+    if (typeof isoDateStr === "string" && isoDateStr.length >= 10) {
+      return isoDateStr.substring(0, 10).replace(/-/g, ".");
+    }
+    return "";
+  }
+}
+
 function showToast(msg) {
   let toast = document.getElementById("toast-msg");
   if (!toast) {
@@ -310,16 +347,27 @@ function getCategoryMembers(cat) {
 }
 
 function updateStats() {
-  let totalMembers = 0;
+  const uniqueMembers = new Map();
   let totalVideos = 0;
 
-  KONGBAB_DATA.categories.forEach(cat => {
-    const members = getCategoryMembers(cat);
-    totalMembers += members.length;
-    members.forEach(m => {
-      totalVideos += (m.videos || []).length;
+  if (KONGBAB_DATA && KONGBAB_DATA.categories) {
+    KONGBAB_DATA.categories.forEach(cat => {
+      const members = getCategoryMembers(cat);
+      members.forEach(m => {
+        if (!m) return;
+        const mKey = m.id || (m.streamer && m.name ? `${m.streamer}_${m.name}` : m.name);
+        if (!mKey) return;
+
+        if (!uniqueMembers.has(mKey)) {
+          uniqueMembers.set(mKey, m);
+          const validVideos = (m.videos || []).filter(v => v && v.url && v.url !== "undefined" && v.url.trim() !== "");
+          totalVideos += validVideos.length;
+        }
+      });
     });
-  });
+  }
+
+  const totalMembers = uniqueMembers.size;
 
   const statEl = document.getElementById("header-stats");
   if (statEl) {
