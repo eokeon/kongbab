@@ -29,6 +29,28 @@ function getAllMembersWithLeaderboardStats() {
         if (currentAffName && existing.displayAffiliation && !existing.displayAffiliation.includes(currentAffName)) {
           existing.displayAffiliation = `${existing.displayAffiliation} · ${currentAffName}`;
         }
+        // 직책(role)이 기존에 비어있고 현재 m에 있다면 보강 병합
+        if (!existing.role) {
+          let r = (m.role && String(m.role).trim() !== "") ? m.role : "";
+          if (!r && Array.isArray(m.affiliations)) {
+            const fa = m.affiliations.find(a => a && a.role && String(a.role).trim() !== "");
+            if (fa) r = fa.role;
+          }
+          if (r) {
+            existing.role = r;
+          }
+        }
+        // 추가 직책(swatRole)이 기존에 비어있고 현재 m에 있다면 보강 병합
+        if (!existing.swatRole) {
+          let sRole = (m.swatRole && String(m.swatRole).trim() !== "") ? m.swatRole : "";
+          if (!sRole && Array.isArray(m.affiliations)) {
+            const fa = m.affiliations.find(a => a && a.swatRole && String(a.swatRole).trim() !== "");
+            if (fa) sRole = fa.swatRole;
+          }
+          if (sRole) {
+            existing.swatRole = sRole.replace(/순직|사직|퇴직|은퇴/g, "").replace(/\s*·\s*/g, "").replace(/^\s*,\s*|\s*,\s*$/g, "").trim();
+          }
+        }
       }
     };
 
@@ -91,8 +113,32 @@ function computeMemberLeaderboardStats(m, cat, group) {
     }
   }
 
+  // role 보강 (m.role 또는 m.affiliations 내 role 확인)
+  let memberRole = (m.role && String(m.role).trim() !== "") ? m.role : "";
+  if (!memberRole && Array.isArray(m.affiliations)) {
+    const currentAff = m.affiliations.find(a => a.category === cat.id && (!group || a.subgroup === group.id));
+    if (currentAff && currentAff.role && String(currentAff.role).trim() !== "") {
+      memberRole = currentAff.role;
+    } else {
+      const foundRoleAff = m.affiliations.find(a => a && a.role && String(a.role).trim() !== "");
+      if (foundRoleAff) memberRole = foundRoleAff.role;
+    }
+  }
+
+  // swatRole 보강 (m.swatRole 또는 m.affiliations 내 swatRole 확인)
+  let memberSwatRole = (m.swatRole && String(m.swatRole).trim() !== "") ? m.swatRole : "";
+  if (!memberSwatRole && Array.isArray(m.affiliations)) {
+    const foundAff = m.affiliations.find(a => a && a.swatRole && String(a.swatRole).trim() !== "");
+    if (foundAff) memberSwatRole = foundAff.swatRole;
+  }
+  if (memberSwatRole) {
+    memberSwatRole = memberSwatRole.replace(/순직|사직|퇴직|은퇴/g, "").replace(/\s*·\s*/g, "").replace(/^\s*,\s*|\s*,\s*$/g, "").trim();
+  }
+
   return {
     ...m,
+    role: memberRole,
+    swatRole: memberSwatRole,
     catId: cat.id,
     catName: cat.name,
     catColor: cat.color || 'blue',
@@ -525,7 +571,7 @@ function renderLeaderboardDynamicContent() {
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-6 pt-3">
         <!-- 2위 🥈 -->
         <div 
-          onclick="selectMemberFromLeaderboard('${top2.catId}', '${top2.groupId || ''}', '${top2.name}')"
+          onclick="selectMemberFromLeaderboard('${top2.catId}', '${top2.groupId || ''}', '${top2.name}', '${top2.id || ''}')"
           class="podium-card order-2 md:order-1 w-full bg-gradient-to-b from-zinc-900/90 to-zinc-950 border border-zinc-800/90 hover:border-zinc-500 rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer shadow-lg hover:shadow-zinc-500/15 group relative"
         >
           <div class="podium-badge -top-3 w-7 h-7 rounded-full bg-zinc-400/20 border border-zinc-400 flex items-center justify-center text-sm shadow">🥈</div>
@@ -533,10 +579,16 @@ function renderLeaderboardDynamicContent() {
             <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-zinc-400/60 group-hover:border-zinc-300 transition-colors duration-300 ease-out bg-zinc-800 shadow-md" style="mask-image: -webkit-radial-gradient(white, black); -webkit-mask-image: -webkit-radial-gradient(white, black);">
               <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top2) : (top2.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" class="podium-avatar-img w-full h-full object-cover" />
             </div>
-            ${typeof getSwatBadgeHtml === 'function' ? getSwatBadgeHtml(top2.swatRole, 'sm') : ''}
+            ${(typeof getSwatBadgeHtml === 'function' && top2.swatRole) ? getSwatBadgeHtml(top2.swatRole, 'sm') : ''}
+            ${top2.role ? `
+              <span class="absolute -bottom-1 -right-1 z-20 text-[9.5px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(top2, top2.catId) : 'bg-zinc-800 text-white'} shadow-md">
+                ${top2.role}
+              </span>
+            ` : ''}
           </div>
-          <h4 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors flex items-center gap-1 mt-1 truncate max-w-full">
+          <h4 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors flex items-center justify-center gap-1.5 mt-1 truncate max-w-full flex-wrap">
             <span>${top2.streamerName || top2.name}</span>
+            ${top2.role ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(top2, top2.catId) : 'bg-zinc-800 text-white'} shadow-sm whitespace-nowrap">${top2.role}</span>` : ''}
           </h4>
           <p class="text-xs text-zinc-300 mb-2 truncate max-w-full" title="${top2.name}">
             <span>${top2.name}</span>${top2Role ? ` <span class="text-zinc-500 text-[11px]">(${top2Role})</span>` : ''}
@@ -552,7 +604,7 @@ function renderLeaderboardDynamicContent() {
 
         <!-- 1위 🥇 -->
         <div 
-          onclick="selectMemberFromLeaderboard('${top1.catId}', '${top1.groupId || ''}', '${top1.name}')"
+          onclick="selectMemberFromLeaderboard('${top1.catId}', '${top1.groupId || ''}', '${top1.name}', '${top1.id || ''}')"
           class="podium-card order-1 md:order-2 w-full bg-gradient-to-b from-amber-950/30 via-zinc-900 to-zinc-950 border-2 border-amber-500/60 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center text-center cursor-pointer shadow-xl shadow-amber-500/10 hover:shadow-amber-500/25 group relative"
         >
           <div class="podium-badge -top-4 w-9 h-9 rounded-full bg-amber-500 text-black font-bold flex items-center justify-center text-base shadow-lg shadow-amber-500/40">👑</div>
@@ -560,37 +612,49 @@ function renderLeaderboardDynamicContent() {
             <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-amber-400 group-hover:border-amber-300 transition-colors duration-300 ease-out bg-zinc-800 shadow-md" style="mask-image: -webkit-radial-gradient(white, black); -webkit-mask-image: -webkit-radial-gradient(white, black);">
               <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top1) : (top1.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" class="podium-avatar-img w-full h-full object-cover" />
             </div>
-            ${typeof getSwatBadgeHtml === 'function' ? getSwatBadgeHtml(top1.swatRole, 'sm') : ''}
+            ${(typeof getSwatBadgeHtml === 'function' && top1.swatRole) ? getSwatBadgeHtml(top1.swatRole, 'sm') : ''}
+            ${top1.role ? `
+              <span class="absolute -bottom-1 -right-1 z-20 text-[9.5px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(top1, top1.catId) : 'bg-zinc-800 text-white'} shadow-md">
+                ${top1.role}
+              </span>
+            ` : ''}
           </div>
-          <h4 class="text-lg font-bold text-white group-hover:text-amber-400 transition-colors flex items-center gap-1.5 mt-1 truncate max-w-full">
+          <h4 class="text-lg font-bold text-white group-hover:text-amber-400 transition-colors flex items-center justify-center gap-1.5 mt-1 truncate max-w-full flex-wrap">
             <span>${top1.streamerName || top1.name}</span>
+            ${top1.role ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(top1, top1.catId) : 'bg-zinc-800 text-white'} shadow-sm whitespace-nowrap">${top1.role}</span>` : ''}
           </h4>
           <p class="text-xs text-amber-200/90 font-medium mb-2 truncate max-w-full" title="${top1.name}">
             <span>${top1.name}</span>${top1Role ? ` <span class="text-amber-400/80 text-[11px]">(${top1Role})</span>` : ''}
           </p>
-          <div class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 mb-3 border border-amber-500/30 truncate max-w-[90%]" title="${top1Aff}">
+          <div class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-950/80 text-amber-300 mb-3 border border-amber-500/50 truncate max-w-[90%]" title="${top1Aff}">
             ${top1Aff}
           </div>
-          <div class="w-full pt-2.5 border-t border-zinc-800 flex flex-col items-center">
-            <span class="text-xl font-bold text-amber-400 tracking-tight">${getTabMetric(top1).valStr}</span>
-            <span class="text-xs text-zinc-300">${getTabMetric(top1).subStr}</span>
+          <div class="w-full pt-2 border-t border-zinc-800 flex flex-col items-center">
+            <span class="text-lg font-black text-amber-400">${getTabMetric(top1).valStr}</span>
+            <span class="text-xs text-zinc-400">${getTabMetric(top1).subStr}</span>
           </div>
         </div>
 
         <!-- 3위 🥉 -->
         <div 
-          onclick="selectMemberFromLeaderboard('${top3.catId}', '${top3.groupId || ''}', '${top3.name}')"
-          class="podium-card order-3 md:order-3 w-full bg-gradient-to-b from-zinc-900/90 to-zinc-950 border border-zinc-800/90 hover:border-amber-600/80 rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer shadow-lg hover:shadow-amber-600/15 group relative"
+          onclick="selectMemberFromLeaderboard('${top3.catId}', '${top3.groupId || ''}', '${top3.name}', '${top3.id || ''}')"
+          class="podium-card order-3 w-full bg-gradient-to-b from-zinc-900/90 to-zinc-950 border border-zinc-800/90 hover:border-amber-700/60 rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer shadow-lg hover:shadow-amber-700/15 group relative"
         >
-          <div class="podium-badge -top-3 w-7 h-7 rounded-full bg-amber-700/20 border border-amber-700 flex items-center justify-center text-sm shadow">🥉</div>
+          <div class="podium-badge -top-3 w-7 h-7 rounded-full bg-amber-800/30 border border-amber-700 flex items-center justify-center text-sm shadow">🥉</div>
           <div class="relative my-2">
-            <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-amber-700/60 group-hover:border-amber-500 transition-colors duration-300 ease-out bg-zinc-800 shadow-md" style="mask-image: -webkit-radial-gradient(white, black); -webkit-mask-image: -webkit-radial-gradient(white, black);">
+            <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-amber-700/60 group-hover:border-amber-600 transition-colors duration-300 ease-out bg-zinc-800 shadow-md" style="mask-image: -webkit-radial-gradient(white, black); -webkit-mask-image: -webkit-radial-gradient(white, black);">
               <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top3) : (top3.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" class="podium-avatar-img w-full h-full object-cover" />
             </div>
-            ${typeof getSwatBadgeHtml === 'function' ? getSwatBadgeHtml(top3.swatRole, 'sm') : ''}
+            ${(typeof getSwatBadgeHtml === 'function' && top3.swatRole) ? getSwatBadgeHtml(top3.swatRole, 'sm') : ''}
+            ${top3.role ? `
+              <span class="absolute -bottom-1 -right-1 z-20 text-[9.5px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(top3, top3.catId) : 'bg-zinc-800 text-white'} shadow-md">
+                ${top3.role}
+              </span>
+            ` : ''}
           </div>
-          <h4 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors flex items-center gap-1 mt-1 truncate max-w-full">
+          <h4 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors flex items-center justify-center gap-1.5 mt-1 truncate max-w-full flex-wrap">
             <span>${top3.streamerName || top3.name}</span>
+            ${top3.role ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(top3, top3.catId) : 'bg-zinc-800 text-white'} shadow-sm whitespace-nowrap">${top3.role}</span>` : ''}
           </h4>
           <p class="text-xs text-zinc-300 mb-2 truncate max-w-full" title="${top3.name}">
             <span>${top3.name}</span>${top3Role ? ` <span class="text-zinc-500 text-[11px]">(${top3Role})</span>` : ''}
@@ -644,7 +708,7 @@ function renderLeaderboardDynamicContent() {
 
           return `
             <div 
-              onclick="selectMemberFromLeaderboard('${m.catId}', '${m.groupId || ''}', '${m.name}')"
+              onclick="selectMemberFromLeaderboard('${m.catId}', '${m.groupId || ''}', '${m.name}', '${m.id || ''}')"
               class="px-4 py-3 flex items-center justify-between hover:bg-zinc-800/50 transition-colors cursor-pointer group"
             >
               <!-- 순위 -->
@@ -660,11 +724,17 @@ function renderLeaderboardDynamicContent() {
                     onerror="this.src='assets/default-avatar.svg'" 
                     class="w-10 h-10 rounded-full object-cover border border-zinc-700 bg-zinc-800 flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
                   />
-                  ${typeof getSwatBadgeHtml === 'function' ? getSwatBadgeHtml(m.swatRole, 'sm') : ''}
+                  ${(typeof getSwatBadgeHtml === 'function' && m.swatRole) ? getSwatBadgeHtml(m.swatRole, 'sm') : ''}
+                  ${m.role ? `
+                    <span class="absolute -bottom-1 -right-1 z-20 text-[8.5px] font-bold px-1 py-0.2 rounded ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(m, m.catId) : 'bg-zinc-800 text-white'} shadow">
+                      ${m.role}
+                    </span>
+                  ` : ''}
                 </div>
                 <div class="min-w-0 flex-1">
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-1.5 flex-wrap">
                     <span class="font-bold text-sm text-white group-hover:text-amber-400 transition-colors truncate">${m.streamerName || m.name}</span>
+                    ${m.role ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(m, m.catId) : 'bg-zinc-800 text-white'} shadow-sm whitespace-nowrap">${m.role}</span>` : ''}
                   </div>
                   <div class="text-xs text-zinc-400 truncate">
                     <span class="text-amber-400/90 font-medium">${m.name}</span>${mRole ? ` <span class="text-zinc-500 text-[11px]">(${mRole})</span>` : ''}
@@ -707,7 +777,7 @@ function renderLeaderboardDynamicContent() {
 }
 
 // 순위 리스트에서 멤버 클릭 시 해당 페이지로 바로 이동
-function selectMemberFromLeaderboard(catId, groupId, memberName) {
+function selectMemberFromLeaderboard(catId, groupId, memberName, memberId = null) {
   closeLeaderboardModal();
 
   // 1. 카테고리 설정
@@ -719,21 +789,28 @@ function selectMemberFromLeaderboard(catId, groupId, memberName) {
   const cat = (KONGBAB_DATA.categories || []).find(c => c.id === catId);
   if (!cat) return;
 
+  const matchFn = m => (memberId && m.id === memberId) || m.name === memberName || m.streamer === memberName;
+
   // 2. 그룹 설정
   if (groupId && cat.hasSubgroups) {
     const grp = (cat.groups || []).find(g => g.id === groupId);
     if (grp) {
       state.currentGroup = grp;
-      const mem = (grp.members || []).find(m => m.name === memberName);
+      const mem = (grp.members || []).find(matchFn);
       if (mem) {
         state.currentMember = mem;
       }
     }
   } else {
-    const mem = (cat.members || []).find(m => m.name === memberName);
+    const mem = (cat.members || []).find(matchFn);
     if (mem) {
       state.currentMember = mem;
     }
+  }
+
+  if (state.currentMember) {
+    const allV = state.currentMember.videos || [];
+    state.currentVideoTab = typeof getDefaultVideoTab === "function" ? getDefaultVideoTab(allV) : "clip";
   }
 
   // 3. 네비게이션 렌더링

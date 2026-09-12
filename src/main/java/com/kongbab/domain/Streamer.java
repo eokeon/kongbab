@@ -40,6 +40,8 @@ public class Streamer {
 
     private String badgeColor;
 
+    private String status;
+
     @Column(length = 1000)
     private String avatar;
 

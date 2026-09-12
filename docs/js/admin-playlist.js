@@ -424,6 +424,7 @@ function handlePlaylistDragLeave(e) {
 function handlePlaylistDrop(e, targetIndex) {
   e.preventDefault();
   e.stopPropagation();
+  if (typeof stopAutoScroll === "function") stopAutoScroll();
   clearPlaylistDragStyles();
 
   if (playlistDragSourceIndex === null || playlistDragSourceIndex === targetIndex) return;
@@ -436,6 +437,7 @@ function handlePlaylistDrop(e, targetIndex) {
 }
 
 function handlePlaylistDragEnd(e) {
+  if (typeof stopAutoScroll === "function") stopAutoScroll();
   playlistDragSourceIndex = null;
   clearPlaylistDragStyles();
 }

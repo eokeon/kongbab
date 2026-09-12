@@ -42,12 +42,18 @@ function parseSubscriberCount(countStr) {
   return isNaN(val) ? 0 : val;
 }
 
-// 그룹(갱단/사업체) 내 모든 멤버의 구독자 수 총합 계산
+// 그룹(갱단/사업체) 및 카테고리 내 모든 멤버의 구독자 수 총합 계산 (동일 스트리머 중복 합산 방지)
 function calculateGroupTotalSubscribers(members) {
   if (!Array.isArray(members) || members.length === 0) return null;
+  const seen = new Set();
   let total = 0;
 
   for (const m of members) {
+    if (!m) continue;
+    const key = m.id || (m.streamer ? m.streamer : m.name);
+    if (key && seen.has(key)) continue;
+    if (key) seen.add(key);
+
     const count = parseSubscriberCount(m.subscriberCount);
     if (count > 0) {
       total += count;

@@ -485,13 +485,16 @@ function applyStreamersToKongbabData(dbStreamers) {
       streamer: s.streamer,
       role: s.role || "",
       swatRole: s.swatRole || "",
+      status: s.status || "active",
       badgeColor: s.badgeColor || "bg-blue-600",
       avatar: s.avatar || "assets/default-avatar.svg",
       displayOrder: s.displayOrder ?? 0,
       subscriberCount: s.subscriberCount || s.subscriberCountFormatted || "",
       youtubeUrl: s.youtubeUrl || "",
       videos: videosList,
-      affiliations: affs
+      affiliations: affs,
+      category: s.category || (affs[0] ? affs[0].category : ""),
+      subgroup: s.subgroup !== undefined ? s.subgroup : (affs[0] ? affs[0].subgroup || null : null)
     };
 
     // 소속된 모든 위치(카테고리/조직)에 동일한 memberObj 인스턴스를 추가 (겸직 반영)
@@ -519,107 +522,157 @@ function applyStreamersToKongbabData(dbStreamers) {
     });
   });
 
+function getAffiliationDisplayOrder(member, categoryId, subgroupId = null) {
+  if (!member) return 999999;
+  if (Array.isArray(member.affiliations)) {
+    const aff = member.affiliations.find(a => {
+      if (a.category !== categoryId) return false;
+      if (subgroupId) return a.subgroup === subgroupId;
+      return !a.subgroup;
+    });
+    if (aff && aff.displayOrder !== undefined && aff.displayOrder !== null) {
+      return Number(aff.displayOrder);
+    }
+  }
+  // fallback 1: 만약 해당 소속이 멤버의 주 소속인 경우 member.displayOrder 사용
+  if (member.category === categoryId && (!subgroupId || member.subgroup === subgroupId)) {
+    if (member.displayOrder !== undefined && member.displayOrder !== null) {
+      return Number(member.displayOrder);
+    }
+  }
+  // fallback 2: 단일 소속인 경우 member.displayOrder 사용
+  if (Array.isArray(member.affiliations) && member.affiliations.length === 1) {
+    if (member.displayOrder !== undefined && member.displayOrder !== null) {
+      return Number(member.displayOrder);
+    }
+  }
+  return 999999;
+}
+
+function sortAllMembersByAffiliationOrder() {
   KONGBAB_DATA.categories.forEach(cat => {
     if (cat.hasSubgroups) {
       (cat.groups || []).forEach(g => {
         if (g.members) {
-          g.members.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
+          g.members.sort((a, b) => {
+            const orderA = getAffiliationDisplayOrder(a, cat.id, g.id);
+            const orderB = getAffiliationDisplayOrder(b, cat.id, g.id);
+            if (orderA !== orderB) return orderA - orderB;
+            return (a.displayOrder ?? 0) - (b.displayOrder ?? 0);
+          });
         }
       });
     } else if (cat.members) {
-      cat.members.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
+      cat.members.sort((a, b) => {
+        const orderA = getAffiliationDisplayOrder(a, cat.id, null);
+        const orderB = getAffiliationDisplayOrder(b, cat.id, null);
+        if (orderA !== orderB) return orderA - orderB;
+        return (a.displayOrder ?? 0) - (b.displayOrder ?? 0);
+      });
     }
   });
+}
+window.getAffiliationDisplayOrder = getAffiliationDisplayOrder;
+window.sortAllMembersByAffiliationOrder = sortAllMembersByAffiliationOrder;
 
+  sortAllMembersByAffiliationOrder();
   persistData();
 }
 
 function extractAllStreamersFromKongbabData() {
   const memberMap = new Map();
-  let globalOrder = 0;
 
+  // 1. 현재 KONGBAB_DATA의 각 카테고리 / 조직 배열 순서를 해당 소속의 affiliation.displayOrder로 즉시 동기화
   KONGBAB_DATA.categories.forEach(cat => {
     if (cat.hasSubgroups) {
       (cat.groups || []).forEach(g => {
-        (g.members || []).forEach(m => {
-          const currentAff = { category: cat.id, subgroup: g.id };
-          if (!memberMap.has(m.id)) {
-            const initialAffs = Array.isArray(m.affiliations) && m.affiliations.length > 0
-              ? [...m.affiliations]
-              : [currentAff];
-            if (!initialAffs.some(a => a.category === currentAff.category && a.subgroup === currentAff.subgroup)) {
-              initialAffs.push(currentAff);
+        (g.members || []).forEach((m, mIdx) => {
+          if (Array.isArray(m.affiliations)) {
+            let aff = m.affiliations.find(a => a.category === cat.id && a.subgroup === g.id);
+            if (!aff) {
+              aff = { category: cat.id, subgroup: g.id };
+              m.affiliations.push(aff);
             }
-
-            const videoList = (m.videos || []).map((v, vIdx) => ({
-              ...v,
-              displayOrder: vIdx
-            }));
-
-            memberMap.set(m.id, {
-              id: m.id,
-              name: m.name,
-              streamer: m.streamer,
-              category: cat.id,
-              subgroup: g.id,
-              role: m.role || "",
-              swatRole: m.swatRole || "",
-              badgeColor: m.badgeColor || "bg-blue-600",
-              avatar: m.avatar || "assets/default-avatar.svg",
-              displayOrder: globalOrder++,
-              subscriberCount: m.subscriberCount || "",
-              youtubeUrl: m.youtubeUrl || "",
-              videos: videoList,
-              affiliations: initialAffs
-            });
-          } else {
-            const existing = memberMap.get(m.id);
-            if (!existing.affiliations.some(a => a.category === currentAff.category && a.subgroup === currentAff.subgroup)) {
-              existing.affiliations.push(currentAff);
-            }
+            aff.displayOrder = mIdx;
+          }
+          if (m.category === cat.id && m.subgroup === g.id) {
+            m.displayOrder = mIdx;
           }
         });
       });
     } else {
-      (cat.members || []).forEach(m => {
-        const currentAff = { category: cat.id, subgroup: null };
-        if (!memberMap.has(m.id)) {
-          const initialAffs = Array.isArray(m.affiliations) && m.affiliations.length > 0
-            ? [...m.affiliations]
-            : [currentAff];
-          if (!initialAffs.some(a => a.category === currentAff.category && a.subgroup === currentAff.subgroup)) {
-            initialAffs.push(currentAff);
+      (cat.members || []).forEach((m, mIdx) => {
+        if (Array.isArray(m.affiliations)) {
+          let aff = m.affiliations.find(a => a.category === cat.id && !a.subgroup);
+          if (!aff) {
+            aff = { category: cat.id, subgroup: null };
+            m.affiliations.push(aff);
           }
-
-          const videoList = (m.videos || []).map((v, vIdx) => ({
-            ...v,
-            displayOrder: vIdx
-          }));
-
-          memberMap.set(m.id, {
-            id: m.id,
-            name: m.name,
-            streamer: m.streamer,
-            category: cat.id,
-            subgroup: null,
-            role: m.role || "",
-            swatRole: m.swatRole || "",
-            badgeColor: m.badgeColor || "bg-blue-600",
-            avatar: m.avatar || "assets/default-avatar.svg",
-            displayOrder: globalOrder++,
-            subscriberCount: m.subscriberCount || "",
-            youtubeUrl: m.youtubeUrl || "",
-            videos: videoList,
-            affiliations: initialAffs
-          });
-        } else {
-          const existing = memberMap.get(m.id);
-          if (!existing.affiliations.some(a => a.category === currentAff.category && a.subgroup === currentAff.subgroup)) {
-            existing.affiliations.push(currentAff);
-          }
+          aff.displayOrder = mIdx;
+        }
+        if (m.category === cat.id && !m.subgroup) {
+          m.displayOrder = mIdx;
         }
       });
     }
+  });
+
+  // 2. 고유 멤버 맵 생성 (주 소속 정보 및 각 소속별 displayOrder 보존)
+  let fallbackGlobalOrder = 0;
+  KONGBAB_DATA.categories.forEach(cat => {
+    const mems = getCategoryMembers(cat);
+    mems.forEach(m => {
+      if (!m || !m.id) return;
+      if (!memberMap.has(m.id)) {
+        const currentAff = { 
+          category: cat.id, 
+          subgroup: (cat.hasSubgroups ? (m.subgroup || null) : null) 
+        };
+        const initialAffs = Array.isArray(m.affiliations) && m.affiliations.length > 0
+          ? [...m.affiliations]
+          : [currentAff];
+        if (!initialAffs.some(a => a.category === currentAff.category && (currentAff.subgroup ? a.subgroup === currentAff.subgroup : !a.subgroup))) {
+          initialAffs.push(currentAff);
+        }
+
+        const videoList = (m.videos || []).map((v, vIdx) => ({
+          ...v,
+          displayOrder: vIdx
+        }));
+
+        // 주 소속 결정: m.category/m.subgroup이 affiliations에 있으면 유지, 없으면 initialAffs[0]
+        const primaryAff = initialAffs.find(a => a.category === m.category && (m.subgroup ? a.subgroup === m.subgroup : !a.subgroup)) || initialAffs[0];
+
+        memberMap.set(m.id, {
+          id: m.id,
+          name: m.name,
+          streamer: m.streamer,
+          category: primaryAff.category,
+          subgroup: primaryAff.subgroup || null,
+          role: primaryAff.role !== undefined ? primaryAff.role : (m.role || ""),
+          swatRole: primaryAff.swatRole !== undefined ? primaryAff.swatRole : (m.swatRole || ""),
+          status: primaryAff.status !== undefined ? primaryAff.status : (m.status || "active"),
+          badgeColor: primaryAff.badgeColor !== undefined ? primaryAff.badgeColor : (m.badgeColor || "bg-blue-600"),
+          avatar: m.avatar || "assets/default-avatar.svg",
+          displayOrder: primaryAff.displayOrder != null ? primaryAff.displayOrder : (m.displayOrder != null ? m.displayOrder : fallbackGlobalOrder++),
+          subscriberCount: m.subscriberCount || "",
+          youtubeUrl: m.youtubeUrl || "",
+          videos: videoList,
+          affiliations: initialAffs
+        });
+      } else {
+        // 이미 등록된 멤버라면 affiliation 목록 누락분만 보강
+        const existing = memberMap.get(m.id);
+        if (Array.isArray(m.affiliations)) {
+          m.affiliations.forEach(aff => {
+            const alreadyHas = existing.affiliations.some(a => a.category === aff.category && (aff.subgroup ? a.subgroup === aff.subgroup : !a.subgroup));
+            if (!alreadyHas) {
+              existing.affiliations.push(aff);
+            }
+          });
+        }
+      }
+    });
   });
 
   const list = Array.from(memberMap.values());

@@ -3,6 +3,244 @@
 // ==========================================
 
 let editingMemberId = null;
+let _modalAffData = {};
+let _activeModalAffKey = null;
+
+function getAffKey(category, subgroup = null) {
+  return `${category}_${subgroup || 'null'}`;
+}
+
+function saveFormIntoAffData(key) {
+  if (!key) return;
+  const roleVal = document.getElementById("member-form-role")?.value?.trim() || "";
+  const swatSelect = document.getElementById("member-form-swat-select");
+  const swatInput = document.getElementById("member-form-swat");
+  let swatVal = "";
+  if (swatSelect) {
+    if (swatSelect.value === "custom" && swatInput) {
+      swatVal = swatInput.value.trim();
+    } else {
+      swatVal = swatSelect.value;
+    }
+  } else if (swatInput) {
+    swatVal = swatInput.value.trim();
+  }
+
+  const statusVal = document.getElementById("member-form-status")?.value || "active";
+  const badgeVal = document.getElementById("member-form-badge")?.value || "bg-blue-600";
+
+  const parts = key.split("_");
+  const cat = parts[0];
+  const actualSub = (parts.length > 1 && parts[1] !== "null") ? parts[1] : null;
+
+  _modalAffData[key] = {
+    category: cat,
+    subgroup: actualSub,
+    role: roleVal,
+    swatRole: swatVal,
+    status: statusVal,
+    badgeColor: badgeVal
+  };
+}
+
+function handleSwatSelectChange(val) {
+  const swatInput = document.getElementById("member-form-swat");
+  if (!swatInput) return;
+  if (val === "custom") {
+    swatInput.classList.remove("hidden");
+    swatInput.value = "";
+    swatInput.focus();
+    if (_activeModalAffKey && _modalAffData[_activeModalAffKey]) {
+      _modalAffData[_activeModalAffKey].swatRole = "";
+    }
+  } else {
+    swatInput.classList.add("hidden");
+    swatInput.value = val;
+    if (_activeModalAffKey && _modalAffData[_activeModalAffKey]) {
+      _modalAffData[_activeModalAffKey].swatRole = val;
+    }
+  }
+}
+window.handleSwatSelectChange = handleSwatSelectChange;
+
+function handleSwatInputChange(val) {
+  if (_activeModalAffKey && _modalAffData[_activeModalAffKey]) {
+    _modalAffData[_activeModalAffKey].swatRole = (val || "").trim();
+  }
+}
+window.handleSwatInputChange = handleSwatInputChange;
+
+function loadAffDataIntoForm(key) {
+  if (!key || !_modalAffData[key]) return;
+  _activeModalAffKey = key;
+  const data = _modalAffData[key];
+
+  const roleEl = document.getElementById("member-form-role");
+  const swatSelect = document.getElementById("member-form-swat-select");
+  const swatInput = document.getElementById("member-form-swat");
+  const statusEl = document.getElementById("member-form-status");
+  const badgeEl = document.getElementById("member-form-badge");
+
+  if (roleEl) roleEl.value = data.role || "";
+
+  const currentSwat = data.swatRole || "";
+  if (swatSelect && swatInput) {
+    if (["", "특공대장", "특공대원", "서버장", "가이드", "정보부"].includes(currentSwat)) {
+      swatSelect.value = currentSwat;
+      swatInput.value = currentSwat;
+      swatInput.classList.add("hidden");
+    } else {
+      swatSelect.value = "custom";
+      swatInput.value = currentSwat;
+      swatInput.classList.remove("hidden");
+    }
+  } else if (swatInput) {
+    swatInput.value = currentSwat;
+  }
+
+  if (statusEl) {
+    const rawStatus = data.status || "active";
+    if (rawStatus === "martyred" || rawStatus === "순직") {
+      statusEl.value = "martyred";
+    } else if (rawStatus === "retired" || rawStatus === "퇴직" || rawStatus === "은퇴") {
+      statusEl.value = "retired";
+    } else if (rawStatus === "resigned" || rawStatus === "사직") {
+      statusEl.value = "resigned";
+    } else {
+      statusEl.value = "active";
+    }
+  }
+
+  if (badgeEl) badgeEl.value = data.badgeColor || (data.category === 'police' ? "bg-blue-600" : "bg-red-600");
+
+  const swatContainer = document.getElementById("member-form-swat-container");
+  const roleRow = document.getElementById("member-form-role-row");
+  if (swatContainer && roleRow) {
+    if (data.category === 'police' || data.category === 'guide' || data.swatRole) {
+      swatContainer.classList.remove("hidden");
+      roleRow.className = "grid grid-cols-1 sm:grid-cols-2 gap-3";
+    } else {
+      swatContainer.classList.add("hidden");
+      roleRow.className = "grid grid-cols-1 gap-3";
+    }
+  }
+
+  // 소속별 설정 힌트 라벨 갱신
+  const affs = getSelectedAffiliations();
+  const cat = KONGBAB_DATA.categories.find(c => c.id === data.category);
+  let name = cat?.name || data.category;
+  let emoji = cat?.emoji || '';
+  if (data.subgroup && cat?.groups) {
+    const g = cat.groups.find(grp => grp.id === data.subgroup);
+    if (g) {
+      name = g.name;
+      emoji = g.emoji || emoji;
+    }
+  }
+
+  const roleHint = document.getElementById("member-form-role-aff-hint");
+  if (roleHint) {
+    if (affs.length > 1) {
+      roleHint.textContent = `[${emoji} ${name}] 설정 중`;
+      roleHint.classList.remove("hidden");
+    } else {
+      roleHint.classList.add("hidden");
+    }
+  }
+
+  renderModalAffTabs();
+}
+
+function renderModalAffTabs() {
+  const container = document.getElementById("member-form-aff-tabs-container");
+  const buttonContainer = document.getElementById("member-form-aff-tab-buttons");
+  if (!container || !buttonContainer) return;
+
+  const affs = getSelectedAffiliations();
+  if (affs.length <= 1) {
+    container.classList.add("hidden");
+    const roleHint = document.getElementById("member-form-role-aff-hint");
+    if (roleHint) roleHint.classList.add("hidden");
+    return;
+  }
+
+  // 겸직(2개 이상 소속) 시 즉시 탭 컨테이너 노출
+  container.classList.remove("hidden");
+
+  const defaultBadges = {
+    police: "bg-blue-600",
+    ems: "bg-teal-600",
+    gang: "bg-red-600",
+    business: "bg-amber-600",
+    press: "bg-sky-600",
+    citizen: "bg-purple-600",
+    guide: "bg-emerald-600"
+  };
+
+  affs.forEach(a => {
+    const k = getAffKey(a.category, a.subgroup);
+    if (!_modalAffData[k]) {
+      _modalAffData[k] = {
+        category: a.category,
+        subgroup: a.subgroup,
+        role: "",
+        swatRole: "",
+        status: "active",
+        badgeColor: defaultBadges[a.category] || "bg-blue-600"
+      };
+    }
+  });
+
+  const validKeys = affs.map(a => getAffKey(a.category, a.subgroup));
+  if (!_activeModalAffKey || !validKeys.includes(_activeModalAffKey)) {
+    _activeModalAffKey = validKeys[0];
+  }
+
+  buttonContainer.innerHTML = affs.map(a => {
+    const k = getAffKey(a.category, a.subgroup);
+    const cat = KONGBAB_DATA.categories.find(c => c.id === a.category);
+    let name = cat?.name || a.category;
+    let emoji = cat?.emoji || '';
+    if (a.subgroup && cat?.groups) {
+      const g = cat.groups.find(grp => grp.id === a.subgroup);
+      if (g) {
+        name = g.name;
+        emoji = g.emoji || emoji;
+      }
+    }
+
+    const isActive = (k === _activeModalAffKey);
+    const itemData = _modalAffData[k] || {};
+    const hasRole = !!itemData.role;
+    const isMartyred = itemData.status === 'martyred' || (itemData.status && itemData.status.includes('순직'));
+    const isRetired = !isMartyred && (itemData.status === 'retired' || (itemData.status && (itemData.status.includes('퇴직') || itemData.status.includes('은퇴'))));
+    const isResigned = !isMartyred && !isRetired && (itemData.status === 'resigned' || (itemData.status && itemData.status.includes('사직')));
+
+    const activeClasses = isActive 
+      ? "bg-amber-500 text-black font-extrabold shadow-md shadow-amber-500/20 border-amber-400 ring-2 ring-amber-400/50 scale-[1.02]" 
+      : "bg-zinc-900 text-zinc-300 hover:text-white hover:bg-zinc-800 border-zinc-700/80";
+
+    return `
+      <button 
+        type="button" 
+        onclick="switchModalAffTab('${k}')" 
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs border transition-all cursor-pointer select-none ${activeClasses}"
+      >
+        <span>${emoji}</span>
+        <span>${name}</span>
+        ${hasRole ? `<span class="text-[10px] opacity-80 font-semibold">(${itemData.role})</span>` : '<span class="text-[10px] opacity-60 font-normal italic">(직위 미입력)</span>'}
+        ${isMartyred ? `<span class="text-[9px] px-1 py-0.2 rounded bg-black/60 text-red-400 border border-red-800/60 font-black">순직</span>` : (isRetired ? `<span class="text-[9px] px-1 py-0.2 rounded bg-black/60 text-zinc-300 border border-zinc-600/60 font-black">퇴직</span>` : (isResigned ? `<span class="text-[9px] px-1 py-0.2 rounded bg-black/60 text-amber-400 border border-amber-800/60 font-black">사직</span>` : ''))}
+      </button>
+    `;
+  }).join("");
+}
+
+function switchModalAffTab(newKey) {
+  if (newKey === _activeModalAffKey) return;
+  saveFormIntoAffData(_activeModalAffKey);
+  loadAffDataIntoForm(newKey);
+}
+window.switchModalAffTab = switchModalAffTab;
 
 function findMemberLocation(memberId) {
   for (const cat of KONGBAB_DATA.categories) {
@@ -43,7 +281,7 @@ function setupAffiliationPanels() {
   if (gangContainer && gangCat?.groups) {
     gangContainer.innerHTML = gangCat.groups.map(g => `
       <label class="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border border-red-900/60 bg-red-950/40 hover:border-red-500/60 cursor-pointer text-xs select-none truncate" title="${g.name}">
-        <input type="checkbox" name="aff-gang-group" value="${g.id}" onchange="updateSelectedAffiliationCount()" class="rounded border-red-800 text-red-600 focus:ring-0 w-3.5 h-3.5 cursor-pointer flex-shrink-0">
+        <input type="checkbox" name="aff-gang-group" value="${g.id}" onchange="handleAffiliationCheckboxChange()" class="rounded border-red-800 text-red-600 focus:ring-0 w-3.5 h-3.5 cursor-pointer flex-shrink-0">
         <span class="truncate text-red-200 text-[11px] font-medium">${g.emoji || ''} ${g.name}</span>
       </label>
     `).join("");
@@ -53,14 +291,16 @@ function setupAffiliationPanels() {
   if (bizContainer && bizCat?.groups) {
     bizContainer.innerHTML = bizCat.groups.map(g => `
       <label class="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border border-amber-900/60 bg-amber-950/40 hover:border-amber-500/60 cursor-pointer text-xs select-none truncate" title="${g.name}">
-        <input type="checkbox" name="aff-business-group" value="${g.id}" onchange="updateSelectedAffiliationCount()" class="rounded border-amber-800 text-amber-600 focus:ring-0 w-3.5 h-3.5 cursor-pointer flex-shrink-0">
+        <input type="checkbox" name="aff-business-group" value="${g.id}" onchange="handleAffiliationCheckboxChange()" class="rounded border-amber-800 text-amber-600 focus:ring-0 w-3.5 h-3.5 cursor-pointer flex-shrink-0">
         <span class="truncate text-amber-200 text-[11px] font-medium">${g.emoji || ''} ${g.name}</span>
       </label>
     `).join("");
   }
 }
 
-function handleAffiliationCheckboxChange() {
+function handleAffiliationCheckboxChange(options = {}) {
+  const skipSave = options && options.skipSave === true;
+
   const gangChecked = document.getElementById("aff-check-gang")?.checked;
   const bizChecked = document.getElementById("aff-check-business")?.checked;
 
@@ -92,17 +332,69 @@ function handleAffiliationCheckboxChange() {
     }
   }
 
-  // 경찰 선택 시에만 특공대 입력 필드 표시, 그 외는 원래대로 1열 단일 필드 표시
-  const policeChecked = !!document.getElementById("aff-check-police")?.checked;
-  const swatContainer = document.getElementById("member-form-swat-container");
-  const roleRow = document.getElementById("member-form-role-row");
-  if (swatContainer && roleRow) {
-    if (policeChecked) {
-      swatContainer.classList.remove("hidden");
-      roleRow.className = "grid grid-cols-1 sm:grid-cols-2 gap-3";
-    } else {
-      swatContainer.classList.add("hidden");
-      roleRow.className = "grid grid-cols-1 gap-3";
+  // 1. 현재 폼 값 먼저 활성 소속에 저장 (모달 초기화 중에는 이전 인원 값 덮어쓰기 방지)
+  if (!skipSave && _activeModalAffKey) {
+    saveFormIntoAffData(_activeModalAffKey);
+  }
+
+  // 2. 현재 선택된 소속 목록 파악
+  const affs = getSelectedAffiliations();
+  const validKeys = affs.map(a => getAffKey(a.category, a.subgroup));
+
+  const defaultBadges = {
+    police: "bg-blue-600",
+    ems: "bg-teal-600",
+    gang: "bg-red-600",
+    business: "bg-amber-600",
+    press: "bg-sky-600",
+    citizen: "bg-purple-600",
+    guide: "bg-emerald-600"
+  };
+
+  // 새로 추가된 소속 감지 및 _modalAffData 초기화
+  let newlyAddedKey = null;
+  affs.forEach(a => {
+    const k = getAffKey(a.category, a.subgroup);
+    if (!_modalAffData[k]) {
+      _modalAffData[k] = {
+        category: a.category,
+        subgroup: a.subgroup,
+        role: "",
+        swatRole: "",
+        status: "active",
+        badgeColor: defaultBadges[a.category] || "bg-blue-600"
+      };
+      newlyAddedKey = k;
+    }
+  });
+
+  // 새 소속이 방금 추가된 경우 해당 소속 탭으로 즉시 전환하여 바로 입력 가능하게 처리
+  // 또는 현재 활성 탭이 체크 해제된 경우 유효한 첫 번째 탭으로 전환
+  if (!skipSave && newlyAddedKey && affs.length > 1) {
+    _activeModalAffKey = newlyAddedKey;
+    loadAffDataIntoForm(_activeModalAffKey);
+  } else if (!_activeModalAffKey || !validKeys.includes(_activeModalAffKey)) {
+    _activeModalAffKey = validKeys[0] || null;
+    if (_activeModalAffKey) {
+      loadAffDataIntoForm(_activeModalAffKey);
+    }
+  } else {
+    // 탭 바 즉시 렌더링 (겸직 탭 즉시 노출/숨김)
+    renderModalAffTabs();
+
+    // 현재 활성 탭의 소속에 맞춰 특공대 및 직위 행 UI 갱신
+    const curAff = _modalAffData[_activeModalAffKey];
+    const isCurPoliceOrGuide = curAff ? (curAff.category === 'police' || curAff.category === 'guide') : (affs[0]?.category === 'police' || affs[0]?.category === 'guide');
+    const swatContainer = document.getElementById("member-form-swat-container");
+    const roleRow = document.getElementById("member-form-role-row");
+    if (swatContainer && roleRow) {
+      if (isCurPoliceOrGuide) {
+        swatContainer.classList.remove("hidden");
+        roleRow.className = "grid grid-cols-1 sm:grid-cols-2 gap-3";
+      } else {
+        swatContainer.classList.add("hidden");
+        roleRow.className = "grid grid-cols-1 gap-3";
+      }
     }
   }
 
@@ -111,12 +403,21 @@ function handleAffiliationCheckboxChange() {
 
 // 직위/계급 입력 시 직책 뱃지 색상 자동 선택 (경찰 계급 및 공통 보스 등)
 function handleRoleInputForPoliceColor(roleVal) {
+  if (_activeModalAffKey && _modalAffData[_activeModalAffKey]) {
+    _modalAffData[_activeModalAffKey].role = (roleVal || "").trim();
+    const affs = getSelectedAffiliations();
+    if (affs.length > 1) {
+      renderModalAffTabs();
+    }
+  }
+
   if (!roleVal) return;
   const badgeSelect = document.getElementById("member-form-badge");
   if (!badgeSelect) return;
   const r = roleVal.trim();
-  const policeChecked = !!document.getElementById("aff-check-police")?.checked;
-  if (policeChecked) {
+  const curAff = _activeModalAffKey ? _modalAffData[_activeModalAffKey] : null;
+  const isPolice = curAff ? (curAff.category === 'police') : !!document.getElementById("aff-check-police")?.checked;
+  if (isPolice) {
     if (r.includes("부청장") || r.includes("서장") || r.includes("경정") || r.includes("경감")) {
       badgeSelect.value = "bg-red-600";
     } else if (r.includes("청장")) {
@@ -137,11 +438,35 @@ function handleRoleInputForPoliceColor(roleVal) {
   } else {
     if (r.includes("보스")) {
       badgeSelect.value = "bg-red-600";
+    } else if (r.includes("서버장")) {
+      badgeSelect.value = "bg-emerald-500";
     } else if (r.includes("가이드")) {
       badgeSelect.value = "bg-emerald-600";
     }
   }
+
+  if (_activeModalAffKey && _modalAffData[_activeModalAffKey]) {
+    _modalAffData[_activeModalAffKey].badgeColor = badgeSelect.value;
+  }
 }
+
+function handleStatusChange(statusVal) {
+  if (_activeModalAffKey && _modalAffData[_activeModalAffKey]) {
+    _modalAffData[_activeModalAffKey].status = statusVal;
+    const affs = getSelectedAffiliations();
+    if (affs.length > 1) {
+      renderModalAffTabs();
+    }
+  }
+}
+window.handleStatusChange = handleStatusChange;
+
+function handleBadgeChange(badgeVal) {
+  if (_activeModalAffKey && _modalAffData[_activeModalAffKey]) {
+    _modalAffData[_activeModalAffKey].badgeColor = badgeVal;
+  }
+}
+window.handleBadgeChange = handleBadgeChange;
 
 function getSelectedAffiliations() {
   const affs = [];
@@ -215,6 +540,8 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
   }
 
   editingMemberId = memberId;
+  _modalAffData = {};
+  _activeModalAffKey = null;
   setupAffiliationPanels();
 
   const modal = document.getElementById("member-modal");
@@ -225,8 +552,27 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
   const formStreamer = document.getElementById("member-form-streamer");
   const formRole = document.getElementById("member-form-role");
   const formSwat = document.getElementById("member-form-swat");
+  const swatSelect = document.getElementById("member-form-swat-select");
   const formBadge = document.getElementById("member-form-badge");
   const formAvatar = document.getElementById("member-form-avatar");
+  const statusEl = document.getElementById("member-form-status");
+  const formYoutube = document.getElementById("member-form-youtube");
+  const roleHint = document.getElementById("member-form-role-aff-hint");
+  const tabsContainer = document.getElementById("member-form-aff-tabs-container");
+
+  // 이전 멤버의 잔여 데이터가 남지 않도록 DOM 폼 필드 완전히 초기화
+  if (formId) formId.value = "";
+  if (formName) formName.value = "";
+  if (formStreamer) formStreamer.value = "";
+  if (formRole) formRole.value = "";
+  if (swatSelect) swatSelect.value = "";
+  if (formSwat) { formSwat.value = ""; formSwat.classList.add("hidden"); }
+  if (statusEl) statusEl.value = "active";
+  if (formBadge) formBadge.value = "bg-blue-600";
+  if (formAvatar) formAvatar.value = "";
+  if (formYoutube) formYoutube.value = "";
+  if (roleHint) roleHint.classList.add("hidden");
+  if (tabsContainer) tabsContainer.classList.add("hidden");
 
   // 모든 소속 체크박스 초기화
   document.querySelectorAll('input[name="member-aff-category"], input[name="aff-gang-group"], input[name="aff-business-group"]').forEach(chk => {
@@ -247,16 +593,12 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
 
     modalTitle.textContent = "인원 정보 수정";
     modalSubtitle.textContent = `${primaryMember.streamer} (${primaryMember.name}) - 소속 겸직 관리`;
-    formId.value = primaryMember.id;
-    formName.value = primaryMember.name || "";
-    formStreamer.value = primaryMember.streamer || "";
-    formRole.value = primaryMember.role || "";
-    if (formSwat) formSwat.value = primaryMember.swatRole || "";
-    formBadge.value = primaryMember.badgeColor || "bg-blue-600";
-    formAvatar.value = primaryMember.avatar || "";
+    if (formId) formId.value = primaryMember.id;
+    if (formName) formName.value = primaryMember.name || "";
+    if (formStreamer) formStreamer.value = primaryMember.streamer || "";
+    if (formAvatar) formAvatar.value = primaryMember.avatar || "";
     previewMemberAvatar(primaryMember.avatar);
 
-    const formYoutube = document.getElementById("member-form-youtube");
     if (formYoutube) {
       let yVal = primaryMember.youtubeUrl || "";
       try { yVal = decodeURIComponent(yVal); } catch(e) {}
@@ -277,41 +619,81 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
       }
     });
 
-    if (Array.isArray(primaryMember.affiliations)) {
-      primaryMember.affiliations.forEach(aff => {
-        const catCheck = document.getElementById(`aff-check-${aff.category}`);
-        if (catCheck) catCheck.checked = true;
-        if (aff.category === "gang" && aff.subgroup) {
-          const gangInput = document.querySelector(`input[name="aff-gang-group"][value="${aff.subgroup}"]`);
-          if (gangInput) gangInput.checked = true;
-        }
-        if (aff.category === "business" && aff.subgroup) {
-          const bizInput = document.querySelector(`input[name="aff-business-group"][value="${aff.subgroup}"]`);
-          if (bizInput) bizInput.checked = true;
-        }
-      });
+    let affList = Array.isArray(primaryMember.affiliations) && primaryMember.affiliations.length > 0
+      ? primaryMember.affiliations
+      : [];
+    if (affList.length === 0 && allLocs.length > 0) {
+      affList = allLocs.map(loc => ({
+        category: loc.category.id,
+        subgroup: loc.group ? loc.group.id : null,
+        role: loc.member.role || "",
+        swatRole: loc.member.swatRole || "",
+        status: loc.member.status || "active",
+        badgeColor: loc.member.badgeColor || "bg-blue-600"
+      }));
+    }
+    if (affList.length === 0) {
+      affList = [{ category: primaryMember.category || 'police', subgroup: primaryMember.subgroup || null }];
     }
 
-    handleAffiliationCheckboxChange();
+    affList.forEach(aff => {
+      const catCheck = document.getElementById(`aff-check-${aff.category}`);
+      if (catCheck) catCheck.checked = true;
+      if (aff.category === "gang" && aff.subgroup) {
+        const gangInput = document.querySelector(`input[name="aff-gang-group"][value="${aff.subgroup}"]`);
+        if (gangInput) gangInput.checked = true;
+      }
+      if (aff.category === "business" && aff.subgroup) {
+        const bizInput = document.querySelector(`input[name="aff-business-group"][value="${aff.subgroup}"]`);
+        if (bizInput) bizInput.checked = true;
+      }
+
+      const k = getAffKey(aff.category, aff.subgroup);
+      let rawSwat = (aff.swatRole && aff.swatRole.trim() !== "") ? aff.swatRole : (primaryMember.swatRole || "");
+      let statusVal = (aff.status !== undefined && aff.status !== null && aff.status !== "") ? aff.status : (primaryMember.status || "active");
+      if (rawSwat.includes("순직")) {
+        statusVal = "martyred";
+        rawSwat = rawSwat.replace(/순직/g, "").replace(/\s*·\s*/g, "").trim();
+      } else if (rawSwat.includes("퇴직") || rawSwat.includes("은퇴")) {
+        statusVal = "retired";
+        rawSwat = rawSwat.replace(/퇴직|은퇴/g, "").replace(/\s*·\s*/g, "").trim();
+      } else if (rawSwat.includes("사직")) {
+        statusVal = "resigned";
+        rawSwat = rawSwat.replace(/사직/g, "").replace(/\s*·\s*/g, "").trim();
+      }
+      if (aff.category !== 'police' && aff.category !== 'guide') {
+        rawSwat = "";
+      }
+      _modalAffData[k] = {
+        category: aff.category,
+        subgroup: aff.subgroup || null,
+        role: aff.role !== undefined ? aff.role : (primaryMember.role || ""),
+        swatRole: rawSwat,
+        status: statusVal,
+        badgeColor: aff.badgeColor !== undefined ? aff.badgeColor : (primaryMember.badgeColor || "bg-blue-600")
+      };
+    });
+
+    const curTabKey = getAffKey(state.currentCategory, state.currentGroup?.id);
+    if (_modalAffData[curTabKey]) {
+      _activeModalAffKey = curTabKey;
+    } else {
+      _activeModalAffKey = Object.keys(_modalAffData)[0];
+    }
+
+    // skipSave: true 로 호출하여 이전 DOM 값이 신규 열린 멤버 데이터를 덮어쓰지 않도록 보호
+    handleAffiliationCheckboxChange({ skipSave: true });
+    loadAffDataIntoForm(_activeModalAffKey);
   } else {
     modalTitle.textContent = "새 인원 추가";
     modalSubtitle.textContent = "새 인원 등록 (다중 소속/겸직 가능)";
-    formId.value = "";
-    formName.value = "";
-    formStreamer.value = "";
-    formRole.value = "";
-    if (formSwat) formSwat.value = "";
-    formAvatar.value = "";
     previewMemberAvatar("");
-
-    const formYoutube = document.getElementById("member-form-youtube");
-    if (formYoutube) formYoutube.value = "";
 
     const targetCatId = prefillCatId || state.currentCategory || "police";
     const catCheck = document.getElementById(`aff-check-${targetCatId}`);
     if (catCheck) catCheck.checked = true;
 
-    const targetGroupId = prefillGroupId || state.currentGroup?.id;
+    const targetGroupId = prefillGroupId || state.currentGroup?.id || null;
     if (targetCatId === "gang" && targetGroupId) {
       const gangInput = document.querySelector(`input[name="aff-gang-group"][value="${targetGroupId}"]`);
       if (gangInput) gangInput.checked = true;
@@ -330,9 +712,21 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
       citizen: "bg-purple-600",
       guide: "bg-emerald-600"
     };
-    formBadge.value = defaultBadges[targetCatId] || "bg-blue-600";
 
-    handleAffiliationCheckboxChange();
+    const initialKey = getAffKey(targetCatId, targetGroupId);
+    _modalAffData[initialKey] = {
+      category: targetCatId,
+      subgroup: targetGroupId,
+      role: "",
+      swatRole: "",
+      status: "active",
+      badgeColor: defaultBadges[targetCatId] || "bg-blue-600"
+    };
+    _activeModalAffKey = initialKey;
+
+    // skipSave: true 로 호출하여 이전 DOM 값이 신규 인원 등록 데이터를 덮어쓰지 않도록 보호
+    handleAffiliationCheckboxChange({ skipSave: true });
+    loadAffDataIntoForm(_activeModalAffKey);
   }
 
   if (modal) {
@@ -351,6 +745,34 @@ function closeMemberModal() {
     document.body.style.overflow = "";
   }
   editingMemberId = null;
+  _modalAffData = {};
+  _activeModalAffKey = null;
+
+  // 모달 닫힐 때 폼 필드들을 초기화하여 다른 인원 열 때 상태 전이 방지
+  const formId = document.getElementById("member-form-id");
+  if (formId) formId.value = "";
+  const formName = document.getElementById("member-form-name");
+  if (formName) formName.value = "";
+  const formStreamer = document.getElementById("member-form-streamer");
+  if (formStreamer) formStreamer.value = "";
+  const formRole = document.getElementById("member-form-role");
+  if (formRole) formRole.value = "";
+  const swatSelect = document.getElementById("member-form-swat-select");
+  if (swatSelect) swatSelect.value = "";
+  const swatInput = document.getElementById("member-form-swat");
+  if (swatInput) { swatInput.value = ""; swatInput.classList.add("hidden"); }
+  const statusEl = document.getElementById("member-form-status");
+  if (statusEl) statusEl.value = "active";
+  const badgeEl = document.getElementById("member-form-badge");
+  if (badgeEl) badgeEl.value = "bg-blue-600";
+  const avatarEl = document.getElementById("member-form-avatar");
+  if (avatarEl) avatarEl.value = "";
+  const youtubeEl = document.getElementById("member-form-youtube");
+  if (youtubeEl) youtubeEl.value = "";
+  const roleHint = document.getElementById("member-form-role-aff-hint");
+  if (roleHint) roleHint.classList.add("hidden");
+  const tabsContainer = document.getElementById("member-form-aff-tabs-container");
+  if (tabsContainer) tabsContainer.classList.add("hidden");
 }
 
 function previewMemberAvatar(url) {
@@ -422,16 +844,16 @@ async function handleSaveMember(e) {
   if (e) e.preventDefault();
   if (!isAdmin()) return;
 
+  // 현재 열려 있는 탭의 입력값을 _modalAffData에 즉시 저장
+  saveFormIntoAffData(_activeModalAffKey);
+
   const name = document.getElementById("member-form-name").value.trim();
   const streamer = document.getElementById("member-form-streamer").value.trim();
-  const role = document.getElementById("member-form-role").value.trim();
-  const swatRole = document.getElementById("member-form-swat")?.value.trim() || "";
-  const badgeColor = document.getElementById("member-form-badge").value;
   let avatar = document.getElementById("member-form-avatar").value.trim();
   let youtubeUrl = document.getElementById("member-form-youtube")?.value.trim() || "";
   try {
     youtubeUrl = decodeURIComponent(youtubeUrl);
-  } catch (e) {}
+  } catch (err) {}
 
   if (!name || !streamer) {
     alert("이름과 스트리머명을 모두 입력해주세요.");
@@ -444,27 +866,74 @@ async function handleSaveMember(e) {
     return;
   }
 
-  const hasPoliceAffiliation = selectedAffiliations.some(a => a.category === 'police');
-  const finalSwatRole = hasPoliceAffiliation ? swatRole : "";
+  const defaultBadges = {
+    police: "bg-blue-600",
+    ems: "bg-teal-600",
+    gang: "bg-red-600",
+    business: "bg-amber-600",
+    press: "bg-sky-600",
+    citizen: "bg-purple-600",
+    guide: "bg-emerald-600"
+  };
 
-  let finalBadgeColor = badgeColor;
-  if (hasPoliceAffiliation && role) {
-    const r = role.trim();
-    if (r.includes("부청장") || r.includes("서장") || r.includes("경정")) finalBadgeColor = "bg-red-600";
-    else if (r.includes("청장")) finalBadgeColor = "bg-red-900";
-    else if (r.includes("경위")) finalBadgeColor = "bg-white";
-    else if (r.includes("경사")) finalBadgeColor = "bg-orange-400";
-    else if (r.includes("경장")) finalBadgeColor = "bg-pink-500";
-    else if (r.includes("팀장")) finalBadgeColor = "bg-emerald-600";
-    else if (r.includes("순경")) finalBadgeColor = "bg-blue-600";
-    else if (r.includes("교육생")) finalBadgeColor = "bg-yellow-400";
-  }
+  const allLocs = editingMemberId ? findAllMemberLocations(editingMemberId) : [];
+  const existingMember = allLocs[0]?.member;
+
+  // 소속별 정보(직위, 특공대직책, 활동상태, 뱃지색상, displayOrder)를 각 affiliation 객체에 주입
+  selectedAffiliations.forEach(aff => {
+    const k = getAffKey(aff.category, aff.subgroup);
+    const d = _modalAffData[k] || {};
+    aff.role = d.role || "";
+    aff.swatRole = d.swatRole || "";
+    aff.status = d.status || "active";
+    aff.badgeColor = d.badgeColor || (defaultBadges[aff.category] || "bg-blue-600");
+
+    // 기존 소속의 displayOrder 보존, 신규 추가 소속은 해당 소속 맨 뒤로 지정하여 기존 소속 위치가 바뀌지 않도록 보호
+    if (existingMember) {
+      const existingAff = (existingMember.affiliations || []).find(a => a.category === aff.category && (aff.subgroup ? a.subgroup === aff.subgroup : !a.subgroup));
+      if (existingAff && existingAff.displayOrder != null) {
+        aff.displayOrder = existingAff.displayOrder;
+      } else {
+        const targetCat = KONGBAB_DATA.categories.find(c => c.id === aff.category);
+        if (targetCat) {
+          if (targetCat.hasSubgroups && aff.subgroup) {
+            const targetGroup = (targetCat.groups || []).find(g => g.id === aff.subgroup);
+            aff.displayOrder = targetGroup?.members?.length ?? 9999;
+          } else {
+            aff.displayOrder = targetCat.members?.length ?? 9999;
+          }
+        } else {
+          aff.displayOrder = 9999;
+        }
+      }
+    } else {
+      const targetCat = KONGBAB_DATA.categories.find(c => c.id === aff.category);
+      if (targetCat) {
+        if (targetCat.hasSubgroups && aff.subgroup) {
+          const targetGroup = (targetCat.groups || []).find(g => g.id === aff.subgroup);
+          aff.displayOrder = targetGroup?.members?.length ?? 0;
+        } else {
+          aff.displayOrder = targetCat.members?.length ?? 0;
+        }
+      } else {
+        aff.displayOrder = 0;
+      }
+    }
+  });
+
+  // 대표(Primary) 소속: 현재 활성 탭 소속 우선, 없을 시 첫 번째 소속
+  const primaryAff = selectedAffiliations.find(a => {
+    if (a.category !== state.currentCategory) return false;
+    if (state.currentGroup?.id) return a.subgroup === state.currentGroup.id;
+    return true;
+  }) || selectedAffiliations[0];
+
+  const primaryKey = getAffKey(primaryAff.category, primaryAff.subgroup);
+  const primaryData = _modalAffData[primaryKey] || {};
 
   if (!avatar || avatar.includes("images.unsplash.com")) {
     avatar = DEFAULT_AVATAR;
   }
-
-  const primaryAff = selectedAffiliations[0];
 
   if (editingMemberId) {
     const allLocs = findAllMemberLocations(editingMemberId);
@@ -477,12 +946,18 @@ async function handleSaveMember(e) {
     allLocs.forEach(loc => {
       loc.member.name = name;
       loc.member.streamer = streamer;
-      loc.member.role = role;
-      loc.member.swatRole = finalSwatRole;
-      loc.member.badgeColor = finalBadgeColor;
+      loc.member.role = primaryData.role || "";
+      loc.member.swatRole = primaryData.swatRole || "";
+      loc.member.status = primaryData.status || "active";
+      loc.member.badgeColor = primaryData.badgeColor || (defaultBadges[primaryAff.category] || "bg-blue-600");
       loc.member.avatar = avatar;
       loc.member.youtubeUrl = youtubeUrl;
       loc.member.affiliations = selectedAffiliations;
+      loc.member.category = primaryAff.category;
+      loc.member.subgroup = primaryAff.subgroup || null;
+      if (primaryAff.displayOrder != null) {
+        loc.member.displayOrder = primaryAff.displayOrder;
+      }
     });
 
     // 1) 이전 소속 중 선택 해제된 곳에서 제거
@@ -529,18 +1004,22 @@ async function handleSaveMember(e) {
       id: memberObj.id,
       name,
       streamer,
-      role,
-      swatRole: finalSwatRole,
+      role: primaryData.role || "",
+      swatRole: primaryData.swatRole || "",
+      status: primaryData.status || "active",
       category: primaryAff.category,
-      subgroup: primaryAff.subgroup,
+      subgroup: primaryAff.subgroup || null,
       affiliations: JSON.stringify(selectedAffiliations),
-      badgeColor: finalBadgeColor,
+      badgeColor: primaryData.badgeColor || (defaultBadges[primaryAff.category] || "bg-blue-600"),
       avatar,
       youtubeUrl,
       subscriberCount: memberObj.subscriberCount || "",
-      displayOrder: memberObj.displayOrder ?? 0
+      displayOrder: primaryAff.displayOrder != null ? primaryAff.displayOrder : (memberObj.displayOrder ?? 0)
     });
 
+    if (typeof sortAllMembersByAffiliationOrder === "function") {
+      sortAllMembersByAffiliationOrder();
+    }
     persistData();
     updateStats();
     createBackupSnapshot(`인원 수정: ${name} (${streamer}) - 소속 ${selectedAffiliations.length}개`);
@@ -550,15 +1029,18 @@ async function handleSaveMember(e) {
       id: "m-" + Date.now().toString(36) + Math.random().toString(36).substr(2, 4),
       name,
       streamer,
-      role,
-      swatRole: finalSwatRole,
-      badgeColor: finalBadgeColor,
+      role: primaryData.role || "",
+      swatRole: primaryData.swatRole || "",
+      status: primaryData.status || "active",
+      badgeColor: primaryData.badgeColor || (defaultBadges[primaryAff.category] || "bg-blue-600"),
       avatar,
       youtubeUrl,
       subscriberCount: "",
-      displayOrder: 0,
-      affiliations: selectedAffiliations,
-      videos: []
+      displayOrder: primaryAff.displayOrder != null ? primaryAff.displayOrder : 0,
+      category: primaryAff.category,
+      subgroup: primaryAff.subgroup || null,
+      videos: [],
+      affiliations: selectedAffiliations
     };
 
     // 선택된 모든 소속에 새 멤버 추가
@@ -582,18 +1064,22 @@ async function handleSaveMember(e) {
       id: newMember.id,
       name,
       streamer,
-      role,
-      swatRole: finalSwatRole,
+      role: primaryData.role || "",
+      swatRole: primaryData.swatRole || "",
+      status: primaryData.status || "active",
       category: primaryAff.category,
-      subgroup: primaryAff.subgroup,
+      subgroup: primaryAff.subgroup || null,
       affiliations: JSON.stringify(selectedAffiliations),
-      badgeColor: finalBadgeColor,
+      badgeColor: primaryData.badgeColor || (defaultBadges[primaryAff.category] || "bg-blue-600"),
       avatar,
       youtubeUrl,
       subscriberCount: "",
-      displayOrder: 0
+      displayOrder: newMember.displayOrder
     });
 
+    if (typeof sortAllMembersByAffiliationOrder === "function") {
+      sortAllMembersByAffiliationOrder();
+    }
     persistData();
     updateStats();
     createBackupSnapshot(`인원 추가: ${name} (${streamer}) - 소속 ${selectedAffiliations.length}개`);
@@ -604,7 +1090,7 @@ async function handleSaveMember(e) {
   renderContent();
 }
 
-let pendingDeleteMemberId = null;
+let pendingDeleteMemberContext = null;
 
 function deleteMember(memberId) {
   if (!isAdmin()) return;
@@ -612,30 +1098,68 @@ function deleteMember(memberId) {
   const allLocs = findAllMemberLocations(memberId);
   if (allLocs.length === 0) return;
 
-  pendingDeleteMemberId = memberId;
-  const targetName = `${allLocs[0].member.name} (${allLocs[0].member.streamer})`;
+  const member = allLocs[0].member;
+  const affs = Array.isArray(member.affiliations) ? member.affiliations : [];
+  const targetName = `${member.name} (${member.streamer})`;
+
+  pendingDeleteMemberContext = {
+    memberId,
+    member,
+    affs
+  };
 
   const modal = document.getElementById("delete-member-modal");
   const targetNameEl = document.getElementById("delete-member-target-name");
   const passInput = document.getElementById("delete-member-password-input");
   const errorMsg = document.getElementById("delete-member-error-msg");
+  const scopeContainer = document.getElementById("delete-member-scope-container");
+  const scopeTabLabel = document.getElementById("delete-scope-tab-label");
+  const scopeTabRadio = document.getElementById("delete-scope-tab");
+  const scopeGlobalRadio = document.getElementById("delete-scope-global");
+  const warningBox = document.getElementById("delete-member-global-warning");
+  const passContainer = document.getElementById("delete-member-password-container");
+
+  const curCat = getCurrentCategory();
+  const curGroup = state.currentGroup;
+  const tabName = curGroup ? `${curGroup.emoji || ''} ${curGroup.name}` : `${curCat.emoji || ''} ${curCat.name}`;
 
   if (modal) {
     if (targetNameEl) targetNameEl.textContent = `대상: ${targetName}`;
-    if (passInput) {
-      passInput.value = "";
-      setTimeout(() => passInput.focus(), 50);
-    }
+    if (passInput) passInput.value = "";
     if (errorMsg) {
       errorMsg.textContent = "";
       errorMsg.classList.add("hidden");
     }
+
+    if (affs.length > 1) {
+      // 겸직 인원: 소속 제외 vs 전체 삭제 선택 패널 표시
+      if (scopeContainer) scopeContainer.classList.remove("hidden");
+      if (scopeTabLabel) scopeTabLabel.textContent = `현재 소속([${tabName}])에서만 제외`;
+      if (scopeTabRadio) scopeTabRadio.checked = true;
+      if (scopeGlobalRadio) scopeGlobalRadio.checked = false;
+      if (warningBox) warningBox.classList.add("hidden");
+      if (passContainer) passContainer.classList.add("hidden");
+    } else {
+      // 단일 소속 인원: 전체 영구 삭제만 가능
+      if (scopeContainer) scopeContainer.classList.add("hidden");
+      if (warningBox) warningBox.classList.remove("hidden");
+      if (passContainer) passContainer.classList.remove("hidden");
+      if (passInput) setTimeout(() => passInput.focus(), 50);
+    }
+
     modal.classList.remove("hidden");
     modal.classList.add("flex");
     document.body.style.overflow = "hidden";
   } else {
-    // Modal 없을 경우 fallback: prompt
-    const inputPw = prompt(`⚠️ [인원 영구 삭제]\n'${targetName}' 인원을 삭제하시겠습니까?\n\n삭제를 진행하려면 비밀번호를 입력해주세요:`);
+    // Fallback prompt
+    if (affs.length > 1) {
+      const confirmRemove = confirm(`'${targetName}' 님은 여러 소속에 겸직 중입니다.\n\n현재 [${tabName}] 소속에서만 제외하시겠습니까?\n(취소를 누르면 전체 삭제 진행 여부를 묻습니다)`);
+      if (confirmRemove) {
+        executeRemoveMemberAffiliation(memberId, curCat.id, curGroup?.id);
+        return;
+      }
+    }
+    const inputPw = prompt(`⚠️ [인원 영구 삭제]\n'${targetName}' 인원을 DB에서 완전히 삭제하시겠습니까?\n\n진행하려면 비밀번호를 입력해주세요:`);
     if (inputPw === null) return;
     if (inputPw.trim() !== "kongbab1234") {
       alert("❌ 비밀번호가 올바르지 않습니다.");
@@ -645,6 +1169,23 @@ function deleteMember(memberId) {
   }
 }
 
+function toggleDeletePasswordRequirement() {
+  const isGlobal = !!document.getElementById("delete-scope-global")?.checked;
+  const passContainer = document.getElementById("delete-member-password-container");
+  const warningBox = document.getElementById("delete-member-global-warning");
+  const passInput = document.getElementById("delete-member-password-input");
+
+  if (isGlobal) {
+    if (passContainer) passContainer.classList.remove("hidden");
+    if (warningBox) warningBox.classList.remove("hidden");
+    if (passInput) passInput.focus();
+  } else {
+    if (passContainer) passContainer.classList.add("hidden");
+    if (warningBox) warningBox.classList.add("hidden");
+  }
+}
+window.toggleDeletePasswordRequirement = toggleDeletePasswordRequirement;
+
 function closeDeleteMemberModal() {
   const modal = document.getElementById("delete-member-modal");
   if (modal) {
@@ -652,13 +1193,26 @@ function closeDeleteMemberModal() {
     modal.classList.remove("flex");
     document.body.style.overflow = "";
   }
-  pendingDeleteMemberId = null;
+  pendingDeleteMemberContext = null;
 }
 
-function handleConfirmDeleteMember(e) {
+async function handleConfirmDeleteMember(e) {
   if (e) e.preventDefault();
-  if (!pendingDeleteMemberId) return;
+  if (!pendingDeleteMemberContext) return;
 
+  const { memberId, member, affs } = pendingDeleteMemberContext;
+  const isGlobalScope = !affs || affs.length <= 1 || !!document.getElementById("delete-scope-global")?.checked;
+
+  if (!isGlobalScope) {
+    // 1. 현재 탭 소속에서만 제외
+    const curCat = getCurrentCategory();
+    const curGroup = state.currentGroup;
+    closeDeleteMemberModal();
+    await executeRemoveMemberAffiliation(memberId, curCat.id, curGroup?.id);
+    return;
+  }
+
+  // 2. 전체 DB 영구 삭제
   const passInput = document.getElementById("delete-member-password-input");
   const errorMsg = document.getElementById("delete-member-error-msg");
   const inputPw = passInput ? passInput.value.trim() : "";
@@ -683,9 +1237,81 @@ function handleConfirmDeleteMember(e) {
     return;
   }
 
-  const memberIdToDelete = pendingDeleteMemberId;
   closeDeleteMemberModal();
-  executeDeleteMember(memberIdToDelete, inputPw);
+  executeDeleteMember(memberId, inputPw);
+}
+
+async function executeRemoveMemberAffiliation(memberId, catId, groupId = null) {
+  const allLocs = findAllMemberLocations(memberId);
+  if (allLocs.length === 0) return;
+
+  const member = allLocs[0].member;
+  const targetName = `${member.name} (${member.streamer})`;
+  const cat = KONGBAB_DATA.categories.find(c => c.id === catId);
+  const group = (cat?.groups || []).find(g => g.id === groupId);
+  const tabLabel = group ? `${group.emoji || ''} ${group.name}` : `${cat?.emoji || ''} ${cat?.name || catId}`;
+
+  // 현재 탭 소속 필터링 제외
+  const currentAffs = Array.isArray(member.affiliations) ? member.affiliations : [];
+  const remainingAffs = currentAffs.filter(a => {
+    if (a.category !== catId) return true;
+    if (groupId && a.subgroup !== groupId) return true;
+    return false;
+  });
+
+  if (remainingAffs.length === 0) {
+    alert("마지막 남은 소속입니다. 삭제하려면 '전체 소속 및 DB 영구 삭제'를 진행해주세요.");
+    return;
+  }
+
+  // 현재 활성 카테고리/그룹에서 멤버 제거
+  if (cat) {
+    if (cat.hasSubgroups && group) {
+      group.members = (group.members || []).filter(m => m.id !== memberId);
+    } else {
+      cat.members = (cat.members || []).filter(m => m.id !== memberId);
+    }
+  }
+
+  member.affiliations = remainingAffs;
+  const primaryAff = remainingAffs[0];
+  member.category = primaryAff.category;
+  member.subgroup = primaryAff.subgroup || null;
+  if (primaryAff.role !== undefined) member.role = primaryAff.role;
+  if (primaryAff.swatRole !== undefined) member.swatRole = primaryAff.swatRole;
+  if (primaryAff.status !== undefined) member.status = primaryAff.status;
+  if (primaryAff.badgeColor !== undefined) member.badgeColor = primaryAff.badgeColor;
+
+  // DB 갱신
+  await saveStreamerToDb({
+    id: member.id,
+    name: member.name,
+    streamer: member.streamer,
+    role: member.role || "",
+    swatRole: member.swatRole || "",
+    status: member.status || "active",
+    category: primaryAff.category,
+    subgroup: primaryAff.subgroup || null,
+    affiliations: JSON.stringify(remainingAffs),
+    badgeColor: member.badgeColor || "bg-blue-600",
+    avatar: member.avatar,
+    youtubeUrl: member.youtubeUrl,
+    subscriberCount: member.subscriberCount || "",
+    displayOrder: member.displayOrder ?? 0
+  });
+
+  if (state.currentMember?.id === memberId) {
+    state.currentMember = null;
+  }
+
+  if (typeof sortAllMembersByAffiliationOrder === "function") {
+    sortAllMembersByAffiliationOrder();
+  }
+  persistData();
+  updateStats();
+  createBackupSnapshot(`소속 제외: ${targetName} - [${tabLabel}] 소속 제외 (잔여 ${remainingAffs.length}개)`);
+  renderContent();
+  showToast(`✓ '${targetName}' 인원이 [${tabLabel}] 소속에서 제외되었습니다.`);
 }
 
 function executeDeleteMember(memberId, password = "kongbab1234") {
@@ -714,10 +1340,20 @@ function executeDeleteMember(memberId, password = "kongbab1234") {
 }
 
 function quickSetSwatRole(val) {
-  const el = document.getElementById("member-form-swat");
-  if (el) {
-    el.value = val;
-    el.focus();
+  const select = document.getElementById("member-form-swat-select");
+  const input = document.getElementById("member-form-swat");
+  if (select && input) {
+    if (["", "특공대장", "특공대원", "서버장", "가이드", "정보부"].includes(val)) {
+      select.value = val;
+      input.value = val;
+      input.classList.add("hidden");
+    } else {
+      select.value = "custom";
+      input.value = val;
+      input.classList.remove("hidden");
+    }
+  } else if (input) {
+    input.value = val;
   }
 }
 window.quickSetSwatRole = quickSetSwatRole;

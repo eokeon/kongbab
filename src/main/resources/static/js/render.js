@@ -1,11 +1,112 @@
-// 경찰 계급별 전용 색상 및 공통 직책 뱃지 색상 판별
+// 인원의 현재 카테고리/소속별 정보(직위, 특공대직책, 활동상태, 뱃지색상 등) 조회 (겸직 정보 격리)
+function getMemberAffiliationInfo(member, categoryId = null, subgroupId = null) {
+  if (!member) {
+    return { role: "", swatRole: "", status: "active", badgeColor: "bg-zinc-800", isResigned: false };
+  }
+
+  const catId = categoryId || (state && state.currentCategory) || member.category;
+  const grpId = subgroupId !== undefined ? subgroupId : (state && state.currentGroup ? state.currentGroup.id : member.subgroup);
+
+  let aff = null;
+  if (Array.isArray(member.affiliations)) {
+    // 1순위: category와 subgroup 모두 일치
+    aff = member.affiliations.find(a => {
+      if (a.category !== catId) return false;
+      if (grpId) return a.subgroup === grpId;
+      return true;
+    });
+    // 2순위: category 일치
+    if (!aff) {
+      aff = member.affiliations.find(a => a.category === catId);
+    }
+  }
+
+  let role = (aff && aff.role !== undefined && aff.role !== null && aff.role !== "") ? aff.role : (member.role || "");
+  if (!role && Array.isArray(member.affiliations)) {
+    const foundRoleAff = member.affiliations.find(a => a && a.role && String(a.role).trim() !== "");
+    if (foundRoleAff) role = foundRoleAff.role;
+  }
+  let rawSwat = (aff && aff.swatRole && String(aff.swatRole).trim() !== "") ? aff.swatRole : (member.swatRole || "");
+  if (!rawSwat && Array.isArray(member.affiliations)) {
+    const foundAff = member.affiliations.find(a => a && a.swatRole && String(a.swatRole).trim() !== "");
+    if (foundAff) rawSwat = foundAff.swatRole;
+  }
+  const status = (aff && aff.status !== undefined && aff.status !== null && aff.status !== "") ? aff.status : (member.status || "active");
+  const badgeColor = (aff && aff.badgeColor !== undefined && aff.badgeColor !== null && aff.badgeColor !== "") ? aff.badgeColor : (member.badgeColor || "bg-blue-600");
+
+  const roleStr = typeof role === "string" ? role : String(role || "");
+  const swatStr = typeof rawSwat === "string" ? rawSwat : String(rawSwat || "");
+  const statusStr = typeof status === "string" ? status : String(status || "active");
+
+  const isMartyred = statusStr === "martyred" || statusStr === "순직" ||
+                     swatStr.includes("순직") || roleStr.includes("순직");
+
+  const isRetired = !isMartyred && (statusStr === "retired" || statusStr === "퇴직" || statusStr === "은퇴" ||
+                    swatStr.includes("퇴직") || swatStr.includes("은퇴") ||
+                    roleStr.includes("퇴직") || roleStr.includes("은퇴"));
+
+  const isResigned = !isMartyred && !isRetired && (statusStr === "resigned" || statusStr === "사직" ||
+                     swatStr.includes("사직") || roleStr.includes("사직"));
+
+  const isInactive = isMartyred || isRetired || isResigned;
+
+  // swatRole에서 순직/사직/퇴직/은퇴 텍스트는 순수 추가직책(특공대장, 특공대원, 정보부, 가이드)과 분리
+  let swatRole = swatStr;
+  if (swatRole.includes("순직") || swatRole.includes("사직") || swatRole.includes("퇴직") || swatRole.includes("은퇴")) {
+    swatRole = swatRole.replace(/순직|사직|퇴직|은퇴/g, "").replace(/\s*·\s*/g, "").replace(/^\s*,\s*|\s*,\s*$/g, "").trim();
+  }
+
+  return {
+    role,
+    swatRole,
+    status,
+    badgeColor,
+    isResigned,
+    isRetired,
+    isMartyred,
+    isInactive,
+    aff
+  };
+}
+
+// 사직 여부 판별
+function isMemberResigned(member, categoryId = null, subgroupId = null) {
+  if (!member) return false;
+  return getMemberAffiliationInfo(member, categoryId, subgroupId).isResigned;
+}
+
+// 퇴직 / 은퇴 여부 판별
+function isMemberRetired(member, categoryId = null, subgroupId = null) {
+  if (!member) return false;
+  return getMemberAffiliationInfo(member, categoryId, subgroupId).isRetired;
+}
+
+// 순직 여부 판별
+function isMemberMartyred(member, categoryId = null, subgroupId = null) {
+  if (!member) return false;
+  return getMemberAffiliationInfo(member, categoryId, subgroupId).isMartyred;
+}
+
+// 비활동(사직/순직) 여부 판별
+function isMemberInactive(member, categoryId = null, subgroupId = null) {
+  if (!member) return false;
+  return getMemberAffiliationInfo(member, categoryId, subgroupId).isInactive;
+}
+
+// 경찰 계급별 전용 색상 및 공통 직책 뱃지 색상 판별 (탭별 소속 격리 반영)
 function getMemberRoleBadgeClass(member, categoryHint = null) {
-  if (!member || !member.role) return "";
-  const role = member.role.trim();
+  if (!member) return "";
+  const info = getMemberAffiliationInfo(member, categoryHint);
+  const role = (info.role || member.role || '').trim();
+  if (!role) return "";
+
+  if (info.isInactive && (role.includes("사직") || role.includes("퇴직") || role.includes("은퇴") || role.includes("순직"))) {
+    return "bg-zinc-800/90 text-zinc-400 border border-zinc-700/80";
+  }
 
   const isPolice = categoryHint === 'police' || 
+    (state && state.currentCategory === 'police') ||
     member.category === 'police' || 
-    (Array.isArray(member.affiliations) && member.affiliations.some(a => a.category === 'police')) ||
     ["순경", "경장", "경사", "경위", "경정", "청장", "부청장", "서장", "팀장", "교육생"].some(r => role.includes(r));
 
   if (isPolice) {
@@ -18,24 +119,77 @@ function getMemberRoleBadgeClass(member, categoryHint = null) {
     if (role.includes("팀장")) return "bg-emerald-600 text-white";
     if (role.includes("순경")) return "bg-blue-600 text-white";
     if (role.includes("교육생")) return "bg-yellow-400 text-zinc-950 font-bold";
+    if (role.includes("서버장")) return "bg-emerald-500 text-white border border-emerald-300/60 shadow-sm";
     if (role.includes("가이드")) return "bg-emerald-600 text-white";
   }
 
-  if (member.badgeColor === 'bg-white') {
+  if (info.badgeColor === 'bg-white') {
     return "bg-white text-zinc-950 font-bold border border-zinc-300 shadow-sm";
   }
 
-  return `${member.badgeColor || 'bg-zinc-800'} text-white`;
+  return `${info.badgeColor || member.badgeColor || 'bg-zinc-800'} text-white`;
 }
 
 // 특공대 및 추가 직책 대각선 뱃지 렌더링 (프로필 왼쪽 위 대각선)
 function getSwatBadgeHtml(swatRole, size = 'md') {
   if (!swatRole) return '';
-  const isLeader = swatRole === '특공대장';
-  const isGuide = swatRole.includes('가이드');
+  const roleStr = typeof swatRole === "string" ? swatRole : String(swatRole || '');
+  if (!roleStr.trim()) return '';
+  const isServerBoss = roleStr.includes('서버장');
+  const isLeader = !isServerBoss && roleStr.includes('특공대장');
+  const isGuide = !isServerBoss && roleStr.includes('가이드');
+  const isInfo = roleStr.includes('정보부');
+  const isMartyred = roleStr.includes('순직');
+  const isRetired = roleStr.includes('퇴직') || roleStr.includes('은퇴');
+  const isResigned = roleStr.includes('사직');
 
   let colorClasses = '';
-  if (isGuide) {
+  if (isMartyred) {
+    // 순직 전용 스탬프 뱃지 (다크 블랙 + 선명한 레드 텍스트/테두리)
+    if (size === 'lg') {
+      colorClasses = 'bg-zinc-950/95 text-red-400 border border-red-800/90 shadow-xl shadow-red-950/40 ring-1 ring-red-900/40';
+    } else if (size === 'sm') {
+      colorClasses = 'bg-zinc-950/95 text-red-400 border border-red-800/90 shadow ring-1 ring-red-900/40';
+    } else {
+      colorClasses = 'bg-zinc-950/95 text-red-400 border border-red-800/90 shadow-md ring-1 ring-red-900/40';
+    }
+  } else if (isRetired) {
+    // 퇴직 전용 스탬프 뱃지 (다크 블랙 + 실버/그레이 텍스트/테두리)
+    if (size === 'lg') {
+      colorClasses = 'bg-zinc-950/95 text-zinc-300 border border-zinc-600/90 shadow-xl shadow-zinc-950/40 ring-1 ring-zinc-700/40';
+    } else if (size === 'sm') {
+      colorClasses = 'bg-zinc-950/95 text-zinc-300 border border-zinc-600/90 shadow ring-1 ring-zinc-700/40';
+    } else {
+      colorClasses = 'bg-zinc-950/95 text-zinc-300 border border-zinc-600/90 shadow-md ring-1 ring-zinc-700/40';
+    }
+  } else if (isResigned) {
+    // 사직 전용 스탬프 뱃지 (다크 블랙 + 엄숙한 앰버 텍스트/테두리)
+    if (size === 'lg') {
+      colorClasses = 'bg-zinc-950/95 text-amber-400 border border-amber-600/90 shadow-xl shadow-amber-950/40 ring-1 ring-amber-900/40';
+    } else if (size === 'sm') {
+      colorClasses = 'bg-zinc-950/95 text-amber-400 border border-amber-600/90 shadow ring-1 ring-amber-900/40';
+    } else {
+      colorClasses = 'bg-zinc-950/95 text-amber-400 border border-amber-600/90 shadow-md ring-1 ring-amber-900/40';
+    }
+  } else if (isInfo) {
+    // 정보부 전용 색상 (시크한 보라/퍼플 + 화이트 텍스트)
+    if (size === 'lg') {
+      colorClasses = 'bg-purple-600 text-white border border-purple-300 shadow-xl shadow-purple-600/30';
+    } else if (size === 'sm') {
+      colorClasses = 'bg-purple-600 text-white border border-purple-300 shadow';
+    } else {
+      colorClasses = 'bg-purple-600 text-white border border-purple-300 shadow-md';
+    }
+  } else if (isServerBoss) {
+    // 서버장 (가이드의 상위 직책 - 특공대장처럼 화사하게 빛나는 파스텔 에메랄드 + 화이트 테두리 및 광채 섀도우)
+    if (size === 'lg') {
+      colorClasses = 'bg-emerald-300 text-zinc-950 border border-white shadow-xl shadow-emerald-400/40 ring-1 ring-white/60 font-black';
+    } else if (size === 'sm') {
+      colorClasses = 'bg-emerald-300 text-zinc-950 border border-white shadow ring-1 ring-white/50 font-black';
+    } else {
+      colorClasses = 'bg-emerald-300 text-zinc-950 border border-white shadow-lg shadow-emerald-400/40 ring-1 ring-white/50 font-black';
+    }
+  } else if (isGuide) {
     // 가이드 전용 색상 (에메랄드/초록 + 선명한 검정 텍스트)
     if (size === 'lg') {
       colorClasses = 'bg-emerald-400 text-zinc-950 border border-emerald-200 shadow-xl shadow-emerald-500/25';
@@ -47,11 +201,11 @@ function getSwatBadgeHtml(swatRole, size = 'md') {
   } else if (isLeader) {
     // 특공대장 (화사한 파스텔 하늘색)
     if (size === 'lg') {
-      colorClasses = 'bg-sky-300 text-zinc-950 border border-white shadow-xl shadow-sky-400/30';
+      colorClasses = 'bg-sky-300 text-zinc-950 border border-white shadow-xl shadow-sky-400/30 font-black';
     } else if (size === 'sm') {
-      colorClasses = 'bg-sky-300 text-zinc-950 border border-white shadow';
+      colorClasses = 'bg-sky-300 text-zinc-950 border border-white shadow font-black';
     } else {
-      colorClasses = 'bg-sky-300 text-zinc-950 border border-white shadow-lg shadow-sky-400/30';
+      colorClasses = 'bg-sky-300 text-zinc-950 border border-white shadow-lg shadow-sky-400/30 font-black';
     }
   } else {
     // 특공대원 및 기타 추가 직책 (선명한 하늘색)
@@ -64,7 +218,7 @@ function getSwatBadgeHtml(swatRole, size = 'md') {
     }
   }
 
-  const roleText = swatRole.replace(/\(.*?\)/g, '').trim();
+  const roleText = roleStr.replace(/\(.*?\)/g, '').trim();
 
   if (size === 'lg') {
     return `
@@ -89,6 +243,9 @@ function getSwatBadgeHtml(swatRole, size = 'md') {
     </span>
   `;
 }
+
+window.getSwatBadgeHtml = getSwatBadgeHtml;
+window.getMemberRoleBadgeClass = getMemberRoleBadgeClass;
 
 function renderHeaderAuth() {
   const container = document.getElementById("header-auth");
@@ -135,7 +292,7 @@ function renderCategoryTabs() {
   const tabContainer = document.getElementById("category-tabs");
   if (!tabContainer) return;
 
-  tabContainer.innerHTML = KONGBAB_DATA.categories.map(cat => {
+  const html = KONGBAB_DATA.categories.map(cat => {
     const isActive = state.currentCategory === cat.id && !state.searchQuery;
     const theme = COLOR_THEMES[cat.color] || COLOR_THEMES.blue;
     const activeClass = isActive 
@@ -155,7 +312,73 @@ function renderCategoryTabs() {
       </button>
     `;
   }).join("");
+
+  tabContainer.innerHTML = html;
+
+  const floatingContainer = document.getElementById("floating-category-tabs");
+  if (floatingContainer) {
+    floatingContainer.innerHTML = KONGBAB_DATA.categories.map(cat => {
+      const isActive = state.currentCategory === cat.id && !state.searchQuery;
+      const theme = COLOR_THEMES[cat.color] || COLOR_THEMES.blue;
+      const activeClass = isActive 
+        ? `${theme.activeTab} ring-1 ring-white/25 shadow-lg font-bold` 
+        : "bg-zinc-900/90 text-zinc-400 hover:text-white hover:bg-zinc-800/90 border border-zinc-800/80 hover:border-zinc-700";
+
+      const memberCount = getCategoryMembers(cat).length;
+      const countLabel = `${memberCount}명`;
+
+      return `
+        <button 
+          onclick="selectCategory('${cat.id}')" 
+          title="${cat.name} (${countLabel})"
+          class="group flex items-center justify-between gap-2.5 sm:gap-3 px-2.5 sm:px-3.5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm transition-all duration-200 cursor-pointer select-none ${activeClass}"
+        >
+          <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
+            <span class="text-base sm:text-lg flex-shrink-0 leading-none">${cat.emoji || ''}</span>
+            <span class="hidden sm:inline whitespace-nowrap font-bold text-xs sm:text-sm">${cat.name}</span>
+          </div>
+          <span class="text-[10px] sm:text-xs px-2 py-0.5 rounded-full flex-shrink-0 font-extrabold ${isActive ? 'bg-black/40 text-white' : 'bg-zinc-800 text-zinc-400 group-hover:text-zinc-200'}">
+            <span class="hidden sm:inline">${countLabel}</span>
+            <span class="sm:hidden">${memberCount}</span>
+          </span>
+        </button>
+      `;
+    }).join("");
+  }
+
+  updateFloatingCategoryNavVisibility();
 }
+
+function updateFloatingCategoryNavVisibility() {
+  const floatingNav = document.getElementById("floating-category-nav");
+  if (!floatingNav) return;
+
+  const target = document.getElementById("category-tabs");
+  let shouldShow = false;
+
+  if (target) {
+    const rect = target.getBoundingClientRect();
+    const header = document.querySelector("header");
+    const headerBottom = header ? header.getBoundingClientRect().bottom : 65;
+    // target(상단 가로 탭 바)의 하단이 헤더 아래로 완전히 스크롤되어 화면에서 벗어났을 때
+    shouldShow = rect.bottom <= (headerBottom + 5);
+  } else {
+    shouldShow = window.scrollY > 150;
+  }
+
+  if (state.searchQuery) {
+    shouldShow = false;
+  }
+
+  if (shouldShow) {
+    floatingNav.classList.remove("opacity-0", "pointer-events-none", "-translate-x-6");
+    floatingNav.classList.add("opacity-100", "pointer-events-auto", "translate-x-0");
+  } else {
+    floatingNav.classList.add("opacity-0", "pointer-events-none", "-translate-x-6");
+    floatingNav.classList.remove("opacity-100", "pointer-events-auto", "translate-x-0");
+  }
+}
+window.updateFloatingCategoryNavVisibility = updateFloatingCategoryNavVisibility;
 
 function getCurrentCategory() {
   return KONGBAB_DATA.categories.find(c => c.id === state.currentCategory) || KONGBAB_DATA.categories[0];
@@ -249,13 +472,24 @@ function renderMemberCard(member, dragType, clickFn) {
       ondrop="handleCardDrop(event, '${dragType}', '${member.id}')"
       ondragend="handleCardDragEnd(event)"
   ` : `draggable="false"`;
+  const info = getMemberAffiliationInfo(member);
+  const effectiveRole = info.role;
+  const effectiveSwatRole = info.swatRole;
+  const resigned = info.isResigned;
+  const retired = info.isRetired;
+  const martyred = info.isMartyred;
+  const inactive = info.isInactive;
+  const avatarFilterClass = inactive 
+    ? "grayscale contrast-125 opacity-70 group-hover:grayscale-0 group-hover:contrast-100 group-hover:opacity-100" 
+    : "";
+  const cardBorderClass = inactive ? "border-zinc-800/40 opacity-85 hover:opacity-100 hover:border-zinc-700" : "border-zinc-800/80 hover:border-zinc-700";
   const cursorClass = admin ? "cursor-grab active:cursor-grabbing" : "cursor-pointer";
 
   return `
     <div 
       ${dragAttrs}
       onclick="${clickFn}('${member.id}')"
-      class="group bg-zinc-900/80 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1.5 ${cursorClass} shadow-lg hover:shadow-2xl flex flex-col justify-between select-none"
+      class="group bg-zinc-900/80 border ${cardBorderClass} rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1.5 ${cursorClass} shadow-lg hover:shadow-2xl flex flex-col justify-between select-none"
     >
       <div>
         <div class="flex items-start gap-4 mb-4">
@@ -263,11 +497,24 @@ function renderMemberCard(member, dragType, clickFn) {
             <img 
               src="${getMemberAvatar(member)}" 
               alt="${member.name}" 
-              draggable="false"
-              class="w-16 h-16 rounded-2xl object-cover border-2 border-zinc-700 group-hover:border-amber-400 transition-colors shadow-md"
+              draggable="false" 
+              class="w-16 h-16 rounded-2xl object-cover border-2 ${inactive ? 'border-zinc-700/60 group-hover:border-amber-400' : 'border-zinc-700 group-hover:border-amber-400'} ${avatarFilterClass} transition-all duration-300 shadow-md"
             />
-            ${getSwatBadgeHtml(member.swatRole, 'md')}
-            ${member.role ? `<span class="absolute -bottom-1 -right-1 text-[10px] font-bold px-1.5 py-0.5 rounded ${getMemberRoleBadgeClass(member, 'police')} shadow">${member.role}</span>` : ''}
+            ${effectiveSwatRole ? getSwatBadgeHtml(effectiveSwatRole, 'md') : ''}
+            ${martyred ? `
+              <span class="absolute -top-1.5 -right-1.5 z-20 text-[9px] font-black px-1.5 py-0.5 rounded-md bg-zinc-950/95 text-red-400 border border-red-800/90 shadow ring-1 ring-red-900/40 rotate-12 flex items-center justify-center whitespace-nowrap tracking-tight select-none" title="순직">
+                <span>순직</span>
+              </span>
+            ` : (retired ? `
+              <span class="absolute -top-1.5 -right-1.5 z-20 text-[9px] font-black px-1.5 py-0.5 rounded-md bg-zinc-950/95 text-zinc-300 border border-zinc-600/90 shadow ring-1 ring-zinc-700/40 rotate-12 flex items-center justify-center whitespace-nowrap tracking-tight select-none" title="퇴직">
+                <span>퇴직</span>
+              </span>
+            ` : (resigned ? `
+              <span class="absolute -top-1.5 -right-1.5 z-20 text-[9px] font-black px-1.5 py-0.5 rounded-md bg-zinc-950/95 text-amber-400 border border-amber-600/90 shadow ring-1 ring-amber-900/40 rotate-12 flex items-center justify-center whitespace-nowrap tracking-tight select-none" title="사직">
+                <span>사직</span>
+              </span>
+            ` : ''))}
+            ${effectiveRole ? `<span class="absolute -bottom-1 -right-1 text-[10px] font-bold px-1.5 py-0.5 rounded ${getMemberRoleBadgeClass(member, state.currentCategory)} shadow">${effectiveRole}</span>` : ''}
           </div>
           
           <div class="flex-1 min-w-0">
@@ -295,7 +542,6 @@ function renderMemberCard(member, dragType, clickFn) {
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                 <span>${member.name}</span>
               </p>
-              ${isDualRole ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-950/80 border border-amber-500/50 text-amber-300 shadow-sm" title="겸직 (${member.affiliations.length}개 소속)">겸직</span>` : ''}
             </div>
           </div>
         </div>
@@ -393,6 +639,10 @@ function renderDirectCategoryMembers(container, cat) {
     ? members.map(m => renderMemberCard(m, 'direct-member', 'selectDirectMember')).join("")
     : renderEmptyState(cat.emoji || '👥', "등록된 인원이 없습니다.");
 
+  const totalSubscribers = typeof calculateGroupTotalSubscribers === "function"
+    ? calculateGroupTotalSubscribers(members)
+    : null;
+
   container.innerHTML = `
     <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
@@ -402,6 +652,12 @@ function renderDirectCategoryMembers(container, cat) {
             <span>${cat.emoji || ''}</span>
             <span>${cat.name} 인원 목록</span>
           </h2>
+          ${totalSubscribers ? `
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-950/80 border border-red-700/50 text-red-300 text-sm font-bold shadow-md shadow-red-950/30" title="${cat.name} 소속 인원 유튜브 총 구독자 수 합계">
+              <svg class="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              <span>총 구독자 ${totalSubscribers}</span>
+            </span>
+          ` : ''}
           ${isAdmin() ? `
             <button onclick="openMemberModal('add', null, '${cat.id}')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-all shadow-lg shadow-amber-500/20 cursor-pointer">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
@@ -423,6 +679,10 @@ function renderDirectCategoryMembers(container, cat) {
 function renderSubgroupList(container, cat) {
   const theme = COLOR_THEMES[cat.color] || COLOR_THEMES.blue;
   const admin = isAdmin();
+  const allMembers = getCategoryMembers(cat);
+  const totalSubscribers = typeof calculateGroupTotalSubscribers === "function"
+    ? calculateGroupTotalSubscribers(allMembers)
+    : null;
 
   const cardsHtml = cat.groups.map(group => {
     const totalVideos = group.members.reduce((sum, m) => sum + (m.videos || []).length, 0);
@@ -507,14 +767,24 @@ function renderSubgroupList(container, cat) {
   }).join("");
 
   container.innerHTML = `
-    <div class="mb-6">
-      <div class="flex items-center gap-2.5 flex-wrap">
-        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">${cat.badge}</span>
-        <h2 class="text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
-          <span>${cat.emoji || ''}</span>
-          <span>${cat.name} 목록 (${cat.groups.length}개)</span>
-        </h2>
+    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <span class="text-xs font-semibold px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">${cat.badge}</span>
+          <h2 class="text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
+            <span>${cat.emoji || ''}</span>
+            <span>${cat.name} 목록 (${cat.groups.length}개)</span>
+          </h2>
+          ${totalSubscribers ? `
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-950/80 border border-red-700/50 text-red-300 text-sm font-bold shadow-md shadow-red-950/30" title="${cat.name} 소속 인원 유튜브 총 구독자 수 합계">
+              <svg class="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              <span>총 구독자 ${totalSubscribers}</span>
+            </span>
+          ` : ''}
+        </div>
       </div>
+
+      ${renderGroupVideoStats(allMembers)}
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -532,9 +802,7 @@ function renderGroupMembers(container) {
     ? members.map(m => renderMemberCard(m, 'group-member', 'selectGroupMember')).join("")
     : renderEmptyState(group.emoji || '👥', "등록된 인원이 없습니다.");
 
-  // 갱단('gang') 및 사업체('business') 카테고리인 경우에만 소속 인원 구독자 수 총합 계산
-  const isTargetCategory = cat && (cat.id === "gang" || cat.id === "business");
-  const totalSubscribers = isTargetCategory && typeof calculateGroupTotalSubscribers === "function"
+  const totalSubscribers = typeof calculateGroupTotalSubscribers === "function"
     ? calculateGroupTotalSubscribers(members)
     : null;
 
@@ -605,7 +873,9 @@ function renderMemberVideos(container) {
     displayedVideos = fullVideos;
   }
 
-  const backButtonHtml = !cat.hasSubgroups ? `
+  const groupName = group ? group.name : (cat ? cat.name : '');
+  const groupEmoji = group ? (group.emoji || '') : (cat ? (cat.emoji || '') : '');
+  const backButtonHtml = (!cat.hasSubgroups || !group) ? `
     <button onclick="resetToCategory('${cat.id}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-4 cursor-pointer">
       ${SVG_ICONS.back}
       <span>${cat.name} 인원 목록으로 돌아가기</span>
@@ -613,7 +883,7 @@ function renderMemberVideos(container) {
   ` : `
     <button onclick="selectGroup('${group.id}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-4 cursor-pointer">
       ${SVG_ICONS.back}
-      <span>${group.emoji || ''} ${group.name} 인원 목록으로 돌아가기</span>
+      <span>${groupEmoji} ${groupName} 인원 목록으로 돌아가기</span>
     </button>
   `;
 
@@ -779,7 +1049,7 @@ function renderMemberVideos(container) {
     }
   }
 
-  const baseAffiliation = cat.hasSubgroups ? `${group.emoji || ''} ${group.name}` : `${cat.emoji || ''} ${cat.name}`;
+  const baseAffiliation = (cat.hasSubgroups && group) ? `${group.emoji || ''} ${group.name}` : `${cat.emoji || ''} ${cat.name}`;
   let affiliationsText = baseAffiliation;
   if (Array.isArray(member.affiliations) && member.affiliations.length > 1) {
     const allNames = member.affiliations.map(a => {
@@ -793,20 +1063,45 @@ function renderMemberVideos(container) {
     affiliationsText = allNames.join(" · ");
   }
 
+  const info = getMemberAffiliationInfo(member, cat.id, group?.id);
+  const effectiveRole = info.role;
+  const effectiveSwatRole = info.swatRole;
+  const resigned = info.isResigned;
+  const retired = info.isRetired;
+  const martyred = info.isMartyred;
+  const inactive = info.isInactive;
+
   container.innerHTML = `
     <div class="mb-8">
       ${backButtonHtml}
       <div class="bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-950 border border-zinc-800 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-2xl relative overflow-hidden">
         <div class="flex items-center gap-6 relative z-10">
           <div class="relative flex-shrink-0">
-            <img src="${getMemberAvatar(member)}" alt="${member.name}" class="w-24 h-24 md:w-28 md:h-28 rounded-3xl object-cover border-4 border-zinc-800 shadow-2xl" />
-            ${getSwatBadgeHtml(member.swatRole, 'lg')}
+            <img src="${getMemberAvatar(member)}" alt="${member.name}" class="w-24 h-24 md:w-28 md:h-28 rounded-3xl object-cover border-4 border-zinc-800 shadow-2xl transition-all duration-300 ${inactive ? 'grayscale contrast-125 opacity-80 hover:grayscale-0 hover:contrast-100 hover:opacity-100 cursor-pointer' : ''}" />
+            ${effectiveSwatRole ? getSwatBadgeHtml(effectiveSwatRole, 'lg') : ''}
+            ${effectiveRole ? `
+              <span class="absolute -bottom-2 -right-2 z-20 text-xs font-bold px-2.5 py-1 rounded-xl ${getMemberRoleBadgeClass(member, cat.id)} shadow-xl border border-white/20">
+                ${effectiveRole}
+              </span>
+            ` : ''}
+            ${martyred ? `
+              <span class="absolute -top-2.5 -right-2.5 z-20 text-xs font-black px-2.5 py-1 rounded-xl bg-zinc-950/95 text-red-400 border border-red-800/90 shadow-xl shadow-red-950/40 ring-1 ring-red-900/40 rotate-12 flex items-center justify-center whitespace-nowrap tracking-tight select-none" title="순직">
+                <span>순직</span>
+              </span>
+            ` : (retired ? `
+              <span class="absolute -top-2.5 -right-2.5 z-20 text-xs font-black px-2.5 py-1 rounded-xl bg-zinc-950/95 text-zinc-300 border border-zinc-600/90 shadow-xl shadow-zinc-950/40 ring-1 ring-zinc-700/40 rotate-12 flex items-center justify-center whitespace-nowrap tracking-tight select-none" title="퇴직">
+                <span>퇴직</span>
+              </span>
+            ` : (resigned ? `
+              <span class="absolute -top-2.5 -right-2.5 z-20 text-xs font-black px-2.5 py-1 rounded-xl bg-zinc-950/95 text-amber-400 border border-amber-600/90 shadow-xl shadow-amber-950/40 ring-1 ring-amber-900/40 rotate-12 flex items-center justify-center whitespace-nowrap tracking-tight select-none" title="사직">
+                <span>사직</span>
+              </span>
+            ` : ''))}
           </div>
           <div>
             <div class="flex items-center gap-2.5 mb-1.5 flex-wrap">
-              ${member.role ? `<span class="text-xs font-bold px-2.5 py-1 rounded-md ${getMemberRoleBadgeClass(member, 'police')}">${member.role}</span>` : ''}
+              ${effectiveRole ? `<span class="text-xs font-bold px-2.5 py-1 rounded-md ${getMemberRoleBadgeClass(member, cat.id)}">${effectiveRole}</span>` : ''}
               <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-300">소속: ${affiliationsText}</span>
-              ${Array.isArray(member.affiliations) && member.affiliations.length > 1 ? `<span class="text-xs font-bold px-2 py-0.5 rounded-md bg-amber-950/80 border border-amber-500/50 text-amber-300">겸직 중</span>` : ''}
             </div>
             <div class="flex items-center gap-3 flex-wrap">
               <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">${member.streamer}</h2>

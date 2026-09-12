@@ -406,6 +406,7 @@ public class BackupController {
             dto.setSubgroup(gId);
             dto.setRole(m.has("role") ? m.get("role").asText() : "");
             dto.setSwatRole(m.has("swatRole") ? m.get("swatRole").asText() : "");
+            dto.setStatus(m.has("status") ? m.get("status").asText() : "active");
             dto.setBadgeColor(m.has("badgeColor") ? m.get("badgeColor").asText() : "bg-zinc-800");
             dto.setAvatar(m.has("avatar") ? m.get("avatar").asText() : "assets/default-avatar.svg");
             dto.setDisplayOrder(m.has("displayOrder") ? m.get("displayOrder").asInt() : defaultOrder);

@@ -124,13 +124,14 @@ function renderSearchResults(container) {
     } else if (item.type === 'member') {
       const m = item.data;
       const groupName = item.group ? item.group.name : item.category.name;
-      const roleText = [m.role, m.swatRole].filter(Boolean).join(' · ');
+      const cleanSwat = (m.swatRole && !m.swatRole.includes('사직') && !m.swatRole.includes('퇴직')) ? m.swatRole : '';
+      const roleText = [m.role, cleanSwat].filter(Boolean).join(' · ');
       html += `
         <div onclick="selectMemberFromSearch('${item.category.id}', ${item.group ? `'${item.group.id}'` : 'null'}, '${m.id}')" class="bg-zinc-900 border border-zinc-800 hover:border-amber-400/50 rounded-2xl p-5 cursor-pointer transition-all hover:-translate-y-1">
           <div class="flex items-center gap-3.5 mb-3">
             <div class="relative flex-shrink-0">
               <img src="${getMemberAvatar(m)}" class="w-14 h-14 rounded-2xl object-cover border border-zinc-700" />
-              ${typeof getSwatBadgeHtml === 'function' ? getSwatBadgeHtml(m.swatRole, 'sm') : ''}
+              ${(typeof getSwatBadgeHtml === 'function' && cleanSwat) ? getSwatBadgeHtml(cleanSwat, 'sm') : ''}
             </div>
             <div>
               <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">[인원] ${groupName}</span>
@@ -355,4 +356,16 @@ function setupEventListeners() {
       }
     }
   });
+
+  window.addEventListener("scroll", () => {
+    if (typeof updateFloatingCategoryNavVisibility === "function") {
+      updateFloatingCategoryNavVisibility();
+    }
+  }, { passive: true });
+
+  window.addEventListener("resize", () => {
+    if (typeof updateFloatingCategoryNavVisibility === "function") {
+      updateFloatingCategoryNavVisibility();
+    }
+  }, { passive: true });
 }
