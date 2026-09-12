@@ -103,7 +103,9 @@ async function apiGetPlaylistInfo(urlOrId) {
     }
 
     if (videoIds.length > 0) {
-      const apiKey = "AIzaSyAyY4g9-iwjwQNXb5F9Xx0LLGtLUEpowl8";
+      const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
+        ? getEffectiveYouTubeApiKey() 
+        : (localStorage.getItem("youtube_api_key") || "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA");
       const fetchedVideos = [];
       for (let i = 0; i < videoIds.length; i += 50) {
         const chunk = videoIds.slice(i, i + 50);
@@ -168,7 +170,9 @@ async function apiGetPlaylistInfo(urlOrId) {
   // 2. 백엔드 실패 시 YouTube Data API v3 직접 호출 fallback
   if (videos.length === 0) {
     try {
-      const apiKey = "AIzaSyAyY4g9-iwjwQNXb5F9Xx0LLGtLUEpowl8";
+      const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
+        ? getEffectiveYouTubeApiKey() 
+        : (localStorage.getItem("youtube_api_key") || "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA");
       let pageToken = "";
 
       for (let p = 0; p < 6; p++) {
@@ -217,7 +221,9 @@ async function apiGetPlaylistInfo(urlOrId) {
   // 3. ⭐ 핵심: 백엔드/프론트 출처에 무관하게, YouTube videos.list API로 실제 영상 게시일(snippet.publishedAt)과 길이를 정확히 일괄 보정!
   // 재생목록 추가 날짜(snippet.publishedAt in playlistItems)가 아닌 실제 영상 업로드일로 100% 보장
   try {
-    const apiKey = "AIzaSyAyY4g9-iwjwQNXb5F9Xx0LLGtLUEpowl8";
+    const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
+      ? getEffectiveYouTubeApiKey() 
+      : (localStorage.getItem("youtube_api_key") || "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA");
     const vIds = videos.map(v => v.videoId || extractYoutubeId(v.url)).filter(Boolean);
 
     for (let i = 0; i < vIds.length; i += 50) {

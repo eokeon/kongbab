@@ -433,7 +433,9 @@ async function handleFetchMultiVideos() {
     statusEl.classList.remove("hidden");
   }
 
-  const apiKey = localStorage.getItem("youtube_api_key") || "AIzaSyAyY4g9-iwjwQNXb5F9Xx0LLGtLUEpowl8";
+  const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
+    ? getEffectiveYouTubeApiKey() 
+    : (localStorage.getItem("youtube_api_key") || "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA");
 
   // URL들을 YouTube와 Chzzk로 분류
   const items = [];
@@ -491,9 +493,28 @@ async function handleFetchMultiVideos() {
               if (thumb) items[idx].thumbnailUrl = thumb;
             });
           });
+        } else {
+          console.warn("[Multi Video] YouTube batch API response not OK:", vRes.status);
         }
       } catch (err) {
         console.warn("[Multi Video] YouTube batch API error:", err);
+      }
+    }
+  }
+
+  // 1-1) 배치 조회 실패 시 또는 정보가 누락된 YouTube 영상에 대해 개별 조회 보정 (백엔드 API 또는 oEmbed fallback)
+  for (const it of items) {
+    if (!it.isChzzk && it.videoId && (!it.duration || !it.title || it.title.startsWith("유튜브 영상"))) {
+      try {
+        const info = typeof apiGetYouTubeInfo === "function" ? await apiGetYouTubeInfo(it.url) : null;
+        if (info && info.success) {
+          if (info.title) it.title = info.title;
+          if (info.publishedDate) it.date = info.publishedDate;
+          if (info.duration) it.duration = info.duration;
+          if (info.thumbnailUrl) it.thumbnailUrl = info.thumbnailUrl;
+        }
+      } catch (e) {
+        console.warn("[Multi Video] 개별 보완 조회 실패:", e);
       }
     }
   }

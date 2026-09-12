@@ -155,3 +155,51 @@ body {
   transform: scale(1.1) translateZ(0) !important;
   -webkit-transform: scale(1.1) translateZ(0) !important;
 }
+
+/* Member & Content Card Smooth Lift & Zero-Jitter */
+.member-card-interactive {
+  position: relative;
+  z-index: 10;
+  transform: translate3d(0, 0, 0) !important;
+  -webkit-transform: translate3d(0, 0, 0) !important;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: transform 250ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 250ms ease-out, border-color 250ms ease-out !important;
+}
+
+.member-card-interactive:hover {
+  z-index: 30 !important;
+  transform: translate3d(0, -6px, 0) !important;
+  -webkit-transform: translate3d(0, -6px, 0) !important;
+}
+
+/* Floating category nav pointer isolation & compact mode */
+#floating-category-nav {
+  pointer-events: none !important;
+  z-index: 20 !important;
+}
+
+#floating-category-nav > div {
+  pointer-events: auto !important;
+}
+
+#floating-category-nav.compact-mode #floating-category-panel {
+  min-width: 48px !important;
+  width: 48px !important;
+  padding: 6px !important;
+  border-radius: 1.25rem !important;
+}
+
+#floating-category-nav.compact-mode #floating-category-header,
+#floating-category-nav.compact-mode .floating-nav-label,
+#floating-category-nav.compact-mode .floating-nav-badge {
+  display: none !important;
+}
+
+#floating-category-nav.compact-mode button {
+  justify-content: center !important;
+  padding: 8px 6px !important;
+  width: 100% !important;
+}
+

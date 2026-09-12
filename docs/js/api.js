@@ -379,12 +379,25 @@ async function apiGetYouTubeInfo(url) {
     console.warn("백엔드 YouTube API 조회 실패, 프론트 대체 조회 진행:", e);
   }
 
+const YOUTUBE_DEFAULT_API_KEY = "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA";
+
+function getEffectiveYouTubeApiKey() {
+  try {
+    const stored = localStorage.getItem("youtube_api_key");
+    if (stored && stored.trim() && stored.trim() !== "AIzaSyAyY4g9-iwjwQNXb5F9Xx0LLGtLUEpowl8") {
+      return stored.trim();
+    }
+  } catch (e) {}
+  return YOUTUBE_DEFAULT_API_KEY;
+}
+window.getEffectiveYouTubeApiKey = getEffectiveYouTubeApiKey;
+
   // 2. 백엔드 오프라인 시 프론트엔드 직접 대체 조회
   const videoId = typeof extractYoutubeId === "function" ? extractYoutubeId(url) : null;
   if (!videoId) return { success: false, message: "유효한 유튜브 ID가 아닙니다." };
 
   // 사용자 로컬 API 키 또는 기본 등록 키 사용
-  const localKey = localStorage.getItem("youtube_api_key") || "AIzaSyAyY4g9-iwjwQNXb5F9Xx0LLGtLUEpowl8";
+  const localKey = getEffectiveYouTubeApiKey();
   if (localKey) {
     try {
       const apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoId}&key=${localKey.trim()}`;
@@ -396,7 +409,7 @@ async function apiGetYouTubeInfo(url) {
           const cd = data.items[0].contentDetails;
           let pubDate = "";
           if (snip.publishedAt) {
-            pubDate = snip.publishedAt.substring(0, 10).replace(/-/g, ".");
+            pubDate = typeof formatIsoDateToKst === "function" ? formatIsoDateToKst(snip.publishedAt) : snip.publishedAt.substring(0, 10).replace(/-/g, ".");
           }
           const duration = cd ? formatIsoDuration(cd.duration) : "";
           return {

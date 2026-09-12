@@ -210,11 +210,99 @@ function restoreNavigationState() {
   } catch (e) {}
 }
 
+let lastMemberScrollY = null;
+let lastSelectedMemberId = null;
+
+try {
+  const savedY = sessionStorage.getItem("kongbab_member_scroll_y");
+  if (savedY !== null) lastMemberScrollY = parseFloat(savedY);
+  const savedMemId = sessionStorage.getItem("kongbab_last_member_id");
+  if (savedMemId) lastSelectedMemberId = savedMemId;
+} catch (e) {}
+
+function recordMemberClickPosition(memberId) {
+  lastMemberScrollY = window.scrollY;
+  lastSelectedMemberId = memberId;
+  try {
+    sessionStorage.setItem("kongbab_member_scroll_y", String(window.scrollY));
+    if (memberId) {
+      sessionStorage.setItem("kongbab_last_member_id", memberId);
+    } else {
+      sessionStorage.removeItem("kongbab_last_member_id");
+    }
+  } catch (e) {}
+}
+
+function restoreMemberScrollPosition() {
+  const targetY = lastMemberScrollY;
+  const targetMemberId = lastSelectedMemberId;
+
+  lastMemberScrollY = null;
+  lastSelectedMemberId = null;
+  try {
+    sessionStorage.removeItem("kongbab_member_scroll_y");
+    sessionStorage.removeItem("kongbab_last_member_id");
+  } catch (e) {}
+
+  const doScroll = () => {
+    let scrolled = false;
+    if (targetMemberId) {
+      const cardEl = document.getElementById(`member-card-${targetMemberId}`);
+      if (cardEl) {
+        if (typeof targetY === 'number' && targetY >= 0) {
+          window.scrollTo({ top: targetY, behavior: 'auto' });
+          const rect = cardEl.getBoundingClientRect();
+          if (rect.top < 0 || rect.bottom > window.innerHeight) {
+            cardEl.scrollIntoView({ behavior: 'auto', block: 'center' });
+          }
+        } else {
+          cardEl.scrollIntoView({ behavior: 'auto', block: 'center' });
+        }
+        cardEl.classList.add('ring-2', 'ring-amber-400', 'shadow-amber-500/30');
+        setTimeout(() => {
+          cardEl.classList.remove('ring-2', 'ring-amber-400', 'shadow-amber-500/30');
+        }, 1500);
+        scrolled = true;
+      }
+    }
+    if (!scrolled && typeof targetY === 'number' && targetY >= 0) {
+      window.scrollTo({ top: targetY, behavior: 'auto' });
+    }
+  };
+
+  doScroll();
+  requestAnimationFrame(doScroll);
+  setTimeout(doScroll, 50);
+  setTimeout(doScroll, 150);
+}
+
+function goBackFromMember(type, targetId) {
+  state.currentMember = null;
+  if (type === 'category') {
+    state.currentCategory = targetId;
+    state.currentGroup = null;
+  } else if (type === 'group') {
+    const cat = getCurrentCategory();
+    if (cat?.hasSubgroups) {
+      state.currentGroup = (cat.groups || []).find(g => g.id === targetId) || null;
+    }
+  }
+  saveNavigationState();
+  renderContent();
+  restoreMemberScrollPosition();
+}
+
 function selectCategory(catId) {
   state.currentCategory = catId;
   state.currentGroup = null;
   state.currentMember = null;
   state.searchQuery = "";
+  lastMemberScrollY = null;
+  lastSelectedMemberId = null;
+  try {
+    sessionStorage.removeItem("kongbab_member_scroll_y");
+    sessionStorage.removeItem("kongbab_last_member_id");
+  } catch (e) {}
   clearSearchInput();
   saveNavigationState();
   renderContent();
@@ -222,12 +310,20 @@ function selectCategory(catId) {
 }
 
 function resetToCategory(catId) {
+  const wasOnMember = !!state.currentMember;
   state.currentCategory = catId;
   state.currentGroup = null;
   state.currentMember = null;
   saveNavigationState();
   renderContent();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (wasOnMember && (lastSelectedMemberId || typeof lastMemberScrollY === 'number')) {
+    restoreMemberScrollPosition();
+  } else {
+    lastMemberScrollY = null;
+    lastSelectedMemberId = null;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }
 
 function selectGroup(groupId) {
@@ -236,18 +332,27 @@ function selectGroup(groupId) {
   if (!cat.hasSubgroups) return;
   const group = cat.groups.find(g => g.id === groupId);
   if (group) {
+    const wasOnMember = !!state.currentMember;
     state.currentGroup = group;
     state.currentMember = null;
     state.searchQuery = "";
     clearSearchInput();
     saveNavigationState();
     renderContent();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (wasOnMember && (lastSelectedMemberId || typeof lastMemberScrollY === 'number')) {
+      restoreMemberScrollPosition();
+    } else {
+      lastMemberScrollY = null;
+      lastSelectedMemberId = null;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 }
 
 function selectDirectMember(memberId) {
   if (isDraggingCard) return;
+  recordMemberClickPosition(memberId);
   const cat = getCurrentCategory();
   const member = (cat.members || []).find(m => m.id === memberId);
   if (member) {
@@ -266,6 +371,7 @@ function selectDirectMember(memberId) {
 function selectGroupMember(memberId) {
   if (isDraggingCard) return;
   if (!state.currentGroup) return;
+  recordMemberClickPosition(memberId);
   const member = state.currentGroup.members.find(m => m.id === memberId);
   if (member) {
     state.currentMember = member;
@@ -294,6 +400,7 @@ function selectGroupFromSearch(catId, groupId) {
 }
 
 function selectMemberFromSearch(catId, groupId, memberId) {
+  recordMemberClickPosition(memberId);
   state.currentCategory = catId;
   const cat = KONGBAB_DATA.categories.find(c => c.id === catId);
   if (!cat) return;
@@ -369,3 +476,8 @@ function setupEventListeners() {
     }
   }, { passive: true });
 }
+
+window.goBackFromMember = goBackFromMember;
+window.recordMemberClickPosition = recordMemberClickPosition;
+window.restoreMemberScrollPosition = restoreMemberScrollPosition;
+

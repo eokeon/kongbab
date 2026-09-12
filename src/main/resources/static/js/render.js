@@ -335,11 +335,11 @@ function renderCategoryTabs() {
         >
           <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
             <span class="text-base sm:text-lg flex-shrink-0 leading-none">${cat.emoji || ''}</span>
-            <span class="hidden sm:inline whitespace-nowrap font-bold text-xs sm:text-sm">${cat.name}</span>
+            <span class="floating-nav-label hidden sm:inline whitespace-nowrap font-bold text-xs sm:text-sm">${cat.name}</span>
           </div>
-          <span class="text-[10px] sm:text-xs px-2 py-0.5 rounded-full flex-shrink-0 font-extrabold ${isActive ? 'bg-black/40 text-white' : 'bg-zinc-800 text-zinc-400 group-hover:text-zinc-200'}">
-            <span class="hidden sm:inline">${countLabel}</span>
-            <span class="sm:hidden">${memberCount}</span>
+          <span class="floating-nav-badge text-[10px] sm:text-xs px-2 py-0.5 rounded-full flex-shrink-0 font-extrabold ${isActive ? 'bg-black/40 text-white' : 'bg-zinc-800 text-zinc-400 group-hover:text-zinc-200'}">
+            <span class="floating-nav-label hidden sm:inline">${countLabel}</span>
+            <span class="floating-nav-short sm:hidden">${memberCount}</span>
           </span>
         </button>
       `;
@@ -370,12 +370,33 @@ function updateFloatingCategoryNavVisibility() {
     shouldShow = false;
   }
 
+  // 좌측 여백 공간 계산: 메인 콘텐츠 영역과 뷰포트 좌측 사이의 거리
+  const mainEl = document.querySelector("main");
+  const mainRect = mainEl ? mainEl.getBoundingClientRect() : null;
+  const leftMargin = mainRect ? mainRect.left : 0;
+
+  // 여백이 70px 미만인 좁은 화면(모바일/태블릿 등)에서는 카드를 가리지 않도록 숨김 처리
+  if (leftMargin < 70) {
+    shouldShow = false;
+  }
+
   if (shouldShow) {
+    // 여백이 225px 미만이면(예: 1536px, 1440px 등 일반 노트북/확대 화면) 컴팩트 아이콘 모드로 전환하여 카드와 절대 겹치지 않게 배치
+    if (leftMargin < 225) {
+      floatingNav.classList.add("compact-mode");
+      const dockLeft = Math.max(8, Math.floor(leftMargin - 56));
+      floatingNav.style.left = `${dockLeft}px`;
+    } else {
+      floatingNav.classList.remove("compact-mode");
+      const dockLeft = Math.max(16, Math.floor(leftMargin - 210));
+      floatingNav.style.left = `${dockLeft}px`;
+    }
+
     floatingNav.classList.remove("opacity-0", "pointer-events-none", "-translate-x-6");
-    floatingNav.classList.add("opacity-100", "pointer-events-auto", "translate-x-0");
+    floatingNav.classList.add("opacity-100", "translate-x-0");
   } else {
     floatingNav.classList.add("opacity-0", "pointer-events-none", "-translate-x-6");
-    floatingNav.classList.remove("opacity-100", "pointer-events-auto", "translate-x-0");
+    floatingNav.classList.remove("opacity-100", "translate-x-0");
   }
 }
 window.updateFloatingCategoryNavVisibility = updateFloatingCategoryNavVisibility;
@@ -487,9 +508,11 @@ function renderMemberCard(member, dragType, clickFn) {
 
   return `
     <div 
+      id="member-card-${member.id}"
+      data-member-id="${member.id}"
       ${dragAttrs}
       onclick="${clickFn}('${member.id}')"
-      class="group bg-zinc-900/80 border ${cardBorderClass} rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1.5 ${cursorClass} shadow-lg hover:shadow-2xl flex flex-col justify-between select-none"
+      class="group member-card-interactive bg-zinc-900/80 border ${cardBorderClass} rounded-2xl p-5 ${cursorClass} shadow-lg hover:shadow-2xl flex flex-col justify-between select-none"
     >
       <div>
         <div class="flex items-start gap-4 mb-4">
@@ -704,7 +727,7 @@ function renderSubgroupList(container, cat) {
         <div 
           ${dragAttrs}
           onclick="selectGroup('${group.id}')"
-          class="group relative overflow-hidden bg-zinc-950 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1.5 ${cursorClass} shadow-xl ${theme.glow} select-none min-h-[140px] flex flex-col justify-between"
+          class="group member-card-interactive relative overflow-hidden bg-zinc-950 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl p-5 ${cursorClass} shadow-xl ${theme.glow} select-none min-h-[140px] flex flex-col justify-between"
         >
           <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
             <div 
@@ -741,7 +764,7 @@ function renderSubgroupList(container, cat) {
       <div 
         ${dragAttrs}
         onclick="selectGroup('${group.id}')"
-        class="group relative bg-gradient-to-b from-zinc-900/90 to-zinc-950/90 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1.5 ${cursorClass} shadow-xl ${theme.glow} select-none"
+        class="group member-card-interactive relative bg-gradient-to-b from-zinc-900/90 to-zinc-950/90 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl p-5 ${cursorClass} shadow-xl ${theme.glow} select-none"
       >
         <div class="flex items-center justify-between gap-2 mb-4">
           <h3 class="text-2xl font-bold text-white group-hover:text-amber-400 transition-colors flex items-center gap-2 truncate min-w-0 flex-1" title="${group.name}">
@@ -876,12 +899,12 @@ function renderMemberVideos(container) {
   const groupName = group ? group.name : (cat ? cat.name : '');
   const groupEmoji = group ? (group.emoji || '') : (cat ? (cat.emoji || '') : '');
   const backButtonHtml = (!cat.hasSubgroups || !group) ? `
-    <button onclick="resetToCategory('${cat.id}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-4 cursor-pointer">
+    <button onclick="goBackFromMember('category', '${cat.id}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-4 cursor-pointer">
       ${SVG_ICONS.back}
       <span>${cat.name} 인원 목록으로 돌아가기</span>
     </button>
   ` : `
-    <button onclick="selectGroup('${group.id}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-4 cursor-pointer">
+    <button onclick="goBackFromMember('group', '${group.id}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-4 cursor-pointer">
       ${SVG_ICONS.back}
       <span>${groupEmoji} ${groupName} 인원 목록으로 돌아가기</span>
     </button>
@@ -919,7 +942,7 @@ function renderMemberVideos(container) {
     return `
       <div 
         ${dragAttrs}
-        class="group bg-zinc-900/90 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1.5 shadow-xl flex flex-col justify-between ${cursorClass} select-none"
+        class="group member-card-interactive bg-zinc-900/90 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between ${cursorClass} select-none"
       >
         <div>
           <a 

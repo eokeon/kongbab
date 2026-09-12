@@ -811,6 +811,9 @@ function selectMemberFromLeaderboard(catId, groupId, memberName, memberId = null
   if (state.currentMember) {
     const allV = state.currentMember.videos || [];
     state.currentVideoTab = typeof getDefaultVideoTab === "function" ? getDefaultVideoTab(allV) : "clip";
+    if (typeof recordMemberClickPosition === "function") {
+      recordMemberClickPosition(state.currentMember.id);
+    }
   }
 
   // 3. 네비게이션 렌더링

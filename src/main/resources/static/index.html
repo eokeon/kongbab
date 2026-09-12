@@ -23,7 +23,7 @@
       }
     }
   </script>
-  <link rel="stylesheet" href="./css/style.css?v=20260912_03">
+  <link rel="stylesheet" href="./css/style.css?v=20260912_05">
 </head>
 <body class="bg-[#09090b] text-zinc-100 min-h-screen flex flex-col selection:bg-red-500 selection:text-white">
 
@@ -83,11 +83,11 @@
   <!-- 좌측 수직 플로팅 카테고리 네비게이션 (상단 탭이 스크롤되어 가려질 때 자동 표시) -->
   <aside 
     id="floating-category-nav" 
-    class="fixed left-2 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-30 transition-all duration-300 ease-out pointer-events-none opacity-0 -translate-x-6 flex flex-col items-start select-none"
+    class="fixed left-2 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-20 transition-all duration-300 ease-out pointer-events-none opacity-0 -translate-x-6 flex flex-col items-start select-none"
     aria-label="카테고리 빠른 이동"
   >
-    <div class="bg-zinc-950/95 backdrop-blur-2xl border border-zinc-800/90 rounded-2xl sm:rounded-3xl p-2 sm:p-2.5 shadow-2xl shadow-black/95 flex flex-col gap-1.5 ring-1 ring-white/10 max-h-[85vh] overflow-y-auto min-w-[58px] sm:min-w-[190px]">
-      <div class="px-3 py-1.5 border-b border-zinc-800/80 hidden sm:flex items-center justify-between text-xs font-bold text-zinc-300">
+    <div id="floating-category-panel" class="bg-zinc-950/95 backdrop-blur-2xl border border-zinc-800/90 rounded-2xl sm:rounded-3xl p-2 sm:p-2.5 shadow-2xl shadow-black/95 flex flex-col gap-1.5 ring-1 ring-white/10 max-h-[85vh] overflow-y-auto min-w-[58px] sm:min-w-[190px]">
+      <div id="floating-category-header" class="px-3 py-1.5 border-b border-zinc-800/80 hidden sm:flex items-center justify-between text-xs font-bold text-zinc-300">
         <span>소속 바로가기</span>
         <span class="text-[10px] text-zinc-500 font-normal">빠른 이동</span>
       </div>
@@ -99,7 +99,7 @@
           class="w-full flex items-center justify-center gap-1.5 py-2 sm:py-2.5 px-3 rounded-xl sm:rounded-2xl text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-all border border-transparent hover:border-zinc-700 cursor-pointer"
         >
           <span class="font-black text-sm">↑</span>
-          <span class="hidden sm:inline">맨 위로 이동</span>
+          <span class="floating-nav-label hidden sm:inline">맨 위로 이동</span>
         </button>
       </div>
     </div>
@@ -1083,17 +1083,17 @@
   </div>
 
   <script src="./js/state.js?v=20260911_01"></script>
-  <script src="./js/api.js?v=20260911_01"></script>
-  <script src="./js/subscriber-sync.js?v=20260911_01"></script>
+  <script src="./js/api.js?v=20260912_06"></script>
+  <script src="./js/subscriber-sync.js?v=20260912_06"></script>
   <script src="./js/drag-drop.js?v=20260911_01"></script>
   <script src="./js/backup.js?v=20260911_01"></script>
-  <script src="./js/admin-video.js?v=20260911_01"></script>
+  <script src="./js/admin-video.js?v=20260912_06"></script>
   <script src="./js/admin-member.js?v=20260911_01"></script>
-  <script src="./js/admin-playlist.js?v=20260911_01"></script>
+  <script src="./js/admin-playlist.js?v=20260912_06"></script>
   <script src="./js/admin.js?v=20260911_01"></script>
-  <script src="./js/render.js?v=20260911_01"></script>
-  <script src="./js/navigation.js?v=20260911_01"></script>
-  <script src="./js/leaderboard.js?v=20260912_03"></script>
+  <script src="./js/render.js?v=20260912_05"></script>
+  <script src="./js/navigation.js?v=20260912_04"></script>
+  <script src="./js/leaderboard.js?v=20260912_04"></script>
   <script src="./js/app.js?v=20260911_01"></script>
 </body>
 </html>

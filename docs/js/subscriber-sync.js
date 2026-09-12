@@ -120,7 +120,9 @@ async function fetchMemberSubscriberFromYouTube(member) {
   const target = getSubscriberLookupTarget(member);
   if (!target) return null;
 
-  const apiKey = localStorage.getItem("youtube_api_key") || "AIzaSyAyY4g9-iwjwQNXb5F9Xx0LLGtLUEpowl8";
+  const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
+    ? getEffectiveYouTubeApiKey() 
+    : (localStorage.getItem("youtube_api_key") || "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA");
   if (!apiKey) return null;
 
   try {
@@ -190,7 +192,9 @@ async function executeSubscriberSync(onProgress) {
   const targets = allMembers.filter(m => m.youtubeUrl && m.youtubeUrl.trim());
   if (targets.length === 0) return 0;
 
-  const apiKey = localStorage.getItem("youtube_api_key") || "AIzaSyAyY4g9-iwjwQNXb5F9Xx0LLGtLUEpowl8";
+  const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
+    ? getEffectiveYouTubeApiKey() 
+    : (localStorage.getItem("youtube_api_key") || "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA");
   if (!apiKey) {
     throw new Error("유튜브 API 키가 설정되지 않았습니다.");
   }
