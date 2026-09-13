@@ -352,6 +352,75 @@ async function apiGetChzzkInfo(url) {
   return { success: false, message: "치지직 영상 정보를 불러올 수 없습니다. 스프링 부트 서버 상태를 확인해주세요." };
 }
 
+async function apiGetChzzkChannelInfo(urlOrId) {
+  if (!urlOrId) return { success: false, message: "URL 또는 채널 ID가 없습니다." };
+
+  // 1. 백엔드 Spring Boot API 호출
+  try {
+    const res = await fetch(`${API_BASE}/api/chzzk/channel?url=${encodeURIComponent(urlOrId)}`, {
+      cache: "no-store"
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.success) {
+        return data;
+      }
+    }
+  } catch (e) {
+    console.warn("백엔드 Chzzk 채널 API 조회 실패, 프론트 대체 시도:", e);
+  }
+
+  // 2. 프론트 대체: direct fetch or public proxy
+  const channelId = typeof extractChzzkChannelId === "function" ? extractChzzkChannelId(urlOrId) : null;
+  if (!channelId) {
+    return { success: false, message: "유효한 치지직 채널 ID를 추출할 수 없습니다." };
+  }
+
+  try {
+    const res = await fetch(`https://api.chzzk.naver.com/service/v1/channels/${channelId}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.code === 200 && data.content) {
+        const followerCount = data.content.followerCount || 0;
+        return {
+          success: true,
+          channelId: channelId,
+          channelTitle: data.content.channelName || "",
+          followerCount: followerCount,
+          followerCountFormatted: typeof formatSubscriberCount === "function" ? formatSubscriberCount(followerCount) : `${followerCount}명`,
+          url: `https://chzzk.naver.com/${channelId}`,
+          thumbnailUrl: data.content.channelImageUrl || ""
+        };
+      }
+    }
+  } catch (err) {
+    // 3. CORS fallback 프록시 시도
+    try {
+      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://api.chzzk.naver.com/service/v1/channels/${channelId}`)}`;
+      const pRes = await fetch(proxyUrl);
+      if (pRes.ok) {
+        const pData = await pRes.json();
+        if (pData.code === 200 && pData.content) {
+          const followerCount = pData.content.followerCount || 0;
+          return {
+            success: true,
+            channelId: channelId,
+            channelTitle: pData.content.channelName || "",
+            followerCount: followerCount,
+            followerCountFormatted: typeof formatSubscriberCount === "function" ? formatSubscriberCount(followerCount) : `${followerCount}명`,
+            url: `https://chzzk.naver.com/${channelId}`,
+            thumbnailUrl: pData.content.channelImageUrl || ""
+          };
+        }
+      }
+    } catch (proxyErr) {
+      console.warn("치지직 CORS 프록시 조회 실패:", proxyErr);
+    }
+  }
+
+  return { success: false, message: "치지직 채널 정보를 불러올 수 없습니다." };
+}
+
 async function apiGetVideoInfo(url) {
   if (!url) return { success: false, message: "URL이 없습니다." };
   if (typeof isChzzkUrl === "function" && isChzzkUrl(url)) {

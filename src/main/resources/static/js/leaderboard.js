@@ -588,7 +588,6 @@ function renderLeaderboardDynamicContent() {
           </div>
           <h4 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors flex items-center justify-center gap-1.5 mt-1 truncate max-w-full flex-wrap">
             <span>${top2.streamerName || top2.name}</span>
-            ${top2.role ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(top2, top2.catId) : 'bg-zinc-800 text-white'} shadow-sm whitespace-nowrap">${top2.role}</span>` : ''}
           </h4>
           <p class="text-xs text-zinc-300 mb-2 truncate max-w-full" title="${top2.name}">
             <span>${top2.name}</span>${top2Role ? ` <span class="text-zinc-500 text-[11px]">(${top2Role})</span>` : ''}
@@ -621,7 +620,6 @@ function renderLeaderboardDynamicContent() {
           </div>
           <h4 class="text-lg font-bold text-white group-hover:text-amber-400 transition-colors flex items-center justify-center gap-1.5 mt-1 truncate max-w-full flex-wrap">
             <span>${top1.streamerName || top1.name}</span>
-            ${top1.role ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(top1, top1.catId) : 'bg-zinc-800 text-white'} shadow-sm whitespace-nowrap">${top1.role}</span>` : ''}
           </h4>
           <p class="text-xs text-amber-200/90 font-medium mb-2 truncate max-w-full" title="${top1.name}">
             <span>${top1.name}</span>${top1Role ? ` <span class="text-amber-400/80 text-[11px]">(${top1Role})</span>` : ''}
@@ -654,7 +652,6 @@ function renderLeaderboardDynamicContent() {
           </div>
           <h4 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors flex items-center justify-center gap-1.5 mt-1 truncate max-w-full flex-wrap">
             <span>${top3.streamerName || top3.name}</span>
-            ${top3.role ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(top3, top3.catId) : 'bg-zinc-800 text-white'} shadow-sm whitespace-nowrap">${top3.role}</span>` : ''}
           </h4>
           <p class="text-xs text-zinc-300 mb-2 truncate max-w-full" title="${top3.name}">
             <span>${top3.name}</span>${top3Role ? ` <span class="text-zinc-500 text-[11px]">(${top3Role})</span>` : ''}
@@ -734,7 +731,6 @@ function renderLeaderboardDynamicContent() {
                 <div class="min-w-0 flex-1">
                   <div class="flex items-center gap-1.5 flex-wrap">
                     <span class="font-bold text-sm text-white group-hover:text-amber-400 transition-colors truncate">${m.streamerName || m.name}</span>
-                    ${m.role ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(m, m.catId) : 'bg-zinc-800 text-white'} shadow-sm whitespace-nowrap">${m.role}</span>` : ''}
                   </div>
                   <div class="text-xs text-zinc-400 truncate">
                     <span class="text-amber-400/90 font-medium">${m.name}</span>${mRole ? ` <span class="text-zinc-500 text-[11px]">(${mRole})</span>` : ''}

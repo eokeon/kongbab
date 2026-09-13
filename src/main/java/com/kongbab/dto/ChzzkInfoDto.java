@@ -22,6 +22,8 @@ public class ChzzkInfoDto {
     private String channelId;
     private String thumbnailUrl;
     private String videoType;
+    private Long followerCount;
+    private String followerCountFormatted;
     private String source;
     private String message;
 }

@@ -157,4 +157,104 @@ public class ChzzkService {
             return null;
         }
     }
+
+    public static String formatFollowerCount(long followerCount) {
+        if (followerCount <= 0) return "0명";
+        if (followerCount >= 100_000_000) {
+            double eok = followerCount / 100_000_000.0;
+            return String.format("%.1f억 명", eok).replace(".0억", "억");
+        }
+        if (followerCount >= 10_000) {
+            double man = followerCount / 10_000.0;
+            return String.format("%.1f만 명", man).replace(".0만", "만");
+        }
+        return String.format("%,d명", followerCount);
+    }
+
+    public String extractChannelId(String urlOrId) {
+        if (urlOrId == null || urlOrId.isBlank()) return null;
+        String trimmed = urlOrId.trim();
+        if (trimmed.matches("(?i)^[a-f0-9]{32}$")) {
+            return trimmed.toLowerCase();
+        }
+        Matcher matcher = Pattern.compile("(?:chzzk\\.naver\\.com\\/(?:live\\/)?)([a-f0-9]{32})", Pattern.CASE_INSENSITIVE).matcher(trimmed);
+        if (matcher.find()) {
+            return matcher.group(1).toLowerCase();
+        }
+        return null;
+    }
+
+    public ChzzkInfoDto getChannelInfo(String urlOrId) {
+        String channelId = extractChannelId(urlOrId);
+        // 혹시 영상 링크가 들어온 경우 영상 조회 후 해당 영상의 channelId 추출
+        if (channelId == null) {
+            Long videoNo = extractVideoNo(urlOrId);
+            if (videoNo != null) {
+                ChzzkInfoDto videoInfo = getVideoInfo(urlOrId);
+                if (videoInfo != null && videoInfo.isSuccess() && videoInfo.getChannelId() != null) {
+                    channelId = videoInfo.getChannelId();
+                }
+            }
+        }
+
+        if (channelId == null) {
+            return ChzzkInfoDto.builder()
+                    .success(false)
+                    .message("유효한 치지직 채널 링크 또는 채널 ID가 아닙니다.")
+                    .build();
+        }
+
+        String apiUrl = "https://api.chzzk.naver.com/service/v1/channels/" + channelId;
+        try {
+            String responseBody = restClient.get()
+                    .uri(apiUrl)
+                    .retrieve()
+                    .body(String.class);
+
+            if (responseBody == null || responseBody.isBlank()) {
+                return ChzzkInfoDto.builder()
+                        .success(false)
+                        .channelId(channelId)
+                        .message("치지직 응답이 비어 있습니다.")
+                        .build();
+            }
+
+            JsonNode root = objectMapper.readTree(responseBody);
+            int code = root.path("code").asInt(0);
+            if (code != 200) {
+                return ChzzkInfoDto.builder()
+                        .success(false)
+                        .channelId(channelId)
+                        .message("치지직 채널 조회 실패: " + root.path("message").asText())
+                        .build();
+            }
+
+            JsonNode content = root.path("content");
+            String chId = content.path("channelId").asText(channelId);
+            String channelName = content.path("channelName").asText("");
+            String channelImageUrl = content.path("channelImageUrl").asText("");
+            long followerCount = content.path("followerCount").asLong(0);
+            String formatted = formatFollowerCount(followerCount);
+
+            return ChzzkInfoDto.builder()
+                    .success(true)
+                    .channelId(chId)
+                    .channelTitle(channelName)
+                    .url("https://chzzk.naver.com/" + chId)
+                    .thumbnailUrl(channelImageUrl)
+                    .followerCount(followerCount)
+                    .followerCountFormatted(formatted)
+                    .source("chzzk_api")
+                    .message("치지직 채널 정보를 성공적으로 가져왔습니다.")
+                    .build();
+
+        } catch (Exception e) {
+            log.warn("치지직 채널 API 호출 실패: {}", e.getMessage());
+            return ChzzkInfoDto.builder()
+                    .success(false)
+                    .channelId(channelId)
+                    .message("치지직 채널 API 호출 중 오류 발생: " + e.getMessage())
+                    .build();
+        }
+    }
 }

@@ -1086,6 +1086,42 @@ async function handleSaveMember(e) {
     showToast(`✓ 새 인원 '${name} (${streamer})' 등록 완료 (${selectedAffiliations.length}개 소속)`);
   }
 
+  const targetMemId = editingMemberId || (typeof newMember !== 'undefined' ? newMember?.id : null);
+  const targetMemberObj = editingMemberId ? (typeof memberObj !== 'undefined' ? memberObj : null) : (typeof newMember !== 'undefined' ? newMember : null);
+  const isUrlChanged = !existingMember || (existingMember.youtubeUrl || "") !== youtubeUrl;
+
+  if (youtubeUrl && targetMemId && targetMemberObj && (isUrlChanged || !targetMemberObj.subscriberCount)) {
+    (async () => {
+      try {
+        if (typeof fetchMemberSubscriberFromYouTube === "function") {
+          const countStr = await fetchMemberSubscriberFromYouTube(targetMemberObj);
+          if (countStr) {
+            KONGBAB_DATA.categories.forEach(cat => {
+              if (cat.hasSubgroups) {
+                (cat.groups || []).forEach(g => {
+                  (g.members || []).forEach(m => {
+                    if (m.id === targetMemId) m.subscriberCount = countStr;
+                  });
+                });
+              } else {
+                (cat.members || []).forEach(m => {
+                  if (m.id === targetMemId) m.subscriberCount = countStr;
+                });
+              }
+            });
+            persistData();
+            if (typeof renderContent === "function") renderContent();
+            if (typeof saveStreamerToDb === "function") {
+              saveStreamerToDb({ ...targetMemberObj, subscriberCount: countStr });
+            }
+          }
+        }
+      } catch (subErr) {
+        console.warn("구독자/팔로워 자동 조회 실패:", subErr);
+      }
+    })();
+  }
+
   closeMemberModal();
   renderContent();
 }

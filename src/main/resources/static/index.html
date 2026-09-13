@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
   <title>콩밥특별시 GTA RP 스트리머 영상</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -763,13 +764,13 @@
           <label class="block text-xs font-semibold text-zinc-300 mb-1.5 flex items-center justify-between">
             <span class="flex items-center gap-1.5">
               <svg class="w-3.5 h-3.5 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-              <span>스트리머 유튜브 링크 <span class="text-zinc-500 font-normal">(채널 또는 영상 주소)</span></span>
+              <span>스트리머 채널 링크 <span class="text-zinc-500 font-normal">(유튜브 또는 치지직 채널 주소)</span></span>
             </span>
           </label>
           <input 
             type="text" 
             id="member-form-youtube" 
-            placeholder="예: https://www.youtube.com/@채널핸들 또는 채널/영상 링크" 
+            placeholder="예: 유튜브 채널(@핸들) 또는 치지직 채널 주소(https://chzzk.naver.com/...)" 
             oninput="cleanYoutubeUrlInput(this)"
             onpaste="handleYoutubeUrlPaste(event)"
             onchange="cleanYoutubeUrlInput(this)"
@@ -984,7 +985,7 @@
               <span>어드민 설정 센터</span>
               <span class="text-xs px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-500/40 font-bold">관리자 도구</span>
             </h3>
-            <p class="text-xs text-zinc-400 mt-0.5">유튜브 구독자 수 수동 일괄 갱신 및 사이트 관리 설정</p>
+            <p class="text-xs text-zinc-400 mt-0.5">유튜브 구독자 및 치지직 팔로워 수 수동 일괄 갱신 및 사이트 관리 설정</p>
           </div>
         </div>
         <button onclick="closeAdminSettingsModal()" class="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors flex-shrink-0">✕</button>
@@ -995,14 +996,14 @@
         <div class="flex items-center justify-between text-xs flex-wrap gap-2">
           <span class="text-zinc-300 flex items-center gap-1.5 font-bold">
             <span>📺</span>
-            <span>유튜브 구독자 수 일괄 갱신 기준</span>
+            <span>구독자 / 팔로워 수 일괄 갱신 기준</span>
           </span>
           <span class="text-xs px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 font-semibold">
             조회 대상: <strong id="admin-sub-target-count" class="text-amber-400">0명</strong>
           </span>
         </div>
         <p class="text-xs text-zinc-400 leading-relaxed">
-          • 인원 정보(정보 수정)에 등록된 <span class="text-amber-400 font-bold">유튜브 공식 채널 링크</span>를 기준으로 구독자 수를 실시간 조회 및 갱신합니다. (유튜브 링크가 등록된 인원만 대상)
+          • 인원 정보(정보 수정)에 등록된 <span class="text-amber-400 font-bold">유튜브 또는 치지직 공식 채널 링크</span>를 기준으로 구독자/팔로워 수를 실시간 조회 및 갱신합니다. (채널 링크가 등록된 인원만 대상)
         </p>
       </div>
 
@@ -1023,7 +1024,7 @@
 
         <!-- 로그 출력 창 -->
         <div id="admin-sub-log-box" class="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3 h-40 overflow-y-auto font-mono text-xs space-y-1">
-          <div class="text-zinc-500 italic">갱신 준비 완료. 아래 [유튜브 구독자 수 일괄 갱신 시작] 버튼을 눌러주세요.</div>
+          <div class="text-zinc-500 italic">갱신 준비 완료. 아래 [구독자·팔로워 수 일괄 갱신 시작] 버튼을 눌러주세요.</div>
         </div>
       </div>
 
@@ -1040,10 +1041,10 @@
           type="button" 
           id="admin-sub-sync-btn"
           onclick="startSubscriberSync()" 
-          class="px-5 py-2.5 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white text-xs font-bold rounded-xl transition-all shadow-lg shadow-red-600/25 cursor-pointer flex items-center gap-2"
+          class="px-5 py-2.5 bg-gradient-to-r from-red-600 via-amber-600 to-emerald-600 hover:from-red-500 hover:to-emerald-500 text-white text-xs font-bold rounded-xl transition-all shadow-lg shadow-red-600/25 cursor-pointer flex items-center gap-2"
         >
           <svg class="w-4 h-4 text-white fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-          <span>유튜브 구독자 수 일괄 갱신 시작</span>
+          <span>구독자·팔로워 수 일괄 갱신 시작</span>
         </button>
       </div>
     </div>
@@ -1082,16 +1083,16 @@
     </div>
   </div>
 
-  <script src="./js/state.js?v=20260911_01"></script>
-  <script src="./js/api.js?v=20260912_06"></script>
-  <script src="./js/subscriber-sync.js?v=20260912_06"></script>
+  <script src="./js/state.js?v=20260913_01"></script>
+  <script src="./js/api.js?v=20260913_01"></script>
+  <script src="./js/subscriber-sync.js?v=20260913_01"></script>
   <script src="./js/drag-drop.js?v=20260911_01"></script>
   <script src="./js/backup.js?v=20260911_01"></script>
   <script src="./js/admin-video.js?v=20260912_06"></script>
   <script src="./js/admin-member.js?v=20260911_01"></script>
   <script src="./js/admin-playlist.js?v=20260912_06"></script>
-  <script src="./js/admin.js?v=20260911_01"></script>
-  <script src="./js/render.js?v=20260912_05"></script>
+  <script src="./js/admin.js?v=20260913_01"></script>
+  <script src="./js/render.js?v=20260913_01"></script>
   <script src="./js/navigation.js?v=20260912_04"></script>
   <script src="./js/leaderboard.js?v=20260912_04"></script>
   <script src="./js/app.js?v=20260911_01"></script>

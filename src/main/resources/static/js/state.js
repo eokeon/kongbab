@@ -284,6 +284,24 @@ function extractChzzkVideoNo(url) {
   return match ? match[1] : null;
 }
 
+function extractChzzkChannelId(urlOrStr) {
+  if (!urlOrStr) return null;
+  const str = String(urlOrStr).trim();
+  if (/^[a-f0-9]{32}$/i.test(str)) {
+    return str.toLowerCase();
+  }
+  const match = str.match(/chzzk\.naver\.com\/(?:live\/)?([a-f0-9]{32})(?:[/?#]|$)/i);
+  return match ? match[1].toLowerCase() : null;
+}
+
+function isMemberChzzk(member) {
+  if (!member || !member.youtubeUrl) return false;
+  const url = String(member.youtubeUrl).trim();
+  if (typeof isChzzkUrl === "function" && isChzzkUrl(url)) return true;
+  if (/^[a-f0-9]{32}$/i.test(url)) return true;
+  return false;
+}
+
 function getYoutubeThumbnail(url) {
   const id = extractYoutubeId(url);
   return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "assets/default-thumbnail.svg";

@@ -125,13 +125,13 @@ function openAdminSettingsModal() {
     if (progressBar) progressBar.style.width = "0%";
     if (progressText) progressText.textContent = `대기 중 (대상: ${targetCount}명)`;
     if (logBox) {
-      logBox.innerHTML = `<div class="text-zinc-500 text-xs italic">갱신 준비 완료. 아래 [구독자 수 일괄 갱신 시작] 버튼을 눌러주세요.</div>`;
+      logBox.innerHTML = `<div class="text-zinc-500 text-xs italic">갱신 준비 완료. 아래 [구독자·팔로워 수 일괄 갱신 시작] 버튼을 눌러주세요.</div>`;
     }
     if (btn) {
       btn.disabled = false;
       btn.innerHTML = `
         <svg class="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-        <span>유튜브 구독자 수 일괄 갱신 시작</span>
+        <span>구독자·팔로워 수 일괄 갱신 시작</span>
       `;
     }
   }
@@ -139,7 +139,7 @@ function openAdminSettingsModal() {
 
 function closeAdminSettingsModal() {
   if (isSyncingSubscribers) {
-    if (!confirm("현재 유튜브 구독자 갱신이 진행 중입니다. 정말 닫으시겠습니까?")) {
+    if (!confirm("현재 구독자/팔로워 갱신이 진행 중입니다. 정말 닫으시겠습니까?")) {
       return;
     }
   }
@@ -168,7 +168,7 @@ async function startSubscriberSync() {
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
       </svg>
-      <span>구독자 수 조회 및 갱신 중...</span>
+      <span>구독자·팔로워 수 조회 및 갱신 중...</span>
     `;
   }
   if (logBox) logBox.innerHTML = "";
@@ -198,12 +198,12 @@ async function startSubscriberSync() {
     if (logBox) {
       const finishLine = document.createElement("div");
       finishLine.className = "text-xs py-2 font-bold text-emerald-400 border-t border-zinc-800 mt-2";
-      finishLine.textContent = `🎉 일괄 갱신 완료! 총 ${updatedCount}명의 구독자 수가 백업 및 DB에 저장되었습니다.`;
+      finishLine.textContent = `🎉 일괄 갱신 완료! 총 ${updatedCount}명의 구독자/팔로워 수가 백업 및 DB에 저장되었습니다.`;
       logBox.appendChild(finishLine);
       logBox.scrollTop = logBox.scrollHeight;
     }
 
-    showToast(`🎉 유튜브 구독자 수 일괄 갱신 완료 (${updatedCount}명)`);
+    showToast(`🎉 구독자·팔로워 수 일괄 갱신 완료 (${updatedCount}명)`);
     if (typeof renderContent === "function") renderContent();
   } catch (err) {
     console.error("구독자 갱신 오류:", err);
@@ -213,14 +213,14 @@ async function startSubscriberSync() {
       errLine.textContent = `❌ 오류 발생: ${err.message || err}`;
       logBox.appendChild(errLine);
     }
-    showToast("⚠️ 구독자 갱신 중 오류가 발생했습니다.");
+    showToast("⚠️ 구독자/팔로워 갱신 중 오류가 발생했습니다.");
   } finally {
     isSyncingSubscribers = false;
     if (btn) {
       btn.disabled = false;
       btn.innerHTML = `
         <svg class="w-4 h-4 text-emerald-400 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-        <span>구독자 수 일괄 재갱신</span>
+        <span>구독자·팔로워 수 일괄 재갱신</span>
       `;
     }
   }

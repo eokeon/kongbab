@@ -521,6 +521,9 @@ function renderMemberCard(member, dragType, clickFn) {
               src="${getMemberAvatar(member)}" 
               alt="${member.name}" 
               draggable="false" 
+              loading="lazy"
+              referrerpolicy="no-referrer"
+              onerror="this.onerror=null; this.src='assets/default-avatar.svg'"
               class="w-16 h-16 rounded-2xl object-cover border-2 ${inactive ? 'border-zinc-700/60 group-hover:border-amber-400' : 'border-zinc-700 group-hover:border-amber-400'} ${avatarFilterClass} transition-all duration-300 shadow-md"
             />
             ${effectiveSwatRole ? getSwatBadgeHtml(effectiveSwatRole, 'md') : ''}
@@ -546,12 +549,19 @@ function renderMemberCard(member, dragType, clickFn) {
                 <h4 class="text-xl font-bold text-white group-hover:text-amber-400 transition-colors truncate" title="${member.streamer}">
                   ${member.streamer}
                 </h4>
-                ${member.subscriberCount ? `
-                  <span class="inline-flex items-center gap-1 text-[11px] font-bold text-red-300 bg-red-950/80 border border-red-700/50 px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="유튜브 채널 구독자 수">
-                    <svg class="w-3 h-3 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                    <span>${member.subscriberCount}</span>
-                  </span>
-                ` : ''}
+                ${member.subscriberCount ? (
+                  isMemberChzzk(member) ? `
+                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#00ffa3] bg-[#00ffa3]/10 border border-[#00ffa3]/40 px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="치지직 채널 팔로워 수">
+                      <svg class="w-3 h-3 text-[#00ffa3] fill-current" viewBox="105 97 300 300"><polygon points="224,101 325,101 294,144 396,144 270,318 385,318 385,393 114,393 241,217 140,217"/></svg>
+                      <span>${member.subscriberCount}</span>
+                    </span>
+                  ` : `
+                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-red-300 bg-red-950/80 border border-red-700/50 px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="유튜브 채널 구독자 수">
+                      <svg class="w-3 h-3 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                      <span>${member.subscriberCount}</span>
+                    </span>
+                  `
+                ) : ''}
               </div>
               ${isAdmin() ? `
                 <div class="flex items-center gap-1.5 ml-2 flex-shrink-0 card-header-actions" onclick="event.stopPropagation()">
@@ -962,6 +972,7 @@ function renderMemberVideos(container) {
               </div>
               ${isChzzk ? `
                 <div class="bg-[#00ffa3]/20 border border-[#00ffa3]/60 backdrop-blur-md text-[10px] font-extrabold text-[#00ffa3] px-2 py-0.5 rounded-lg shadow flex items-center gap-1 whitespace-nowrap flex-shrink-0">
+                  <svg class="w-2.5 h-2.5 text-[#00ffa3] fill-current" viewBox="105 97 300 300"><polygon points="224,101 325,101 294,144 396,144 270,318 385,318 385,393 114,393 241,217 140,217"/></svg>
                   <span>CHZZK</span>
                 </div>
               ` : ''}
@@ -1100,7 +1111,7 @@ function renderMemberVideos(container) {
       <div class="bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-950 border border-zinc-800 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-2xl relative overflow-hidden">
         <div class="flex items-center gap-6 relative z-10">
           <div class="relative flex-shrink-0">
-            <img src="${getMemberAvatar(member)}" alt="${member.name}" class="w-24 h-24 md:w-28 md:h-28 rounded-3xl object-cover border-4 border-zinc-800 shadow-2xl transition-all duration-300 ${inactive ? 'grayscale contrast-125 opacity-80 hover:grayscale-0 hover:contrast-100 hover:opacity-100 cursor-pointer' : ''}" />
+            <img src="${getMemberAvatar(member)}" alt="${member.name}" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='assets/default-avatar.svg'" class="w-24 h-24 md:w-28 md:h-28 rounded-3xl object-cover border-4 border-zinc-800 shadow-2xl transition-all duration-300 ${inactive ? 'grayscale contrast-125 opacity-80 hover:grayscale-0 hover:contrast-100 hover:opacity-100 cursor-pointer' : ''}" />
             ${effectiveSwatRole ? getSwatBadgeHtml(effectiveSwatRole, 'lg') : ''}
             ${effectiveRole ? `
               <span class="absolute -bottom-2 -right-2 z-20 text-xs font-bold px-2.5 py-1 rounded-xl ${getMemberRoleBadgeClass(member, cat.id)} shadow-xl border border-white/20">
@@ -1128,12 +1139,21 @@ function renderMemberVideos(container) {
             </div>
             <div class="flex items-center gap-3 flex-wrap">
               <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">${member.streamer}</h2>
-              ${member.subscriberCount ? `
-                <span class="inline-flex items-center gap-1.5 text-xs font-bold text-red-300 bg-red-950/80 border border-red-700/50 px-2.5 py-1 rounded-lg shadow-sm" title="유튜브 채널 구독자 수">
-                  <svg class="w-3.5 h-3.5 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                  <span>${member.subscriberCount}</span>
-                </span>
-              ` : ''}
+              ${member.subscriberCount ? (
+                isMemberChzzk(member) ? `
+                  <a href="${member.youtubeUrl && member.youtubeUrl.startsWith('http') ? member.youtubeUrl : (member.youtubeUrl ? `https://chzzk.naver.com/${member.youtubeUrl}` : '#')}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#00ffa3] bg-[#00ffa3]/10 hover:bg-[#00ffa3]/20 border border-[#00ffa3]/40 px-2.5 py-1 rounded-lg shadow-sm transition-colors cursor-pointer" title="치지직 채널 바로가기 (팔로워 ${member.subscriberCount})">
+                    <svg class="w-3.5 h-3.5 text-[#00ffa3] fill-current" viewBox="105 97 300 300"><polygon points="224,101 325,101 294,144 396,144 270,318 385,318 385,393 114,393 241,217 140,217"/></svg>
+                    <span>${member.subscriberCount}</span>
+                    <svg class="w-3 h-3 text-[#00ffa3]/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                  </a>
+                ` : `
+                  <a href="${member.youtubeUrl && member.youtubeUrl.startsWith('http') ? member.youtubeUrl : (member.youtubeUrl ? `https://www.youtube.com/${member.youtubeUrl}` : '#')}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-bold text-red-300 bg-red-950/80 hover:bg-red-900/90 border border-red-700/50 px-2.5 py-1 rounded-lg shadow-sm transition-colors cursor-pointer" title="유튜브 채널 바로가기 (구독자 ${member.subscriberCount})">
+                    <svg class="w-3.5 h-3.5 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    <span>${member.subscriberCount}</span>
+                    <svg class="w-3 h-3 text-red-400/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                  </a>
+                `
+              ) : ''}
             </div>
             <p class="text-amber-400 text-base font-semibold mt-1">RP 캐릭터: ${member.name}</p>
             ${isAdmin() ? `

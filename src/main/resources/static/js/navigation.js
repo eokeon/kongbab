@@ -130,7 +130,7 @@ function renderSearchResults(container) {
         <div onclick="selectMemberFromSearch('${item.category.id}', ${item.group ? `'${item.group.id}'` : 'null'}, '${m.id}')" class="bg-zinc-900 border border-zinc-800 hover:border-amber-400/50 rounded-2xl p-5 cursor-pointer transition-all hover:-translate-y-1">
           <div class="flex items-center gap-3.5 mb-3">
             <div class="relative flex-shrink-0">
-              <img src="${getMemberAvatar(m)}" class="w-14 h-14 rounded-2xl object-cover border border-zinc-700" />
+              <img src="${getMemberAvatar(m)}" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='assets/default-avatar.svg'" class="w-14 h-14 rounded-2xl object-cover border border-zinc-700" />
               ${(typeof getSwatBadgeHtml === 'function' && cleanSwat) ? getSwatBadgeHtml(cleanSwat, 'sm') : ''}
             </div>
             <div>
@@ -202,7 +202,17 @@ function restoreNavigationState() {
       if (state.currentGroup) {
         const m = (state.currentGroup.members || []).find(mem => mem.id === savedMember);
         if (m) state.currentMember = m;
-      } else if (!cat.hasSubgroups) {
+      }
+      if (!state.currentMember && cat.hasSubgroups && Array.isArray(cat.groups)) {
+        for (const grp of cat.groups) {
+          const m = (grp.members || []).find(mem => mem.id === savedMember);
+          if (m) {
+            state.currentGroup = grp;
+            state.currentMember = m;
+            break;
+          }
+        }
+      } else if (!state.currentMember && !cat.hasSubgroups) {
         const m = (cat.members || []).find(mem => mem.id === savedMember);
         if (m) state.currentMember = m;
       }

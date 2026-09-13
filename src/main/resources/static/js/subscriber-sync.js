@@ -113,13 +113,41 @@ function parseYouTubeTarget(urlOrStr) {
 // 구독자 조회를 위한 타깃 식별자 (오직 인원 정보에 등록된 youtubeUrl만 사용, 영상 fallback 일절 없음)
 function getSubscriberLookupTarget(member) {
   if (!member || !member.youtubeUrl || !member.youtubeUrl.trim()) return null;
-  return parseYouTubeTarget(member.youtubeUrl);
+  const url = member.youtubeUrl.trim();
+
+  // 치지직 채널 식별자 추출 (치지직 URL 또는 32자리 hex 채널 ID)
+  const chzzkId = typeof extractChzzkChannelId === "function" ? extractChzzkChannelId(url) : null;
+  if (chzzkId) {
+    return { platform: "chzzk", type: "chzzkChannelId", value: chzzkId, rawUrl: url };
+  }
+
+  const ytTarget = parseYouTubeTarget(url);
+  if (ytTarget) {
+    return { platform: "youtube", ...ytTarget, rawUrl: url };
+  }
+  return null;
 }
 
 async function fetchMemberSubscriberFromYouTube(member) {
   const target = getSubscriberLookupTarget(member);
   if (!target) return null;
 
+  // 1) 치지직 채널 팔로워 조회
+  if (target.platform === "chzzk" || target.type === "chzzkChannelId") {
+    try {
+      if (typeof apiGetChzzkChannelInfo === "function") {
+        const cData = await apiGetChzzkChannelInfo(target.value);
+        if (cData && cData.success && cData.followerCountFormatted) {
+          return cData.followerCountFormatted;
+        }
+      }
+    } catch (err) {
+      console.warn(`[Chzzk] ${member.streamer || member.name} 팔로워 조회 오류:`, err);
+    }
+    return null;
+  }
+
+  // 2) 유튜브 채널 구독자 조회
   const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
     ? getEffectiveYouTubeApiKey() 
     : (localStorage.getItem("youtube_api_key") || "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA");
@@ -185,21 +213,14 @@ async function fetchMemberSubscriberFromYouTube(member) {
   return null;
 }
 
-// 관리자가 모달에서 수동으로 실행하는 유튜브 구독자 수 일괄 갱신 (오직 인원 정보의 유튜브 링크 기준)
+// 관리자가 모달에서 수동으로 실행하는 유튜브/치지직 구독자·팔로워 수 일괄 갱신 (오직 인원 정보의 링크 기준)
 async function executeSubscriberSync(onProgress) {
   const allMembers = extractAllStreamersFromKongbabData();
-  // 대상: 오직 인원 정보에 유튜브 링크(youtubeUrl)가 등록된 인원만 대상 (영상 기준 fallback 완전 제거)
+  // 대상: 오직 인원 정보에 유튜브 또는 치지직 링크(youtubeUrl)가 등록된 인원만 대상 (영상 기준 fallback 완전 제거)
   const targets = allMembers.filter(m => m.youtubeUrl && m.youtubeUrl.trim());
   if (targets.length === 0) return 0;
 
-  const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
-    ? getEffectiveYouTubeApiKey() 
-    : (localStorage.getItem("youtube_api_key") || "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA");
-  if (!apiKey) {
-    throw new Error("유튜브 API 키가 설정되지 않았습니다.");
-  }
-
-  // 1단계: 각 멤버별 인원 정보의 유튜브 링크 분석
+  // 1단계: 각 멤버별 인원 정보의 링크 분석
   const targetItems = [];
   for (const m of targets) {
     const target = getSubscriberLookupTarget(m);
@@ -214,49 +235,78 @@ async function executeSubscriberSync(onProgress) {
   // 캐시 맵 (중복 요청 방지)
   const subCountCache = new Map();
 
-  // 1단계: 채널 ID 일괄 사전 조회 (YouTube API 배치 part=statistics&id=c1,c2...)
-  const directChannelIds = targetItems
-    .filter(item => item.target && item.target.type === "channelId")
-    .map(item => item.target.value);
-  
-  // videoId가 있는 경우 channelId 추출
-  const videoTargets = targetItems.filter(item => item.target && item.target.type === "videoId");
-  const videoIds = Array.from(new Set(videoTargets.map(item => item.target.value)));
-  const videoToChannelMap = new Map();
+  // 유튜브 타깃과 치지직 타깃 분리
+  const ytItems = targetItems.filter(item => item.target && item.target.platform !== "chzzk" && item.target.type !== "chzzkChannelId");
+  const chzzkItems = targetItems.filter(item => item.target && (item.target.platform === "chzzk" || item.target.type === "chzzkChannelId"));
 
-  if (videoIds.length > 0) {
-    try {
-      const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoIds.join(",")}&key=${apiKey.trim()}`);
-      if (vRes.ok) {
-        const vData = await vRes.json();
-        (vData.items || []).forEach(vItem => {
-          if (vItem.id && vItem.snippet?.channelId) {
-            videoToChannelMap.set(vItem.id, vItem.snippet.channelId);
-          }
-        });
+  const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
+    ? getEffectiveYouTubeApiKey() 
+    : (localStorage.getItem("youtube_api_key") || "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA");
+  if (!apiKey && ytItems.length > 0) {
+    throw new Error("유튜브 API 키가 설정되지 않았습니다.");
+  }
+
+  let videoToChannelMap = new Map();
+
+  // 1-1단계: 유튜브 채널 ID 일괄 사전 조회 (YouTube API 배치 part=statistics&id=c1,c2...)
+  if (apiKey && ytItems.length > 0) {
+    const directChannelIds = ytItems
+      .filter(item => item.target && item.target.type === "channelId")
+      .map(item => item.target.value);
+    
+    // videoId가 있는 경우 channelId 추출
+    const videoTargets = ytItems.filter(item => item.target && item.target.type === "videoId");
+    const videoIds = Array.from(new Set(videoTargets.map(item => item.target.value)));
+
+    if (videoIds.length > 0) {
+      try {
+        const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoIds.join(",")}&key=${apiKey.trim()}`);
+        if (vRes.ok) {
+          const vData = await vRes.json();
+          (vData.items || []).forEach(vItem => {
+            if (vItem.id && vItem.snippet?.channelId) {
+              videoToChannelMap.set(vItem.id, vItem.snippet.channelId);
+            }
+          });
+        }
+      } catch (err) {
+        console.warn("[YouTube Batch] 영상 정보 일괄 조회 오류:", err);
       }
-    } catch (err) {
-      console.warn("[YouTube Batch] 영상 정보 일괄 조회 오류:", err);
+    }
+
+    const allChannelIds = Array.from(new Set([...directChannelIds, ...videoToChannelMap.values()]));
+    for (let i = 0; i < allChannelIds.length; i += 50) {
+      const chunk = allChannelIds.slice(i, i + 50);
+      try {
+        const cRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${chunk.join(",")}&key=${apiKey.trim()}`);
+        if (cRes.ok) {
+          const cData = await cRes.json();
+          (cData.items || []).forEach(cItem => {
+            const stats = cItem.statistics;
+            if (stats && !stats.hiddenSubscriberCount && stats.subscriberCount) {
+              const formatted = formatSubscriberCount(stats.subscriberCount);
+              if (formatted) subCountCache.set(cItem.id, formatted);
+            }
+          });
+        }
+      } catch (err) {
+        console.warn("[YouTube Batch] 채널 구독자 일괄 조회 오류:", err);
+      }
     }
   }
 
-  const allChannelIds = Array.from(new Set([...directChannelIds, ...videoToChannelMap.values()]));
-  for (let i = 0; i < allChannelIds.length; i += 50) {
-    const chunk = allChannelIds.slice(i, i + 50);
+  // 1-2단계: 치지직 채널 사전 조회 캐시 (동일 치지직 채널 중복 조회 방지)
+  const uniqueChzzkIds = Array.from(new Set(chzzkItems.map(item => item.target.value)));
+  for (const chId of uniqueChzzkIds) {
     try {
-      const cRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${chunk.join(",")}&key=${apiKey.trim()}`);
-      if (cRes.ok) {
-        const cData = await cRes.json();
-        (cData.items || []).forEach(cItem => {
-          const stats = cItem.statistics;
-          if (stats && !stats.hiddenSubscriberCount && stats.subscriberCount) {
-            const formatted = formatSubscriberCount(stats.subscriberCount);
-            if (formatted) subCountCache.set(cItem.id, formatted);
-          }
-        });
+      if (typeof apiGetChzzkChannelInfo === "function") {
+        const res = await apiGetChzzkChannelInfo(chId);
+        if (res && res.success && res.followerCountFormatted) {
+          subCountCache.set(chId, res.followerCountFormatted);
+        }
       }
     } catch (err) {
-      console.warn("[YouTube Batch] 채널 구독자 일괄 조회 오류:", err);
+      console.warn(`[Chzzk Batch] 채널(${chId}) 팔로워 조회 오류:`, err);
     }
   }
 
@@ -266,9 +316,22 @@ async function executeSubscriberSync(onProgress) {
     const m = item.member;
     const t = item.target;
     let subStr = null;
+    const isChzzk = t && (t.platform === "chzzk" || t.type === "chzzkChannelId");
 
     if (t) {
-      if (t.type === "channelId") {
+      if (isChzzk) {
+        if (subCountCache.has(t.value)) {
+          subStr = subCountCache.get(t.value);
+        } else if (typeof apiGetChzzkChannelInfo === "function") {
+          try {
+            const res = await apiGetChzzkChannelInfo(t.value);
+            if (res && res.success && res.followerCountFormatted) {
+              subStr = res.followerCountFormatted;
+              subCountCache.set(t.value, subStr);
+            }
+          } catch (err) {}
+        }
+      } else if (t.type === "channelId") {
         subStr = subCountCache.get(t.value) || null;
       } else if (t.type === "videoId") {
         const chId = videoToChannelMap.get(t.value);
@@ -349,7 +412,8 @@ async function executeSubscriberSync(onProgress) {
         }
       });
       updatedCount++;
-      if (onProgress) onProgress(processedCount, targetItems.length, m.streamer, `성공 (${subStr})`);
+      const platformPrefix = isChzzk ? "치지직 팔로워" : "유튜브 구독자";
+      if (onProgress) onProgress(processedCount, targetItems.length, m.streamer, `성공 (${platformPrefix} ${subStr})`);
     } else {
       if (onProgress) onProgress(processedCount, targetItems.length, m.streamer, "조회 실패/비공개");
     }
@@ -366,7 +430,7 @@ async function executeSubscriberSync(onProgress) {
     syncPromises.push(syncAllStreamersToDb(extractAllStreamersFromKongbabData()));
   }
   if (typeof createBackupSnapshot === "function") {
-    createBackupSnapshot(`유튜브 구독자 수 일괄 갱신 (${updatedCount}명)`, true);
+    createBackupSnapshot(`구독자/팔로워 수 일괄 갱신 (${updatedCount}명)`, true);
   }
 
   try {
