@@ -317,7 +317,7 @@ function renderCategoryTabs() {
 
   const floatingContainer = document.getElementById("floating-category-tabs");
   if (floatingContainer) {
-    floatingContainer.innerHTML = KONGBAB_DATA.categories.map(cat => {
+    const catsHtml = KONGBAB_DATA.categories.map(cat => {
       const isActive = state.currentCategory === cat.id && !state.searchQuery;
       const theme = COLOR_THEMES[cat.color] || COLOR_THEMES.blue;
       const activeClass = isActive 
@@ -344,6 +344,26 @@ function renderCategoryTabs() {
         </button>
       `;
     }).join("");
+
+    const statsBtnHtml = `
+      <button 
+        onclick="openLeaderboardModal()" 
+        title="명예의 전당 & 종합 통계 보기"
+        class="group flex items-center justify-between gap-2.5 sm:gap-3 px-2.5 sm:px-3.5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm transition-all duration-200 cursor-pointer select-none bg-gradient-to-r from-amber-500/15 to-amber-600/10 hover:from-amber-500/25 hover:to-amber-600/20 text-amber-300 hover:text-amber-200 border border-amber-500/40 hover:border-amber-400/80 shadow-md shadow-amber-950/30"
+      >
+        <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
+          <span class="text-base sm:text-lg flex-shrink-0 leading-none">📊</span>
+          <span class="floating-nav-label hidden sm:inline whitespace-nowrap font-bold text-xs sm:text-sm">종합 통계</span>
+        </div>
+        <span class="floating-nav-badge text-[10px] sm:text-xs px-2 py-0.5 rounded-full flex-shrink-0 font-extrabold bg-amber-500/25 text-amber-300 border border-amber-500/40 group-hover:bg-amber-500/35">
+          <span class="floating-nav-label hidden sm:inline">랭킹</span>
+          <span class="floating-nav-short sm:hidden">★</span>
+        </span>
+      </button>
+      <div class="pb-1 my-0.5 border-b border-zinc-800/80"></div>
+    `;
+
+    floatingContainer.innerHTML = statsBtnHtml + catsHtml;
   }
 
   updateFloatingCategoryNavVisibility();
@@ -616,7 +636,7 @@ function renderGroupVideoStats(members) {
   const totalDur = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(totalSec) : "0분";
 
   return `
-    <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-2 sm:p-2.5 flex items-center gap-1.5 sm:gap-2 flex-wrap self-start md:self-auto shadow-xl select-none">
+    <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-2 sm:p-2.5 flex items-center gap-1.5 sm:gap-2 flex-nowrap flex-shrink-0 shadow-xl select-none">
       <!-- 편집 영상 -->
       <div class="flex flex-col items-center justify-center text-center min-w-[76px] sm:min-w-[84px] px-2.5 py-1">
         <p class="text-[11px] text-zinc-400 flex items-center justify-center gap-1.5 font-medium mb-1">
@@ -666,31 +686,50 @@ function renderGroupVideoStats(members) {
   `;
 }
 
+function renderGroupSubscriberBadgesHtml(members, titleContext = "") {
+  if (typeof calculateGroupPlatformSubscribers !== "function") return "";
+  const stats = calculateGroupPlatformSubscribers(members);
+  const badges = [];
+
+  if (stats.ytStr) {
+    badges.push(`
+      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-red-950/80 border border-red-700/50 text-red-300 text-xs sm:text-sm font-bold shadow-md shadow-red-950/30 flex-shrink-0" title="${titleContext} 소속 인원 유튜브 총 구독자: ${stats.ytStr}">
+        <svg class="w-3.5 h-3.5 text-red-500 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        <span>구독자 ${stats.ytStr}</span>
+      </span>
+    `);
+  }
+
+  if (stats.chzzkStr) {
+    badges.push(`
+      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#00ffa3]/10 border border-[#00ffa3]/40 text-[#00ffa3] text-xs sm:text-sm font-bold shadow-md shadow-[#00ffa3]/10 flex-shrink-0" title="${titleContext} 소속 인원 치지직 총 팔로워: ${stats.chzzkStr}">
+        <svg class="w-3.5 h-3.5 text-[#00ffa3] fill-current flex-shrink-0" viewBox="105 97 300 300"><polygon points="224,101 325,101 294,144 396,144 270,318 385,318 385,393 114,393 241,217 140,217"/></svg>
+        <span>팔로워 ${stats.chzzkStr}</span>
+      </span>
+    `);
+  }
+
+  return badges.join("");
+}
+
 function renderDirectCategoryMembers(container, cat) {
   const members = cat.members || [];
   const membersHtml = members.length > 0
     ? members.map(m => renderMemberCard(m, 'direct-member', 'selectDirectMember')).join("")
     : renderEmptyState(cat.emoji || '👥', "등록된 인원이 없습니다.");
 
-  const totalSubscribers = typeof calculateGroupTotalSubscribers === "function"
-    ? calculateGroupTotalSubscribers(members)
-    : null;
+  const subscriberBadgesHtml = renderGroupSubscriberBadgesHtml(members, cat.name);
 
   container.innerHTML = `
-    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-      <div>
-        <div class="flex items-center gap-3 flex-wrap">
-          <span class="text-xs font-semibold px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">${cat.badge}</span>
-          <h2 class="text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
+    <div class="mb-8 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+      <div class="min-w-0">
+        <div class="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+          <span class="text-xs font-semibold px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 flex-shrink-0">${cat.badge}</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2 flex-shrink-0">
             <span>${cat.emoji || ''}</span>
             <span>${cat.name} 인원 목록</span>
           </h2>
-          ${totalSubscribers ? `
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-950/80 border border-red-700/50 text-red-300 text-sm font-bold shadow-md shadow-red-950/30" title="${cat.name} 소속 인원 유튜브 총 구독자 수 합계">
-              <svg class="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-              <span>총 구독자 ${totalSubscribers}</span>
-            </span>
-          ` : ''}
+          ${subscriberBadgesHtml}
           ${isAdmin() ? `
             <button onclick="openMemberModal('add', null, '${cat.id}')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-all shadow-lg shadow-amber-500/20 cursor-pointer">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
@@ -713,9 +752,7 @@ function renderSubgroupList(container, cat) {
   const theme = COLOR_THEMES[cat.color] || COLOR_THEMES.blue;
   const admin = isAdmin();
   const allMembers = getCategoryMembers(cat);
-  const totalSubscribers = typeof calculateGroupTotalSubscribers === "function"
-    ? calculateGroupTotalSubscribers(allMembers)
-    : null;
+  const subscriberBadgesHtml = renderGroupSubscriberBadgesHtml(allMembers, cat.name);
 
   const cardsHtml = cat.groups.map(group => {
     const totalVideos = group.members.reduce((sum, m) => sum + (m.videos || []).length, 0);
@@ -800,20 +837,15 @@ function renderSubgroupList(container, cat) {
   }).join("");
 
   container.innerHTML = `
-    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-      <div>
-        <div class="flex items-center gap-2.5 flex-wrap">
-          <span class="text-xs font-semibold px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">${cat.badge}</span>
-          <h2 class="text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
+    <div class="mb-8 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+      <div class="min-w-0">
+        <div class="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+          <span class="text-xs font-semibold px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 flex-shrink-0">${cat.badge}</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2 flex-shrink-0">
             <span>${cat.emoji || ''}</span>
             <span>${cat.name} 목록 (${cat.groups.length}개)</span>
           </h2>
-          ${totalSubscribers ? `
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-950/80 border border-red-700/50 text-red-300 text-sm font-bold shadow-md shadow-red-950/30" title="${cat.name} 소속 인원 유튜브 총 구독자 수 합계">
-              <svg class="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-              <span>총 구독자 ${totalSubscribers}</span>
-            </span>
-          ` : ''}
+          ${subscriberBadgesHtml}
         </div>
       </div>
 
@@ -835,29 +867,22 @@ function renderGroupMembers(container) {
     ? members.map(m => renderMemberCard(m, 'group-member', 'selectGroupMember')).join("")
     : renderEmptyState(group.emoji || '👥', "등록된 인원이 없습니다.");
 
-  const totalSubscribers = typeof calculateGroupTotalSubscribers === "function"
-    ? calculateGroupTotalSubscribers(members)
-    : null;
+  const subscriberBadgesHtml = renderGroupSubscriberBadgesHtml(members, group.name);
 
   container.innerHTML = `
-    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-      <div>
+    <div class="mb-8 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+      <div class="min-w-0">
         <button onclick="resetToCategory('${cat.id}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-3 cursor-pointer">
           ${SVG_ICONS.back}
           <span>${cat.name} 목록으로 돌아가기</span>
         </button>
-        <div class="flex items-center gap-3 flex-wrap">
-          ${bgImage ? `<img src="${bgImage}" alt="${group.name}" class="w-10 h-10 rounded-xl object-cover border-2 border-amber-500/60 shadow-lg shadow-amber-500/20" />` : ''}
-          <h2 class="text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
+        <div class="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+          ${bgImage ? `<img src="${bgImage}" alt="${group.name}" class="w-10 h-10 rounded-xl object-cover border-2 border-amber-500/60 shadow-lg shadow-amber-500/20 flex-shrink-0" />` : ''}
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2 flex-shrink-0">
             <span>${group.emoji || ''}</span>
             <span>${group.name}</span>
           </h2>
-          ${totalSubscribers ? `
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-950/80 border border-red-700/50 text-red-300 text-sm font-bold shadow-md shadow-red-950/30" title="${group.name} 소속 인원 유튜브 총 구독자 수 합계">
-              <svg class="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-              <span>총 구독자 ${totalSubscribers}</span>
-            </span>
-          ` : ''}
+          ${subscriberBadgesHtml}
           ${isAdmin() ? `
             <button onclick="openMemberModal('add', null, '${cat.id}', '${group.id}')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-all shadow-lg shadow-amber-500/20 cursor-pointer">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>

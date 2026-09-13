@@ -470,41 +470,38 @@ window.handleBadgeChange = handleBadgeChange;
 
 function getSelectedAffiliations() {
   const affs = [];
-  const directCats = ["police", "ems", "press", "citizen", "guide"];
-  directCats.forEach(catId => {
-    const chk = document.getElementById(`aff-check-${catId}`);
-    if (chk && chk.checked) {
-      affs.push({ category: catId, subgroup: null });
+  const categories = (KONGBAB_DATA && Array.isArray(KONGBAB_DATA.categories))
+    ? KONGBAB_DATA.categories
+    : [{ id: "police" }, { id: "ems" }, { id: "gang" }, { id: "business" }, { id: "press" }, { id: "citizen" }, { id: "guide" }];
+
+  categories.forEach(cat => {
+    const chk = document.getElementById(`aff-check-${cat.id}`);
+    if (!chk || !chk.checked) return;
+
+    if (cat.id === "gang") {
+      const gangInputs = document.querySelectorAll('input[name="aff-gang-group"]:checked');
+      if (gangInputs.length > 0) {
+        gangInputs.forEach(input => {
+          affs.push({ category: "gang", subgroup: input.value });
+        });
+      } else {
+        const firstGroup = cat?.groups?.[0]?.id || "gang-bigdick";
+        affs.push({ category: "gang", subgroup: firstGroup });
+      }
+    } else if (cat.id === "business") {
+      const bizInputs = document.querySelectorAll('input[name="aff-business-group"]:checked');
+      if (bizInputs.length > 0) {
+        bizInputs.forEach(input => {
+          affs.push({ category: "business", subgroup: input.value });
+        });
+      } else {
+        const firstGroup = cat?.groups?.[0]?.id || "biz-lux";
+        affs.push({ category: "business", subgroup: firstGroup });
+      }
+    } else {
+      affs.push({ category: cat.id, subgroup: null });
     }
   });
-
-  const gangChk = document.getElementById("aff-check-gang");
-  if (gangChk && gangChk.checked) {
-    const gangInputs = document.querySelectorAll('input[name="aff-gang-group"]:checked');
-    if (gangInputs.length > 0) {
-      gangInputs.forEach(input => {
-        affs.push({ category: "gang", subgroup: input.value });
-      });
-    } else {
-      const gangCat = KONGBAB_DATA.categories.find(c => c.id === "gang");
-      const firstGroup = gangCat?.groups?.[0]?.id || "gang-nonghyup";
-      affs.push({ category: "gang", subgroup: firstGroup });
-    }
-  }
-
-  const bizChk = document.getElementById("aff-check-business");
-  if (bizChk && bizChk.checked) {
-    const bizInputs = document.querySelectorAll('input[name="aff-business-group"]:checked');
-    if (bizInputs.length > 0) {
-      bizInputs.forEach(input => {
-        affs.push({ category: "business", subgroup: input.value });
-      });
-    } else {
-      const bizCat = KONGBAB_DATA.categories.find(c => c.id === "business");
-      const firstGroup = bizCat?.groups?.[0]?.id || "biz-yastation";
-      affs.push({ category: "business", subgroup: firstGroup });
-    }
-  }
 
   return affs;
 }
@@ -578,7 +575,7 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
   document.querySelectorAll('input[name="member-aff-category"], input[name="aff-gang-group"], input[name="aff-business-group"]').forEach(chk => {
     chk.checked = false;
   });
-  ["aff-check-police", "aff-check-ems", "aff-check-press", "aff-check-citizen", "aff-check-guide", "aff-check-gang", "aff-check-business"].forEach(id => {
+  ["aff-check-police", "aff-check-ems", "aff-check-gang", "aff-check-business", "aff-check-press", "aff-check-citizen", "aff-check-guide"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.checked = false;
   });

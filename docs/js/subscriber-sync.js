@@ -64,6 +64,54 @@ function calculateGroupTotalSubscribers(members) {
   return formatSubscriberCount(total);
 }
 
+// 플랫폼별(유튜브 구독자 / 치지직 팔로워) 총합 계산
+function calculateGroupPlatformSubscribers(members) {
+  if (!Array.isArray(members) || members.length === 0) {
+    return {
+      ytTotal: 0,
+      ytStr: null,
+      chzzkTotal: 0,
+      chzzkStr: null,
+      grandTotal: 0,
+      grandStr: null,
+    };
+  }
+
+  const seen = new Set();
+  let ytTotal = 0;
+  let chzzkTotal = 0;
+
+  for (const m of members) {
+    if (!m) continue;
+    const key = m.id || (m.streamer ? m.streamer : m.name);
+    if (key && seen.has(key)) continue;
+    if (key) seen.add(key);
+
+    const count = parseSubscriberCount(m.subscriberCount);
+    if (count > 0) {
+      const isChzzk = typeof isMemberChzzk === "function"
+        ? isMemberChzzk(m)
+        : (m.youtubeUrl && (/chzzk\.naver\.com/i.test(String(m.youtubeUrl)) || /^[a-f0-9]{32}$/i.test(String(m.youtubeUrl).trim())));
+      if (isChzzk) {
+        chzzkTotal += count;
+      } else {
+        ytTotal += count;
+      }
+    }
+  }
+
+  const grandTotal = ytTotal + chzzkTotal;
+
+  return {
+    ytTotal,
+    ytStr: ytTotal > 0 ? (typeof formatSubscriberCount === "function" ? formatSubscriberCount(ytTotal) : `${ytTotal.toLocaleString()}명`) : null,
+    chzzkTotal,
+    chzzkStr: chzzkTotal > 0 ? (typeof formatSubscriberCount === "function" ? formatSubscriberCount(chzzkTotal) : `${chzzkTotal.toLocaleString()}명`) : null,
+    grandTotal,
+    grandStr: grandTotal > 0 ? (typeof formatSubscriberCount === "function" ? formatSubscriberCount(grandTotal) : `${grandTotal.toLocaleString()}명`) : null,
+  };
+}
+
 // 유튜브 URL/문자열에서 채널 식별 정보(channelId, handle, videoId, username, search) 추출
 function parseYouTubeTarget(urlOrStr) {
   if (!urlOrStr || typeof urlOrStr !== "string") return null;

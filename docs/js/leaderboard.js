@@ -193,9 +193,12 @@ function computeGlobalMetrics(members) {
   const totalBingeCount = uniqueMembers.reduce((sum, m) => sum + (m.bingeCount || 0), 0);
   const totalBingeSec = uniqueMembers.reduce((sum, m) => sum + (m.bingeSec || 0), 0);
 
-  // 전체 소속 인원 총합 구독자수 계산 (중복 스트리머/유튜브 채널 중복 집계 방지)
+  // 전체 소속 인원 총합 구독자수 및 치지직 팔로워수 계산 (플랫폼별 구분 & 중복 스트리머 중복 집계 방지)
   const seenSubKeys = new Set();
   let totalSubCount = 0;
+  let ytSubCount = 0;
+  let chzzkFollowerCount = 0;
+
   uniqueMembers.forEach(m => {
     const ytKey = (m.youtubeUrl && typeof m.youtubeUrl === 'string' && m.youtubeUrl.trim())
       ? m.youtubeUrl.trim().toLowerCase().replace(/\/+$/, '')
@@ -209,6 +212,14 @@ function computeGlobalMetrics(members) {
       const count = typeof parseSubscriberCount === "function" ? parseSubscriberCount(m.subscriberCount) : 0;
       if (count > 0) {
         totalSubCount += count;
+        const isChzzk = typeof isMemberChzzk === "function"
+          ? isMemberChzzk(m)
+          : (m.youtubeUrl && (/chzzk\.naver\.com/i.test(String(m.youtubeUrl)) || /^[a-f0-9]{32}$/i.test(String(m.youtubeUrl).trim())));
+        if (isChzzk) {
+          chzzkFollowerCount += count;
+        } else {
+          ytSubCount += count;
+        }
       }
     }
   });
@@ -216,6 +227,14 @@ function computeGlobalMetrics(members) {
   const totalSubStr = typeof formatSubscriberCount === "function" && totalSubCount > 0
     ? formatSubscriberCount(totalSubCount)
     : (totalSubCount > 0 ? `${totalSubCount.toLocaleString()}명` : "0명");
+
+  const ytSubStr = typeof formatSubscriberCount === "function" && ytSubCount > 0
+    ? formatSubscriberCount(ytSubCount)
+    : (ytSubCount > 0 ? `${ytSubCount.toLocaleString()}명` : "0명");
+
+  const chzzkFollowerStr = typeof formatSubscriberCount === "function" && chzzkFollowerCount > 0
+    ? formatSubscriberCount(chzzkFollowerCount)
+    : (chzzkFollowerCount > 0 ? `${chzzkFollowerCount.toLocaleString()}명` : "0명");
 
   return {
     totalMembers,
@@ -233,6 +252,10 @@ function computeGlobalMetrics(members) {
     totalBingeDurStr: typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(totalBingeSec) : "0분",
     totalSubCount,
     totalSubStr,
+    ytSubCount,
+    ytSubStr,
+    chzzkFollowerCount,
+    chzzkFollowerStr,
   };
 }
 
@@ -344,90 +367,120 @@ function renderLeaderboardTabButtons() {
   }).join("");
 }
 
+// 개별 멤버 구독자/팔로워 뱃지 렌더링 헬퍼 (통계 모달 스트리머명 옆 미표시)
+function renderMemberSubscriberBadgeHtml(m) {
+  return '';
+}
+
 // 상단 글로벌 통계 요약 카드 렌더링
 function renderGlobalStatsCards(globalStats) {
   return `
     <!-- 총 소속 인원 -->
     <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-3 flex flex-col justify-between shadow-sm">
-      <div class="flex items-center justify-between text-zinc-400 text-xs mb-2">
+      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1.5">
         <span class="font-medium">총 소속 인원</span>
         <span class="text-zinc-500">👥</span>
       </div>
       <div>
-        <div class="text-xl sm:text-2xl font-bold text-white tracking-tight">${globalStats.totalMembers}명</div>
-        <div class="text-[11px] text-zinc-400 mt-0.5 flex items-center gap-1 truncate" title="전체 스트리머 총합 구독자 수: ${globalStats.totalSubStr}">
-          <svg class="w-3 h-3 text-red-500 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-          <span class="truncate">총 구독자 <span class="text-white font-bold">${globalStats.totalSubStr}</span></span>
+        <div class="min-h-[26px] flex items-center text-lg sm:text-xl font-bold text-white tracking-tight leading-tight">${globalStats.totalMembers}명</div>
+        <div class="mt-1 flex flex-col gap-0.5 text-[11px] leading-tight">
+          <div class="h-4 flex items-center gap-1.5 text-zinc-300 truncate" title="전체 유튜브 총 구독자: ${globalStats.ytSubStr}">
+            <svg class="w-3 h-3 text-red-500 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            <span class="text-white font-bold truncate">${globalStats.ytSubStr}</span>
+          </div>
+          ${globalStats.chzzkFollowerCount > 0 ? `
+            <div class="h-4 flex items-center gap-1.5 text-[#00ffa3] truncate" title="전체 치지직 총 팔로워: ${globalStats.chzzkFollowerStr}">
+              <svg class="w-3 h-3 text-[#00ffa3] fill-current flex-shrink-0" viewBox="105 97 300 300"><polygon points="224,101 325,101 294,144 396,144 270,318 385,318 385,393 114,393 241,217 140,217"/></svg>
+              <span class="text-[#00ffa3] font-bold truncate">${globalStats.chzzkFollowerStr}</span>
+            </div>
+          ` : `
+            <div class="h-4 flex items-center text-zinc-500 truncate">전체 채널 합산</div>
+          `}
         </div>
       </div>
     </div>
 
     <!-- 총 영상 개수 -->
     <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-3 flex flex-col justify-between shadow-sm">
-      <div class="flex items-center justify-between text-zinc-400 text-xs mb-2">
+      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1.5">
         <span class="font-medium">등록된 총 영상</span>
         <span class="text-zinc-500">🎬</span>
       </div>
       <div>
-        <div class="text-xl sm:text-2xl font-bold text-amber-400 tracking-tight">${globalStats.totalVideos}개</div>
-        <div class="text-[11px] text-zinc-500 mt-0.5">누적 아카이브</div>
+        <div class="min-h-[26px] flex items-center text-lg sm:text-xl font-bold text-amber-400 tracking-tight leading-tight">${globalStats.totalVideos}개</div>
+        <div class="mt-1 flex flex-col gap-0.5 text-[11px] leading-tight">
+          <div class="h-4 flex items-center text-zinc-300 truncate">누적 아카이브</div>
+          <div class="h-4 flex items-center text-zinc-500 truncate">전체 등록 영상</div>
+        </div>
       </div>
     </div>
 
     <!-- 총 누적 시간 -->
     <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-3 flex flex-col justify-between shadow-sm">
-      <div class="flex items-center justify-between text-zinc-400 text-xs mb-2">
+      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1.5">
         <span class="font-medium">총 누적 시간</span>
         <span class="text-amber-400">⏱️</span>
       </div>
       <div>
-        <div class="text-base sm:text-lg font-bold text-amber-400 tracking-tight leading-tight">${globalStats.totalDurStr}</div>
-        <div class="text-[11px] text-zinc-500 mt-0.5">전체 플레이타임</div>
+        <div class="min-h-[26px] flex items-center text-base sm:text-lg font-bold text-amber-400 tracking-tight leading-tight">${globalStats.totalDurStr}</div>
+        <div class="mt-1 flex flex-col gap-0.5 text-[11px] leading-tight">
+          <div class="h-4 flex items-center text-zinc-300 truncate">전체 플레이타임</div>
+          <div class="h-4 flex items-center text-zinc-500 truncate">누적 방송 합산</div>
+        </div>
       </div>
     </div>
 
     <!-- 편집 영상 합산 -->
     <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-3 flex flex-col justify-between shadow-sm">
-      <div class="flex items-center justify-between text-zinc-400 text-xs mb-2">
+      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1.5">
         <span class="font-medium flex items-center gap-1.5">
           <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
           <span>편집 영상</span>
         </span>
-        <span class="text-white font-semibold text-[10px]">${globalStats.totalClipCount}개</span>
+        <span class="text-zinc-400 font-semibold text-[10px]">${globalStats.totalClipCount}개</span>
       </div>
       <div>
-        <div class="text-sm sm:text-base font-bold text-red-400 tracking-tight leading-tight">${globalStats.totalClipDurStr}</div>
-        <div class="text-[11px] text-white mt-0.5 font-medium">총 ${globalStats.totalClipCount}개 등록됨</div>
+        <div class="min-h-[26px] flex items-center text-base sm:text-lg font-bold text-red-400 tracking-tight leading-tight">${globalStats.totalClipDurStr}</div>
+        <div class="mt-1 flex flex-col gap-0.5 text-[11px] leading-tight">
+          <div class="h-4 flex items-center text-zinc-300 font-medium truncate">총 ${globalStats.totalClipCount}개 등록됨</div>
+          <div class="h-4 flex items-center text-zinc-500 truncate">하이라이트 클립</div>
+        </div>
       </div>
     </div>
 
     <!-- 풀 영상 합산 -->
     <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-3 flex flex-col justify-between shadow-sm">
-      <div class="flex items-center justify-between text-zinc-400 text-xs mb-2">
+      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1.5">
         <span class="font-medium flex items-center gap-1.5">
           <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
           <span>풀 영상</span>
         </span>
-        <span class="text-white font-semibold text-[10px]">${globalStats.totalFullCount}개</span>
+        <span class="text-zinc-400 font-semibold text-[10px]">${globalStats.totalFullCount}개</span>
       </div>
       <div>
-        <div class="text-sm sm:text-base font-bold text-indigo-400 tracking-tight leading-tight">${globalStats.totalFullDurStr}</div>
-        <div class="text-[11px] text-white mt-0.5 font-medium">총 ${globalStats.totalFullCount}개 등록됨</div>
+        <div class="min-h-[26px] flex items-center text-base sm:text-lg font-bold text-indigo-400 tracking-tight leading-tight">${globalStats.totalFullDurStr}</div>
+        <div class="mt-1 flex flex-col gap-0.5 text-[11px] leading-tight">
+          <div class="h-4 flex items-center text-zinc-300 font-medium truncate">총 ${globalStats.totalFullCount}개 등록됨</div>
+          <div class="h-4 flex items-center text-zinc-500 truncate">다시보기 풀버전</div>
+        </div>
       </div>
     </div>
 
     <!-- 몰아보기 합산 -->
     <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-3 flex flex-col justify-between shadow-sm">
-      <div class="flex items-center justify-between text-zinc-400 text-xs mb-2">
+      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1.5">
         <span class="font-medium flex items-center gap-1.5">
           <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
           <span>몰아보기</span>
         </span>
-        <span class="text-white font-semibold text-[10px]">${globalStats.totalBingeCount}개</span>
+        <span class="text-zinc-400 font-semibold text-[10px]">${globalStats.totalBingeCount}개</span>
       </div>
       <div>
-        <div class="text-sm sm:text-base font-bold text-amber-300 tracking-tight leading-tight">${globalStats.totalBingeDurStr}</div>
-        <div class="text-[11px] text-white mt-0.5 font-medium">총 ${globalStats.totalBingeCount}개 등록됨</div>
+        <div class="min-h-[26px] flex items-center text-base sm:text-lg font-bold text-amber-300 tracking-tight leading-tight">${globalStats.totalBingeDurStr}</div>
+        <div class="mt-1 flex flex-col gap-0.5 text-[11px] leading-tight">
+          <div class="h-4 flex items-center text-zinc-300 font-medium truncate">총 ${globalStats.totalBingeCount}개 등록됨</div>
+          <div class="h-4 flex items-center text-zinc-500 truncate">정주행 몰아보기</div>
+        </div>
       </div>
     </div>
   `;

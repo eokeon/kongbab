@@ -52,7 +52,7 @@
             <input 
               type="text" 
               id="search-input" 
-              placeholder="인원, 스트리머, 갱단, 영상 검색..." 
+              placeholder="인원, 스트리머, 소속, 직책 검색..." 
               class="w-full pl-10 pr-4 py-2 bg-zinc-900/90 border border-zinc-800 rounded-xl text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
             />
           </div>
@@ -64,8 +64,8 @@
       <div class="pb-3 sm:hidden">
         <input 
           type="text" 
-          oninput="state.searchQuery = this.value.trim().toLowerCase(); renderContent();"
-          placeholder="인원, 스트리머, 영상 검색..." 
+          id="search-input-mobile"
+          placeholder="인원, 스트리머, 소속, 직책 검색..." 
           class="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-red-500"
         />
       </div>
@@ -570,6 +570,16 @@
               <span class="text-xs font-semibold text-zinc-200">🚑 EMS</span>
             </label>
 
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-red-500/60 cursor-pointer transition-all select-none">
+              <input type="checkbox" id="aff-check-gang" value="gang" onchange="handleAffiliationCheckboxChange()" class="rounded border-zinc-700 text-red-600 focus:ring-0 cursor-pointer w-4 h-4">
+              <span class="text-xs font-semibold text-zinc-200">💀 갱단</span>
+            </label>
+
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-amber-500/60 cursor-pointer transition-all select-none">
+              <input type="checkbox" id="aff-check-business" value="business" onchange="handleAffiliationCheckboxChange()" class="rounded border-zinc-700 text-amber-600 focus:ring-0 cursor-pointer w-4 h-4">
+              <span class="text-xs font-semibold text-zinc-200">🏢 사업체</span>
+            </label>
+
             <label class="flex items-center gap-2 p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-sky-500/60 cursor-pointer transition-all select-none">
               <input type="checkbox" id="aff-check-press" value="press" onchange="handleAffiliationCheckboxChange()" class="rounded border-zinc-700 text-sky-600 focus:ring-0 cursor-pointer w-4 h-4">
               <span class="text-xs font-semibold text-zinc-200">📰 기자</span>
@@ -583,16 +593,6 @@
             <label class="flex items-center gap-2 p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-emerald-500/60 cursor-pointer transition-all select-none">
               <input type="checkbox" id="aff-check-guide" value="guide" onchange="handleAffiliationCheckboxChange()" class="rounded border-zinc-700 text-emerald-600 focus:ring-0 cursor-pointer w-4 h-4">
               <span class="text-xs font-semibold text-zinc-200">🧭 가이드</span>
-            </label>
-
-            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-red-500/60 cursor-pointer transition-all select-none">
-              <input type="checkbox" id="aff-check-gang" value="gang" onchange="handleAffiliationCheckboxChange()" class="rounded border-zinc-700 text-red-600 focus:ring-0 cursor-pointer w-4 h-4">
-              <span class="text-xs font-semibold text-zinc-200">💀 갱단</span>
-            </label>
-
-            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-amber-500/60 cursor-pointer transition-all select-none">
-              <input type="checkbox" id="aff-check-business" value="business" onchange="handleAffiliationCheckboxChange()" class="rounded border-zinc-700 text-amber-600 focus:ring-0 cursor-pointer w-4 h-4">
-              <span class="text-xs font-semibold text-zinc-200">🏢 사업체</span>
             </label>
           </div>
 
