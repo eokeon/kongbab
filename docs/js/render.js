@@ -253,28 +253,28 @@ function renderHeaderAuth() {
 
   if (isAdmin()) {
     container.innerHTML = `
-      <div class="flex items-center gap-2">
-        <button onclick="openAdminSettingsModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-950/80 hover:bg-amber-900 border border-amber-600/60 text-amber-300 text-xs font-bold shadow-sm transition-all cursor-pointer group" title="어드민 설정 (유튜브 구독자 갱신 등)">
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <button onclick="openAdminSettingsModal()" class="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-950/80 hover:bg-amber-900 border border-amber-600/60 text-amber-300 text-[11px] sm:text-xs font-bold shadow-sm transition-all cursor-pointer group whitespace-nowrap" title="어드민 설정 (유튜브 구독자 갱신 등)">
           <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
           <span>🛡️ 어드민</span>
         </button>
-        <button onclick="openBackupModal()" class="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white text-xs font-semibold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer" title="DB / 백업 관리 센터 (즉시 저장, 백업 기록, 불러오기)">
-          <span>💾 백업 관리</span>
+        <button onclick="openBackupModal()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white text-[11px] sm:text-xs font-semibold transition-all shadow-sm flex items-center gap-1 sm:gap-1.5 cursor-pointer whitespace-nowrap" title="DB / 백업 관리 센터 (즉시 저장, 백업 기록, 불러오기)">
+          <span>💾 <span class="hidden sm:inline">백업 </span>관리</span>
         </button>
-        <button onclick="logoutUser()" class="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white text-xs font-semibold border border-zinc-800 transition-colors cursor-pointer">
+        <button onclick="logoutUser()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white text-[11px] sm:text-xs font-semibold border border-zinc-800 transition-colors cursor-pointer whitespace-nowrap">
           로그아웃
         </button>
       </div>
     `;
   } else {
     container.innerHTML = `
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1.5 sm:gap-2">
         <span class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 text-xs font-medium">
           <span class="w-2 h-2 rounded-full bg-zinc-500"></span>
           게스트 (시청 전용)
         </span>
-        <button onclick="openLoginModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white text-xs font-bold transition-all shadow-md shadow-red-600/25 cursor-pointer">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+        <button onclick="openLoginModal()" class="inline-flex items-center gap-1 sm:gap-1.5 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white text-xs font-bold transition-all shadow-md shadow-red-600/25 cursor-pointer whitespace-nowrap">
+          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
           <span>로그인</span>
         </button>
       </div>
@@ -303,10 +303,10 @@ function renderCategoryTabs() {
     const countLabel = `${memberCount}명`;
 
     return `
-      <button onclick="selectCategory('${cat.id}')" class="flex items-center gap-2 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${activeClass}">
+      <button onclick="selectCategory('${cat.id}')" class="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 cursor-pointer whitespace-nowrap flex-shrink-0 sm:flex-shrink ${activeClass}">
         <span>${cat.emoji || ''}</span>
         <span>${cat.name}</span>
-        <span class="text-xs px-2 py-0.5 rounded-full ${isActive ? 'bg-black/30 text-white font-bold' : 'bg-zinc-800 text-zinc-400'}">
+        <span class="text-[11px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full ${isActive ? 'bg-black/30 text-white font-bold' : 'bg-zinc-800 text-zinc-400'}">
           ${countLabel}
         </span>
       </button>
@@ -532,10 +532,10 @@ function renderMemberCard(member, dragType, clickFn) {
       data-member-id="${member.id}"
       ${dragAttrs}
       onclick="${clickFn}('${member.id}')"
-      class="group member-card-interactive bg-zinc-900/80 border ${cardBorderClass} rounded-2xl p-5 ${cursorClass} shadow-lg hover:shadow-2xl flex flex-col justify-between select-none"
+      class="group member-card-interactive bg-zinc-900/80 border ${cardBorderClass} rounded-2xl p-4 sm:p-5 ${cursorClass} shadow-lg hover:shadow-2xl flex flex-col justify-between select-none"
     >
       <div>
-        <div class="flex items-start gap-4 mb-4">
+        <div class="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
           <div class="relative flex-shrink-0">
             <img 
               src="${getMemberAvatar(member)}" 
@@ -544,7 +544,7 @@ function renderMemberCard(member, dragType, clickFn) {
               loading="lazy"
               referrerpolicy="no-referrer"
               onerror="this.onerror=null; this.src='assets/default-avatar.svg'"
-              class="w-16 h-16 rounded-2xl object-cover border-2 ${inactive ? 'border-zinc-700/60 group-hover:border-amber-400' : 'border-zinc-700 group-hover:border-amber-400'} ${avatarFilterClass} transition-all duration-300 shadow-md"
+              class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 ${inactive ? 'border-zinc-700/60 group-hover:border-amber-400' : 'border-zinc-700 group-hover:border-amber-400'} ${avatarFilterClass} transition-all duration-300 shadow-md"
             />
             ${effectiveSwatRole ? getSwatBadgeHtml(effectiveSwatRole, 'md') : ''}
             ${martyred ? `
@@ -565,18 +565,18 @@ function renderMemberCard(member, dragType, clickFn) {
           
           <div class="flex-1 min-w-0">
             <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2 flex-1 min-w-0 flex-wrap">
-                <h4 class="text-xl font-bold text-white group-hover:text-amber-400 transition-colors truncate" title="${member.streamer}">
+              <div class="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-0 flex-wrap">
+                <h4 class="text-lg sm:text-xl font-bold text-white group-hover:text-amber-400 transition-colors truncate" title="${member.streamer}">
                   ${member.streamer}
                 </h4>
                 ${member.subscriberCount ? (
                   isMemberChzzk(member) ? `
-                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#00ffa3] bg-[#00ffa3]/10 border border-[#00ffa3]/40 px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="치지직 채널 팔로워 수">
+                    <span class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-[#00ffa3] bg-[#00ffa3]/10 border border-[#00ffa3]/40 px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="치지직 채널 팔로워 수">
                       <svg class="w-3 h-3 text-[#00ffa3] fill-current" viewBox="105 97 300 300"><polygon points="224,101 325,101 294,144 396,144 270,318 385,318 385,393 114,393 241,217 140,217"/></svg>
                       <span>${member.subscriberCount}</span>
                     </span>
                   ` : `
-                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-red-300 bg-red-950/80 border border-red-700/50 px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="유튜브 채널 구독자 수">
+                    <span class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-red-300 bg-red-950/80 border border-red-700/50 px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="유튜브 채널 구독자 수">
                       <svg class="w-3 h-3 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                       <span>${member.subscriberCount}</span>
                     </span>
@@ -600,11 +600,11 @@ function renderMemberCard(member, dragType, clickFn) {
         </div>
       </div>
 
-      <div class="pt-4 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400 gap-2">
+      <div class="pt-3 sm:pt-4 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400 gap-2 flex-wrap">
         <div class="font-medium text-zinc-300 flex items-center gap-1.5 flex-wrap">
           ${videoStatHtml}
         </div>
-        <span class="inline-flex items-center gap-1 text-amber-400 group-hover:translate-x-0.5 transition-transform font-semibold flex-shrink-0">
+        <span class="inline-flex items-center gap-1 text-amber-400 group-hover:translate-x-0.5 transition-transform font-semibold flex-shrink-0 text-[11px] sm:text-xs">
           영상 목록 보기 →
         </span>
       </div>
@@ -636,51 +636,51 @@ function renderGroupVideoStats(members) {
   const totalDur = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(totalSec) : "0분";
 
   return `
-    <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-2 sm:p-2.5 flex items-center gap-1.5 sm:gap-2 flex-nowrap flex-shrink-0 shadow-xl select-none">
+    <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-1.5 sm:p-2.5 flex items-center gap-1 sm:gap-2 flex-nowrap max-w-full overflow-x-auto no-scrollbar flex-shrink-0 shadow-xl select-none">
       <!-- 편집 영상 -->
-      <div class="flex flex-col items-center justify-center text-center min-w-[76px] sm:min-w-[84px] px-2.5 py-1">
-        <p class="text-[11px] text-zinc-400 flex items-center justify-center gap-1.5 font-medium mb-1">
+      <div class="flex flex-col items-center justify-center text-center min-w-[66px] sm:min-w-[84px] px-1.5 sm:px-2.5 py-1">
+        <p class="text-[10px] sm:text-[11px] text-zinc-400 flex items-center justify-center gap-1 sm:gap-1.5 font-medium mb-0.5 sm:mb-1">
           <span class="w-1.5 h-1.5 rounded-full bg-red-500 shadow-sm shadow-red-500/50"></span>
           <span>편집 영상</span>
         </p>
-        <p class="text-sm sm:text-[15px] font-bold text-red-400 tracking-tight leading-snug my-0.5">${clipDur}</p>
-        <p class="text-xs text-zinc-400 font-medium whitespace-nowrap mt-0.5 leading-none">${clipCount}개</p>
+        <p class="text-xs sm:text-[15px] font-bold text-red-400 tracking-tight leading-snug my-0.5">${clipDur}</p>
+        <p class="text-[11px] sm:text-xs text-zinc-400 font-medium whitespace-nowrap mt-0.5 leading-none">${clipCount}개</p>
       </div>
 
-      <div class="w-px h-8 bg-zinc-800 self-center"></div>
+      <div class="w-px h-7 sm:h-8 bg-zinc-800 self-center"></div>
 
       <!-- 풀 영상 -->
-      <div class="flex flex-col items-center justify-center text-center min-w-[76px] sm:min-w-[84px] px-2.5 py-1">
-        <p class="text-[11px] text-zinc-400 flex items-center justify-center gap-1.5 font-medium mb-1">
+      <div class="flex flex-col items-center justify-center text-center min-w-[66px] sm:min-w-[84px] px-1.5 sm:px-2.5 py-1">
+        <p class="text-[10px] sm:text-[11px] text-zinc-400 flex items-center justify-center gap-1 sm:gap-1.5 font-medium mb-0.5 sm:mb-1">
           <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-sm shadow-indigo-400/50"></span>
           <span>풀 영상</span>
         </p>
-        <p class="text-sm sm:text-[15px] font-bold text-indigo-400 tracking-tight leading-snug my-0.5">${fullDur}</p>
-        <p class="text-xs text-zinc-400 font-medium whitespace-nowrap mt-0.5 leading-none">${fullCount}개</p>
+        <p class="text-xs sm:text-[15px] font-bold text-indigo-400 tracking-tight leading-snug my-0.5">${fullDur}</p>
+        <p class="text-[11px] sm:text-xs text-zinc-400 font-medium whitespace-nowrap mt-0.5 leading-none">${fullCount}개</p>
       </div>
 
       ${bingeCount > 0 ? `
-        <div class="w-px h-8 bg-zinc-800 self-center"></div>
+        <div class="w-px h-7 sm:h-8 bg-zinc-800 self-center"></div>
         <!-- 몰아보기 -->
-        <div class="flex flex-col items-center justify-center text-center min-w-[76px] sm:min-w-[84px] px-2.5 py-1">
-          <p class="text-[11px] text-zinc-400 flex items-center justify-center gap-1.5 font-medium mb-1">
+        <div class="flex flex-col items-center justify-center text-center min-w-[66px] sm:min-w-[84px] px-1.5 sm:px-2.5 py-1">
+          <p class="text-[10px] sm:text-[11px] text-zinc-400 flex items-center justify-center gap-1 sm:gap-1.5 font-medium mb-0.5 sm:mb-1">
             <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></span>
             <span>몰아보기</span>
           </p>
-          <p class="text-sm sm:text-[15px] font-bold text-amber-400 tracking-tight leading-snug my-0.5">${bingeDur}</p>
-          <p class="text-xs text-zinc-400 font-medium whitespace-nowrap mt-0.5 leading-none">${bingeCount}개</p>
+          <p class="text-xs sm:text-[15px] font-bold text-amber-400 tracking-tight leading-snug my-0.5">${bingeDur}</p>
+          <p class="text-[11px] sm:text-xs text-zinc-400 font-medium whitespace-nowrap mt-0.5 leading-none">${bingeCount}개</p>
         </div>
       ` : ''}
 
-      <div class="w-px h-8 bg-zinc-800 self-center"></div>
+      <div class="w-px h-7 sm:h-8 bg-zinc-800 self-center"></div>
 
       <!-- 소속 인원 -->
-      <div class="flex flex-col items-center justify-center text-center min-w-[76px] sm:min-w-[84px] px-2.5 py-1">
-        <p class="text-[11px] text-zinc-400 flex items-center justify-center gap-1 font-medium mb-1">
+      <div class="flex flex-col items-center justify-center text-center min-w-[66px] sm:min-w-[84px] px-1.5 sm:px-2.5 py-1">
+        <p class="text-[10px] sm:text-[11px] text-zinc-400 flex items-center justify-center gap-1 font-medium mb-0.5 sm:mb-1">
           <svg class="w-3 h-3 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
           <span>소속 인원</span>
         </p>
-        <p class="text-sm sm:text-[15px] font-bold text-white tracking-tight leading-snug my-0.5">${memberList.length}명</p>
+        <p class="text-xs sm:text-[15px] font-bold text-white tracking-tight leading-snug my-0.5">${memberList.length}명</p>
       </div>
     </div>
   `;
@@ -721,11 +721,11 @@ function renderDirectCategoryMembers(container, cat) {
   const subscriberBadgesHtml = renderGroupSubscriberBadgesHtml(members, cat.name);
 
   container.innerHTML = `
-    <div class="mb-8 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+    <div class="mb-6 sm:mb-8 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
       <div class="min-w-0">
-        <div class="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+        <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
           <span class="text-xs font-semibold px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 flex-shrink-0">${cat.badge}</span>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2 flex-shrink-0">
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2 flex-shrink-0">
             <span>${cat.emoji || ''}</span>
             <span>${cat.name} 인원 목록</span>
           </h2>
@@ -742,7 +742,7 @@ function renderDirectCategoryMembers(container, cat) {
       ${renderGroupVideoStats(members)}
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
       ${membersHtml}
     </div>
   `;
@@ -774,7 +774,7 @@ function renderSubgroupList(container, cat) {
         <div 
           ${dragAttrs}
           onclick="selectGroup('${group.id}')"
-          class="group member-card-interactive relative overflow-hidden bg-zinc-950 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl p-5 ${cursorClass} shadow-xl ${theme.glow} select-none min-h-[140px] flex flex-col justify-between"
+          class="group member-card-interactive relative overflow-hidden bg-zinc-950 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl p-4 sm:p-5 ${cursorClass} shadow-xl ${theme.glow} select-none min-h-[140px] flex flex-col justify-between"
         >
           <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
             <div 
@@ -785,7 +785,7 @@ function renderSubgroupList(container, cat) {
           </div>
 
           <div class="relative z-10 flex items-center justify-between gap-2 mb-4">
-            <h3 class="text-2xl font-black text-white group-hover:text-amber-400 transition-colors flex items-center gap-2 truncate min-w-0 flex-1 drop-shadow-md" title="${group.name}">
+            <h3 class="text-xl sm:text-2xl font-black text-white group-hover:text-amber-400 transition-colors flex items-center gap-2 truncate min-w-0 flex-1 drop-shadow-md" title="${group.name}">
               <span class="flex-shrink-0">${group.emoji || ''}</span>
               <span class="truncate">${group.name}</span>
             </h3>
@@ -811,10 +811,10 @@ function renderSubgroupList(container, cat) {
       <div 
         ${dragAttrs}
         onclick="selectGroup('${group.id}')"
-        class="group member-card-interactive relative bg-gradient-to-b from-zinc-900/90 to-zinc-950/90 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl p-5 ${cursorClass} shadow-xl ${theme.glow} select-none"
+        class="group member-card-interactive relative bg-gradient-to-b from-zinc-900/90 to-zinc-950/90 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl p-4 sm:p-5 ${cursorClass} shadow-xl ${theme.glow} select-none"
       >
         <div class="flex items-center justify-between gap-2 mb-4">
-          <h3 class="text-2xl font-bold text-white group-hover:text-amber-400 transition-colors flex items-center gap-2 truncate min-w-0 flex-1" title="${group.name}">
+          <h3 class="text-xl sm:text-2xl font-bold text-white group-hover:text-amber-400 transition-colors flex items-center gap-2 truncate min-w-0 flex-1" title="${group.name}">
             <span class="flex-shrink-0">${group.emoji || ''}</span>
             <span class="truncate">${group.name}</span>
           </h3>
@@ -837,11 +837,11 @@ function renderSubgroupList(container, cat) {
   }).join("");
 
   container.innerHTML = `
-    <div class="mb-8 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+    <div class="mb-6 sm:mb-8 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
       <div class="min-w-0">
-        <div class="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+        <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
           <span class="text-xs font-semibold px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 flex-shrink-0">${cat.badge}</span>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2 flex-shrink-0">
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2 flex-shrink-0">
             <span>${cat.emoji || ''}</span>
             <span>${cat.name} 목록 (${cat.groups.length}개)</span>
           </h2>
@@ -852,7 +852,7 @@ function renderSubgroupList(container, cat) {
       ${renderGroupVideoStats(allMembers)}
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
       ${cardsHtml}
     </div>
   `;
@@ -870,15 +870,15 @@ function renderGroupMembers(container) {
   const subscriberBadgesHtml = renderGroupSubscriberBadgesHtml(members, group.name);
 
   container.innerHTML = `
-    <div class="mb-8 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+    <div class="mb-6 sm:mb-8 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
       <div class="min-w-0">
         <button onclick="resetToCategory('${cat.id}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-3 cursor-pointer">
           ${SVG_ICONS.back}
           <span>${cat.name} 목록으로 돌아가기</span>
         </button>
-        <div class="flex items-center gap-2.5 sm:gap-3 flex-wrap">
-          ${bgImage ? `<img src="${bgImage}" alt="${group.name}" class="w-10 h-10 rounded-xl object-cover border-2 border-amber-500/60 shadow-lg shadow-amber-500/20 flex-shrink-0" />` : ''}
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2 flex-shrink-0">
+        <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+          ${bgImage ? `<img src="${bgImage}" alt="${group.name}" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-cover border-2 border-amber-500/60 shadow-lg shadow-amber-500/20 flex-shrink-0" />` : ''}
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2 flex-shrink-0">
             <span>${group.emoji || ''}</span>
             <span>${group.name}</span>
           </h2>
@@ -895,7 +895,7 @@ function renderGroupMembers(container) {
       ${renderGroupVideoStats(members)}
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
       ${membersHtml}
     </div>
   `;
@@ -1033,15 +1033,15 @@ function renderMemberVideos(container) {
             </div>
           </a>
 
-          <div class="px-5 pt-5 pb-2.5 flex-1 flex flex-col justify-between">
+          <div class="px-4 sm:px-5 pt-4 sm:pt-5 pb-2.5 flex-1 flex flex-col justify-between">
             <div>
               <a 
                 href="${vUrl || '#'}" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                draggable="false"
+                draggable="false" 
                 onclick="if (isDraggingCard || !this.getAttribute('href') || this.getAttribute('href') === '#') { event.preventDefault(); return false; }"
-                class="block text-base font-bold text-white ${isChzzk ? 'hover:text-emerald-400' : 'hover:text-red-400'} transition-colors line-clamp-2 leading-snug cursor-pointer ${video.description ? 'mb-2' : ''}"
+                class="block text-sm sm:text-base font-bold text-white ${isChzzk ? 'hover:text-emerald-400' : 'hover:text-red-400'} transition-colors line-clamp-2 leading-snug cursor-pointer ${video.description ? 'mb-2' : ''}"
                 title="${video.title}"
               >
                 ${video.title}
@@ -1057,7 +1057,7 @@ function renderMemberVideos(container) {
 
 
         ${isAdmin() ? `
-          <div class="px-5 py-2.5 bg-zinc-950 border-t border-zinc-800/80 flex items-center justify-between">
+          <div class="px-4 sm:px-5 py-2.5 bg-zinc-950 border-t border-zinc-800/80 flex items-center justify-between">
             <span class="text-[11px] text-amber-400 font-bold flex items-center gap-1">🛡️ 어드민 관리</span>
             <div class="flex items-center gap-1.5">
               <button onclick="openVideoModal('edit', '${video.id}')" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold transition-colors cursor-pointer">✏️ 수정</button>
@@ -1131,12 +1131,12 @@ function renderMemberVideos(container) {
   const inactive = info.isInactive;
 
   container.innerHTML = `
-    <div class="mb-8">
+    <div class="mb-6 sm:mb-8">
       ${backButtonHtml}
-      <div class="bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-950 border border-zinc-800 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-2xl relative overflow-hidden">
-        <div class="flex items-center gap-6 relative z-10">
+      <div class="bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-950 border border-zinc-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6 shadow-2xl relative overflow-hidden">
+        <div class="flex items-start sm:items-center gap-4 sm:gap-6 relative z-10">
           <div class="relative flex-shrink-0">
-            <img src="${getMemberAvatar(member)}" alt="${member.name}" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='assets/default-avatar.svg'" class="w-24 h-24 md:w-28 md:h-28 rounded-3xl object-cover border-4 border-zinc-800 shadow-2xl transition-all duration-300 ${inactive ? 'grayscale contrast-125 opacity-80 hover:grayscale-0 hover:contrast-100 hover:opacity-100 cursor-pointer' : ''}" />
+            <img src="${getMemberAvatar(member)}" alt="${member.name}" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='assets/default-avatar.svg'" class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl sm:rounded-3xl object-cover border-4 border-zinc-800 shadow-2xl transition-all duration-300 ${inactive ? 'grayscale contrast-125 opacity-80 hover:grayscale-0 hover:contrast-100 hover:opacity-100 cursor-pointer' : ''}" />
             ${effectiveSwatRole ? getSwatBadgeHtml(effectiveSwatRole, 'lg') : ''}
             ${effectiveRole ? `
               <span class="absolute -bottom-2 -right-2 z-20 text-xs font-bold px-2.5 py-1 rounded-xl ${getMemberRoleBadgeClass(member, cat.id)} shadow-xl border border-white/20">
@@ -1157,13 +1157,13 @@ function renderMemberVideos(container) {
               </span>
             ` : ''))}
           </div>
-          <div>
-            <div class="flex items-center gap-2.5 mb-1.5 flex-wrap">
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2 mb-1.5 flex-wrap">
               ${effectiveRole ? `<span class="text-xs font-bold px-2.5 py-1 rounded-md ${getMemberRoleBadgeClass(member, cat.id)}">${effectiveRole}</span>` : ''}
               <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-300">소속: ${affiliationsText}</span>
             </div>
-            <div class="flex items-center gap-3 flex-wrap">
-              <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">${member.streamer}</h2>
+            <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+              <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight truncate">${member.streamer}</h2>
               ${member.subscriberCount ? (
                 isMemberChzzk(member) ? `
                   <a href="${member.youtubeUrl && member.youtubeUrl.startsWith('http') ? member.youtubeUrl : (member.youtubeUrl ? `https://chzzk.naver.com/${member.youtubeUrl}` : '#')}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#00ffa3] bg-[#00ffa3]/10 hover:bg-[#00ffa3]/20 border border-[#00ffa3]/40 px-2.5 py-1 rounded-lg shadow-sm transition-colors cursor-pointer" title="치지직 채널 바로가기 (팔로워 ${member.subscriberCount})">
@@ -1180,7 +1180,7 @@ function renderMemberVideos(container) {
                 `
               ) : ''}
             </div>
-            <p class="text-amber-400 text-base font-semibold mt-1">RP 캐릭터: ${member.name}</p>
+            <p class="text-amber-400 text-sm sm:text-base font-semibold mt-1">RP 캐릭터: ${member.name}</p>
             ${isAdmin() ? `
               <div class="flex items-center gap-2 mt-3">
                 <button onclick="openMemberModal('edit', '${member.id}')" class="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white text-xs font-semibold transition-colors cursor-pointer inline-flex items-center gap-1">✏️ 정보 수정</button>
@@ -1190,59 +1190,61 @@ function renderMemberVideos(container) {
           </div>
         </div>
 
-        <div class="flex items-center gap-3 self-start md:self-auto border-t md:border-t-0 border-zinc-800/80 pt-4 md:pt-0 flex-wrap">
-          <button onclick="setVideoTab('clip')" title="편집 영상만 보기" class="bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'clip' ? 'border-red-500 ring-2 ring-red-500/30 bg-red-950/20' : 'border-zinc-800'} rounded-2xl px-4 sm:px-5 py-3 text-center min-w-[115px] sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
+        <div class="grid grid-cols-2 sm:flex sm:items-center gap-2.5 sm:gap-3 w-full md:w-auto border-t md:border-t-0 border-zinc-800/80 pt-4 md:pt-0">
+          <button onclick="setVideoTab('clip')" title="편집 영상만 보기" class="bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'clip' ? 'border-red-500 ring-2 ring-red-500/30 bg-red-950/20' : 'border-zinc-800'} rounded-xl sm:rounded-2xl p-2.5 sm:px-5 sm:py-3 text-center sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
             <span class="text-xs sm:text-sm text-zinc-300 block font-bold group-hover:text-white transition-colors">🎬 편집 영상</span>
-            <span class="text-2xl sm:text-3xl font-black text-red-400 my-0.5 block tracking-tight">${clipCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
-            <span class="text-xs sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2.5 py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${clipTotalDuration}</span>
+            <span class="text-xl sm:text-3xl font-black text-red-400 my-0.5 block tracking-tight">${clipCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
+            <span class="text-[11px] sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${clipTotalDuration}</span>
           </button>
-          <button onclick="setVideoTab('full')" title="풀 영상만 보기" class="bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'full' ? 'border-indigo-500 ring-2 ring-indigo-500/30 bg-indigo-950/20' : 'border-zinc-800'} rounded-2xl px-4 sm:px-5 py-3 text-center min-w-[115px] sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
+          <button onclick="setVideoTab('full')" title="풀 영상만 보기" class="bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'full' ? 'border-indigo-500 ring-2 ring-indigo-500/30 bg-indigo-950/20' : 'border-zinc-800'} rounded-xl sm:rounded-2xl p-2.5 sm:px-5 sm:py-3 text-center sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
             <span class="text-xs sm:text-sm text-zinc-300 block font-bold group-hover:text-white transition-colors">📹 풀 영상</span>
-            <span class="text-2xl sm:text-3xl font-black text-indigo-400 my-0.5 block tracking-tight">${fullCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
-            <span class="text-xs sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2.5 py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${fullTotalDuration}</span>
+            <span class="text-xl sm:text-3xl font-black text-indigo-400 my-0.5 block tracking-tight">${fullCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
+            <span class="text-[11px] sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${fullTotalDuration}</span>
           </button>
           ${bingeCount > 0 ? `
-            <button onclick="setVideoTab('binge')" title="몰아보기 영상만 보기" class="bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'binge' ? 'border-amber-500 ring-2 ring-amber-500/30 bg-amber-950/20' : 'border-zinc-800'} rounded-2xl px-4 sm:px-5 py-3 text-center min-w-[115px] sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
+            <button onclick="setVideoTab('binge')" title="몰아보기 영상만 보기" class="col-span-2 sm:col-span-1 bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'binge' ? 'border-amber-500 ring-2 ring-amber-500/30 bg-amber-950/20' : 'border-zinc-800'} rounded-xl sm:rounded-2xl p-2.5 sm:px-5 sm:py-3 text-center sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
               <span class="text-xs sm:text-sm text-zinc-300 block font-bold group-hover:text-white transition-colors">🍿 몰아보기</span>
-              <span class="text-2xl sm:text-3xl font-black text-amber-400 my-0.5 block tracking-tight">${bingeCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
-              <span class="text-xs sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2.5 py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${bingeTotalDuration}</span>
+              <span class="text-xl sm:text-3xl font-black text-amber-400 my-0.5 block tracking-tight">${bingeCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
+              <span class="text-[11px] sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${bingeTotalDuration}</span>
             </button>
           ` : ''}
         </div>
       </div>
     </div>
 
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-      <div class="flex items-center gap-3 flex-wrap">
-        <div class="flex items-center gap-1.5 p-1 bg-zinc-900/90 border border-zinc-800 rounded-2xl w-fit">
-          <button onclick="setVideoTab('clip')" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${currentTab === 'clip' ? 'bg-red-600 text-white shadow-lg shadow-red-600/30' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'}">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-5 sm:mb-6">
+      <div class="flex items-center gap-2 sm:gap-3 flex-wrap w-full sm:w-auto">
+        <div class="flex items-center gap-1 sm:gap-1.5 p-1 bg-zinc-900/90 border border-zinc-800 rounded-2xl w-full sm:w-fit overflow-x-auto no-scrollbar">
+          <button onclick="setVideoTab('clip')" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${currentTab === 'clip' ? 'bg-red-600 text-white shadow-lg shadow-red-600/30' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'}">
             <span>🎬 편집 영상</span>
             <span class="text-[11px] px-1.5 py-0.5 rounded-full ${currentTab === 'clip' ? 'bg-black/30 text-white' : 'bg-zinc-800 text-zinc-400'}">${clipCount}</span>
           </button>
-          <button onclick="setVideoTab('full')" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${currentTab === 'full' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'}">
+          <button onclick="setVideoTab('full')" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${currentTab === 'full' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'}">
             <span>📹 풀 영상</span>
             <span class="text-[11px] px-1.5 py-0.5 rounded-full ${currentTab === 'full' ? 'bg-black/30 text-white' : 'bg-zinc-800 text-zinc-400'}">${fullCount}</span>
           </button>
-          <button onclick="setVideoTab('binge')" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${currentTab === 'binge' ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/30' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'}">
+          <button onclick="setVideoTab('binge')" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${currentTab === 'binge' ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/30' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'}">
             <span>🍿 몰아보기</span>
             <span class="text-[11px] px-1.5 py-0.5 rounded-full ${currentTab === 'binge' ? 'bg-black/20 text-black font-extrabold' : 'bg-zinc-800 text-zinc-400'}">${bingeCount}</span>
           </button>
         </div>
 
         ${isAdmin() ? `
-          <button onclick="openVideoModal('add')" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-all shadow-lg shadow-amber-500/20 cursor-pointer" title="새 영상 등록">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            <span>영상 추가</span>
-          </button>
-          <button onclick="openPlaylistModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-amber-400 hover:text-amber-300 text-xs font-bold transition-all border border-amber-500/40 hover:border-amber-400 shadow-lg cursor-pointer" title="유튜브 재생목록에서 영상 일괄 등록">
-            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-            <span>📑 재생목록 일괄 등록</span>
-          </button>
+          <div class="flex items-center gap-2 flex-wrap">
+            <button onclick="openVideoModal('add')" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-all shadow-lg shadow-amber-500/20 cursor-pointer" title="새 영상 등록">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+              <span>영상 추가</span>
+            </button>
+            <button onclick="openPlaylistModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-amber-400 hover:text-amber-300 text-xs font-bold transition-all border border-amber-500/40 hover:border-amber-400 shadow-lg cursor-pointer" title="유튜브 재생목록에서 영상 일괄 등록">
+              <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+              <span>📑 재생목록 일괄 등록</span>
+            </button>
+          </div>
         ` : ''}
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
       ${videosHtml}
     </div>
   `;

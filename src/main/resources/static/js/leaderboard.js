@@ -376,14 +376,14 @@ function renderMemberSubscriberBadgeHtml(m) {
 function renderGlobalStatsCards(globalStats) {
   return `
     <!-- 총 소속 인원 -->
-    <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-3 flex flex-col justify-between shadow-sm">
-      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1.5">
-        <span class="font-medium">총 소속 인원</span>
+    <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-2.5 sm:p-3 flex flex-col justify-between shadow-sm">
+      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1 sm:mb-1.5">
+        <span class="font-medium text-[11px] sm:text-xs">총 소속 인원</span>
         <span class="text-zinc-500">👥</span>
       </div>
       <div>
-        <div class="min-h-[26px] flex items-center text-lg sm:text-xl font-bold text-white tracking-tight leading-tight">${globalStats.totalMembers}명</div>
-        <div class="mt-1 flex flex-col gap-0.5 text-[11px] leading-tight">
+        <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-base sm:text-xl font-bold text-white tracking-tight leading-tight">${globalStats.totalMembers}명</div>
+        <div class="mt-1 flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
           <div class="h-4 flex items-center gap-1.5 text-zinc-300 truncate" title="전체 유튜브 총 구독자: ${globalStats.ytSubStr}">
             <svg class="w-3 h-3 text-red-500 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             <span class="text-white font-bold truncate">${globalStats.ytSubStr}</span>
@@ -401,14 +401,14 @@ function renderGlobalStatsCards(globalStats) {
     </div>
 
     <!-- 총 영상 개수 -->
-    <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-3 flex flex-col justify-between shadow-sm">
-      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1.5">
-        <span class="font-medium">등록된 총 영상</span>
+    <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-2.5 sm:p-3 flex flex-col justify-between shadow-sm">
+      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1 sm:mb-1.5">
+        <span class="font-medium text-[11px] sm:text-xs">등록된 총 영상</span>
         <span class="text-zinc-500">🎬</span>
       </div>
       <div>
-        <div class="min-h-[26px] flex items-center text-lg sm:text-xl font-bold text-amber-400 tracking-tight leading-tight">${globalStats.totalVideos}개</div>
-        <div class="mt-1 flex flex-col gap-0.5 text-[11px] leading-tight">
+        <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-base sm:text-xl font-bold text-amber-400 tracking-tight leading-tight">${globalStats.totalVideos}개</div>
+        <div class="mt-1 flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
           <div class="h-4 flex items-center text-zinc-300 truncate">누적 아카이브</div>
           <div class="h-4 flex items-center text-zinc-500 truncate">전체 등록 영상</div>
         </div>
@@ -416,14 +416,14 @@ function renderGlobalStatsCards(globalStats) {
     </div>
 
     <!-- 총 누적 시간 -->
-    <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-3 flex flex-col justify-between shadow-sm">
-      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1.5">
-        <span class="font-medium">총 누적 시간</span>
+    <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-2.5 sm:p-3 flex flex-col justify-between shadow-sm">
+      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1 sm:mb-1.5">
+        <span class="font-medium text-[11px] sm:text-xs">총 누적 시간</span>
         <span class="text-amber-400">⏱️</span>
       </div>
       <div>
-        <div class="min-h-[26px] flex items-center text-base sm:text-lg font-bold text-amber-400 tracking-tight leading-tight">${globalStats.totalDurStr}</div>
-        <div class="mt-1 flex flex-col gap-0.5 text-[11px] leading-tight">
+        <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-amber-400 tracking-tight leading-tight">${globalStats.totalDurStr}</div>
+        <div class="mt-1 flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
           <div class="h-4 flex items-center text-zinc-300 truncate">전체 플레이타임</div>
           <div class="h-4 flex items-center text-zinc-500 truncate">누적 방송 합산</div>
         </div>
@@ -431,17 +431,17 @@ function renderGlobalStatsCards(globalStats) {
     </div>
 
     <!-- 편집 영상 합산 -->
-    <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-3 flex flex-col justify-between shadow-sm">
-      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1.5">
-        <span class="font-medium flex items-center gap-1.5">
+    <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-2.5 sm:p-3 flex flex-col justify-between shadow-sm">
+      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1 sm:mb-1.5">
+        <span class="font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
           <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
           <span>편집 영상</span>
         </span>
         <span class="text-zinc-400 font-semibold text-[10px]">${globalStats.totalClipCount}개</span>
       </div>
       <div>
-        <div class="min-h-[26px] flex items-center text-base sm:text-lg font-bold text-red-400 tracking-tight leading-tight">${globalStats.totalClipDurStr}</div>
-        <div class="mt-1 flex flex-col gap-0.5 text-[11px] leading-tight">
+        <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-red-400 tracking-tight leading-tight">${globalStats.totalClipDurStr}</div>
+        <div class="mt-1 flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
           <div class="h-4 flex items-center text-zinc-300 font-medium truncate">총 ${globalStats.totalClipCount}개 등록됨</div>
           <div class="h-4 flex items-center text-zinc-500 truncate">하이라이트 클립</div>
         </div>
@@ -449,17 +449,17 @@ function renderGlobalStatsCards(globalStats) {
     </div>
 
     <!-- 풀 영상 합산 -->
-    <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-3 flex flex-col justify-between shadow-sm">
-      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1.5">
-        <span class="font-medium flex items-center gap-1.5">
+    <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-2.5 sm:p-3 flex flex-col justify-between shadow-sm">
+      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1 sm:mb-1.5">
+        <span class="font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
           <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
           <span>풀 영상</span>
         </span>
         <span class="text-zinc-400 font-semibold text-[10px]">${globalStats.totalFullCount}개</span>
       </div>
       <div>
-        <div class="min-h-[26px] flex items-center text-base sm:text-lg font-bold text-indigo-400 tracking-tight leading-tight">${globalStats.totalFullDurStr}</div>
-        <div class="mt-1 flex flex-col gap-0.5 text-[11px] leading-tight">
+        <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-indigo-400 tracking-tight leading-tight">${globalStats.totalFullDurStr}</div>
+        <div class="mt-1 flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
           <div class="h-4 flex items-center text-zinc-300 font-medium truncate">총 ${globalStats.totalFullCount}개 등록됨</div>
           <div class="h-4 flex items-center text-zinc-500 truncate">다시보기 풀버전</div>
         </div>
@@ -467,17 +467,17 @@ function renderGlobalStatsCards(globalStats) {
     </div>
 
     <!-- 몰아보기 합산 -->
-    <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-3 flex flex-col justify-between shadow-sm">
-      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1.5">
-        <span class="font-medium flex items-center gap-1.5">
+    <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-2.5 sm:p-3 flex flex-col justify-between shadow-sm">
+      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1 sm:mb-1.5">
+        <span class="font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
           <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
           <span>몰아보기</span>
         </span>
         <span class="text-zinc-400 font-semibold text-[10px]">${globalStats.totalBingeCount}개</span>
       </div>
       <div>
-        <div class="min-h-[26px] flex items-center text-base sm:text-lg font-bold text-amber-300 tracking-tight leading-tight">${globalStats.totalBingeDurStr}</div>
-        <div class="mt-1 flex flex-col gap-0.5 text-[11px] leading-tight">
+        <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-amber-300 tracking-tight leading-tight">${globalStats.totalBingeDurStr}</div>
+        <div class="mt-1 flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
           <div class="h-4 flex items-center text-zinc-300 font-medium truncate">총 ${globalStats.totalBingeCount}개 등록됨</div>
           <div class="h-4 flex items-center text-zinc-500 truncate">정주행 몰아보기</div>
         </div>
@@ -724,12 +724,12 @@ function renderLeaderboardDynamicContent() {
   // 순위 목록 테이블
   html += `
     <div class="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl overflow-hidden shadow-md">
-      <div class="px-4 py-3 border-b border-zinc-800 flex items-center justify-between text-xs text-zinc-400 font-semibold bg-zinc-900/90">
-        <div class="w-12 text-center">순위</div>
-        <div class="flex-1 px-3">스트리머 / 인원</div>
+      <div class="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-zinc-800 flex items-center justify-between text-xs text-zinc-400 font-semibold bg-zinc-900/90">
+        <div class="w-8 sm:w-12 text-center flex-shrink-0">순위</div>
+        <div class="flex-1 px-2 sm:px-3">스트리머 / 인원</div>
         <div class="hidden sm:block w-36 px-2 text-left">소속</div>
-        <div class="w-36 sm:w-56 px-2 text-right">플레이타임 / 개수</div>
-        <div class="w-8"></div>
+        <div class="w-28 sm:w-56 px-1.5 sm:px-2 text-right">플레이타임 / 개수</div>
+        <div class="hidden sm:block w-8"></div>
       </div>
 
       <div class="divide-y divide-zinc-800/60 max-h-[460px] overflow-y-auto">
@@ -759,34 +759,34 @@ function renderLeaderboardDynamicContent() {
           return `
             <div 
               onclick="selectMemberFromLeaderboard('${m.catId}', '${m.groupId || ''}', '${m.name}', '${m.id || ''}')"
-              class="px-4 py-3 flex items-center justify-between hover:bg-zinc-800/50 transition-colors cursor-pointer group"
+              class="px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between hover:bg-zinc-800/50 transition-colors cursor-pointer group"
             >
               <!-- 순위 -->
-              <div class="w-12 text-center flex-shrink-0 flex items-center justify-center">
+              <div class="w-8 sm:w-12 text-center flex-shrink-0 flex items-center justify-center">
                 ${medalBadge}
               </div>
 
               <!-- 프로필 및 인원 정보 -->
-              <div class="flex-1 px-3 flex items-center gap-3 min-w-0">
+              <div class="flex-1 px-2 sm:px-3 flex items-center gap-2 sm:gap-3 min-w-0">
                 <div class="relative flex-shrink-0">
                   <img 
                     src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(m) : (m.avatar || 'assets/default-avatar.svg')}" 
                     onerror="this.src='assets/default-avatar.svg'" 
-                    class="w-10 h-10 rounded-full object-cover border border-zinc-700 bg-zinc-800 flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
+                    class="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border border-zinc-700 bg-zinc-800 flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
                   />
                   ${(typeof getSwatBadgeHtml === 'function' && m.swatRole) ? getSwatBadgeHtml(m.swatRole, 'sm') : ''}
                   ${m.role ? `
-                    <span class="absolute -bottom-1 -right-1 z-20 text-[8.5px] font-bold px-1 py-0.2 rounded ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(m, m.catId) : 'bg-zinc-800 text-white'} shadow">
+                    <span class="absolute -bottom-1 -right-1 z-20 text-[8px] sm:text-[8.5px] font-bold px-1 py-0.2 rounded ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(m, m.catId) : 'bg-zinc-800 text-white'} shadow">
                       ${m.role}
                     </span>
                   ` : ''}
                 </div>
                 <div class="min-w-0 flex-1">
-                  <div class="flex items-center gap-1.5 flex-wrap">
-                    <span class="font-bold text-sm text-white group-hover:text-amber-400 transition-colors truncate">${m.streamerName || m.name}</span>
+                  <div class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
+                    <span class="font-bold text-xs sm:text-sm text-white group-hover:text-amber-400 transition-colors truncate">${m.streamerName || m.name}</span>
                   </div>
-                  <div class="text-xs text-zinc-400 truncate">
-                    <span class="text-amber-400/90 font-medium">${m.name}</span>${mRole ? ` <span class="text-zinc-500 text-[11px]">(${mRole})</span>` : ''}
+                  <div class="text-[11px] sm:text-xs text-zinc-400 truncate">
+                    <span class="text-amber-400/90 font-medium">${m.name}</span>${mRole ? ` <span class="text-zinc-500 text-[10px] sm:text-[11px]">(${mRole})</span>` : ''}
                   </div>
                 </div>
               </div>
@@ -799,12 +799,12 @@ function renderLeaderboardDynamicContent() {
               </div>
 
               <!-- 메트릭 바 & 수치 -->
-              <div class="w-36 sm:w-56 px-2 text-right flex-shrink-0">
-                <div class="font-bold text-sm text-white tracking-tight leading-tight">
+              <div class="w-28 sm:w-56 px-1.5 sm:px-2 text-right flex-shrink-0">
+                <div class="font-bold text-xs sm:text-sm text-white tracking-tight leading-tight">
                   ${metric.valStr}
                 </div>
-                <div class="flex items-center justify-end gap-2 mt-1">
-                  <span class="text-[11px] text-zinc-300 font-medium">${metric.subStr}</span>
+                <div class="flex items-center justify-end gap-1.5 sm:gap-2 mt-0.5 sm:mt-1">
+                  <span class="text-[10px] sm:text-[11px] text-zinc-300 font-medium">${metric.subStr}</span>
                   <div class="w-16 sm:w-20 bg-zinc-800 rounded-full h-1.5 overflow-hidden hidden sm:block">
                     <div class="bg-amber-400 h-full rounded-full transition-all duration-300" style="width: ${percent}%;"></div>
                   </div>
@@ -812,7 +812,7 @@ function renderLeaderboardDynamicContent() {
               </div>
 
               <!-- 이동 화살표 -->
-              <div class="w-8 flex-shrink-0 text-right text-zinc-600 group-hover:text-amber-400 transition-colors flex justify-end">
+              <div class="hidden sm:flex w-8 flex-shrink-0 text-right text-zinc-600 group-hover:text-amber-400 transition-colors justify-end">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
               </div>
             </div>

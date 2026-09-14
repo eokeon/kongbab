@@ -309,7 +309,7 @@ function renderPlaylistPreviewList() {
           ondragleave="handlePlaylistDragLeave(event)"
           ondrop="handlePlaylistDrop(event, ${idx})"
           ondragend="handlePlaylistDragEnd(event)"
-          class="playlist-preview-item group flex items-center gap-2.5 p-2 bg-zinc-900/90 hover:bg-zinc-800/90 border border-zinc-800/80 hover:border-zinc-700 rounded-xl transition-all select-none"
+          class="playlist-preview-item group flex items-center gap-1.5 sm:gap-2.5 p-1.5 sm:p-2 bg-zinc-900/90 hover:bg-zinc-800/90 border border-zinc-800/80 hover:border-zinc-700 rounded-xl transition-all select-none"
         >
           <!-- 드래그 핸들 -->
           <div class="cursor-grab active:cursor-grabbing text-zinc-500 hover:text-amber-400 p-1 flex-shrink-0" title="드래그하여 순서 변경">
@@ -319,24 +319,24 @@ function renderPlaylistPreviewList() {
           </div>
 
           <!-- 순번 뱃지 -->
-          <div class="w-6 h-6 rounded-md bg-zinc-800 border border-zinc-700 text-zinc-200 font-mono font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
+          <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-md bg-zinc-800 border border-zinc-700 text-zinc-200 font-mono font-bold text-[10px] sm:text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
             ${idx + 1}
           </div>
 
           <!-- 썸네일 (클릭 시 새 탭) -->
           <a href="${vUrl || '#'}" target="_blank" rel="noopener noreferrer" class="flex-shrink-0 cursor-pointer group/thumb" title="유튜브에서 영상 확인 (새 탭)">
-            <img src="${vThumb}" class="w-16 h-9 object-cover rounded-lg border border-zinc-800 bg-black group-hover/thumb:scale-105 transition-transform" loading="lazy" />
+            <img src="${vThumb}" class="w-14 h-8 sm:w-16 sm:h-9 object-cover rounded-lg border border-zinc-800 bg-black group-hover/thumb:scale-105 transition-transform" loading="lazy" />
           </a>
 
           <!-- 정보 (제목, 날짜, 시간) -->
           <div class="flex-1 min-w-0 pr-1">
-            <a href="${vUrl || '#'}" target="_blank" rel="noopener noreferrer" class="block font-bold text-white text-xs truncate hover:text-red-400 transition-colors cursor-pointer" title="${safeTitle} (유튜브로 열기)">
+            <a href="${vUrl || '#'}" target="_blank" rel="noopener noreferrer" class="block font-bold text-white text-[11px] sm:text-xs truncate hover:text-red-400 transition-colors cursor-pointer" title="${safeTitle} (유튜브로 열기)">
               ${v.title}
             </a>
-            <div class="flex items-center gap-2 text-[11px] text-zinc-400 mt-1 flex-wrap">
-              <span class="text-zinc-400 font-mono text-[11px] bg-zinc-950 border border-zinc-800 rounded-lg px-2 py-0.5">📅 ${v.publishedDate || '-'}</span>
-              ${v.duration ? `<span class="text-zinc-300 font-mono font-semibold bg-zinc-950 border border-zinc-800 rounded-lg px-1.5 py-0.5">⏱️ ${v.duration}</span>` : ''}
-              <a href="${vUrl || '#'}" target="_blank" rel="noopener noreferrer" class="text-[11px] text-zinc-400 hover:text-amber-400 flex items-center gap-0.5 cursor-pointer ml-0.5">열기 ↗</a>
+            <div class="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] text-zinc-400 mt-1 flex-wrap">
+              <span class="text-zinc-400 font-mono text-[10px] sm:text-[11px] bg-zinc-950 border border-zinc-800 rounded-lg px-1.5 sm:px-2 py-0.5">📅 ${v.publishedDate || '-'}</span>
+              ${v.duration ? `<span class="text-zinc-300 font-mono font-semibold bg-zinc-950 border border-zinc-800 rounded-lg px-1 sm:px-1.5 py-0.5">⏱️ ${v.duration}</span>` : ''}
+              <a href="${vUrl || '#'}" target="_blank" rel="noopener noreferrer" class="text-[10px] sm:text-[11px] text-zinc-400 hover:text-amber-400 flex items-center gap-0.5 cursor-pointer ml-0.5">열기 ↗</a>
             </div>
           </div>
 
@@ -345,10 +345,10 @@ function renderPlaylistPreviewList() {
             <button 
               type="button" 
               onclick="removePlaylistItem(${idx})" 
-              class="w-7 h-7 rounded-lg bg-red-950/40 hover:bg-red-900/80 border border-red-800/40 text-red-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors"
+              class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-red-950/40 hover:bg-red-900/80 border border-red-800/40 text-red-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors"
               title="목록에서 제외"
             >
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              <svg class="w-3 sm:w-3.5 h-3 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
           </div>
         </div>

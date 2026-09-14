@@ -203,3 +203,75 @@ body {
   width: 100% !important;
 }
 
+/* ==========================================================================
+   Responsive & Touch Screen Enhancements (Mobile, Tablet, Foldable)
+   ========================================================================== */
+
+/* Modern dynamic viewport height support for mobile browsers (Safari/Chrome toolbars) */
+@supports (height: 100dvh) {
+  .min-h-screen {
+    min-height: 100dvh;
+  }
+}
+
+/* Touch momentum scrolling for scrollable containers */
+.overflow-y-auto,
+.overflow-x-auto,
+#floating-category-panel,
+#leaderboard-modal-content,
+#playlist-preview-list,
+#video-multi-preview-list,
+#backup-modal-list-container,
+#admin-sub-log-box {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Remove tap highlight overlay on touch devices */
+button, a, input, select, textarea, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Word break safety to prevent horizontal page overflow */
+.break-words {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Safe area insets for notched phones (iPhone, etc.) */
+header {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+footer {
+  padding-bottom: max(2rem, env(safe-area-inset-bottom, 0px));
+}
+
+#mobile-scroll-top-btn {
+  bottom: max(1.25rem, calc(env(safe-area-inset-bottom, 0px) + 0.75rem));
+  right: max(1.25rem, calc(env(safe-area-inset-right, 0px) + 0.75rem));
+}
+
+/* Touch device adjustments (when hover is not primary input) */
+@media (hover: none) and (pointer: coarse) {
+  .member-card-interactive:hover,
+  .podium-card:hover {
+    transform: none !important;
+    -webkit-transform: none !important;
+  }
+
+  .member-card-interactive:active,
+  .podium-card:active {
+    transform: scale(0.985) !important;
+    -webkit-transform: scale(0.985) !important;
+    transition: transform 0.1s ease-out !important;
+  }
+}
+
+/* Small mobile devices (< 400px) */
+@media (max-width: 399px) {
+  .podium-badge {
+    transform: translateX(-50%) scale(0.9) !important;
+  }
+}
+
+

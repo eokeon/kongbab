@@ -106,7 +106,7 @@ function renderSearchResults(container) {
         <span>검색 닫기</span>
       </button>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
   `;
 
   matchedMembers.forEach(({ member: m, group, category: cat }) => {
@@ -184,14 +184,14 @@ function renderSearchResults(container) {
       const isChzzk = typeof isMemberChzzk === 'function' ? isMemberChzzk(m) : false;
       if (isChzzk) {
         subBadgeHtml = `
-          <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#00ffa3] bg-[#00ffa3]/10 border border-[#00ffa3]/40 px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="치지직 채널 팔로워 수: ${m.subscriberCount}">
+          <span class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-[#00ffa3] bg-[#00ffa3]/10 border border-[#00ffa3]/40 px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="치지직 채널 팔로워 수: ${m.subscriberCount}">
             <svg class="w-2.5 h-2.5 text-[#00ffa3] fill-current flex-shrink-0" viewBox="105 97 300 300"><polygon points="224,101 325,101 294,144 396,144 270,318 385,318 385,393 114,393 241,217 140,217"/></svg>
             <span>${m.subscriberCount}</span>
           </span>
         `;
       } else {
         subBadgeHtml = `
-          <span class="inline-flex items-center gap-1 text-[11px] font-bold text-red-300 bg-red-950/80 border border-red-700/50 px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="유튜브 채널 구독자 수: ${m.subscriberCount}">
+          <span class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-red-300 bg-red-950/80 border border-red-700/50 px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="유튜브 채널 구독자 수: ${m.subscriberCount}">
             <svg class="w-2.5 h-2.5 text-red-500 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             <span>${m.subscriberCount}</span>
           </span>
@@ -205,7 +205,7 @@ function renderSearchResults(container) {
     html += `
       <div 
         onclick="selectMemberFromSearch('${cat.id}', ${group ? `'${group.id}'` : 'null'}, '${m.id}')"
-        class="group bg-zinc-900/80 border border-zinc-800/80 hover:border-amber-400/50 rounded-2xl p-5 cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col justify-between select-none"
+        class="group bg-zinc-900/80 border border-zinc-800/80 hover:border-amber-400/50 rounded-2xl p-4 sm:p-5 cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col justify-between select-none"
       >
         <div>
           <!-- 소속 태그 & 구독자/팔로워 뱃지 -->
@@ -217,7 +217,7 @@ function renderSearchResults(container) {
           </div>
 
           <!-- 아바타 + 인원 기본 정보 -->
-          <div class="flex items-start gap-4 mb-4">
+          <div class="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
             <div class="relative flex-shrink-0">
               <img 
                 src="${getMemberAvatar(m)}" 
@@ -225,7 +225,7 @@ function renderSearchResults(container) {
                 loading="lazy"
                 referrerpolicy="no-referrer"
                 onerror="this.onerror=null; this.src='assets/default-avatar.svg'"
-                class="w-16 h-16 rounded-2xl object-cover border-2 border-zinc-700 group-hover:border-amber-400 transition-all duration-300 shadow-md ${avatarFilterClass}"
+                class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 border-zinc-700 group-hover:border-amber-400 transition-all duration-300 shadow-md ${avatarFilterClass}"
               />
               ${cleanSwat ? (typeof getSwatBadgeHtml === 'function' ? getSwatBadgeHtml(cleanSwat, 'md') : '') : ''}
               ${statusOverlayHtml}
@@ -252,11 +252,11 @@ function renderSearchResults(container) {
         </div>
 
         <!-- 하단 영상 통계 및 이동 버튼 -->
-        <div class="pt-3.5 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400 gap-2">
+        <div class="pt-3 sm:pt-3.5 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400 gap-2 flex-wrap">
           <div class="font-medium text-zinc-300 flex items-center gap-1.5 flex-wrap">
             ${videoStatHtml}
           </div>
-          <span class="inline-flex items-center gap-1 text-amber-400 group-hover:translate-x-0.5 transition-transform font-semibold flex-shrink-0">
+          <span class="inline-flex items-center gap-1 text-amber-400 group-hover:translate-x-0.5 transition-transform font-semibold flex-shrink-0 text-[11px] sm:text-xs">
             영상 보기 →
           </span>
         </div>
@@ -593,16 +593,30 @@ function setupEventListeners() {
     }
   });
 
+  function updateMobileScrollTopVisibility() {
+    const btn = document.getElementById("mobile-scroll-top-btn");
+    if (!btn) return;
+    if (window.scrollY > 300) {
+      btn.classList.remove("opacity-0", "pointer-events-none", "translate-y-4");
+      btn.classList.add("opacity-100", "translate-y-0");
+    } else {
+      btn.classList.remove("opacity-100", "translate-y-0");
+      btn.classList.add("opacity-0", "pointer-events-none", "translate-y-4");
+    }
+  }
+
   window.addEventListener("scroll", () => {
     if (typeof updateFloatingCategoryNavVisibility === "function") {
       updateFloatingCategoryNavVisibility();
     }
+    updateMobileScrollTopVisibility();
   }, { passive: true });
 
   window.addEventListener("resize", () => {
     if (typeof updateFloatingCategoryNavVisibility === "function") {
       updateFloatingCategoryNavVisibility();
     }
+    updateMobileScrollTopVisibility();
   }, { passive: true });
 }
 

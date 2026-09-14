@@ -1,12 +1,12 @@
 {
   "appName": "kongbab-gta-rp",
   "version": "1.0",
-  "createdAt": "2026.09.13 23:11:05",
-  "reason": "영상 다중 일괄 등록: 코브라 (2개)",
+  "createdAt": "2026.09.15 03:45:48",
+  "reason": "인원 수정: 아카콩 (아카캉) - 소속 2개",
   "stats": {
     "totalCategories": 7,
     "totalMembers": 86,
-    "totalVideos": 1220
+    "totalVideos": 1248
   },
   "categories": [
     {
@@ -538,7 +538,7 @@
         },
         {
           "id": "pol-3",
-          "name": "훈이",
+          "name": "훈이 / 훈삼",
           "streamer": "콩콩",
           "role": "1대 청장",
           "swatRole": "서버장",
@@ -4497,7 +4497,7 @@
           "badgeColor": "bg-orange-400",
           "avatar": "https://yt3.googleusercontent.com/cnB68MCzXqsw6oYcygwoLxnzB6Zzx1LRVIgbpfoD2_SucsFgojdDv8cB-FIshuBKTXSlWfBx=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 19,
-          "subscriberCount": "15.8만 명",
+          "subscriberCount": "15.9만 명",
           "youtubeUrl": "https://www.youtube.com/@chyeonz_",
           "videos": [
             {
@@ -4833,7 +4833,7 @@
           "badgeColor": "bg-orange-400",
           "avatar": "https://yt3.googleusercontent.com/ZkcIYR9aKEkE3xk269koGBxZAH9Ik_CTS_6bhd0i0U19MGAYeA3Xg_cya0A-9KFU0W2fWReihw=s160-c-k-c0x00ffffff-no-rj",
           "displayOrder": 20,
-          "subscriberCount": "5.4만 명",
+          "subscriberCount": "5.5만 명",
           "youtubeUrl": "https://www.youtube.com/@달콤레나",
           "videos": [
             {
@@ -5577,7 +5577,7 @@
           "badgeColor": "bg-pink-500",
           "avatar": "https://nng-phinf.pstatic.net/MjAyNTAxMTBfMjcy/MDAxNzM2NDgyNjQ1ODk1.EYgT6KrXbZqFTxYHPDSxU4wAvvciXqksGPR3y-SFEtYg.nKYfxdAzTrc06gVD9sEqwovSaUFVOPBJDGA2vfgGB-Qg.JPEG/NNG-1736482645359431678326222488732.jpg?type=f120_120_na",
           "displayOrder": 25,
-          "subscriberCount": "9,595명",
+          "subscriberCount": "9,596명",
           "youtubeUrl": "https://chzzk.naver.com/8d6e95c0f193da34696514afec515e74",
           "videos": [
             {
@@ -5914,7 +5914,7 @@
           "badgeColor": "bg-pink-500",
           "avatar": "https://yt3.googleusercontent.com/DU-7pEVyOi5IHRXqqDXKRElNk0n4A-ljPAYfyYfy67tl7TiA_VCwVcDDVrjJKZVRzMB_BhMOhA=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 28,
-          "subscriberCount": "8,100명",
+          "subscriberCount": "8,110명",
           "youtubeUrl": "https://www.youtube.com/@hamkubby",
           "videos": [
             {
@@ -6085,7 +6085,7 @@
           "badgeColor": "bg-pink-500",
           "avatar": "https://yt3.googleusercontent.com/NQj31TwRKTC8yTiOHnKM6gzv9KyEZL5KR8G_LPuCZATcjHFNEm6WjDMlcMx7SMUcfDenPfnDOCE=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 29,
-          "subscriberCount": "2.1만 명",
+          "subscriberCount": "2.2만 명",
           "youtubeUrl": "https://www.youtube.com/@Midomido_Mayo",
           "videos": [
             {
@@ -7353,7 +7353,7 @@
           "badgeColor": "bg-emerald-600",
           "avatar": "https://yt3.googleusercontent.com/CUcPuAiQhUSoTnS5WyoNi2RlwKAixrGSZWwf4w0d1f-AoxJy4hfW41kMVXer13u2Ab9gHbEY0A=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 35,
-          "subscriberCount": "9,760명",
+          "subscriberCount": "9,770명",
           "youtubeUrl": "https://www.youtube.com/@ruruka02",
           "videos": [
             {
@@ -7949,7 +7949,7 @@
           "badgeColor": "bg-emerald-600",
           "avatar": "https://yt3.googleusercontent.com/aVsRyZWdOMgavsdfu-u_hA6V21GSFKgZftaZL_ffIxsAeA4slaCpJ5kFQnJ8Ghqnwc7clPB01A=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 39,
-          "subscriberCount": "",
+          "subscriberCount": "2.9만 명",
           "youtubeUrl": "https://www.youtube.com/@_KimToki",
           "videos": [
             {
@@ -8081,7 +8081,7 @@
           "badgeColor": "bg-blue-600",
           "avatar": "https://yt3.googleusercontent.com/K4UdYdWPPzLH3vjYIYpMaA-yC1QHhKevf2xEnaiFvF6yxOkouwfn93L_dASbfaTDguYvehF2=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 41,
-          "subscriberCount": "",
+          "subscriberCount": "1,690명",
           "youtubeUrl": "https://www.youtube.com/@pengssam",
           "videos": [
             {
@@ -8120,7 +8120,7 @@
           "badgeColor": "bg-blue-600",
           "avatar": "https://yt3.googleusercontent.com/5kGgReRI_FAMIbg5Dt5rP8YSlsLu4d0-K8I0T_THgKLApWy3RdWNDbxlT-StmDuJtb-VEiBfZw=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 42,
-          "subscriberCount": "",
+          "subscriberCount": "15.2만 명",
           "youtubeUrl": "https://www.youtube.com/@sopoong_youtube",
           "videos": [
             {
@@ -8236,7 +8236,7 @@
           "badgeColor": "bg-blue-600",
           "avatar": "https://yt3.googleusercontent.com/VLugI3oJ2YibdayLg63AfEnW3UwRMU9naaMxwF6vojVVGtemwGFgOWV-wk9u5YfZIz2Ioh-Mmw=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 43,
-          "subscriberCount": "",
+          "subscriberCount": "2.9만 명",
           "youtubeUrl": "https://www.youtube.com/@potato_stream",
           "videos": [
             {
@@ -8363,7 +8363,7 @@
           "badgeColor": "bg-blue-600",
           "avatar": "https://yt3.googleusercontent.com/JRCLswfV3q0yow0NkUveH8vXdIX92rBa1uJysv3wo3sJNU2ECy6gjj9zS1qc7TeZnJ5akdHD8g=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 44,
-          "subscriberCount": "",
+          "subscriberCount": "7.3만 명",
           "youtubeUrl": "https://www.youtube.com/@mallang_mandii",
           "videos": [
             {
@@ -8510,11 +8510,56 @@
           "swatRole": "",
           "status": "active",
           "badgeColor": "bg-blue-600",
-          "avatar": "assets/default-avatar.svg",
+          "avatar": "https://yt3.googleusercontent.com/MBvhcnQuDImz_XkKjRUOn_b0QjmYZtyQ15kqy4pi1YlRVx1WHTM8GGZb3DQO6nYCV0KwWMopYg=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 45,
-          "subscriberCount": "",
-          "youtubeUrl": "",
-          "videos": [],
+          "subscriberCount": "5.1만 명",
+          "youtubeUrl": "https://www.youtube.com/@moyaji77",
+          "videos": [
+            {
+              "id": "v-mu1igv704g4w",
+              "title": "GTA의 무법자 \"모예염\" [콩밥특별시 1일차]",
+              "url": "https://www.youtube.com/watch?v=WqNAqDXJwb4",
+              "videoType": "clip",
+              "date": "2025.07.13",
+              "duration": "7:13",
+              "description": "",
+              "displayOrder": 0,
+              "thumbnailUrl": "https://img.youtube.com/vi/WqNAqDXJwb4/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu1ihg0t2acms-0",
+              "title": "[250603] 대전여행후기+콩밥특별시 1일차 모예염~",
+              "url": "https://www.youtube.com/watch?v=uGAUKMM-W2Y",
+              "videoType": "full",
+              "date": "2025.06.16",
+              "duration": "10:42:21",
+              "description": "",
+              "displayOrder": 1,
+              "thumbnailUrl": "https://i.ytimg.com/vi/uGAUKMM-W2Y/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1ihg0tf9hlu-1",
+              "title": "[250605] 콩밥특별시 2일차! 경찰신입 모예염ㅎ",
+              "url": "https://www.youtube.com/watch?v=n-0YQux-TYA",
+              "videoType": "full",
+              "date": "2025.06.16",
+              "duration": "10:19:24",
+              "description": "",
+              "displayOrder": 2,
+              "thumbnailUrl": "https://i.ytimg.com/vi/n-0YQux-TYA/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1ihg0tgrwyy-2",
+              "title": "[250606] 콩밥특별시 3일차 짧방 모예염~",
+              "url": "https://www.youtube.com/watch?v=WBUsqAso68s",
+              "videoType": "full",
+              "date": "2025.06.16",
+              "duration": "1:44:07",
+              "description": "",
+              "displayOrder": 3,
+              "thumbnailUrl": "https://i.ytimg.com/vi/WBUsqAso68s/mqdefault.jpg"
+            }
+          ],
           "affiliations": [
             {
               "category": "police",
@@ -8539,7 +8584,7 @@
           "badgeColor": "bg-yellow-400",
           "avatar": "https://yt3.googleusercontent.com/oECxTD4XvXx98e8dUAuL-QPIZ13GcG1ycCoZV1j7DAB1i524NVdc3mEggITvmw8RGlCbbNUsYg=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 46,
-          "subscriberCount": "",
+          "subscriberCount": "23.7만 명",
           "youtubeUrl": "https://www.youtube.com/@1983dk",
           "videos": [],
           "affiliations": [
@@ -8566,7 +8611,7 @@
           "badgeColor": "bg-yellow-400",
           "avatar": "https://yt3.googleusercontent.com/ytc/AIdro_k8G2_4hcehaiUxqvrW29bByaDdkXobiUnnTrM0EYxvgbU=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 47,
-          "subscriberCount": "",
+          "subscriberCount": "12.1만 명",
           "youtubeUrl": "https://www.youtube.com/@miyagod",
           "videos": [],
           "affiliations": [
@@ -8593,7 +8638,7 @@
           "badgeColor": "bg-yellow-400",
           "avatar": "https://yt3.googleusercontent.com/EsxZuCZIgwkdBhQvxaDHbINcrgccTJ4G7_GTBon3psmckjgOa1moy5baGLRQ-N22YeFn_fXw=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 48,
-          "subscriberCount": "",
+          "subscriberCount": "4.8만 명",
           "youtubeUrl": "https://www.youtube.com/@_runner",
           "videos": [
             {
@@ -8614,9 +8659,9 @@
               "videoType": "full",
               "date": "2025.06.04",
               "duration": "14:33:15",
-              "thumbnailUrl": "https://video-phinf.pstatic.net/20250604_125/1748978262550vYq6p_JPEG/uX305inkq0_03.jpg",
               "description": "",
-              "displayOrder": 1
+              "displayOrder": 1,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250604_125/1748978262550vYq6p_JPEG/uX305inkq0_03.jpg"
             },
             {
               "id": "v-mtzw6i71kjkmt-1",
@@ -8625,9 +8670,9 @@
               "videoType": "full",
               "date": "2025.06.04",
               "duration": "7:33:27",
-              "thumbnailUrl": "https://video-phinf.pstatic.net/20250604_37/1749041531037PDM9r_JPEG/3TjDfTa30b_03.jpg",
               "description": "",
-              "displayOrder": 2
+              "displayOrder": 2,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250604_37/1749041531037PDM9r_JPEG/3TjDfTa30b_03.jpg"
             }
           ],
           "affiliations": [
@@ -8652,11 +8697,23 @@
           "swatRole": "",
           "status": "resigned",
           "badgeColor": "bg-yellow-400",
-          "avatar": "assets/default-avatar.svg",
+          "avatar": "https://nng-phinf.pstatic.net/MjAyMzEyMjhfMjA0/MDAxNzAzNjkyNDk2NTA2.U55N1X4pASRUtYwAm2l-AgmLc093lnKJVhMwghZxHbEg.bMn15tC_DcIenfLYq21PlvoVUge8SE1KdhyWb1o60cMg.JPEG/%EB%B0%B0%EA%B2%BD%EB%8C%80%EA%B8%B0%EC%82%AC%EC%A7%841.jpg?type=f120_120_na",
           "displayOrder": 49,
-          "subscriberCount": "",
-          "youtubeUrl": "",
-          "videos": [],
+          "subscriberCount": "3.5만 명",
+          "youtubeUrl": "https://chzzk.naver.com/ec63f122d921707806fc27e42c7a997d",
+          "videos": [
+            {
+              "id": "v-mu1jha50p09y",
+              "title": "콩밥특별시 오늘 처음!!!!!!!!",
+              "url": "https://chzzk.naver.com/video/7610034",
+              "videoType": "full",
+              "date": "2025.06.06",
+              "duration": "13:00:46",
+              "description": "",
+              "displayOrder": 0,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250606_118/1749144869355eh662_JPEG/86Rd1fznkA_03.jpg"
+            }
+          ],
           "affiliations": [
             {
               "category": "police",
@@ -8679,11 +8736,265 @@
           "swatRole": "",
           "status": "resigned",
           "badgeColor": "bg-yellow-400",
-          "avatar": "assets/default-avatar.svg",
+          "avatar": "https://yt3.googleusercontent.com/XGOKEHONYSlHUd-3DwrewPJEb8riLXpMb8Y89b10Hp54V5NkirBRkJlzElUCvcSBWkwRm3mi=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 50,
-          "subscriberCount": "",
-          "youtubeUrl": "",
-          "videos": [],
+          "subscriberCount": "1,930명",
+          "youtubeUrl": "https://www.youtube.com/@wishing_momomo",
+          "videos": [
+            {
+              "id": "v-mu1jiupuwy23",
+              "title": "[콩밥 특별시] 1일차 함몰 등장",
+              "url": "https://www.youtube.com/watch?v=AVC7lliQ_ZQ",
+              "videoType": "clip",
+              "date": "2025.06.09",
+              "duration": "13:01",
+              "description": "",
+              "displayOrder": 0,
+              "thumbnailUrl": "https://img.youtube.com/vi/AVC7lliQ_ZQ/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvze5nomt-0",
+              "title": "『 2025.05.28 』 노래, 게임 :: 콩밥특별시 첫 입주! 1부",
+              "url": "https://www.youtube.com/watch?v=Ub_v55kAUCg",
+              "videoType": "full",
+              "date": "2025.06.13",
+              "duration": "8:34:26",
+              "description": "",
+              "displayOrder": 1,
+              "thumbnailUrl": "https://i.ytimg.com/vi/Ub_v55kAUCg/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzed014c-1",
+              "title": "『 2025.05.28 』 게임 :: 콩밥특별시 첫 입주! 2부",
+              "url": "https://www.youtube.com/watch?v=hkcXq1FHwYg",
+              "videoType": "full",
+              "date": "2025.06.13",
+              "duration": "7:08:13",
+              "description": "",
+              "displayOrder": 2,
+              "thumbnailUrl": "https://i.ytimg.com/vi/hkcXq1FHwYg/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzek631i-2",
+              "title": "『 2025.05.29 』 게임 :: 콩밥특별시, 버거집 취직했어요! 1부",
+              "url": "https://www.youtube.com/watch?v=C1hCtG-BhrQ",
+              "videoType": "full",
+              "date": "2025.06.15",
+              "duration": "10:09:02",
+              "description": "",
+              "displayOrder": 3,
+              "thumbnailUrl": "https://i.ytimg.com/vi/C1hCtG-BhrQ/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvze9a0mh-3",
+              "title": "『 2025.05.29 』 게임 :: 콩밥특별시, 버거집 취직했어요! 2부",
+              "url": "https://www.youtube.com/watch?v=naVyktN9Vtw",
+              "videoType": "full",
+              "date": "2025.06.14",
+              "duration": "8:43:31",
+              "description": "",
+              "displayOrder": 4,
+              "thumbnailUrl": "https://i.ytimg.com/vi/naVyktN9Vtw/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzetox4i-4",
+              "title": "『 2025.05.31 』 게임 :: 콩밥특별시, 버거집 근무 서요! 1부",
+              "url": "https://www.youtube.com/watch?v=BbwNklkqeCM",
+              "videoType": "full",
+              "date": "2025.06.15",
+              "duration": "10:04:32",
+              "description": "",
+              "displayOrder": 5,
+              "thumbnailUrl": "https://i.ytimg.com/vi/BbwNklkqeCM/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzeuurig-5",
+              "title": "『 2025.05.31 』 게임 :: 콩밥특별시, 버거집 근무 서요! 2부",
+              "url": "https://www.youtube.com/watch?v=IimmQYYPAtc",
+              "videoType": "full",
+              "date": "2025.06.15",
+              "duration": "4:06:48",
+              "description": "",
+              "displayOrder": 6,
+              "thumbnailUrl": "https://i.ytimg.com/vi/IimmQYYPAtc/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzeaylpi-6",
+              "title": "『 2025.06.01 』 게임 :: 콩밥특별시 버거집 출근합니다!! 1부",
+              "url": "https://www.youtube.com/watch?v=If7lsvU-1S0",
+              "videoType": "full",
+              "date": "2025.06.15",
+              "duration": "6:52:20",
+              "description": "",
+              "displayOrder": 7,
+              "thumbnailUrl": "https://i.ytimg.com/vi/If7lsvU-1S0/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzexprdb-7",
+              "title": "『 2025.06.01 』 게임 :: 콩밥특별시 버거집 출근합니다!! 1부",
+              "url": "https://www.youtube.com/watch?v=gR7y1FWjisA",
+              "videoType": "full",
+              "date": "2025.06.15",
+              "duration": "7:13:38",
+              "description": "",
+              "displayOrder": 8,
+              "thumbnailUrl": "https://i.ytimg.com/vi/gR7y1FWjisA/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzecis1b-8",
+              "title": "2025.06.02 콩밥특별시 함몰, 경찰 출근합니다 1부",
+              "url": "https://www.youtube.com/watch?v=ia0hzt8yiRA",
+              "videoType": "full",
+              "date": "2025.06.15",
+              "duration": "10:06:14",
+              "description": "",
+              "displayOrder": 9,
+              "thumbnailUrl": "https://i.ytimg.com/vi/ia0hzt8yiRA/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzeblcgv-9",
+              "title": "2025.06.02 콩밥특별시 함몰, 경찰 출근합니다 2부",
+              "url": "https://www.youtube.com/watch?v=qZG2psNxC60",
+              "videoType": "full",
+              "date": "2025.06.15",
+              "duration": "4:30:09",
+              "description": "",
+              "displayOrder": 10,
+              "thumbnailUrl": "https://i.ytimg.com/vi/qZG2psNxC60/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvze1o83e-10",
+              "title": "2025.06.06-3 콩밥특별시",
+              "url": "https://www.youtube.com/watch?v=bSwSBTFFy3I",
+              "videoType": "full",
+              "date": "2025.06.23",
+              "duration": "1:01:25",
+              "description": "",
+              "displayOrder": 11,
+              "thumbnailUrl": "https://i.ytimg.com/vi/bSwSBTFFy3I/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzenpuyp-11",
+              "title": "2025.06.04 콩밥특별시, 함몰 지각 출근했습니다",
+              "url": "https://www.youtube.com/watch?v=q7LIfPVmDJ4",
+              "videoType": "full",
+              "date": "2025.06.23",
+              "duration": "6:29:20",
+              "description": "",
+              "displayOrder": 12,
+              "thumbnailUrl": "https://i.ytimg.com/vi/q7LIfPVmDJ4/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzeihdv9-12",
+              "title": "2025.06.05-1 콩밥특별시",
+              "url": "https://www.youtube.com/watch?v=Ewf-UbWldOE",
+              "videoType": "full",
+              "date": "2025.06.27",
+              "duration": "6:00:30",
+              "description": "",
+              "displayOrder": 13,
+              "thumbnailUrl": "https://i.ytimg.com/vi/Ewf-UbWldOE/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzetrzoc-13",
+              "title": "2025.06.05-2 콩밥특별시",
+              "url": "https://www.youtube.com/watch?v=eqyNhmIQfN4",
+              "videoType": "full",
+              "date": "2025.06.27",
+              "duration": "9:56:29",
+              "description": "",
+              "displayOrder": 14,
+              "thumbnailUrl": "https://i.ytimg.com/vi/eqyNhmIQfN4/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzemdkmx-14",
+              "title": "2025.06.06 (1) 콩밥특별시",
+              "url": "https://www.youtube.com/watch?v=_y_o4hFIwuc",
+              "videoType": "full",
+              "date": "2025.06.28",
+              "duration": "8:30:01",
+              "description": "",
+              "displayOrder": 15,
+              "thumbnailUrl": "https://i.ytimg.com/vi/_y_o4hFIwuc/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzesk7ik-15",
+              "title": "2025.06.06 (2) 콩밥특별시",
+              "url": "https://www.youtube.com/watch?v=v2mtr2Cuino",
+              "videoType": "full",
+              "date": "2025.06.28",
+              "duration": "8:30:01",
+              "description": "",
+              "displayOrder": 16,
+              "thumbnailUrl": "https://i.ytimg.com/vi/v2mtr2Cuino/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvze5c7aq-16",
+              "title": "2025.06.07 (1) 콩밥특별시",
+              "url": "https://www.youtube.com/watch?v=JcXZK-c_X-w",
+              "videoType": "full",
+              "date": "2025.06.29",
+              "duration": "7:10:34",
+              "description": "",
+              "displayOrder": 17,
+              "thumbnailUrl": "https://i.ytimg.com/vi/JcXZK-c_X-w/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzeg2nku-17",
+              "title": "2025 06 07 (2) 콩밥특별시",
+              "url": "https://www.youtube.com/watch?v=JSc8wsL2ZEs",
+              "videoType": "full",
+              "date": "2025.06.29",
+              "duration": "6:47:16",
+              "description": "",
+              "displayOrder": 18,
+              "thumbnailUrl": "https://i.ytimg.com/vi/JSc8wsL2ZEs/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzeayl53-18",
+              "title": "2025 06 08 (1) 콩밥특별시",
+              "url": "https://www.youtube.com/watch?v=GoqyBjpQiJM",
+              "videoType": "full",
+              "date": "2025.06.29",
+              "duration": "7:01:25",
+              "description": "",
+              "displayOrder": 19,
+              "thumbnailUrl": "https://i.ytimg.com/vi/GoqyBjpQiJM/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzes17n5-19",
+              "title": "2025 06 08 (2) 콩밥특별시",
+              "url": "https://www.youtube.com/watch?v=rZmH35vMmSQ",
+              "videoType": "full",
+              "date": "2025.06.29",
+              "duration": "6:07:43",
+              "description": "",
+              "displayOrder": 20,
+              "thumbnailUrl": "https://i.ytimg.com/vi/rZmH35vMmSQ/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzexb5uo-20",
+              "title": "2025 06 09 콩밥특별시 였던것...",
+              "url": "https://www.youtube.com/watch?v=CcMmjocV5Tg",
+              "videoType": "full",
+              "date": "2025.06.29",
+              "duration": "4:30:13",
+              "description": "",
+              "displayOrder": 21,
+              "thumbnailUrl": "https://i.ytimg.com/vi/CcMmjocV5Tg/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu1jmvzegoful-21",
+              "title": "2025 06 10 콩밥특별시 였던 것 시즌2",
+              "url": "https://www.youtube.com/watch?v=q9hc_qylwf4",
+              "videoType": "full",
+              "date": "2025.06.29",
+              "duration": "2:46:56",
+              "description": "",
+              "displayOrder": 22,
+              "thumbnailUrl": "https://i.ytimg.com/vi/q9hc_qylwf4/mqdefault.jpg"
+            }
+          ],
           "affiliations": [
             {
               "category": "police",
@@ -9063,7 +9374,7 @@
               "subgroup": null,
               "role": "교육생",
               "swatRole": "",
-              "status": "retired",
+              "status": "resigned",
               "badgeColor": "bg-yellow-400",
               "displayOrder": 52
             },
@@ -9855,7 +10166,7 @@
               "badgeColor": "bg-zinc-700",
               "avatar": "https://yt3.googleusercontent.com/8oHiEHC_CwrQawea5pkTh7Qn8euVigdOLTFvXo1jiD6gmHbLXqyfL5y5BGOI79RpkgQ687ZZWA=s120-c-k-c0x00ffffff-no-rj",
               "displayOrder": 4,
-              "subscriberCount": "6.7만 명",
+              "subscriberCount": "6.8만 명",
               "youtubeUrl": "https://www.youtube.com/@MochidukiKaede",
               "videos": [
                 {
@@ -10933,7 +11244,7 @@
                   "subgroup": null,
                   "role": "교육생",
                   "swatRole": "",
-                  "status": "retired",
+                  "status": "resigned",
                   "badgeColor": "bg-yellow-400",
                   "displayOrder": 52
                 },
@@ -14272,7 +14583,7 @@
               "badgeColor": "bg-zinc-700",
               "avatar": "https://yt3.googleusercontent.com/dR-DU6i-sb5UfS33j2PpfXaYcVvBWNs8KI60JtI6Z11keYo7O43P6OisgTHkNWPtfYzn2DV61w=s120-c-k-c0x00ffffff-no-rj",
               "displayOrder": 3,
-              "subscriberCount": "3,980명",
+              "subscriberCount": "3,990명",
               "youtubeUrl": "https://www.youtube.com/@odanming",
               "videos": [
                 {
@@ -14762,7 +15073,7 @@
               "badgeColor": "bg-zinc-700",
               "avatar": "https://yt3.googleusercontent.com/CZQvuyQ4oE7WfcJ3dPUSsEJl7KoDfQyUZuUZ3OXQdmNJVaaMKrGyAptZltexQwZGhehDod0efQ=s120-c-k-c0x00ffffff-no-rj",
               "displayOrder": 6,
-              "subscriberCount": "475명",
+              "subscriberCount": "483명",
               "youtubeUrl": "https://www.youtube.com/@me_youuuu",
               "videos": [],
               "affiliations": [
@@ -15093,7 +15404,7 @@
               "badgeColor": "bg-amber-600",
               "avatar": "https://yt3.googleusercontent.com/ytc/AIdro_m-fnZQ9FB8gB8AzPhh3xQYv125xF7yqd_EiZZNjsFM8Gk=s120-c-k-c0x00ffffff-no-rj",
               "displayOrder": 0,
-              "subscriberCount": "59만 명",
+              "subscriberCount": "59.1만 명",
               "youtubeUrl": "https://www.youtube.com/@ukitivi",
               "videos": [
                 {
