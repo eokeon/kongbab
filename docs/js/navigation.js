@@ -223,6 +223,7 @@ function renderSearchResults(container) {
                 src="${getMemberAvatar(m)}" 
                 alt="${m.name}" 
                 loading="lazy"
+                decoding="async"
                 referrerpolicy="no-referrer"
                 onerror="this.onerror=null; this.src='assets/default-avatar.svg'"
                 class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 border-zinc-700 group-hover:border-amber-400 transition-all duration-300 shadow-md ${avatarFilterClass}"
@@ -553,26 +554,36 @@ function clearSearchInput() {
 
 function setupEventListeners() {
   const searchInput = document.getElementById("search-input");
+  const mobileInput = document.getElementById("search-input-mobile");
+
+  let searchDebounceTimer = null;
+  const handleSearchInputChange = (rawVal, mirrorEl) => {
+    if (mirrorEl && mirrorEl.value !== rawVal) {
+      mirrorEl.value = rawVal;
+    }
+    const q = rawVal.trim().toLowerCase();
+    if (!q) {
+      if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+      state.searchQuery = "";
+      renderContent();
+      return;
+    }
+    if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(() => {
+      state.searchQuery = q;
+      renderContent();
+    }, 120);
+  };
+
   if (searchInput) {
     searchInput.addEventListener("input", (e) => {
-      state.searchQuery = e.target.value.trim().toLowerCase();
-      const mobileInput = document.getElementById("search-input-mobile");
-      if (mobileInput && mobileInput.value !== e.target.value) {
-        mobileInput.value = e.target.value;
-      }
-      renderContent();
+      handleSearchInputChange(e.target.value, mobileInput);
     });
   }
 
-  const mobileInput = document.getElementById("search-input-mobile");
   if (mobileInput) {
     mobileInput.addEventListener("input", (e) => {
-      state.searchQuery = e.target.value.trim().toLowerCase();
-      const desktopInput = document.getElementById("search-input");
-      if (desktopInput && desktopInput.value !== e.target.value) {
-        desktopInput.value = e.target.value;
-      }
-      renderContent();
+      handleSearchInputChange(e.target.value, searchInput);
     });
   }
 
@@ -605,18 +616,28 @@ function setupEventListeners() {
     }
   }
 
+  let scrollRafId = null;
   window.addEventListener("scroll", () => {
-    if (typeof updateFloatingCategoryNavVisibility === "function") {
-      updateFloatingCategoryNavVisibility();
+    if (!scrollRafId) {
+      scrollRafId = requestAnimationFrame(() => {
+        scrollRafId = null;
+        if (typeof updateFloatingCategoryNavVisibility === "function") {
+          updateFloatingCategoryNavVisibility();
+        }
+        updateMobileScrollTopVisibility();
+      });
     }
-    updateMobileScrollTopVisibility();
   }, { passive: true });
 
+  let resizeTimer = null;
   window.addEventListener("resize", () => {
-    if (typeof updateFloatingCategoryNavVisibility === "function") {
-      updateFloatingCategoryNavVisibility();
-    }
-    updateMobileScrollTopVisibility();
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (typeof updateFloatingCategoryNavVisibility === "function") {
+        updateFloatingCategoryNavVisibility();
+      }
+      updateMobileScrollTopVisibility();
+    }, 100);
   }, { passive: true });
 
   window.addEventListener("orientationchange", () => {

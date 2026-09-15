@@ -588,6 +588,7 @@ function renderMemberCard(member, dragType, clickFn) {
               alt="${member.name}" 
               draggable="false" 
               loading="lazy"
+              decoding="async"
               referrerpolicy="no-referrer"
               onerror="this.onerror=null; this.src='assets/default-avatar.svg'"
               class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 ${inactive ? 'border-zinc-700/60 group-hover:border-amber-400' : 'border-zinc-700 group-hover:border-amber-400'} ${avatarFilterClass} transition-all duration-300 shadow-md"
@@ -923,7 +924,7 @@ function renderGroupMembers(container) {
           <span>${cat.name} 목록으로 돌아가기</span>
         </button>
         <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
-          ${bgImage ? `<img src="${bgImage}" alt="${group.name}" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-cover border-2 border-amber-500/60 shadow-lg shadow-amber-500/20 flex-shrink-0" />` : ''}
+          ${bgImage ? `<img src="${bgImage}" alt="${group.name}" loading="lazy" decoding="async" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-cover border-2 border-amber-500/60 shadow-lg shadow-amber-500/20 flex-shrink-0" />` : ''}
           <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2 flex-shrink-0">
             <span>${group.emoji || ''}</span>
             <span>${group.name}</span>
@@ -1035,7 +1036,7 @@ function renderMemberVideos(container) {
             class="relative block aspect-video bg-black overflow-hidden group cursor-pointer"
             title="${platformLabel}에서 영상 보기 (새 탭)"
           >
-            <img src="${thumbUrl}" alt="${video.title}" draggable="false" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+            <img src="${thumbUrl}" alt="${video.title}" draggable="false" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
             
             <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 z-10 select-none">
               <div class="${typeBadgeClass} border backdrop-blur-md text-[11px] font-bold px-2.5 py-1 rounded-lg shadow flex items-center gap-1 whitespace-nowrap flex-shrink-0">
@@ -1182,7 +1183,7 @@ function renderMemberVideos(container) {
       <div class="bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-950 border border-zinc-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6 shadow-2xl relative overflow-hidden">
         <div class="flex items-start sm:items-center gap-4 sm:gap-6 relative z-10">
           <div class="relative flex-shrink-0">
-            <img src="${getMemberAvatar(member)}" alt="${member.name}" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='assets/default-avatar.svg'" class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl sm:rounded-3xl object-cover border-4 border-zinc-800 shadow-2xl transition-all duration-300 ${inactive ? 'grayscale contrast-125 opacity-80 hover:grayscale-0 hover:contrast-100 hover:opacity-100 cursor-pointer' : ''}" />
+            <img src="${getMemberAvatar(member)}" alt="${member.name}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='assets/default-avatar.svg'" class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl sm:rounded-3xl object-cover border-4 border-zinc-800 shadow-2xl transition-all duration-300 ${inactive ? 'grayscale contrast-125 opacity-80 hover:grayscale-0 hover:contrast-100 hover:opacity-100 cursor-pointer' : ''}" />
             ${effectiveSwatRole ? getSwatBadgeHtml(effectiveSwatRole, 'lg') : ''}
             ${effectiveRole ? `
               <span class="absolute -bottom-2 -right-2 z-20 text-xs font-bold px-2.5 py-1 rounded-xl ${getMemberRoleBadgeClass(member, cat.id)} shadow-xl border border-white/20">

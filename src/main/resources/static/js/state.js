@@ -156,13 +156,41 @@ function loadStoredData() {
   }
 }
 
-function persistData() {
-  try {
-    localStorage.setItem("kongbab_custom_data", JSON.stringify(KONGBAB_DATA));
-  } catch (e) {
-    console.error("로컬 캐시 저장 실패", e);
+let persistTimer = null;
+function persistData(immediate = false) {
+  if (typeof invalidateLeaderboardCache === "function") {
+    invalidateLeaderboardCache();
   }
+
+  const saveToStorage = () => {
+    try {
+      localStorage.setItem("kongbab_custom_data", JSON.stringify(KONGBAB_DATA));
+    } catch (e) {
+      console.error("로컬 캐시 저장 실패", e);
+    }
+  };
+
+  if (immediate) {
+    if (persistTimer) {
+      clearTimeout(persistTimer);
+      persistTimer = null;
+    }
+    saveToStorage();
+    return;
+  }
+
+  if (persistTimer) clearTimeout(persistTimer);
+  persistTimer = setTimeout(() => {
+    persistTimer = null;
+    saveToStorage();
+  }, 150);
 }
+
+window.addEventListener("beforeunload", () => {
+  if (persistTimer) {
+    persistData(true);
+  }
+});
 
 const COLOR_THEMES = {
   blue: {

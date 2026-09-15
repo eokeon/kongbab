@@ -7,8 +7,18 @@ let currentLeaderboardTab = 'total'; // 'total' | 'clip' | 'full' | 'binge' | 'c
 let leaderboardSearchQuery = '';
 
 // 전체 멤버 목록 및 통계 데이터 추출
+let cachedLeaderboardMembers = null;
+let cachedGlobalStats = null;
+
+function invalidateLeaderboardCache() {
+  cachedLeaderboardMembers = null;
+  cachedGlobalStats = null;
+}
+window.invalidateLeaderboardCache = invalidateLeaderboardCache;
+
 // 전체 멤버 목록 및 통계 데이터 추출 (고유 스트리머 기준 중복 제거 및 겸직 소속 병합)
 function getAllMembersWithLeaderboardStats() {
+  if (cachedLeaderboardMembers) return cachedLeaderboardMembers;
   if (!KONGBAB_DATA || !KONGBAB_DATA.categories) return [];
 
   const memberMap = new Map();
@@ -61,7 +71,8 @@ function getAllMembersWithLeaderboardStats() {
     }
   });
 
-  return Array.from(memberMap.values());
+  cachedLeaderboardMembers = Array.from(memberMap.values());
+  return cachedLeaderboardMembers;
 }
 
 function computeMemberLeaderboardStats(m, cat, group) {
@@ -159,6 +170,7 @@ function computeMemberLeaderboardStats(m, cat, group) {
 
 // 전체 종합 메트릭 계산 (고유 스트리머 및 고유 비디오 기준 중복 집계 방지)
 function computeGlobalMetrics(members) {
+  if (cachedGlobalStats) return cachedGlobalStats;
   // 1. 혹시 모를 멤버 중복 방지 (동일 ID 또는 고유 스트리머 식별자 기준)
   const uniqueMembers = [];
   const seenMemberKeys = new Set();
@@ -229,7 +241,7 @@ function computeGlobalMetrics(members) {
     ? formatSubscriberCount(chzzkFollowerCount)
     : (chzzkFollowerCount > 0 ? `${chzzkFollowerCount.toLocaleString()}명` : "0명");
 
-  return {
+  cachedGlobalStats = {
     totalMembers,
     totalVideos,
     totalSec,
@@ -250,6 +262,7 @@ function computeGlobalMetrics(members) {
     chzzkFollowerCount,
     chzzkFollowerStr,
   };
+  return cachedGlobalStats;
 }
 
 // 모달 열기
@@ -299,23 +312,34 @@ function setLeaderboardTab(tab) {
 }
 
 // 검색어 입력
+let leaderboardSearchTimer = null;
 function handleLeaderboardSearch(query) {
-  leaderboardSearchQuery = (query || '').trim().toLowerCase();
-  
+  const q = (query || '').trim().toLowerCase();
   const clearBtn = document.getElementById("leaderboard-search-clear");
   if (clearBtn) {
-    if (leaderboardSearchQuery) {
+    if (q) {
       clearBtn.classList.remove("hidden");
     } else {
       clearBtn.classList.add("hidden");
     }
   }
 
-  renderLeaderboardDynamicContent();
+  if (leaderboardSearchTimer) clearTimeout(leaderboardSearchTimer);
+  if (!q) {
+    leaderboardSearchQuery = '';
+    renderLeaderboardDynamicContent();
+    return;
+  }
+
+  leaderboardSearchTimer = setTimeout(() => {
+    leaderboardSearchQuery = q;
+    renderLeaderboardDynamicContent();
+  }, 120);
 }
 
 // 검색어 비우기
 function clearLeaderboardSearch() {
+  if (leaderboardSearchTimer) clearTimeout(leaderboardSearchTimer);
   leaderboardSearchQuery = '';
   const searchInput = document.getElementById("leaderboard-search-input");
   if (searchInput) {
@@ -403,7 +427,6 @@ function renderGlobalStatsCards(globalStats) {
         <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-base sm:text-xl font-bold text-amber-400 tracking-tight leading-tight">${globalStats.totalVideos}개</div>
         <div class="mt-1 flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
           <div class="h-4 flex items-center text-zinc-300 truncate">누적 아카이브</div>
-          <div class="h-4 flex items-center text-zinc-500 truncate">전체 등록 영상</div>
         </div>
       </div>
     </div>
@@ -418,7 +441,6 @@ function renderGlobalStatsCards(globalStats) {
         <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-amber-400 tracking-tight leading-tight">${globalStats.totalDurStr}</div>
         <div class="mt-1 flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
           <div class="h-4 flex items-center text-zinc-300 truncate">전체 플레이타임</div>
-          <div class="h-4 flex items-center text-zinc-500 truncate">누적 방송 합산</div>
         </div>
       </div>
     </div>
@@ -436,7 +458,6 @@ function renderGlobalStatsCards(globalStats) {
         <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-red-400 tracking-tight leading-tight">${globalStats.totalClipDurStr}</div>
         <div class="mt-1 flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
           <div class="h-4 flex items-center text-zinc-300 font-medium truncate">총 ${globalStats.totalClipCount}개 등록됨</div>
-          <div class="h-4 flex items-center text-zinc-500 truncate">하이라이트 클립</div>
         </div>
       </div>
     </div>
@@ -454,7 +475,6 @@ function renderGlobalStatsCards(globalStats) {
         <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-indigo-400 tracking-tight leading-tight">${globalStats.totalFullDurStr}</div>
         <div class="mt-1 flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
           <div class="h-4 flex items-center text-zinc-300 font-medium truncate">총 ${globalStats.totalFullCount}개 등록됨</div>
-          <div class="h-4 flex items-center text-zinc-500 truncate">다시보기 풀버전</div>
         </div>
       </div>
     </div>
@@ -472,7 +492,6 @@ function renderGlobalStatsCards(globalStats) {
         <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-amber-300 tracking-tight leading-tight">${globalStats.totalBingeDurStr}</div>
         <div class="mt-1 flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
           <div class="h-4 flex items-center text-zinc-300 font-medium truncate">총 ${globalStats.totalBingeCount}개 등록됨</div>
-          <div class="h-4 flex items-center text-zinc-500 truncate">정주행 몰아보기</div>
         </div>
       </div>
     </div>
@@ -623,7 +642,7 @@ function renderLeaderboardDynamicContent() {
           <div class="podium-badge -top-3 w-7 h-7 rounded-full bg-zinc-400/20 border border-zinc-400 flex items-center justify-center text-sm shadow">🥈</div>
           <div class="relative my-2">
             <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-zinc-400/60 group-hover:border-zinc-300 transition-colors duration-300 ease-out bg-zinc-800 shadow-md" style="mask-image: -webkit-radial-gradient(white, black); -webkit-mask-image: -webkit-radial-gradient(white, black);">
-              <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top2) : (top2.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" class="podium-avatar-img w-full h-full object-cover" />
+              <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top2) : (top2.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" loading="lazy" decoding="async" class="podium-avatar-img w-full h-full object-cover" />
             </div>
             ${(typeof getSwatBadgeHtml === 'function' && top2.swatRole) ? getSwatBadgeHtml(top2.swatRole, 'sm') : ''}
             ${top2.role ? `
@@ -655,7 +674,7 @@ function renderLeaderboardDynamicContent() {
           <div class="podium-badge -top-4 w-9 h-9 rounded-full bg-amber-500 text-black font-bold flex items-center justify-center text-base shadow-lg shadow-amber-500/40">👑</div>
           <div class="relative my-2">
             <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-amber-400 group-hover:border-amber-300 transition-colors duration-300 ease-out bg-zinc-800 shadow-md" style="mask-image: -webkit-radial-gradient(white, black); -webkit-mask-image: -webkit-radial-gradient(white, black);">
-              <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top1) : (top1.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" class="podium-avatar-img w-full h-full object-cover" />
+              <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top1) : (top1.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" loading="lazy" decoding="async" class="podium-avatar-img w-full h-full object-cover" />
             </div>
             ${(typeof getSwatBadgeHtml === 'function' && top1.swatRole) ? getSwatBadgeHtml(top1.swatRole, 'sm') : ''}
             ${top1.role ? `
@@ -687,7 +706,7 @@ function renderLeaderboardDynamicContent() {
           <div class="podium-badge -top-3 w-7 h-7 rounded-full bg-amber-800/30 border border-amber-700 flex items-center justify-center text-sm shadow">🥉</div>
           <div class="relative my-2">
             <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-amber-700/60 group-hover:border-amber-600 transition-colors duration-300 ease-out bg-zinc-800 shadow-md" style="mask-image: -webkit-radial-gradient(white, black); -webkit-mask-image: -webkit-radial-gradient(white, black);">
-              <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top3) : (top3.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" class="podium-avatar-img w-full h-full object-cover" />
+              <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top3) : (top3.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" loading="lazy" decoding="async" class="podium-avatar-img w-full h-full object-cover" />
             </div>
             ${(typeof getSwatBadgeHtml === 'function' && top3.swatRole) ? getSwatBadgeHtml(top3.swatRole, 'sm') : ''}
             ${top3.role ? `
@@ -765,6 +784,8 @@ function renderLeaderboardDynamicContent() {
                   <img 
                     src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(m) : (m.avatar || 'assets/default-avatar.svg')}" 
                     onerror="this.src='assets/default-avatar.svg'" 
+                    loading="lazy"
+                    decoding="async"
                     class="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border border-zinc-700 bg-zinc-800 flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
                   />
                   ${(typeof getSwatBadgeHtml === 'function' && m.swatRole) ? getSwatBadgeHtml(m.swatRole, 'sm') : ''}
