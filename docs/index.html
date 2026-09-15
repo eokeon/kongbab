@@ -24,7 +24,7 @@
       }
     }
   </script>
-  <link rel="stylesheet" href="./css/style.css?v=20260912_05">
+  <link rel="stylesheet" href="./css/style.css?v=20260915_01">
 </head>
 <body class="bg-[#09090b] text-zinc-100 min-h-screen flex flex-col selection:bg-red-500 selection:text-white">
 
@@ -64,7 +64,7 @@
       <div class="pb-3 sm:hidden">
         <input 
           type="text" 
-          id="search-input-mobile"
+          id="search-input-mobile" 
           placeholder="인원, 스트리머, 소속, 직책 검색..." 
           class="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-red-500"
         />
@@ -73,18 +73,18 @@
   </header>
 
   <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
-    <div class="mb-5 sm:mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4 border-b border-zinc-800/80 pb-4 sm:pb-5">
-      <div id="category-tabs" class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1 sm:py-0 sm:flex-wrap max-w-full"></div>
-      <div id="header-stats" onclick="openLeaderboardModal()" title="전체 종합 통계 보기 (클릭)" class="text-xs text-zinc-400 flex items-center justify-center sm:justify-start gap-2 sm:gap-2.5 bg-zinc-900/80 hover:bg-zinc-800/90 px-3 sm:px-4 py-2 rounded-xl border border-zinc-800 hover:border-amber-500/50 flex-shrink-0 cursor-pointer transition-all shadow-md group select-none w-full sm:w-auto"></div>
+    <div class="mb-5 sm:mb-6 flex flex-col xl:flex-row xl:items-center justify-between gap-3 sm:gap-4 border-b border-zinc-800/80 pb-4 sm:pb-5">
+      <div id="category-tabs" class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1 sm:py-0 flex-nowrap min-w-0 max-w-full"></div>
+      <div id="header-stats" onclick="openLeaderboardModal()" title="전체 종합 통계 보기 (클릭)" class="text-xs text-zinc-400 flex items-center justify-center sm:justify-start gap-2 sm:gap-2.5 bg-zinc-900/80 hover:bg-zinc-800/90 px-3 sm:px-4 py-2 rounded-xl border border-zinc-800 hover:border-amber-500/50 flex-shrink-0 cursor-pointer transition-all shadow-md group select-none self-center sm:self-start xl:self-auto w-full sm:w-auto"></div>
     </div>
 
     <section id="main-content" class="animate-fade-in"></section>
   </main>
 
-  <!-- 좌측 수직 플로팅 카테고리 네비게이션 (상단 탭이 스크롤되어 가려질 때 자동 표시) -->
+  <!-- 좌측 수직 플로팅 카테고리 네비게이션 (상단 탭이 스크롤되어 가려질 때 자동 표시, 대형 화면 전용) -->
   <aside 
     id="floating-category-nav" 
-    class="fixed left-2 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-20 transition-all duration-300 ease-out pointer-events-none opacity-0 -translate-x-6 flex flex-col items-start select-none"
+    class="hidden xl:flex fixed left-2 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-20 transition-all duration-300 ease-out pointer-events-none opacity-0 -translate-x-6 flex-col items-start select-none"
     aria-label="카테고리 빠른 이동"
   >
     <div id="floating-category-panel" class="bg-zinc-950/95 backdrop-blur-2xl border border-zinc-800/90 rounded-2xl sm:rounded-3xl p-2 sm:p-2.5 shadow-2xl shadow-black/95 flex flex-col gap-1.5 ring-1 ring-white/10 max-h-[85vh] overflow-y-auto min-w-[58px] sm:min-w-[190px]">
@@ -106,13 +106,13 @@
     </div>
   </aside>
 
-  <!-- 모바일 전용 플로팅 맨 위로 이동 버튼 -->
+  <!-- 모바일 및 태블릿 플로팅 맨 위로 이동 버튼 -->
   <button 
     id="mobile-scroll-top-btn" 
     onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" 
     title="맨 위로 이동" 
     aria-label="맨 위로 이동"
-    class="fixed bottom-5 right-5 z-40 w-11 h-11 rounded-full bg-zinc-900/95 text-amber-400 hover:text-white border border-zinc-700/80 shadow-2xl backdrop-blur-md flex items-center justify-center transition-all duration-300 opacity-0 pointer-events-none translate-y-4 cursor-pointer sm:hidden select-none active:scale-95"
+    class="fixed bottom-5 right-5 z-40 w-11 h-11 rounded-full bg-zinc-900/95 text-amber-400 hover:text-white border border-zinc-700/80 shadow-2xl backdrop-blur-md flex items-center justify-center transition-all duration-300 opacity-0 pointer-events-none translate-y-4 cursor-pointer xl:hidden select-none active:scale-95"
   >
     <span class="font-black text-lg">↑</span>
   </button>
@@ -669,7 +669,7 @@
             <input 
               type="text" 
               id="member-form-role" 
-              placeholder="예: 순경, 경장, 경사, 경위, 보스" 
+              placeholder="예: 순경, 경장, 보스, 병원장, 간호부장, 간호실장, 간호사" 
               oninput="handleRoleInputForPoliceColor(this.value)"
               class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-blue-500 transition-colors"
             />
@@ -735,6 +735,12 @@
                 <option value="bg-emerald-600">🟢 초록 (팀장)</option>
                 <option value="bg-blue-600">🔵 파란색 (순경)</option>
                 <option value="bg-yellow-400">🟡 노란색 (교육생)</option>
+              </optgroup>
+              <optgroup label="EMS 직책 전용 색상">
+                <option value="bg-teal-900">🩺 짙은청록 (병원장)</option>
+                <option value="bg-teal-700">🩺 딥청록 (간호부장)</option>
+                <option value="bg-cyan-600">🩺 밝은시안 (간호실장)</option>
+                <option value="bg-emerald-500">🩺 에메랄드/민트 (간호사)</option>
               </optgroup>
               <optgroup label="기타 / 공통">
                 <option value="bg-red-600">🔴 빨강 (보스)</option>

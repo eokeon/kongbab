@@ -36,6 +36,7 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 * {
@@ -129,9 +130,16 @@ body {
   transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1), border-color 300ms ease-out, box-shadow 300ms ease-out !important;
 }
 
-.podium-card:hover {
-  transform: translate3d(0, -8px, 0) !important;
-  -webkit-transform: translate3d(0, -8px, 0) !important;
+@media (hover: hover) and (pointer: fine) {
+  .podium-card:hover {
+    transform: translate3d(0, -8px, 0) !important;
+    -webkit-transform: translate3d(0, -8px, 0) !important;
+  }
+
+  .podium-card:hover .podium-avatar-img {
+    transform: scale(1.1) translateZ(0) !important;
+    -webkit-transform: scale(1.1) translateZ(0) !important;
+  }
 }
 
 .podium-badge {
@@ -151,11 +159,6 @@ body {
   transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1) !important;
 }
 
-.podium-card:hover .podium-avatar-img {
-  transform: scale(1.1) translateZ(0) !important;
-  -webkit-transform: scale(1.1) translateZ(0) !important;
-}
-
 /* Member & Content Card Smooth Lift & Zero-Jitter */
 .member-card-interactive {
   position: relative;
@@ -168,10 +171,12 @@ body {
   transition: transform 250ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 250ms ease-out, border-color 250ms ease-out !important;
 }
 
-.member-card-interactive:hover {
-  z-index: 30 !important;
-  transform: translate3d(0, -6px, 0) !important;
-  -webkit-transform: translate3d(0, -6px, 0) !important;
+@media (hover: hover) and (pointer: fine) {
+  .member-card-interactive:hover {
+    z-index: 30 !important;
+    transform: translate3d(0, -6px, 0) !important;
+    -webkit-transform: translate3d(0, -6px, 0) !important;
+  }
 }
 
 /* Floating category nav pointer isolation & compact mode */
@@ -180,8 +185,32 @@ body {
   z-index: 20 !important;
 }
 
-#floating-category-nav > div {
+/* 태블릿 및 모바일 (< 1280px) 에서는 본문 카드 및 탭 버튼 터치 영역을 침범하지 않도록 완전히 차단 */
+@media (max-width: 1279px) {
+  #floating-category-nav {
+    display: none !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+  }
+  #floating-category-nav * {
+    pointer-events: none !important;
+    visibility: hidden !important;
+  }
+}
+
+/* 숨김 상태일 때는 자식 요소를 포함하여 클릭 및 터치 이벤트를 100% 차단 */
+#floating-category-nav.opacity-0,
+#floating-category-nav.opacity-0 *,
+#floating-category-nav.pointer-events-none,
+#floating-category-nav.pointer-events-none * {
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+/* 활성화(표시) 상태일 때만 자식 패널의 터치/클릭 허용 */
+#floating-category-nav:not(.opacity-0):not(.pointer-events-none) > div {
   pointer-events: auto !important;
+  visibility: visible !important;
 }
 
 #floating-category-nav.compact-mode #floating-category-panel {

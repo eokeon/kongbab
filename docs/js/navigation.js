@@ -144,8 +144,8 @@ function renderSearchResults(container) {
     }
 
     const info = typeof getMemberAffiliationInfo === 'function' ? getMemberAffiliationInfo(m, cat.id, group ? group.id : null) : {};
-    const effectiveRole = info.role || m.role || '';
-    const effectiveSwatRole = info.swatRole || m.swatRole || '';
+    const effectiveRole = info.role || (Array.isArray(m.affiliations) ? '' : (m.role || ''));
+    const effectiveSwatRole = info.swatRole || (Array.isArray(m.affiliations) ? '' : (m.swatRole || ''));
     const cleanSwat = (effectiveSwatRole && !effectiveSwatRole.includes('사직') && !effectiveSwatRole.includes('퇴직') && !effectiveSwatRole.includes('순직')) ? effectiveSwatRole : '';
     const martyred = info.isMartyred;
     const retired = info.isRetired;
@@ -617,6 +617,15 @@ function setupEventListeners() {
       updateFloatingCategoryNavVisibility();
     }
     updateMobileScrollTopVisibility();
+  }, { passive: true });
+
+  window.addEventListener("orientationchange", () => {
+    setTimeout(() => {
+      if (typeof updateFloatingCategoryNavVisibility === "function") {
+        updateFloatingCategoryNavVisibility();
+      }
+      updateMobileScrollTopVisibility();
+    }, 150);
   }, { passive: true });
 }
 

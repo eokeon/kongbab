@@ -417,6 +417,7 @@ function handleRoleInputForPoliceColor(roleVal) {
   const r = roleVal.trim();
   const curAff = _activeModalAffKey ? _modalAffData[_activeModalAffKey] : null;
   const isPolice = curAff ? (curAff.category === 'police') : !!document.getElementById("aff-check-police")?.checked;
+  const isEMS = curAff ? (curAff.category === 'ems') : !!document.getElementById("aff-check-ems")?.checked;
   if (isPolice) {
     if (r.includes("부청장") || r.includes("서장") || r.includes("경정") || r.includes("경감")) {
       badgeSelect.value = "bg-red-600";
@@ -434,6 +435,16 @@ function handleRoleInputForPoliceColor(roleVal) {
       badgeSelect.value = "bg-blue-600";
     } else if (r.includes("교육생")) {
       badgeSelect.value = "bg-yellow-400";
+    }
+  } else if (isEMS || ["병원장", "간호실장", "간호부장", "간호사"].some(k => r.includes(k))) {
+    if (r.includes("병원장")) {
+      badgeSelect.value = "bg-teal-900";
+    } else if (r.includes("간호부장")) {
+      badgeSelect.value = "bg-teal-700";
+    } else if (r.includes("간호실장")) {
+      badgeSelect.value = "bg-cyan-600";
+    } else if (r.includes("간호사")) {
+      badgeSelect.value = "bg-emerald-500";
     }
   } else {
     if (r.includes("보스")) {
@@ -620,20 +631,27 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
       ? primaryMember.affiliations
       : [];
     if (affList.length === 0 && allLocs.length > 0) {
-      affList = allLocs.map(loc => ({
+      affList = allLocs.map((loc, idx) => ({
         category: loc.category.id,
         subgroup: loc.group ? loc.group.id : null,
-        role: loc.member.role || "",
-        swatRole: loc.member.swatRole || "",
+        role: idx === 0 ? (loc.member.role || "") : "",
+        swatRole: idx === 0 ? (loc.member.swatRole || "") : "",
         status: loc.member.status || "active",
         badgeColor: loc.member.badgeColor || "bg-blue-600"
       }));
     }
     if (affList.length === 0) {
-      affList = [{ category: primaryMember.category || 'police', subgroup: primaryMember.subgroup || null }];
+      affList = [{
+        category: primaryMember.category || 'police',
+        subgroup: primaryMember.subgroup || null,
+        role: primaryMember.role || "",
+        swatRole: primaryMember.swatRole || "",
+        status: primaryMember.status || "active",
+        badgeColor: primaryMember.badgeColor || "bg-blue-600"
+      }];
     }
 
-    affList.forEach(aff => {
+    affList.forEach((aff, idx) => {
       const catCheck = document.getElementById(`aff-check-${aff.category}`);
       if (catCheck) catCheck.checked = true;
       if (aff.category === "gang" && aff.subgroup) {
@@ -646,7 +664,8 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
       }
 
       const k = getAffKey(aff.category, aff.subgroup);
-      let rawSwat = (aff.swatRole && aff.swatRole.trim() !== "") ? aff.swatRole : (primaryMember.swatRole || "");
+      // 타 소속 추가직책 상속 금지: aff에 저장된 swatRole만 사용 (미입력 시 공백)
+      let rawSwat = (aff.swatRole !== undefined && aff.swatRole !== null) ? String(aff.swatRole).trim() : "";
       let statusVal = (aff.status !== undefined && aff.status !== null && aff.status !== "") ? aff.status : (primaryMember.status || "active");
       if (rawSwat.includes("순직")) {
         statusVal = "martyred";
@@ -661,10 +680,20 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
       if (aff.category !== 'police' && aff.category !== 'guide') {
         rawSwat = "";
       }
+
+      // 원래 직업의 직위 상속 금지: aff에 저장된 role만 사용 (미입력 시 공백 유지)
+      // 단, affiliations 배열이 없던 레거시에서 단일 affiliation으로 생성된 경우(idx === 0)에만 primaryMember.role 보존
+      let roleVal = "";
+      if (aff.role !== undefined && aff.role !== null) {
+        roleVal = String(aff.role).trim();
+      } else if (idx === 0 && (!Array.isArray(primaryMember.affiliations) || primaryMember.affiliations.length === 0)) {
+        roleVal = (primaryMember.role || "").trim();
+      }
+
       _modalAffData[k] = {
         category: aff.category,
         subgroup: aff.subgroup || null,
-        role: aff.role !== undefined ? aff.role : (primaryMember.role || ""),
+        role: roleVal,
         swatRole: rawSwat,
         status: statusVal,
         badgeColor: aff.badgeColor !== undefined ? aff.badgeColor : (primaryMember.badgeColor || "bg-blue-600")

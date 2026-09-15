@@ -29,24 +29,22 @@ function getAllMembersWithLeaderboardStats() {
         if (currentAffName && existing.displayAffiliation && !existing.displayAffiliation.includes(currentAffName)) {
           existing.displayAffiliation = `${existing.displayAffiliation} · ${currentAffName}`;
         }
-        // 직책(role)이 기존에 비어있고 현재 m에 있다면 보강 병합
+        // 직책(role)이 기존에 비어있고 현재 m의 해당 소속에 있다면 보강 병합
         if (!existing.role) {
-          let r = (m.role && String(m.role).trim() !== "") ? m.role : "";
-          if (!r && Array.isArray(m.affiliations)) {
-            const fa = m.affiliations.find(a => a && a.role && String(a.role).trim() !== "");
-            if (fa) r = fa.role;
-          }
+          const currentAff = Array.isArray(m.affiliations)
+            ? m.affiliations.find(a => a.category === cat.id && (!group || a.subgroup === group.id))
+            : null;
+          let r = currentAff?.role ? String(currentAff.role).trim() : (!Array.isArray(m.affiliations) ? (m.role || '') : '');
           if (r) {
             existing.role = r;
           }
         }
-        // 추가 직책(swatRole)이 기존에 비어있고 현재 m에 있다면 보강 병합
+        // 추가 직책(swatRole)이 기존에 비어있고 현재 m의 해당 소속에 있다면 보강 병합
         if (!existing.swatRole) {
-          let sRole = (m.swatRole && String(m.swatRole).trim() !== "") ? m.swatRole : "";
-          if (!sRole && Array.isArray(m.affiliations)) {
-            const fa = m.affiliations.find(a => a && a.swatRole && String(a.swatRole).trim() !== "");
-            if (fa) sRole = fa.swatRole;
-          }
+          const currentAff = Array.isArray(m.affiliations)
+            ? m.affiliations.find(a => a.category === cat.id && (!group || a.subgroup === group.id))
+            : null;
+          let sRole = currentAff?.swatRole ? String(currentAff.swatRole).trim() : (!Array.isArray(m.affiliations) ? (m.swatRole || '') : '');
           if (sRole) {
             existing.swatRole = sRole.replace(/순직|사직|퇴직|은퇴/g, "").replace(/\s*·\s*/g, "").replace(/^\s*,\s*|\s*,\s*$/g, "").trim();
           }
@@ -113,23 +111,18 @@ function computeMemberLeaderboardStats(m, cat, group) {
     }
   }
 
-  // role 보강 (m.role 또는 m.affiliations 내 role 확인)
-  let memberRole = (m.role && String(m.role).trim() !== "") ? m.role : "";
-  if (!memberRole && Array.isArray(m.affiliations)) {
+  // role 보강 (해당 소속 aff.role 또는 레거시 m.role 확인, 타 소속 직위 절대 상속 금지)
+  let memberRole = "";
+  let memberSwatRole = "";
+  if (Array.isArray(m.affiliations) && m.affiliations.length > 0) {
     const currentAff = m.affiliations.find(a => a.category === cat.id && (!group || a.subgroup === group.id));
-    if (currentAff && currentAff.role && String(currentAff.role).trim() !== "") {
-      memberRole = currentAff.role;
-    } else {
-      const foundRoleAff = m.affiliations.find(a => a && a.role && String(a.role).trim() !== "");
-      if (foundRoleAff) memberRole = foundRoleAff.role;
+    if (currentAff) {
+      memberRole = (currentAff.role != null) ? String(currentAff.role).trim() : "";
+      memberSwatRole = (currentAff.swatRole != null) ? String(currentAff.swatRole).trim() : "";
     }
-  }
-
-  // swatRole 보강 (m.swatRole 또는 m.affiliations 내 swatRole 확인)
-  let memberSwatRole = (m.swatRole && String(m.swatRole).trim() !== "") ? m.swatRole : "";
-  if (!memberSwatRole && Array.isArray(m.affiliations)) {
-    const foundAff = m.affiliations.find(a => a && a.swatRole && String(a.swatRole).trim() !== "");
-    if (foundAff) memberSwatRole = foundAff.swatRole;
+  } else {
+    memberRole = (m.role != null) ? String(m.role).trim() : "";
+    memberSwatRole = (m.swatRole != null) ? String(m.swatRole).trim() : "";
   }
   if (memberSwatRole) {
     memberSwatRole = memberSwatRole.replace(/순직|사직|퇴직|은퇴/g, "").replace(/\s*·\s*/g, "").replace(/^\s*,\s*|\s*,\s*$/g, "").trim();

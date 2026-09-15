@@ -21,18 +21,30 @@ function getMemberAffiliationInfo(member, categoryId = null, subgroupId = null) 
     }
   }
 
-  let role = (aff && aff.role !== undefined && aff.role !== null && aff.role !== "") ? aff.role : (member.role || "");
-  if (!role && Array.isArray(member.affiliations)) {
-    const foundRoleAff = member.affiliations.find(a => a && a.role && String(a.role).trim() !== "");
-    if (foundRoleAff) role = foundRoleAff.role;
+  let role = "";
+  let rawSwat = "";
+  let status = "active";
+  let badgeColor = "bg-blue-600";
+
+  if (aff) {
+    // 해당 소속(affiliation)의 고유 직위 및 추가직책 사용 (미입력 시 공백 유지, 원래 직업의 직위/추가직책 절대 상속 금지)
+    role = (aff.role !== undefined && aff.role !== null) ? String(aff.role).trim() : "";
+    rawSwat = (aff.swatRole !== undefined && aff.swatRole !== null) ? String(aff.swatRole).trim() : "";
+    status = (aff.status !== undefined && aff.status !== null && aff.status !== "") ? aff.status : (member.status || "active");
+    badgeColor = (aff.badgeColor !== undefined && aff.badgeColor !== null && aff.badgeColor !== "") ? aff.badgeColor : (member.badgeColor || "bg-blue-600");
+  } else if (!Array.isArray(member.affiliations) || member.affiliations.length === 0) {
+    // affiliations 배열이 없는 레거시 단일 소속 멤버 호환용
+    role = (member.role !== undefined && member.role !== null) ? String(member.role).trim() : "";
+    rawSwat = (member.swatRole !== undefined && member.swatRole !== null) ? String(member.swatRole).trim() : "";
+    status = (member.status !== undefined && member.status !== null && member.status !== "") ? member.status : "active";
+    badgeColor = (member.badgeColor !== undefined && member.badgeColor !== null && member.badgeColor !== "") ? member.badgeColor : "bg-blue-600";
+  } else {
+    // affiliations 배열이 있으나 현재 탭에 매칭되는 소속이 없는 경우: 타 소속/원래 직업 직위 상속 금지 (빈 값 유지)
+    role = "";
+    rawSwat = "";
+    status = (member.status !== undefined && member.status !== null && member.status !== "") ? member.status : "active";
+    badgeColor = (member.badgeColor !== undefined && member.badgeColor !== null && member.badgeColor !== "") ? member.badgeColor : "bg-blue-600";
   }
-  let rawSwat = (aff && aff.swatRole && String(aff.swatRole).trim() !== "") ? aff.swatRole : (member.swatRole || "");
-  if (!rawSwat && Array.isArray(member.affiliations)) {
-    const foundAff = member.affiliations.find(a => a && a.swatRole && String(a.swatRole).trim() !== "");
-    if (foundAff) rawSwat = foundAff.swatRole;
-  }
-  const status = (aff && aff.status !== undefined && aff.status !== null && aff.status !== "") ? aff.status : (member.status || "active");
-  const badgeColor = (aff && aff.badgeColor !== undefined && aff.badgeColor !== null && aff.badgeColor !== "") ? aff.badgeColor : (member.badgeColor || "bg-blue-600");
 
   const roleStr = typeof role === "string" ? role : String(role || "");
   const swatStr = typeof rawSwat === "string" ? rawSwat : String(rawSwat || "");
@@ -97,7 +109,7 @@ function isMemberInactive(member, categoryId = null, subgroupId = null) {
 function getMemberRoleBadgeClass(member, categoryHint = null) {
   if (!member) return "";
   const info = getMemberAffiliationInfo(member, categoryHint);
-  const role = (info.role || member.role || '').trim();
+  const role = (info.role || '').trim();
   if (!role) return "";
 
   if (info.isInactive && (role.includes("사직") || role.includes("퇴직") || role.includes("은퇴") || role.includes("순직"))) {
@@ -123,8 +135,29 @@ function getMemberRoleBadgeClass(member, categoryHint = null) {
     if (role.includes("가이드")) return "bg-emerald-600 text-white";
   }
 
+  const isEMS = categoryHint === 'ems' ||
+    (state && state.currentCategory === 'ems') ||
+    member.category === 'ems' ||
+    ["병원장", "간호실장", "간호부장", "간호사"].some(r => role.includes(r));
+
+  if (isEMS) {
+    if (role.includes("병원장")) return "bg-teal-900 text-white border border-teal-400/70 shadow-sm";
+    if (role.includes("간호부장")) return "bg-teal-700 text-white";
+    if (role.includes("간호실장")) return "bg-cyan-600 text-white";
+    if (role.includes("간호사")) return "bg-emerald-500 text-zinc-950 font-bold";
+  }
+
+  if (role.includes("서버장")) return "bg-emerald-500 text-white border border-emerald-300/60 shadow-sm";
+  if (role.includes("가이드")) return "bg-emerald-600 text-white";
+
   if (info.badgeColor === 'bg-white') {
     return "bg-white text-zinc-950 font-bold border border-zinc-300 shadow-sm";
+  }
+  if (info.badgeColor === 'bg-emerald-500') {
+    return "bg-emerald-500 text-zinc-950 font-bold";
+  }
+  if (info.badgeColor === 'bg-teal-900') {
+    return "bg-teal-900 text-white border border-teal-400/70 shadow-sm";
   }
 
   return `${info.badgeColor || member.badgeColor || 'bg-zinc-800'} text-white`;
@@ -286,6 +319,9 @@ function setVideoTab(tab) {
   state.currentVideoTab = tab;
   const container = document.getElementById("main-content");
   if (container && state.currentMember) renderMemberVideos(container);
+  if (typeof updateFloatingCategoryNavVisibility === "function") {
+    updateFloatingCategoryNavVisibility();
+  }
 }
 
 function renderCategoryTabs() {
@@ -303,7 +339,7 @@ function renderCategoryTabs() {
     const countLabel = `${memberCount}명`;
 
     return `
-      <button onclick="selectCategory('${cat.id}')" class="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 cursor-pointer whitespace-nowrap flex-shrink-0 sm:flex-shrink ${activeClass}">
+      <button onclick="selectCategory('${cat.id}')" class="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 md:px-3.5 py-1.5 sm:py-2 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 cursor-pointer whitespace-nowrap flex-shrink-0 ${activeClass}">
         <span>${cat.emoji || ''}</span>
         <span>${cat.name}</span>
         <span class="text-[11px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full ${isActive ? 'bg-black/30 text-white font-bold' : 'bg-zinc-800 text-zinc-400'}">
@@ -373,6 +409,14 @@ function updateFloatingCategoryNavVisibility() {
   const floatingNav = document.getElementById("floating-category-nav");
   if (!floatingNav) return;
 
+  // 화면 너비가 1280px(xl) 미만인 모바일 및 태블릿(패드)에서는 좌측 플로팅 네비게이션을 완전 숨김(display: none)
+  if (window.innerWidth < 1280) {
+    floatingNav.classList.add("opacity-0", "pointer-events-none", "-translate-x-6");
+    floatingNav.classList.remove("opacity-100", "translate-x-0");
+    floatingNav.style.display = "none";
+    return;
+  }
+
   const target = document.getElementById("category-tabs");
   let shouldShow = false;
 
@@ -395,13 +439,14 @@ function updateFloatingCategoryNavVisibility() {
   const mainRect = mainEl ? mainEl.getBoundingClientRect() : null;
   const leftMargin = mainRect ? mainRect.left : 0;
 
-  // 여백이 70px 미만인 좁은 화면(모바일/태블릿 등)에서는 카드를 가리지 않도록 숨김 처리
-  if (leftMargin < 70) {
+  // 여백이 100px 미만인 경우 본문 카드를 가리지 않도록 숨김 처리
+  if (leftMargin < 100) {
     shouldShow = false;
   }
 
   if (shouldShow) {
-    // 여백이 225px 미만이면(예: 1536px, 1440px 등 일반 노트북/확대 화면) 컴팩트 아이콘 모드로 전환하여 카드와 절대 겹치지 않게 배치
+    floatingNav.style.display = "flex";
+    // 여백이 225px 미만이면(예: 1440px 등 일반 노트북 화면) 컴팩트 아이콘 모드로 전환하여 카드와 절대 겹치지 않게 배치
     if (leftMargin < 225) {
       floatingNav.classList.add("compact-mode");
       const dockLeft = Math.max(8, Math.floor(leftMargin - 56));
@@ -417,6 +462,7 @@ function updateFloatingCategoryNavVisibility() {
   } else {
     floatingNav.classList.add("opacity-0", "pointer-events-none", "-translate-x-6");
     floatingNav.classList.remove("opacity-100", "translate-x-0");
+    floatingNav.style.display = "none";
   }
 }
 window.updateFloatingCategoryNavVisibility = updateFloatingCategoryNavVisibility;
