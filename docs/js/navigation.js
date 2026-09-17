@@ -13,6 +13,16 @@ function renderSearchResults(container) {
   const matchedMembers = [];
   const seenMemberKeys = new Set();
 
+  // 빠른 O(1) 카테고리/조직 참조용 맵 색인
+  const catMap = new Map();
+  const grpMap = new Map();
+  (KONGBAB_DATA.categories || []).forEach(c => {
+    catMap.set(c.id, c);
+    if (c.hasSubgroups && Array.isArray(c.groups)) {
+      c.groups.forEach(g => grpMap.set(g.id, g));
+    }
+  });
+
   (KONGBAB_DATA.categories || []).forEach(cat => {
     const processMember = (member, group) => {
       if (!member) return;
@@ -26,24 +36,25 @@ function renderSearchResults(container) {
       const roleStr = (member.role || '').toLowerCase();
       const swatStr = (member.swatRole || '').toLowerCase();
 
-      // 소속 및 겸직 텍스트 수집
+      // 소속 및 겸직 텍스트 수집 (맵 활용 O(1) 조회)
       const affParts = [];
       if (Array.isArray(member.affiliations)) {
-        member.affiliations.forEach(a => {
-          if (!a) return;
+        for (let i = 0; i < member.affiliations.length; i++) {
+          const a = member.affiliations[i];
+          if (!a) continue;
           if (a.role) affParts.push(String(a.role).toLowerCase());
           if (a.swatRole) affParts.push(String(a.swatRole).toLowerCase());
           if (a.category) {
-            const c = (KONGBAB_DATA.categories || []).find(cItem => cItem.id === a.category);
+            const c = catMap.get(a.category);
             if (c) {
               affParts.push((c.name || '').toLowerCase());
               if (c.hasSubgroups && a.subgroup) {
-                const g = (c.groups || []).find(grp => grp.id === a.subgroup);
+                const g = grpMap.get(a.subgroup);
                 if (g) affParts.push((g.name || '').toLowerCase());
               }
             }
           }
-        });
+        }
       }
 
       const searchHaystack = [
@@ -110,17 +121,22 @@ function renderSearchResults(container) {
   `;
 
   matchedMembers.forEach(({ member: m, group, category: cat }) => {
-    const allVideos = (m.videos || []).filter(v => v && ((v.url && v.url !== "undefined" && v.url.trim() !== "") || v.videoId));
-    const chzzkVideos = allVideos.filter(v => {
-      const u = (v.url && v.url !== "undefined") ? v.url : "";
-      return typeof isChzzkUrl === "function" && isChzzkUrl(u);
-    });
-    const ytVideos = allVideos.filter(v => {
-      const u = (v.url && v.url !== "undefined") ? v.url : "";
-      return !(typeof isChzzkUrl === "function" && isChzzkUrl(u));
-    });
-    const ytCount = ytVideos.length;
-    const chzzkCount = chzzkVideos.length;
+    let ytCount = 0;
+    let chzzkCount = 0;
+    const vList = m.videos;
+    if (Array.isArray(vList)) {
+      for (let i = 0; i < vList.length; i++) {
+        const v = vList[i];
+        if (!v) continue;
+        const u = (v.url && v.url !== "undefined") ? v.url : "";
+        if (!u && !v.videoId) continue;
+        if (typeof isChzzkUrl === "function" && isChzzkUrl(u)) {
+          chzzkCount++;
+        } else {
+          ytCount++;
+        }
+      }
+    }
 
     let videoStatHtml = '';
     if (chzzkCount > 0 && ytCount > 0) {
@@ -204,8 +220,9 @@ function renderSearchResults(container) {
 
     html += `
       <div 
+        id="member-card-${m.id}"
         onclick="selectMemberFromSearch('${cat.id}', ${group ? `'${group.id}'` : 'null'}, '${m.id}')"
-        class="group bg-zinc-900/80 border border-zinc-800/80 hover:border-amber-400/50 rounded-2xl p-4 sm:p-5 cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col justify-between select-none"
+        class="group member-card-interactive bg-zinc-900/80 border border-zinc-800/80 hover:border-amber-400/50 rounded-2xl p-4 sm:p-5 cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col justify-between select-none"
       >
         <div>
           <!-- 소속 태그 & 구독자/팔로워 뱃지 -->
@@ -269,6 +286,181 @@ function renderSearchResults(container) {
   container.innerHTML = html;
 }
 
+let isHistoryNavigating = false;
+let appHistoryDepth = 0;
+let isSearchHistoryPushed = false;
+
+function buildNavUrl(catId, groupId, memberId, videoTab, searchQuery) {
+  // 주소창 뒤에 ?category=... 같은 파라미터가 보이지 않도록 깔끔한 기본 경로만 반환
+  return window.location.pathname;
+}
+
+function parseUrlNavState() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    category: params.get("category") || null,
+    group: params.get("group") || null,
+    member: params.get("member") || null,
+    videoTab: params.get("tab") || "clip",
+    searchQuery: params.get("search") || ""
+  };
+}
+
+function getCurrentNavSnapshot() {
+  return {
+    category: state.currentCategory || "police",
+    group: state.currentGroup ? state.currentGroup.id : null,
+    member: state.currentMember ? state.currentMember.id : null,
+    videoTab: state.currentVideoTab || "clip",
+    searchQuery: state.searchQuery || ""
+  };
+}
+
+function updatePageTitle() {
+  const baseTitle = "콩밥특별시 GTA RP";
+  if (state.searchQuery) {
+    document.title = `"${state.searchQuery}" 검색 결과 | ${baseTitle}`;
+    return;
+  }
+  if (state.currentMember) {
+    const streamer = state.currentMember.streamer || state.currentMember.name;
+    document.title = `${streamer} (${state.currentMember.name}) | ${baseTitle}`;
+    return;
+  }
+  if (state.currentGroup) {
+    document.title = `${state.currentGroup.name} | ${baseTitle}`;
+    return;
+  }
+  const cat = typeof getCurrentCategory === "function" ? getCurrentCategory() : null;
+  if (cat && cat.name) {
+    document.title = `${cat.name} | ${baseTitle}`;
+    return;
+  }
+  document.title = `${baseTitle} 스트리머 영상`;
+}
+
+function pushNavHistory() {
+  if (isHistoryNavigating) return;
+  const snapshot = getCurrentNavSnapshot();
+  const url = buildNavUrl(snapshot.category, snapshot.group, snapshot.member, snapshot.videoTab, snapshot.searchQuery);
+
+  const currentHState = window.history.state;
+  if (currentHState &&
+      currentHState.isKongbabApp &&
+      currentHState.category === snapshot.category &&
+      currentHState.group === snapshot.group &&
+      currentHState.member === snapshot.member &&
+      currentHState.videoTab === snapshot.videoTab &&
+      currentHState.searchQuery === snapshot.searchQuery) {
+    return;
+  }
+
+  const prevDepth = (currentHState && typeof currentHState.depth === "number") ? currentHState.depth : appHistoryDepth;
+  appHistoryDepth = prevDepth + 1;
+
+  const hState = {
+    ...snapshot,
+    depth: appHistoryDepth,
+    isKongbabApp: true
+  };
+  try {
+    window.history.pushState(hState, "", url);
+  } catch (e) {}
+  updatePageTitle();
+}
+
+function replaceNavHistory() {
+  if (isHistoryNavigating) return;
+  const snapshot = getCurrentNavSnapshot();
+  const url = buildNavUrl(snapshot.category, snapshot.group, snapshot.member, snapshot.videoTab, snapshot.searchQuery);
+
+  const currentHState = window.history.state;
+  const currentDepth = (currentHState && typeof currentHState.depth === "number") ? currentHState.depth : appHistoryDepth;
+
+  const hState = {
+    ...snapshot,
+    depth: currentDepth,
+    isKongbabApp: true
+  };
+  try {
+    window.history.replaceState(hState, "", url);
+  } catch (e) {}
+  updatePageTitle();
+}
+
+function applyNavState(navState, options = {}) {
+  if (!navState) return;
+
+  const targetCatId = navState.category || "police";
+  const cat = (KONGBAB_DATA.categories || []).find(c => c.id === targetCatId) || (KONGBAB_DATA.categories || [])[0];
+  if (cat) {
+    state.currentCategory = cat.id;
+  }
+
+  // 그룹 복원
+  state.currentGroup = null;
+  if (cat && cat.hasSubgroups && navState.group) {
+    const grp = (cat.groups || []).find(g => g.id === navState.group);
+    if (grp) {
+      state.currentGroup = grp;
+    }
+  }
+
+  // 멤버 복원
+  state.currentMember = null;
+  if (navState.member) {
+    if (state.currentGroup) {
+      state.currentMember = (state.currentGroup.members || []).find(m => m.id === navState.member) || null;
+    }
+    if (!state.currentMember && cat) {
+      if (cat.hasSubgroups && Array.isArray(cat.groups)) {
+        for (const grp of cat.groups) {
+          const m = (grp.members || []).find(mem => mem.id === navState.member);
+          if (m) {
+            state.currentGroup = grp;
+            state.currentMember = m;
+            break;
+          }
+        }
+      } else {
+        state.currentMember = (cat.members || []).find(m => m.id === navState.member) || null;
+      }
+    }
+  }
+
+  // 비디오 탭 복원
+  if (state.currentMember) {
+    const allV = state.currentMember.videos || [];
+    const validTabs = ["clip", "full", "binge"];
+    if (navState.videoTab && validTabs.includes(navState.videoTab)) {
+      state.currentVideoTab = navState.videoTab;
+    } else {
+      state.currentVideoTab = typeof getDefaultVideoTab === "function" ? getDefaultVideoTab(allV) : "clip";
+    }
+  }
+
+  // 검색어 복원
+  state.searchQuery = navState.searchQuery || "";
+  const sInput = document.getElementById("search-input");
+  if (sInput && sInput.value !== state.searchQuery) sInput.value = state.searchQuery;
+  const mInput = document.getElementById("search-input-mobile");
+  if (mInput && mInput.value !== state.searchQuery) mInput.value = state.searchQuery;
+  isSearchHistoryPushed = !!state.searchQuery;
+
+  saveNavigationState();
+
+  if (typeof renderCategoryTabs === "function") renderCategoryTabs();
+  if (typeof renderContent === "function") renderContent();
+
+  if (options.shouldRestoreScroll) {
+    restoreMemberScrollPosition();
+  } else if (!state.currentMember && !options.preserveScroll) {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
+
+  updatePageTitle();
+}
+
 function saveNavigationState() {
   try {
     sessionStorage.setItem("kongbab_nav_category", state.currentCategory || "police");
@@ -287,39 +479,89 @@ function saveNavigationState() {
 
 function restoreNavigationState() {
   try {
-    const savedCat = sessionStorage.getItem("kongbab_nav_category");
-    if (savedCat && KONGBAB_DATA.categories.some(c => c.id === savedCat)) {
-      state.currentCategory = savedCat;
+    const urlState = parseUrlNavState();
+    const hasUrlParams = !!(urlState.category || urlState.group || urlState.member || urlState.searchQuery);
+    const hState = window.history.state;
+
+    let targetCat = null;
+    let targetGroup = null;
+    let targetMember = null;
+    let targetTab = "clip";
+    let targetSearch = "";
+
+    // 1. 브라우저 새로고침(F5) 시 기존 history.state가 보존되어 있다면 최우선 복원
+    if (hState && hState.isKongbabApp) {
+      targetCat = hState.category;
+      targetGroup = hState.group;
+      targetMember = hState.member;
+      targetTab = hState.videoTab || "clip";
+      targetSearch = hState.searchQuery || "";
+      appHistoryDepth = typeof hState.depth === "number" ? hState.depth : 0;
+    } else if (hasUrlParams) {
+      targetCat = urlState.category;
+      targetGroup = urlState.group;
+      targetMember = urlState.member;
+      targetTab = urlState.videoTab || "clip";
+      targetSearch = urlState.searchQuery || "";
+      appHistoryDepth = 0;
+    } else {
+      targetCat = sessionStorage.getItem("kongbab_nav_category");
+      targetGroup = sessionStorage.getItem("kongbab_nav_group");
+      targetMember = sessionStorage.getItem("kongbab_nav_member");
+      appHistoryDepth = 0;
+    }
+
+    if (targetCat && KONGBAB_DATA.categories.some(c => c.id === targetCat)) {
+      state.currentCategory = targetCat;
+    } else {
+      state.currentCategory = (KONGBAB_DATA.categories[0] && KONGBAB_DATA.categories[0].id) || "police";
     }
 
     const cat = getCurrentCategory();
-    const savedGroup = sessionStorage.getItem("kongbab_nav_group");
-    if (savedGroup && cat.hasSubgroups) {
-      const g = (cat.groups || []).find(grp => grp.id === savedGroup);
+    if (targetGroup && cat && cat.hasSubgroups) {
+      const g = (cat.groups || []).find(grp => grp.id === targetGroup);
       if (g) state.currentGroup = g;
     }
 
-    const savedMember = sessionStorage.getItem("kongbab_nav_member");
-    if (savedMember) {
+    if (targetMember) {
       if (state.currentGroup) {
-        const m = (state.currentGroup.members || []).find(mem => mem.id === savedMember);
+        const m = (state.currentGroup.members || []).find(mem => mem.id === targetMember);
         if (m) state.currentMember = m;
       }
-      if (!state.currentMember && cat.hasSubgroups && Array.isArray(cat.groups)) {
+      if (!state.currentMember && cat && cat.hasSubgroups && Array.isArray(cat.groups)) {
         for (const grp of cat.groups) {
-          const m = (grp.members || []).find(mem => mem.id === savedMember);
+          const m = (grp.members || []).find(mem => mem.id === targetMember);
           if (m) {
             state.currentGroup = grp;
             state.currentMember = m;
             break;
           }
         }
-      } else if (!state.currentMember && !cat.hasSubgroups) {
-        const m = (cat.members || []).find(mem => mem.id === savedMember);
+      } else if (!state.currentMember && cat && !cat.hasSubgroups) {
+        const m = (cat.members || []).find(mem => mem.id === targetMember);
         if (m) state.currentMember = m;
       }
     }
-  } catch (e) {}
+
+    if (state.currentMember) {
+      const allV = state.currentMember.videos || [];
+      const validTabs = ["clip", "full", "binge"];
+      state.currentVideoTab = validTabs.includes(targetTab) ? targetTab : (typeof getDefaultVideoTab === "function" ? getDefaultVideoTab(allV) : "clip");
+    }
+
+    if (targetSearch) {
+      state.searchQuery = targetSearch;
+      isSearchHistoryPushed = true;
+      const sInput = document.getElementById("search-input");
+      if (sInput) sInput.value = targetSearch;
+      const mInput = document.getElementById("search-input-mobile");
+      if (mInput) mInput.value = targetSearch;
+    }
+
+    replaceNavHistory();
+  } catch (e) {
+    console.warn("네비게이션 상태 복원 중 오류:", e);
+  }
 }
 
 let lastMemberScrollY = null;
@@ -389,6 +631,11 @@ function restoreMemberScrollPosition() {
 }
 
 function goBackFromMember(type, targetId) {
+  if (window.history.state && window.history.state.isKongbabApp && (window.history.state.depth > 0)) {
+    window.history.back();
+    return;
+  }
+
   state.currentMember = null;
   if (type === 'category') {
     state.currentCategory = targetId;
@@ -400,15 +647,21 @@ function goBackFromMember(type, targetId) {
     }
   }
   saveNavigationState();
+  replaceNavHistory();
   renderContent();
   restoreMemberScrollPosition();
 }
 
 function selectCategory(catId) {
+  if (state.currentCategory === catId && !state.currentGroup && !state.currentMember && !state.searchQuery) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
   state.currentCategory = catId;
   state.currentGroup = null;
   state.currentMember = null;
   state.searchQuery = "";
+  isSearchHistoryPushed = false;
   lastMemberScrollY = null;
   lastSelectedMemberId = null;
   try {
@@ -417,16 +670,23 @@ function selectCategory(catId) {
   } catch (e) {}
   clearSearchInput();
   saveNavigationState();
+  pushNavHistory();
   renderContent();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function resetToCategory(catId) {
+  if (window.history.state && window.history.state.isKongbabApp && (window.history.state.depth > 0)) {
+    window.history.back();
+    return;
+  }
+
   const wasOnMember = !!state.currentMember;
   state.currentCategory = catId;
   state.currentGroup = null;
   state.currentMember = null;
   saveNavigationState();
+  replaceNavHistory();
   renderContent();
 
   if (wasOnMember && (lastSelectedMemberId || typeof lastMemberScrollY === 'number')) {
@@ -448,8 +708,10 @@ function selectGroup(groupId) {
     state.currentGroup = group;
     state.currentMember = null;
     state.searchQuery = "";
+    isSearchHistoryPushed = false;
     clearSearchInput();
     saveNavigationState();
+    pushNavHistory();
     renderContent();
 
     if (wasOnMember && (lastSelectedMemberId || typeof lastMemberScrollY === 'number')) {
@@ -471,10 +733,12 @@ function selectDirectMember(memberId) {
     state.currentGroup = null;
     state.currentMember = member;
     state.searchQuery = "";
+    isSearchHistoryPushed = false;
     clearSearchInput();
     const allV = member.videos || [];
     state.currentVideoTab = typeof getDefaultVideoTab === "function" ? getDefaultVideoTab(allV) : "clip";
     saveNavigationState();
+    pushNavHistory();
     renderContent();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -488,10 +752,12 @@ function selectGroupMember(memberId) {
   if (member) {
     state.currentMember = member;
     state.searchQuery = "";
+    isSearchHistoryPushed = false;
     clearSearchInput();
     const allV = member.videos || [];
     state.currentVideoTab = typeof getDefaultVideoTab === "function" ? getDefaultVideoTab(allV) : "clip";
     saveNavigationState();
+    pushNavHistory();
     renderContent();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -504,8 +770,10 @@ function selectGroupFromSearch(catId, groupId) {
     state.currentGroup = cat.groups.find(g => g.id === groupId);
     state.currentMember = null;
     state.searchQuery = "";
+    isSearchHistoryPushed = false;
     clearSearchInput();
     saveNavigationState();
+    pushNavHistory();
     renderContent();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -533,15 +801,23 @@ function selectMemberFromSearch(catId, groupId, memberId) {
   }
 
   state.searchQuery = "";
+  isSearchHistoryPushed = false;
   clearSearchInput();
   saveNavigationState();
+  pushNavHistory();
   renderContent();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function clearSearch() {
   state.searchQuery = "";
+  isSearchHistoryPushed = false;
   clearSearchInput();
+  if (window.history.state && window.history.state.isKongbabApp && window.history.state.depth > 0) {
+    window.history.back();
+    return;
+  }
+  replaceNavHistory();
   renderContent();
 }
 
@@ -550,6 +826,17 @@ function clearSearchInput() {
   if (searchInput) searchInput.value = "";
   const mobileInput = document.getElementById("search-input-mobile");
   if (mobileInput) mobileInput.value = "";
+}
+
+function closeAllOpenModals() {
+  if (typeof closeLoginModal === "function") closeLoginModal();
+  if (typeof closeVideoModal === "function") closeVideoModal();
+  if (typeof closePlaylistModal === "function") closePlaylistModal();
+  if (typeof closeMemberModal === "function") closeMemberModal();
+  if (typeof closeDeleteMemberModal === "function") closeDeleteMemberModal();
+  if (typeof closeBackupModal === "function") closeBackupModal();
+  if (typeof closeLeaderboardModal === "function") closeLeaderboardModal();
+  if (typeof closeAdminSettingsModal === "function") closeAdminSettingsModal();
 }
 
 function setupEventListeners() {
@@ -565,12 +852,21 @@ function setupEventListeners() {
     if (!q) {
       if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
       state.searchQuery = "";
+      isSearchHistoryPushed = false;
+      replaceNavHistory();
       renderContent();
       return;
     }
     if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
     searchDebounceTimer = setTimeout(() => {
+      const wasEmpty = !state.searchQuery;
       state.searchQuery = q;
+      if (wasEmpty && !isSearchHistoryPushed) {
+        isSearchHistoryPushed = true;
+        pushNavHistory();
+      } else {
+        replaceNavHistory();
+      }
       renderContent();
     }, 120);
   };
@@ -587,20 +883,44 @@ function setupEventListeners() {
     });
   }
 
+  // 브라우저 뒤로가기 / 앞으로가기 (마우스 뒤로가기 버튼, 스마트폰 제스처, 브라우저 뒤로가기 화살표 등)
+  window.addEventListener("popstate", (e) => {
+    closeAllOpenModals();
+
+    const previousMember = state.currentMember ? state.currentMember.id : null;
+    let targetNavState;
+    if (e.state && e.state.isKongbabApp) {
+      targetNavState = e.state;
+      appHistoryDepth = typeof e.state.depth === "number" ? e.state.depth : 0;
+    } else {
+      const savedCat = sessionStorage.getItem("kongbab_nav_category");
+      const savedGroup = sessionStorage.getItem("kongbab_nav_group");
+      const savedMember = sessionStorage.getItem("kongbab_nav_member");
+      targetNavState = {
+        category: savedCat || (KONGBAB_DATA.categories[0] && KONGBAB_DATA.categories[0].id) || "police",
+        group: savedGroup || null,
+        member: savedMember || null,
+        videoTab: "clip",
+        searchQuery: ""
+      };
+      appHistoryDepth = 0;
+    }
+
+    isHistoryNavigating = true;
+    try {
+      const shouldRestoreScroll = !!previousMember && !targetNavState.member;
+      if (shouldRestoreScroll && !lastSelectedMemberId && previousMember) {
+        lastSelectedMemberId = previousMember;
+      }
+      applyNavState(targetNavState, { shouldRestoreScroll });
+    } finally {
+      isHistoryNavigating = false;
+    }
+  });
+
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
-      closeLoginModal();
-      closeVideoModal();
-      if (typeof closePlaylistModal === "function") {
-        closePlaylistModal();
-      }
-      closeMemberModal();
-      if (typeof closeBackupModal === "function") {
-        closeBackupModal();
-      }
-      if (typeof closeLeaderboardModal === "function") {
-        closeLeaderboardModal();
-      }
+      closeAllOpenModals();
     }
   });
 
@@ -651,6 +971,12 @@ function setupEventListeners() {
 }
 
 window.goBackFromMember = goBackFromMember;
+window.resetToCategory = resetToCategory;
 window.recordMemberClickPosition = recordMemberClickPosition;
 window.restoreMemberScrollPosition = restoreMemberScrollPosition;
+window.pushNavHistory = pushNavHistory;
+window.replaceNavHistory = replaceNavHistory;
+window.updatePageTitle = updatePageTitle;
+window.closeAllOpenModals = closeAllOpenModals;
+
 

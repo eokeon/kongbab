@@ -28,6 +28,7 @@ public class StreamerService {
 
     private final StreamerRepository streamerRepository;
     private final VideoRepository videoRepository;
+    private final ObjectMapper objectMapper;
 
     public List<StreamerDto> getAllStreamers() {
         return streamerRepository.findAllByOrderByDisplayOrderAscIdAsc().stream()
@@ -264,9 +265,7 @@ public class StreamerService {
 
             if (json == null) {
                 List<StreamerDto> all = getAllStreamers();
-                ObjectMapper mapper = new ObjectMapper();
-                mapper.enable(SerializationFeature.INDENT_OUTPUT);
-                json = mapper.writeValueAsString(all);
+                json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(all);
             }
 
             // static 및 docs, build 폴더의 streamers.json 동시 갱신

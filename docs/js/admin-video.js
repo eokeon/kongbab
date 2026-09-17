@@ -719,7 +719,7 @@ async function submitMultiVideos() {
 // 단일 영상 등록/수정 저장
 // ==========================================
 
-function handleSaveVideo(e) {
+async function handleSaveVideo(e) {
   if (e) e.preventDefault();
   if (!isAdmin()) return;
   if (!state.currentMember) return;
@@ -787,9 +787,9 @@ function handleSaveVideo(e) {
 
   // 변경된 displayOrder 전체 동기화 및 DB 저장
   if (typeof syncAllStreamersToDb === "function") {
-    syncAllStreamersToDb(extractAllStreamersFromKongbabData());
+    await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
   } else if (savedVideo) {
-    saveVideoToDb(state.currentMember.id, savedVideo);
+    await saveVideoToDb(state.currentMember.id, savedVideo);
   }
 
   persistData();
@@ -803,7 +803,7 @@ function handleSaveVideo(e) {
   if (container) renderMemberVideos(container);
 }
 
-function deleteVideo(videoId) {
+async function deleteVideo(videoId) {
   if (!isAdmin()) return;
   if (!state.currentMember?.videos) return;
 
@@ -816,10 +816,10 @@ function deleteVideo(videoId) {
   state.currentMember.videos = state.currentMember.videos.filter(v => v.id !== videoId);
   // 남은 영상들 displayOrder 재부여
   state.currentMember.videos.forEach((v, idx) => { v.displayOrder = idx; });
-  deleteVideoFromDb(videoId);
+  await deleteVideoFromDb(videoId);
 
   if (typeof syncAllStreamersToDb === "function") {
-    syncAllStreamersToDb(extractAllStreamersFromKongbabData());
+    await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
   }
 
   persistData();

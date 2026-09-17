@@ -28,6 +28,16 @@ public class YouTubeService {
     private static final Pattern YOUTUBE_ID_PATTERN = Pattern.compile(
             "(?:youtu\\.be\\/|v\\/|u\\/\\w\\/|embed\\/|watch\\?v=|&v=|shorts\\/)([a-zA-Z0-9_-]{11})"
     );
+    private static final Pattern TITLE_DATE_PATTERN_1 = Pattern.compile(
+            "(?:[\\[\\(\\s]|^)(?:20)?(2[3-9])[.\\-\\/](0?[1-9]|1[0-2])[.\\-\\/](0?[1-9]|[12][0-9]|3[01])(?:[\\]\\)\\s]|$)"
+    );
+    private static final Pattern TITLE_DATE_PATTERN_2 = Pattern.compile(
+            "(?:[\\[\\(\\s]|^)(?:20)?(2[3-9])(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])(?:[\\]\\)\\s]|$)"
+    );
+    private static final Pattern TITLE_DATE_PATTERN_3 = Pattern.compile(
+            "(?:20)?(2[3-9])년\\s*(0?[1-9]|1[0-2])월\\s*(0?[1-9]|[12][0-9]|3[01])일"
+    );
+    private static final Pattern EXACT_11_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]{11}$");
 
     private static final java.time.ZoneId KST_ZONE = java.time.ZoneId.of("Asia/Seoul");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd").withZone(KST_ZONE);
@@ -54,19 +64,19 @@ public class YouTubeService {
         String t = title.trim();
 
         // 1. [24.05.01], 2024-05-01, 24/05/01, 24.5.1
-        Matcher m1 = Pattern.compile("(?:[\\[\\(\\s]|^)(?:20)?(2[3-9])[.\\-\\/](0?[1-9]|1[0-2])[.\\-\\/](0?[1-9]|[12][0-9]|3[01])(?:[\\]\\)\\s]|$)").matcher(t);
+        Matcher m1 = TITLE_DATE_PATTERN_1.matcher(t);
         if (m1.find()) {
             return String.format("20%s.%02d.%02d", m1.group(1), Integer.parseInt(m1.group(2)), Integer.parseInt(m1.group(3)));
         }
 
         // 2. [240501], (240501), 240501, 20240501
-        Matcher m2 = Pattern.compile("(?:[\\[\\(\\s]|^)(?:20)?(2[3-9])(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])(?:[\\]\\)\\s]|$)").matcher(t);
+        Matcher m2 = TITLE_DATE_PATTERN_2.matcher(t);
         if (m2.find()) {
             return String.format("20%s.%s.%s", m2.group(1), m2.group(2), m2.group(3));
         }
 
         // 3. 24년 5월 1일, 2024년 05월 01일
-        Matcher m3 = Pattern.compile("(?:20)?(2[3-9])년\\s*(0?[1-9]|1[0-2])월\\s*(0?[1-9]|[12][0-9]|3[01])일").matcher(t);
+        Matcher m3 = TITLE_DATE_PATTERN_3.matcher(t);
         if (m3.find()) {
             return String.format("20%s.%02d.%02d", m3.group(1), Integer.parseInt(m3.group(2)), Integer.parseInt(m3.group(3)));
         }
@@ -103,7 +113,7 @@ public class YouTubeService {
             return null;
         }
         String trimmed = urlOrId.trim();
-        if (trimmed.length() == 11 && trimmed.matches("^[a-zA-Z0-9_-]{11}$")) {
+        if (trimmed.length() == 11 && EXACT_11_ID_PATTERN.matcher(trimmed).matches()) {
             return trimmed;
         }
         Matcher matcher = YOUTUBE_ID_PATTERN.matcher(trimmed);

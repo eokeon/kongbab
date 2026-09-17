@@ -564,7 +564,8 @@ async function handleBatchImportPlaylist(e) {
       videoType: videoType,
       date: item.publishedDate || getTodayDateString(),
       duration: item.duration || "",
-      description: item.description || ""
+      description: item.description || "",
+      thumbnailUrl: item.thumbnailUrl || (videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : "")
     };
 
     state.currentMember.videos.push(newVideo);

@@ -76,32 +76,39 @@ function getAllMembersWithLeaderboardStats() {
 }
 
 function computeMemberLeaderboardStats(m, cat, group) {
-  // 유효한 비디오 필터링 (동일 URL 중복 등록 방지)
+  // 유효한 비디오 필터링 및 단일 패스 통계 집계 (동일 URL 중복 등록 방지)
   const seenUrls = new Set();
-  const rawVideos = (m.videos || []).filter(v => v && v.url && v.url !== "undefined" && v.url.trim() !== "");
-  const videos = [];
-  rawVideos.forEach(v => {
+  const rawVideos = m.videos || [];
+  let clipCount = 0;
+  let fullCount = 0;
+  let bingeCount = 0;
+  let totalCount = 0;
+  let clipSec = 0;
+  let fullSec = 0;
+  let bingeSec = 0;
+
+  for (let i = 0; i < rawVideos.length; i++) {
+    const v = rawVideos[i];
+    if (!v || !v.url || v.url === "undefined" || !v.url.trim()) continue;
     const vKey = (v.url || v.id || '').trim().toLowerCase();
-    if (vKey && !seenUrls.has(vKey)) {
-      seenUrls.add(vKey);
-      videos.push(v);
-    } else if (!vKey) {
-      videos.push(v);
+    if (vKey && seenUrls.has(vKey)) continue;
+    if (vKey) seenUrls.add(vKey);
+
+    totalCount++;
+    const type = typeof getVideoType === "function" ? getVideoType(v) : 'clip';
+    const sec = typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0;
+    if (type === 'binge') {
+      bingeCount++;
+      bingeSec += sec;
+    } else if (type === 'full') {
+      fullCount++;
+      fullSec += sec;
+    } else {
+      clipCount++;
+      clipSec += sec;
     }
-  });
-  
-  const clipVideos = videos.filter(v => typeof getVideoType === "function" ? getVideoType(v) === 'clip' : true);
-  const fullVideos = videos.filter(v => typeof getVideoType === "function" ? getVideoType(v) === 'full' : false);
-  const bingeVideos = videos.filter(v => typeof getVideoType === "function" ? getVideoType(v) === 'binge' : false);
+  }
 
-  const clipCount = clipVideos.length;
-  const fullCount = fullVideos.length;
-  const bingeCount = bingeVideos.length;
-  const totalCount = videos.length;
-
-  const clipSec = clipVideos.reduce((sum, v) => sum + (typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0), 0);
-  const fullSec = fullVideos.reduce((sum, v) => sum + (typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0), 0);
-  const bingeSec = bingeVideos.reduce((sum, v) => sum + (typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0), 0);
   const totalSec = clipSec + fullSec + bingeSec;
 
   // 소속 텍스트 생성 (겸직 다중 소속 반영)
@@ -186,17 +193,26 @@ function computeGlobalMetrics(members) {
   });
 
   const totalMembers = uniqueMembers.length;
-  const totalVideos = uniqueMembers.reduce((sum, m) => sum + (m.totalCount || 0), 0);
-  const totalSec = uniqueMembers.reduce((sum, m) => sum + (m.totalSec || 0), 0);
+  let totalVideos = 0;
+  let totalSec = 0;
+  let totalClipCount = 0;
+  let totalClipSec = 0;
+  let totalFullCount = 0;
+  let totalFullSec = 0;
+  let totalBingeCount = 0;
+  let totalBingeSec = 0;
 
-  const totalClipCount = uniqueMembers.reduce((sum, m) => sum + (m.clipCount || 0), 0);
-  const totalClipSec = uniqueMembers.reduce((sum, m) => sum + (m.clipSec || 0), 0);
-
-  const totalFullCount = uniqueMembers.reduce((sum, m) => sum + (m.fullCount || 0), 0);
-  const totalFullSec = uniqueMembers.reduce((sum, m) => sum + (m.fullSec || 0), 0);
-
-  const totalBingeCount = uniqueMembers.reduce((sum, m) => sum + (m.bingeCount || 0), 0);
-  const totalBingeSec = uniqueMembers.reduce((sum, m) => sum + (m.bingeSec || 0), 0);
+  for (let i = 0; i < uniqueMembers.length; i++) {
+    const m = uniqueMembers[i];
+    totalVideos += (m.totalCount || 0);
+    totalSec += (m.totalSec || 0);
+    totalClipCount += (m.clipCount || 0);
+    totalClipSec += (m.clipSec || 0);
+    totalFullCount += (m.fullCount || 0);
+    totalFullSec += (m.fullSec || 0);
+    totalBingeCount += (m.bingeCount || 0);
+    totalBingeSec += (m.bingeSec || 0);
+  }
 
   // 전체 소속 인원 총합 구독자수 및 치지직 팔로워수 계산 (플랫폼별 구분 & 중복 스트리머 중복 집계 방지)
   const seenSubKeys = new Set();
@@ -880,6 +896,8 @@ function selectMemberFromLeaderboard(catId, groupId, memberName, memberId = null
   }
 
   // 3. 네비게이션 렌더링
+  if (typeof saveNavigationState === "function") saveNavigationState();
+  if (typeof pushNavHistory === "function") pushNavHistory();
   if (typeof renderCategoryTabs === "function") renderCategoryTabs();
   if (typeof renderContent === "function") renderContent();
 

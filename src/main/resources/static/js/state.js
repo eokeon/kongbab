@@ -454,10 +454,18 @@ function parseDateToTimestamp(dateStr) {
 
 // 영상 목록을 게시일자가 빠른 순(과거순/오름차순)으로 정렬하고 displayOrder를 0부터 순차 부여
 function sortVideosByDateAsc(videos) {
-  if (!Array.isArray(videos)) return videos;
+  if (!Array.isArray(videos) || videos.length <= 1) return videos;
+
+  // 정렬 전 날짜 타임스탬프 1회 일괄 계산 (O(N log N) 중복 파싱 방지)
+  const timeMap = new Map();
+  for (let i = 0; i < videos.length; i++) {
+    const v = videos[i];
+    timeMap.set(v, parseDateToTimestamp(v?.date));
+  }
+
   videos.sort((a, b) => {
-    const timeA = parseDateToTimestamp(a.date);
-    const timeB = parseDateToTimestamp(b.date);
+    const timeA = timeMap.get(a) ?? Infinity;
+    const timeB = timeMap.get(b) ?? Infinity;
     if (timeA !== timeB) {
       return timeA - timeB; // 빠른 날짜가 먼저 (오름차순)
     }
@@ -471,20 +479,20 @@ function sortVideosByDateAsc(videos) {
   });
 
   // 0부터 순차적으로 displayOrder 재부여
-  videos.forEach((v, idx) => {
-    v.displayOrder = idx;
-  });
+  for (let idx = 0; idx < videos.length; idx++) {
+    videos[idx].displayOrder = idx;
+  }
 
   return videos;
 }
 
-// 영상 재생 시간(H:MM:SS, MM:SS, ISO)을 초 단위로 변환
+// 영상 재생 시간(H:MM:SS, MM:SS, ISO)을 초 단위로 변환 (중간 배열 생성 없이 고속 파싱)
 function parseDurationToSeconds(durationStr) {
   if (!durationStr || typeof durationStr !== "string") return 0;
   const str = durationStr.trim();
   if (!str) return 0;
 
-  if (str.startsWith("PT") || str.startsWith("P")) {
+  if (str.charCodeAt(0) === 80) { // 'P' (ISO-8601: PT#H#M#S)
     let hours = 0, minutes = 0, seconds = 0;
     const hMatch = str.match(/(\d+)H/i);
     const mMatch = str.match(/(\d+)M/i);
@@ -495,15 +503,22 @@ function parseDurationToSeconds(durationStr) {
     return hours * 3600 + minutes * 60 + seconds;
   }
 
-  const parts = str.split(":").map(p => parseInt(p.trim(), 10)).filter(n => !isNaN(n));
-  if (parts.length === 3) {
-    return parts[0] * 3600 + parts[1] * 60 + parts[2];
-  } else if (parts.length === 2) {
-    return parts[0] * 60 + parts[1];
-  } else if (parts.length === 1) {
-    return parts[0];
+  const c1 = str.indexOf(':');
+  if (c1 === -1) {
+    const val = parseInt(str, 10);
+    return isNaN(val) ? 0 : val;
   }
-  return 0;
+  const c2 = str.indexOf(':', c1 + 1);
+  if (c2 !== -1) {
+    const h = parseInt(str.substring(0, c1), 10);
+    const m = parseInt(str.substring(c1 + 1, c2), 10);
+    const s = parseInt(str.substring(c2 + 1), 10);
+    return (isNaN(h) ? 0 : h * 3600) + (isNaN(m) ? 0 : m * 60) + (isNaN(s) ? 0 : s);
+  } else {
+    const m = parseInt(str.substring(0, c1), 10);
+    const s = parseInt(str.substring(c1 + 1), 10);
+    return (isNaN(m) ? 0 : m * 60) + (isNaN(s) ? 0 : s);
+  }
 }
 
 // 초 단위를 한글 시간 표기(X시간 Y분 / X분 Y초)로 변환

@@ -21,6 +21,12 @@ public class ChzzkService {
             "(?:chzzk\\.naver\\.com\\/video\\/)(\\d+)",
             Pattern.CASE_INSENSITIVE
     );
+    private static final Pattern DIGITS_PATTERN = Pattern.compile("^\\d+$");
+    private static final Pattern HEX32_CHANNEL_PATTERN = Pattern.compile("^[a-fA-F0-9]{32}$");
+    private static final Pattern CHZZK_CHANNEL_URL_PATTERN = Pattern.compile(
+            "(?:chzzk\\.naver\\.com\\/(?:live\\/)?)([a-f0-9]{32})",
+            Pattern.CASE_INSENSITIVE
+    );
 
     public ChzzkService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
@@ -53,7 +59,7 @@ public class ChzzkService {
     public Long extractVideoNo(String urlOrId) {
         if (urlOrId == null || urlOrId.isBlank()) return null;
         String trimmed = urlOrId.trim();
-        if (trimmed.matches("^\\d+$")) {
+        if (DIGITS_PATTERN.matcher(trimmed).matches()) {
             try {
                 return Long.parseLong(trimmed);
             } catch (NumberFormatException ignored) {}
@@ -119,21 +125,29 @@ public class ChzzkService {
 
             String videoId = content.path("videoId").asText("");
             String videoTitle = content.path("videoTitle").asText("");
-            String thumbnailImageUrl = content.path("thumbnailImageUrl").asText("");
-            long durationSec = content.path("duration").asLong(0);
-            String duration = formatDuration(durationSec);
             String publishDateRaw = content.path("publishDate").asText("");
-            String videoType = content.path("videoType").asText("");
+            String videoType = content.path("videoType").asText("clip");
+            long durationSec = content.path("duration").asLong(0);
+            String formattedDuration = formatDuration(durationSec);
 
-            // 날짜 포맷: 제목에서 날짜를 먼저 찾고, 없으면 publishDate 변환
             String dateFromTitle = YouTubeService.extractDateFromTitle(videoTitle);
             String publishedDate = (dateFromTitle != null && !dateFromTitle.isBlank())
                     ? dateFromTitle
                     : formatPublishDate(publishDateRaw);
 
-            JsonNode channelNode = content.path("channel");
-            String channelTitle = channelNode.path("channelName").asText("");
-            String channelId = channelNode.path("channelId").asText("");
+            // 채널 정보
+            JsonNode channel = content.path("channel");
+            String channelId = channel.path("channelId").asText("");
+            String channelName = channel.path("channelName").asText("");
+
+            // 썸네일
+            String thumbnail = content.path("trailerUrl").asText("");
+            if (thumbnail == null || thumbnail.isBlank()) {
+                thumbnail = content.path("liveSnapshotPath").asText("");
+            }
+            if (thumbnail == null || thumbnail.isBlank()) {
+                thumbnail = content.path("thumbnailImageUrl").asText("");
+            }
 
             return ChzzkInfoDto.builder()
                     .success(true)
@@ -142,18 +156,18 @@ public class ChzzkService {
                     .url(fullUrl)
                     .title(videoTitle)
                     .publishedDate(publishedDate)
-                    .duration(duration)
+                    .duration(formattedDuration)
                     .durationSeconds(durationSec)
-                    .channelTitle(channelTitle)
+                    .channelTitle(channelName)
                     .channelId(channelId)
-                    .thumbnailUrl(thumbnailImageUrl)
+                    .thumbnailUrl(thumbnail)
                     .videoType(videoType)
                     .source("chzzk_api")
                     .message("치지직 정보를 성공적으로 가져왔습니다.")
                     .build();
 
         } catch (Exception e) {
-            log.warn("치지직 API 호출 실패 (url: {}): {}", apiUrl, e.getMessage());
+            log.warn("치지직 API 호출 실패 (videoNo: {}, apiUrl: {}): {}", videoNo, apiUrl, e.getMessage());
             return null;
         }
     }
@@ -174,10 +188,10 @@ public class ChzzkService {
     public String extractChannelId(String urlOrId) {
         if (urlOrId == null || urlOrId.isBlank()) return null;
         String trimmed = urlOrId.trim();
-        if (trimmed.matches("(?i)^[a-f0-9]{32}$")) {
+        if (HEX32_CHANNEL_PATTERN.matcher(trimmed).matches()) {
             return trimmed.toLowerCase();
         }
-        Matcher matcher = Pattern.compile("(?:chzzk\\.naver\\.com\\/(?:live\\/)?)([a-f0-9]{32})", Pattern.CASE_INSENSITIVE).matcher(trimmed);
+        Matcher matcher = CHZZK_CHANNEL_URL_PATTERN.matcher(trimmed);
         if (matcher.find()) {
             return matcher.group(1).toLowerCase();
         }

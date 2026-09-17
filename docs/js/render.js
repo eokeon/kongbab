@@ -317,6 +317,9 @@ function renderHeaderAuth() {
 
 function setVideoTab(tab) {
   state.currentVideoTab = tab;
+  if (typeof replaceNavHistory === "function") {
+    replaceNavHistory();
+  }
   const container = document.getElementById("main-content");
   if (container && state.currentMember) renderMemberVideos(container);
   if (typeof updateFloatingCategoryNavVisibility === "function") {
@@ -479,26 +482,31 @@ function renderContent() {
 
   if (state.searchQuery) {
     renderSearchResults(mainContent);
+    if (typeof updatePageTitle === "function") updatePageTitle();
     return;
   }
 
   if (state.currentMember) {
     renderMemberVideos(mainContent);
+    if (typeof updatePageTitle === "function") updatePageTitle();
     return;
   }
 
   const cat = getCurrentCategory();
   if (!cat.hasSubgroups) {
     renderDirectCategoryMembers(mainContent, cat);
+    if (typeof updatePageTitle === "function") updatePageTitle();
     return;
   }
 
   if (state.currentGroup) {
     renderGroupMembers(mainContent);
+    if (typeof updatePageTitle === "function") updatePageTitle();
     return;
   }
 
   renderSubgroupList(mainContent, cat);
+  if (typeof updatePageTitle === "function") updatePageTitle();
 }
 
 function renderEmptyState(emoji, title) {
@@ -513,24 +521,26 @@ function renderEmptyState(emoji, title) {
 }
 
 function renderMemberCard(member, dragType, clickFn) {
-  const allVideos = (member.videos || []).filter(v => v && ((v.url && v.url !== "undefined" && v.url.trim() !== "") || v.videoId));
-  const videoCount = allVideos.length;
+  let ytCount = 0;
+  let chzzkCount = 0;
+  const rawVideos = member.videos;
+  if (Array.isArray(rawVideos)) {
+    for (let i = 0; i < rawVideos.length; i++) {
+      const v = rawVideos[i];
+      if (!v) continue;
+      const u = (v.url && v.url !== "undefined") ? v.url : "";
+      if (!u && !v.videoId) continue;
+      if (typeof isChzzkUrl === "function" && isChzzkUrl(u)) {
+        chzzkCount++;
+      } else {
+        ytCount++;
+      }
+    }
+  }
+  const videoCount = ytCount + chzzkCount;
   const isDualRole = Array.isArray(member.affiliations) && member.affiliations.length > 1;
   const admin = isAdmin();
   const cachedSub = typeof getCachedSubscriber === "function" ? getCachedSubscriber(member.id) : null;
-
-  // 유튜브 vs 치지직 영상 개수 분리
-  const chzzkVideos = allVideos.filter(v => {
-    const u = (v.url && v.url !== "undefined") ? v.url : "";
-    return typeof isChzzkUrl === "function" && isChzzkUrl(u);
-  });
-  const ytVideos = allVideos.filter(v => {
-    const u = (v.url && v.url !== "undefined") ? v.url : "";
-    return !(typeof isChzzkUrl === "function" && isChzzkUrl(u));
-  });
-
-  const ytCount = ytVideos.length;
-  const chzzkCount = chzzkVideos.length;
 
   let videoStatHtml = '';
   if (chzzkCount > 0 && ytCount > 0) {
@@ -661,22 +671,37 @@ function renderMemberCard(member, dragType, clickFn) {
 
 function renderGroupVideoStats(members) {
   const memberList = members || [];
-  const allVideos = memberList.flatMap(m => (m.videos || []).filter(v => v && v.url && v.url !== "undefined" && v.url.trim() !== ""));
-  
-  const clipVideos = allVideos.filter(v => getVideoType(v) === 'clip');
-  const fullVideos = allVideos.filter(v => getVideoType(v) === 'full');
-  const bingeVideos = allVideos.filter(v => getVideoType(v) === 'binge');
+  let clipCount = 0;
+  let fullCount = 0;
+  let bingeCount = 0;
+  let totalVideoCount = 0;
+  let clipSec = 0;
+  let fullSec = 0;
+  let bingeSec = 0;
 
-  const clipCount = clipVideos.length;
-  const fullCount = fullVideos.length;
-  const bingeCount = bingeVideos.length;
-  const totalVideoCount = allVideos.length;
+  for (let i = 0; i < memberList.length; i++) {
+    const vList = memberList[i]?.videos;
+    if (!Array.isArray(vList)) continue;
+    for (let j = 0; j < vList.length; j++) {
+      const v = vList[j];
+      if (!v || !v.url || v.url === "undefined" || !v.url.trim()) continue;
+      totalVideoCount++;
+      const type = getVideoType(v);
+      const sec = typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0;
+      if (type === 'binge') {
+        bingeCount++;
+        bingeSec += sec;
+      } else if (type === 'full') {
+        fullCount++;
+        fullSec += sec;
+      } else {
+        clipCount++;
+        clipSec += sec;
+      }
+    }
+  }
 
-  const clipSec = clipVideos.reduce((sum, v) => sum + (typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0), 0);
-  const fullSec = fullVideos.reduce((sum, v) => sum + (typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0), 0);
-  const bingeSec = bingeVideos.reduce((sum, v) => sum + (typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0), 0);
   const totalSec = clipSec + fullSec + bingeSec;
-
   const clipDur = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(clipSec) : "0분";
   const fullDur = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(fullSec) : "0분";
   const bingeDur = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(bingeSec) : "0분";
@@ -953,18 +978,36 @@ function renderMemberVideos(container) {
   const group = state.currentGroup;
   const cat = getCurrentCategory();
 
-  // 유효한 영상만 필터링 (잘못 등록된 undefined/빈 링크 영상 자동 제거)
-  const allVideos = (member.videos || []).filter(v => v && v.url && v.url !== "undefined" && v.url.trim() !== "");
-  const clipVideos = allVideos.filter(v => getVideoType(v) === 'clip');
-  const fullVideos = allVideos.filter(v => getVideoType(v) === 'full');
-  const bingeVideos = allVideos.filter(v => getVideoType(v) === 'binge');
+  // 유효한 영상만 필터링 및 탭별 분류·시간 합산 (단일 패스 처리)
+  const clipVideos = [];
+  const fullVideos = [];
+  const bingeVideos = [];
+  let clipTotalSeconds = 0;
+  let fullTotalSeconds = 0;
+  let bingeTotalSeconds = 0;
+
+  const rawVideos = member.videos || [];
+  for (let i = 0; i < rawVideos.length; i++) {
+    const v = rawVideos[i];
+    if (!v || !v.url || v.url === "undefined" || !v.url.trim()) continue;
+    const type = getVideoType(v);
+    const sec = typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0;
+    if (type === 'binge') {
+      bingeVideos.push(v);
+      bingeTotalSeconds += sec;
+    } else if (type === 'full') {
+      fullVideos.push(v);
+      fullTotalSeconds += sec;
+    } else {
+      clipVideos.push(v);
+      clipTotalSeconds += sec;
+    }
+  }
+
   const clipCount = clipVideos.length;
   const fullCount = fullVideos.length;
   const bingeCount = bingeVideos.length;
 
-  const clipTotalSeconds = clipVideos.reduce((sum, v) => sum + (typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0), 0);
-  const fullTotalSeconds = fullVideos.reduce((sum, v) => sum + (typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0), 0);
-  const bingeTotalSeconds = bingeVideos.reduce((sum, v) => sum + (typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0), 0);
   const clipTotalDuration = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(clipTotalSeconds) : "0분";
   const fullTotalDuration = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(fullTotalSeconds) : "0분";
   const bingeTotalDuration = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(bingeTotalSeconds) : "0분";

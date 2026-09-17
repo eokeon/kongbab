@@ -1,8 +1,8 @@
 {
   "appName": "kongbab-gta-rp",
   "version": "1.0",
-  "createdAt": "2026.09.16 00:17:56",
-  "reason": "구독자/팔로워 수 일괄 갱신 (92명)",
+  "createdAt": "2026.09.18 03:15:58",
+  "reason": "인원 순서 변경: [경찰] 김윤성 (김뿡) (2번 → 1번)",
   "stats": {
     "totalCategories": 7,
     "totalMembers": 107,
@@ -9449,9 +9449,9 @@
               "videoType": "clip",
               "date": "2025.06.17",
               "duration": "20:52",
-              "thumbnailUrl": "https://i.ytimg.com/vi/kryj9HkIyEI/mqdefault.jpg",
               "description": "",
-              "displayOrder": 0
+              "displayOrder": 0,
+              "thumbnailUrl": "https://i.ytimg.com/vi/kryj9HkIyEI/mqdefault.jpg"
             },
             {
               "id": "v-mu2sv4prx4pm0-1",
@@ -9460,9 +9460,9 @@
               "videoType": "clip",
               "date": "2025.06.18",
               "duration": "3:03:30",
-              "thumbnailUrl": "https://i.ytimg.com/vi/9qrcqZGDRoc/mqdefault.jpg",
               "description": "",
-              "displayOrder": 1
+              "displayOrder": 1,
+              "thumbnailUrl": "https://i.ytimg.com/vi/9qrcqZGDRoc/mqdefault.jpg"
             },
             {
               "id": "v-mu2sv4pr57nvy-2",
@@ -9471,9 +9471,9 @@
               "videoType": "clip",
               "date": "2025.06.15",
               "duration": "34:57",
-              "thumbnailUrl": "https://i.ytimg.com/vi/reW96BoJkEw/mqdefault.jpg",
               "description": "",
-              "displayOrder": 2
+              "displayOrder": 2,
+              "thumbnailUrl": "https://i.ytimg.com/vi/reW96BoJkEw/mqdefault.jpg"
             },
             {
               "id": "v-mu2sv4pr9cxiz-3",
@@ -9482,9 +9482,9 @@
               "videoType": "clip",
               "date": "2025.06.22",
               "duration": "14:55",
-              "thumbnailUrl": "https://i.ytimg.com/vi/HGYfIY8FNkA/mqdefault.jpg",
               "description": "",
-              "displayOrder": 3
+              "displayOrder": 3,
+              "thumbnailUrl": "https://i.ytimg.com/vi/HGYfIY8FNkA/mqdefault.jpg"
             },
             {
               "id": "v-mu2swm14isj3v-0",
@@ -9493,9 +9493,9 @@
               "videoType": "full",
               "date": "2025.08.07",
               "duration": "2:43:43",
-              "thumbnailUrl": "https://i.ytimg.com/vi/rb0Lwx8n3YQ/mqdefault.jpg",
               "description": "",
-              "displayOrder": 4
+              "displayOrder": 4,
+              "thumbnailUrl": "https://i.ytimg.com/vi/rb0Lwx8n3YQ/mqdefault.jpg"
             },
             {
               "id": "v-mu2swm14fud60-1",
@@ -9504,9 +9504,9 @@
               "videoType": "full",
               "date": "2025.08.07",
               "duration": "6:35:23",
-              "thumbnailUrl": "https://i.ytimg.com/vi/WXjS4xApzps/mqdefault.jpg",
               "description": "",
-              "displayOrder": 5
+              "displayOrder": 5,
+              "thumbnailUrl": "https://i.ytimg.com/vi/WXjS4xApzps/mqdefault.jpg"
             }
           ],
           "affiliations": [
@@ -9681,9 +9681,9 @@
               "videoType": "full",
               "date": "2025.05.25",
               "duration": "6:31:27",
-              "thumbnailUrl": "https://i.ytimg.com/vi/uE0E6G4ODTU/mqdefault.jpg",
               "description": "",
-              "displayOrder": 0
+              "displayOrder": 0,
+              "thumbnailUrl": "https://i.ytimg.com/vi/uE0E6G4ODTU/mqdefault.jpg"
             },
             {
               "id": "v-mu2t8ngjzkv39-1",
@@ -9692,9 +9692,9 @@
               "videoType": "full",
               "date": "2025.05.26",
               "duration": "10:24:59",
-              "thumbnailUrl": "https://i.ytimg.com/vi/90wEfjN6pJM/mqdefault.jpg",
               "description": "",
-              "displayOrder": 1
+              "displayOrder": 1,
+              "thumbnailUrl": "https://i.ytimg.com/vi/90wEfjN6pJM/mqdefault.jpg"
             },
             {
               "id": "v-mu2t8ngjfmje1-2",
@@ -9703,9 +9703,9 @@
               "videoType": "full",
               "date": "2025.05.27",
               "duration": "14:02:25",
-              "thumbnailUrl": "https://i.ytimg.com/vi/_rRzcYA8doY/mqdefault.jpg",
               "description": "",
-              "displayOrder": 2
+              "displayOrder": 2,
+              "thumbnailUrl": "https://i.ytimg.com/vi/_rRzcYA8doY/mqdefault.jpg"
             },
             {
               "id": "v-mu2t8ngjf3ylw-3",
@@ -9714,9 +9714,9 @@
               "videoType": "full",
               "date": "2025.05.28",
               "duration": "14:44:09",
-              "thumbnailUrl": "https://i.ytimg.com/vi/KRw8vCiJtwU/mqdefault.jpg",
               "description": "",
-              "displayOrder": 3
+              "displayOrder": 3,
+              "thumbnailUrl": "https://i.ytimg.com/vi/KRw8vCiJtwU/mqdefault.jpg"
             },
             {
               "id": "v-mu2t8ngj4atf0-4",
@@ -9725,9 +9725,9 @@
               "videoType": "full",
               "date": "2025.05.29",
               "duration": "13:40:53",
-              "thumbnailUrl": "https://i.ytimg.com/vi/BeQjDaEqzh4/mqdefault.jpg",
               "description": "",
-              "displayOrder": 4
+              "displayOrder": 4,
+              "thumbnailUrl": "https://i.ytimg.com/vi/BeQjDaEqzh4/mqdefault.jpg"
             },
             {
               "id": "v-mu2t8ngjie9hs-5",
@@ -9736,9 +9736,9 @@
               "videoType": "full",
               "date": "2025.05.30",
               "duration": "9:03:50",
-              "thumbnailUrl": "https://i.ytimg.com/vi/9PhP6kIG7lY/mqdefault.jpg",
               "description": "",
-              "displayOrder": 5
+              "displayOrder": 5,
+              "thumbnailUrl": "https://i.ytimg.com/vi/9PhP6kIG7lY/mqdefault.jpg"
             },
             {
               "id": "v-mu2t8ngjtgz6q-6",
@@ -9747,9 +9747,9 @@
               "videoType": "full",
               "date": "2025.06.01",
               "duration": "8:17:35",
-              "thumbnailUrl": "https://i.ytimg.com/vi/quknBoytuvE/mqdefault.jpg",
               "description": "",
-              "displayOrder": 6
+              "displayOrder": 6,
+              "thumbnailUrl": "https://i.ytimg.com/vi/quknBoytuvE/mqdefault.jpg"
             },
             {
               "id": "v-mu2t8ngjyc7ci-7",
@@ -9758,9 +9758,9 @@
               "videoType": "full",
               "date": "2025.06.02",
               "duration": "10:18:43",
-              "thumbnailUrl": "https://i.ytimg.com/vi/CEOkAEjPnR8/mqdefault.jpg",
               "description": "",
-              "displayOrder": 7
+              "displayOrder": 7,
+              "thumbnailUrl": "https://i.ytimg.com/vi/CEOkAEjPnR8/mqdefault.jpg"
             },
             {
               "id": "v-mu2t8ngju3pbk-8",
@@ -9769,9 +9769,9 @@
               "videoType": "full",
               "date": "2025.06.03",
               "duration": "8:25:43",
-              "thumbnailUrl": "https://i.ytimg.com/vi/aJ5LK0H2t3U/mqdefault.jpg",
               "description": "",
-              "displayOrder": 8
+              "displayOrder": 8,
+              "thumbnailUrl": "https://i.ytimg.com/vi/aJ5LK0H2t3U/mqdefault.jpg"
             },
             {
               "id": "v-mu2t8ngjb4aok-9",
@@ -9780,9 +9780,9 @@
               "videoType": "full",
               "date": "2025.06.04",
               "duration": "14:41:07",
-              "thumbnailUrl": "https://i.ytimg.com/vi/751YHc8FJq4/mqdefault.jpg",
               "description": "",
-              "displayOrder": 9
+              "displayOrder": 9,
+              "thumbnailUrl": "https://i.ytimg.com/vi/751YHc8FJq4/mqdefault.jpg"
             },
             {
               "id": "v-mu2t8ngjws3zn-10",
@@ -9791,9 +9791,9 @@
               "videoType": "full",
               "date": "2025.06.05",
               "duration": "9:05:12",
-              "thumbnailUrl": "https://i.ytimg.com/vi/VMfgAu13J-c/mqdefault.jpg",
               "description": "",
-              "displayOrder": 10
+              "displayOrder": 10,
+              "thumbnailUrl": "https://i.ytimg.com/vi/VMfgAu13J-c/mqdefault.jpg"
             },
             {
               "id": "v-mu2t8ngjb8b1w-11",
@@ -9802,9 +9802,9 @@
               "videoType": "full",
               "date": "2025.06.06",
               "duration": "9:25:59",
-              "thumbnailUrl": "https://i.ytimg.com/vi/8axnZm19WuU/mqdefault.jpg",
               "description": "",
-              "displayOrder": 11
+              "displayOrder": 11,
+              "thumbnailUrl": "https://i.ytimg.com/vi/8axnZm19WuU/mqdefault.jpg"
             },
             {
               "id": "v-mu2t8ngjngrf8-12",
@@ -9813,9 +9813,9 @@
               "videoType": "full",
               "date": "2025.06.07",
               "duration": "8:40:10",
-              "thumbnailUrl": "https://i.ytimg.com/vi/dvWiD8jB0Eo/mqdefault.jpg",
               "description": "",
-              "displayOrder": 12
+              "displayOrder": 12,
+              "thumbnailUrl": "https://i.ytimg.com/vi/dvWiD8jB0Eo/mqdefault.jpg"
             },
             {
               "id": "v-mu2t8ngjgqtr1-13",
@@ -9824,9 +9824,9 @@
               "videoType": "full",
               "date": "2025.06.08",
               "duration": "11:00:33",
-              "thumbnailUrl": "https://i.ytimg.com/vi/WonDyX_2d0Y/mqdefault.jpg",
               "description": "",
-              "displayOrder": 13
+              "displayOrder": 13,
+              "thumbnailUrl": "https://i.ytimg.com/vi/WonDyX_2d0Y/mqdefault.jpg"
             },
             {
               "id": "v-mu2t8ngjl9cfo-14",
@@ -9835,9 +9835,9 @@
               "videoType": "full",
               "date": "2025.06.09",
               "duration": "8:29:25",
-              "thumbnailUrl": "https://i.ytimg.com/vi/WRoDLNSYj-I/mqdefault.jpg",
               "description": "",
-              "displayOrder": 14
+              "displayOrder": 14,
+              "thumbnailUrl": "https://i.ytimg.com/vi/WRoDLNSYj-I/mqdefault.jpg"
             },
             {
               "id": "v-mu2t8ngjhqmxh-15",
@@ -9846,9 +9846,9 @@
               "videoType": "full",
               "date": "2025.06.10",
               "duration": "4:27:36",
-              "thumbnailUrl": "https://i.ytimg.com/vi/RdRgRzsw5lE/mqdefault.jpg",
               "description": "",
-              "displayOrder": 15
+              "displayOrder": 15,
+              "thumbnailUrl": "https://i.ytimg.com/vi/RdRgRzsw5lE/mqdefault.jpg"
             }
           ],
           "affiliations": [
@@ -9886,7 +9886,8 @@
               "date": "2025.06.22",
               "duration": "31:26",
               "description": "",
-              "displayOrder": 0
+              "displayOrder": 0,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2tcbnqma1y9-1",
@@ -9896,7 +9897,8 @@
               "date": "2025.06.27",
               "duration": "39:06",
               "description": "",
-              "displayOrder": 1
+              "displayOrder": 1,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2tcbnqtat2o-2",
@@ -9906,7 +9908,8 @@
               "date": "2025.06.30",
               "duration": "34:59",
               "description": "",
-              "displayOrder": 2
+              "displayOrder": 2,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2tcbnqsgqk2-3",
@@ -9916,7 +9919,8 @@
               "date": "2025.07.08",
               "duration": "38:39",
               "description": "",
-              "displayOrder": 3
+              "displayOrder": 3,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2tcbnqdyq9s-4",
@@ -9926,7 +9930,8 @@
               "date": "2025.07.14",
               "duration": "45:13",
               "description": "",
-              "displayOrder": 4
+              "displayOrder": 4,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2tcbnqfxo7h-5",
@@ -9936,7 +9941,8 @@
               "date": "2025.08.22",
               "duration": "1:01:59",
               "description": "",
-              "displayOrder": 5
+              "displayOrder": 5,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2tcbnqfwl7f-6",
@@ -9946,7 +9952,8 @@
               "date": "2025.08.29",
               "duration": "1:07:49",
               "description": "",
-              "displayOrder": 6
+              "displayOrder": 6,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2tcbnqea7v7-7",
@@ -9956,7 +9963,8 @@
               "date": "2025.09.07",
               "duration": "45:30",
               "description": "",
-              "displayOrder": 7
+              "displayOrder": 7,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2tcbnq7ms71-8",
@@ -9966,7 +9974,8 @@
               "date": "2025.09.21",
               "duration": "1:05:06",
               "description": "",
-              "displayOrder": 8
+              "displayOrder": 8,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2tcbnq1q4td-9",
@@ -9976,7 +9985,8 @@
               "date": "2025.09.30",
               "duration": "1:03:41",
               "description": "",
-              "displayOrder": 9
+              "displayOrder": 9,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2tcbnq1moup-10",
@@ -9986,7 +9996,8 @@
               "date": "2025.10.14",
               "duration": "2:04:41",
               "description": "",
-              "displayOrder": 10
+              "displayOrder": 10,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2tcbnqbwmpq-11",
@@ -9996,7 +10007,8 @@
               "date": "2025.10.18",
               "duration": "44:02",
               "description": "",
-              "displayOrder": 11
+              "displayOrder": 11,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teeliu4hqa-0",
@@ -10006,7 +10018,8 @@
               "date": "2025.06.20",
               "duration": "2:36:29",
               "description": "",
-              "displayOrder": 12
+              "displayOrder": 12,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teeliplbf7-1",
@@ -10016,7 +10029,8 @@
               "date": "2025.06.27",
               "duration": "5:49:43",
               "description": "",
-              "displayOrder": 13
+              "displayOrder": 13,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teelin6jgi-2",
@@ -10026,7 +10040,8 @@
               "date": "2025.06.27",
               "duration": "10:20:27",
               "description": "",
-              "displayOrder": 14
+              "displayOrder": 14,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teelity6ji-3",
@@ -10036,7 +10051,8 @@
               "date": "2025.06.28",
               "duration": "8:20:15",
               "description": "",
-              "displayOrder": 15
+              "displayOrder": 15,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teelie1w7j-4",
@@ -10046,7 +10062,8 @@
               "date": "2025.06.28",
               "duration": "9:57:48",
               "description": "",
-              "displayOrder": 16
+              "displayOrder": 16,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teeli3nfaw-5",
@@ -10056,7 +10073,8 @@
               "date": "2025.06.28",
               "duration": "5:40:05",
               "description": "",
-              "displayOrder": 17
+              "displayOrder": 17,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teeligec28-6",
@@ -10066,7 +10084,8 @@
               "date": "2025.06.28",
               "duration": "8:06:52",
               "description": "",
-              "displayOrder": 18
+              "displayOrder": 18,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teelis4kaj-7",
@@ -10076,7 +10095,8 @@
               "date": "2025.06.29",
               "duration": "11:03:20",
               "description": "",
-              "displayOrder": 19
+              "displayOrder": 19,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teeliq3ffm-8",
@@ -10086,7 +10106,8 @@
               "date": "2025.06.29",
               "duration": "7:57:20",
               "description": "",
-              "displayOrder": 20
+              "displayOrder": 20,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teeli7mi02-9",
@@ -10096,7 +10117,8 @@
               "date": "2025.06.29",
               "duration": "5:23:38",
               "description": "",
-              "displayOrder": 21
+              "displayOrder": 21,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teelixmxft-10",
@@ -10106,7 +10128,8 @@
               "date": "2025.06.29",
               "duration": "7:45:55",
               "description": "",
-              "displayOrder": 22
+              "displayOrder": 22,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teeliojs9v-11",
@@ -10116,7 +10139,8 @@
               "date": "2025.06.29",
               "duration": "8:21:18",
               "description": "",
-              "displayOrder": 23
+              "displayOrder": 23,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teeli1ewnv-12",
@@ -10126,7 +10150,8 @@
               "date": "2025.06.30",
               "duration": "7:48:30",
               "description": "",
-              "displayOrder": 24
+              "displayOrder": 24,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teeliefo8a-13",
@@ -10136,7 +10161,8 @@
               "date": "2025.06.30",
               "duration": "8:59:04",
               "description": "",
-              "displayOrder": 25
+              "displayOrder": 25,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teeli4aqbo-14",
@@ -10146,7 +10172,8 @@
               "date": "2025.06.30",
               "duration": "9:03:55",
               "description": "",
-              "displayOrder": 26
+              "displayOrder": 26,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teeli5rzn0-15",
@@ -10156,7 +10183,8 @@
               "date": "2025.06.30",
               "duration": "3:48:52",
               "description": "",
-              "displayOrder": 27
+              "displayOrder": 27,
+              "thumbnailUrl": null
             },
             {
               "id": "v-mu2teelikxd2y-16",
@@ -10166,7 +10194,8 @@
               "date": "2025.06.30",
               "duration": "9:17:14",
               "description": "",
-              "displayOrder": 28
+              "displayOrder": 28,
+              "thumbnailUrl": null
             }
           ],
           "affiliations": [

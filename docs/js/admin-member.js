@@ -1364,6 +1364,8 @@ async function executeRemoveMemberAffiliation(memberId, catId, groupId = null) {
 
   if (state.currentMember?.id === memberId) {
     state.currentMember = null;
+    if (typeof saveNavigationState === "function") saveNavigationState();
+    if (typeof replaceNavHistory === "function") replaceNavHistory();
   }
 
   if (typeof sortAllMembersByAffiliationOrder === "function") {
@@ -1390,7 +1392,11 @@ function executeDeleteMember(memberId, password = "kongbab1234") {
     }
   });
 
-  if (state.currentMember?.id === memberId) state.currentMember = null;
+  if (state.currentMember?.id === memberId) {
+    state.currentMember = null;
+    if (typeof saveNavigationState === "function") saveNavigationState();
+    if (typeof replaceNavHistory === "function") replaceNavHistory();
+  }
 
   deleteStreamerFromDb(memberId, password);
 
