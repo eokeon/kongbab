@@ -1,12 +1,12 @@
 {
   "appName": "kongbab-gta-rp",
   "version": "1.0",
-  "createdAt": "2026.09.18 03:15:58",
-  "reason": "인원 순서 변경: [경찰] 김윤성 (김뿡) (2번 → 1번)",
+  "createdAt": "2026.09.18 07:53:34",
+  "reason": "구독자/팔로워 수 일괄 갱신 (114명)",
   "stats": {
     "totalCategories": 7,
-    "totalMembers": 107,
-    "totalVideos": 1301
+    "totalMembers": 114,
+    "totalVideos": 1449
   },
   "categories": [
     {
@@ -1106,7 +1106,7 @@
           "badgeColor": "bg-red-600",
           "avatar": "https://yt3.googleusercontent.com/dgb7xWejv0czVQ_3_NS6AZ-8NdlY1d4LP8-gx-Vs5ahLW4pr8Rrqg6r2w7T3K94rzCgLrgYs=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 4,
-          "subscriberCount": "2,160명",
+          "subscriberCount": "2,170명",
           "youtubeUrl": "https://www.youtube.com/@레스-04",
           "videos": [
             {
@@ -5604,7 +5604,7 @@
           "badgeColor": "bg-pink-500",
           "avatar": "https://nng-phinf.pstatic.net/MjAyNTAxMTBfMjcy/MDAxNzM2NDgyNjQ1ODk1.EYgT6KrXbZqFTxYHPDSxU4wAvvciXqksGPR3y-SFEtYg.nKYfxdAzTrc06gVD9sEqwovSaUFVOPBJDGA2vfgGB-Qg.JPEG/NNG-1736482645359431678326222488732.jpg?type=f120_120_na",
           "displayOrder": 25,
-          "subscriberCount": "9,593명",
+          "subscriberCount": "9,591명",
           "youtubeUrl": "https://chzzk.naver.com/8d6e95c0f193da34696514afec515e74",
           "videos": [
             {
@@ -5941,7 +5941,7 @@
           "badgeColor": "bg-pink-500",
           "avatar": "https://yt3.googleusercontent.com/DU-7pEVyOi5IHRXqqDXKRElNk0n4A-ljPAYfyYfy67tl7TiA_VCwVcDDVrjJKZVRzMB_BhMOhA=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 28,
-          "subscriberCount": "8,120명",
+          "subscriberCount": "8,130명",
           "youtubeUrl": "https://www.youtube.com/@hamkubby",
           "videos": [
             {
@@ -6112,7 +6112,7 @@
           "badgeColor": "bg-pink-500",
           "avatar": "https://yt3.googleusercontent.com/NQj31TwRKTC8yTiOHnKM6gzv9KyEZL5KR8G_LPuCZATcjHFNEm6WjDMlcMx7SMUcfDenPfnDOCE=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 29,
-          "subscriberCount": "2.2만 명",
+          "subscriberCount": "2.3만 명",
           "youtubeUrl": "https://www.youtube.com/@Midomido_Mayo",
           "videos": [
             {
@@ -7380,7 +7380,7 @@
           "badgeColor": "bg-emerald-600",
           "avatar": "https://yt3.googleusercontent.com/CUcPuAiQhUSoTnS5WyoNi2RlwKAixrGSZWwf4w0d1f-AoxJy4hfW41kMVXer13u2Ab9gHbEY0A=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 35,
-          "subscriberCount": "9,780명",
+          "subscriberCount": "9,790명",
           "youtubeUrl": "https://www.youtube.com/@ruruka02",
           "videos": [
             {
@@ -8539,7 +8539,7 @@
           "badgeColor": "bg-blue-600",
           "avatar": "https://yt3.googleusercontent.com/MBvhcnQuDImz_XkKjRUOn_b0QjmYZtyQ15kqy4pi1YlRVx1WHTM8GGZb3DQO6nYCV0KwWMopYg=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 45,
-          "subscriberCount": "5.1만 명",
+          "subscriberCount": "5.2만 명",
           "youtubeUrl": "https://www.youtube.com/@moyaji77",
           "videos": [
             {
@@ -8765,7 +8765,7 @@
           "badgeColor": "bg-yellow-400",
           "avatar": "https://yt3.googleusercontent.com/XGOKEHONYSlHUd-3DwrewPJEb8riLXpMb8Y89b10Hp54V5NkirBRkJlzElUCvcSBWkwRm3mi=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 50,
-          "subscriberCount": "1,930명",
+          "subscriberCount": "1,940명",
           "youtubeUrl": "https://www.youtube.com/@wishing_momomo",
           "videos": [
             {
@@ -9040,12 +9040,12 @@
           "id": "gang-bd-9",
           "name": "코코팜 / 야고곡",
           "streamer": "야코코",
-          "role": "",
+          "role": "교육생",
           "swatRole": "",
-          "status": "active",
-          "badgeColor": "bg-red-900",
+          "status": "retired",
+          "badgeColor": "bg-yellow-400",
           "avatar": "https://yt3.googleusercontent.com/esE3TJPUIjG3y22QYpKLOTcEWLmWymJfPlUQu0oIfkUETQjtczV4YCXaPhrCvptcy5bqtnL-=s160-c-k-c0x00ffffff-no-rj",
-          "displayOrder": 8,
+          "displayOrder": 51,
           "subscriberCount": "21만 명",
           "youtubeUrl": "https://www.youtube.com/@0630",
           "videos": [
@@ -9323,19 +9323,19 @@
               "displayOrder": 8
             }
           ],
-          "category": "gang",
-          "subgroup": "gang-bigdick"
+          "category": "police",
+          "subgroup": null
         },
         {
           "id": "gang-bd-8",
           "name": "아카콩",
           "streamer": "아카캉",
-          "role": "",
+          "role": "교육생",
           "swatRole": "",
-          "status": "active",
-          "badgeColor": "bg-zinc-700",
+          "status": "resigned",
+          "badgeColor": "bg-yellow-400",
           "avatar": "https://yt3.googleusercontent.com/22RAHXxC1uETHtstGdHQ-Jz0iYybtZRGXRIQxd9NinF4zByflh1x-t-df6cGkmTvcStx1_f6gg=s160-c-k-c0x00ffffff-no-rj",
-          "displayOrder": 9,
+          "displayOrder": 52,
           "subscriberCount": "37.4만 명",
           "youtubeUrl": "https://www.youtube.com/@아카캉",
           "videos": [
@@ -9415,8 +9415,8 @@
               "displayOrder": 9
             }
           ],
-          "category": "gang",
-          "subgroup": "gang-bigdick"
+          "category": "police",
+          "subgroup": null
         }
       ]
     },
@@ -9431,12 +9431,12 @@
       "members": [
         {
           "id": "ems-2",
-          "name": "싹아지",
-          "streamer": "새싹 / 싹바가지",
+          "name": "싹아지 / 싹바가지",
+          "streamer": "새싹",
           "role": "2대 병원장",
           "swatRole": "",
           "status": "martyred",
-          "badgeColor": "bg-teal-900",
+          "badgeColor": "bg-teal-500",
           "avatar": "https://yt3.googleusercontent.com/dwmcYzZ2sHL6UwiJqEqrW3cjJODM-i92ETYS0WKqd0Xbbrr2fP5s7hfWn7mMl8YB-LzxR2tMlTk=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 0,
           "subscriberCount": "2.3만 명",
@@ -9516,7 +9516,7 @@
               "role": "2대 병원장",
               "swatRole": "",
               "status": "martyred",
-              "badgeColor": "bg-teal-900",
+              "badgeColor": "bg-teal-500",
               "displayOrder": 0
             }
           ],
@@ -9530,7 +9530,7 @@
           "role": "1대 병원장",
           "swatRole": "",
           "status": "retired",
-          "badgeColor": "bg-teal-900",
+          "badgeColor": "bg-teal-500",
           "avatar": "https://yt3.googleusercontent.com/ytc/AIdro_m1ykZ7T3H8P28_2buzn_7ENflWlqILVz4AZGwg0hrxT8g=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 1,
           "subscriberCount": "135만 명",
@@ -9543,7 +9543,7 @@
               "role": "1대 병원장",
               "swatRole": "",
               "status": "retired",
-              "badgeColor": "bg-teal-900",
+              "badgeColor": "bg-teal-500",
               "displayOrder": 1
             }
           ],
@@ -9596,7 +9596,7 @@
           "role": "2대 간호부장",
           "swatRole": "",
           "status": "active",
-          "badgeColor": "bg-teal-700",
+          "badgeColor": "bg-teal-600",
           "avatar": "https://yt3.googleusercontent.com/SaquCmAyzl9XrWeO9wIrnYJeu6tmcv10nFTqtLh4K0Up8SXnqGlKmf4uvMxoXlZey398qQAEPg=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 3,
           "subscriberCount": "1,530명",
@@ -9621,7 +9621,7 @@
               "role": "2대 간호부장",
               "swatRole": "",
               "status": "active",
-              "badgeColor": "bg-teal-700",
+              "badgeColor": "bg-teal-600",
               "displayOrder": 3
             }
           ],
@@ -9630,36 +9630,39 @@
         },
         {
           "id": "gang-sangryeon-10",
-          "name": "선마녀 / 악마녀",
+          "name": "악마녀 / 선마녀",
           "streamer": "끠월마녀",
-          "role": "탈퇴",
+          "role": "2대 간호부장",
           "swatRole": "",
           "status": "active",
-          "badgeColor": "bg-red-600",
+          "badgeColor": "bg-teal-600",
           "avatar": "https://yt3.googleusercontent.com/Fv-x7MPzdWtEedCZZCKI0aKwx7hOTjBs_LEq4_9OxnuR3KRBKrZqKmTKsV6CbLLjekaL9QvY=s120-c-k-c0x00ffffff-no-rj",
-          "displayOrder": 10,
-          "subscriberCount": "2,100명",
+          "displayOrder": 4,
+          "subscriberCount": "2,090명",
           "youtubeUrl": "https://www.youtube.com/@MaNyeo919",
           "videos": [],
           "affiliations": [
-            {
-              "category": "gang",
-              "subgroup": "gang-sangryeon",
-              "role": "탈퇴",
-              "displayOrder": 10
-            },
             {
               "category": "ems",
               "subgroup": null,
               "role": "2대 간호부장",
               "swatRole": "",
               "status": "active",
-              "badgeColor": "bg-teal-700",
+              "badgeColor": "bg-teal-600",
               "displayOrder": 4
+            },
+            {
+              "category": "gang",
+              "subgroup": "gang-sangryeon",
+              "role": "탈퇴",
+              "swatRole": "",
+              "status": "active",
+              "badgeColor": "bg-teal-600",
+              "displayOrder": 10
             }
           ],
-          "category": "gang",
-          "subgroup": "gang-sangryeon"
+          "category": "ems",
+          "subgroup": null
         },
         {
           "id": "ems-4",
@@ -9668,7 +9671,7 @@
           "role": "1대 간호부장",
           "swatRole": "",
           "status": "active",
-          "badgeColor": "bg-teal-700",
+          "badgeColor": "bg-teal-600",
           "avatar": "https://yt3.googleusercontent.com/USg6WoCEMX4hcOuAtn0FvaDxKoeahkY09bCsB1QCI0znF8BtheNHe9ry3DsFHIzNKOxhs3jofFo=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 5,
           "subscriberCount": "5.3만 명",
@@ -9858,7 +9861,7 @@
               "role": "1대 간호부장",
               "swatRole": "",
               "status": "active",
-              "badgeColor": "bg-teal-700",
+              "badgeColor": "bg-teal-600",
               "displayOrder": 5
             }
           ],
@@ -9872,7 +9875,7 @@
           "role": "1대 간호부장",
           "swatRole": "",
           "status": "martyred",
-          "badgeColor": "bg-teal-700",
+          "badgeColor": "bg-teal-600",
           "avatar": "https://yt3.googleusercontent.com/lSDmTKPVriZ3lf7rfXMT34vwH-OVqXD7mpM_PTlGGKImKW7ELVWgKSdmxX9r5Z9Z1OT38Ei9hA=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 6,
           "subscriberCount": "2.5만 명",
@@ -10205,7 +10208,7 @@
               "role": "1대 간호부장",
               "swatRole": "",
               "status": "martyred",
-              "badgeColor": "bg-teal-700",
+              "badgeColor": "bg-teal-600",
               "displayOrder": 6
             }
           ],
@@ -10213,18 +10216,206 @@
           "subgroup": null
         },
         {
-          "id": "ems-7",
-          "name": "옥수수",
-          "streamer": "옥쓔수",
+          "id": "ems-11",
+          "name": "마릴라",
+          "streamer": "마우쥐",
           "role": "간호사",
           "swatRole": "",
           "status": "active",
           "badgeColor": "bg-emerald-500",
-          "avatar": "assets/default-avatar.svg",
+          "avatar": "https://yt3.googleusercontent.com/bUga_IlKmBnDtyHv1T_nMCX6r10Ud-CIV1Pu3Bq8z_xwg-50B4tCypvukMUoZziFgjY1mwDhbg=s160-c-k-c0x00ffffff-no-rj",
           "displayOrder": 7,
-          "subscriberCount": "",
-          "youtubeUrl": "",
-          "videos": [],
+          "subscriberCount": "1만 명",
+          "youtubeUrl": "https://www.youtube.com/@maumau_g",
+          "videos": [
+            {
+              "id": "v-mu640crq5h3al-0",
+              "title": "바디캠이 몸캠 아님? [콩밥핫클립 1화]",
+              "url": "https://www.youtube.com/watch?v=-T5MNV1RQR4",
+              "videoType": "clip",
+              "date": "2025.07.10",
+              "duration": "8:08",
+              "description": "",
+              "displayOrder": 0,
+              "thumbnailUrl": "https://i.ytimg.com/vi/-T5MNV1RQR4/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu640crqywdqd-1",
+              "title": "모두가 인정한 레전드 저점매수 [콩밥핫클립 2화]",
+              "url": "https://www.youtube.com/watch?v=LGAol8nOIbU",
+              "videoType": "clip",
+              "date": "2025.07.16",
+              "duration": "10:22",
+              "description": "",
+              "displayOrder": 1,
+              "thumbnailUrl": "https://i.ytimg.com/vi/LGAol8nOIbU/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu640wrilby4b-0",
+              "title": "🐹250525 [콩밥특별시 1일차(1)] 분내를 RP로 잡은 나.... + 칼바람 급합방",
+              "url": "https://www.youtube.com/watch?v=vwx82-0pIeE&list=PLTw3BRYNwUGy3s-GYSX9k6WM6egBqsUMG",
+              "videoType": "full",
+              "date": "2025.05.29",
+              "duration": "5:34:06",
+              "description": "",
+              "displayOrder": 2,
+              "thumbnailUrl": "https://img.youtube.com/vi/vwx82-0pIeE/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu640wrjcuwg0-1",
+              "title": "🐹250525 [콩밥특별시 1일차(2)] 분내 댕쩌는 EMS 가자~!",
+              "url": "https://www.youtube.com/watch?v=zjSycZPOloE&list=PLTw3BRYNwUGy3s-GYSX9k6WM6egBqsUMG",
+              "videoType": "full",
+              "date": "2025.05.29",
+              "duration": "9:13:47",
+              "description": "",
+              "displayOrder": 3,
+              "thumbnailUrl": "https://img.youtube.com/vi/zjSycZPOloE/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu640wrjut1wo-2",
+              "title": "🐹250526 [콩밥특별시 2일차] 분내와 분뇨가 왔다갔다한다",
+              "url": "https://www.youtube.com/watch?v=1gge-MCDZWU&list=PLTw3BRYNwUGy3s-GYSX9k6WM6egBqsUMG",
+              "videoType": "full",
+              "date": "2025.05.29",
+              "duration": "9:57:32",
+              "description": "",
+              "displayOrder": 4,
+              "thumbnailUrl": "https://img.youtube.com/vi/1gge-MCDZWU/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu640wrjcpfa2-3",
+              "title": "🐹250527 [콩밥특별시 3일차] 다 퇴사한다 EMS가 위험하다....!",
+              "url": "https://www.youtube.com/watch?v=bOGI14CXBG0&list=PLTw3BRYNwUGy3s-GYSX9k6WM6egBqsUMG",
+              "videoType": "full",
+              "date": "2025.05.29",
+              "duration": "10:50:39",
+              "description": "",
+              "displayOrder": 5,
+              "thumbnailUrl": "https://img.youtube.com/vi/bOGI14CXBG0/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu640wrj80nlt-4",
+              "title": "🐹250528 [콩밥특별시 4일차] 오늘은 출동을 많이 나가서 행복해따 헤헤",
+              "url": "https://www.youtube.com/watch?v=CFXAZI9dxHA&list=PLTw3BRYNwUGy3s-GYSX9k6WM6egBqsUMG",
+              "videoType": "full",
+              "date": "2025.06.10",
+              "duration": "6:07:13",
+              "description": "",
+              "displayOrder": 6,
+              "thumbnailUrl": "https://img.youtube.com/vi/CFXAZI9dxHA/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu640wrj8ydw9-5",
+              "title": "🐹250529 [마릴라 5일차(1)] 생일이지만 오늘도 난 열심히 사람을 살린다...!",
+              "url": "https://www.youtube.com/watch?v=LLZnRsZmRcY&list=PLTw3BRYNwUGy3s-GYSX9k6WM6egBqsUMG",
+              "videoType": "full",
+              "date": "2025.06.10",
+              "duration": "6:11:17",
+              "description": "",
+              "displayOrder": 7,
+              "thumbnailUrl": "https://img.youtube.com/vi/LLZnRsZmRcY/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu640wrjlrsff-6",
+              "title": "🐹250529 [콩밥특별시 5일차(2)] 생일이지만 오늘도 난 열심히 사람을 살린다...!",
+              "url": "https://www.youtube.com/watch?v=MU6tnh_GUr8&list=PLTw3BRYNwUGy3s-GYSX9k6WM6egBqsUMG",
+              "videoType": "full",
+              "date": "2025.06.10",
+              "duration": "5:58:30",
+              "description": "",
+              "displayOrder": 8,
+              "thumbnailUrl": "https://img.youtube.com/vi/MU6tnh_GUr8/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu640wrjyyi60-7",
+              "title": "🐹250531 [콩밥특별시 7일차] 릴라는 심심해",
+              "url": "https://www.youtube.com/watch?v=fGcw0V6tTeY&list=PLTw3BRYNwUGy3s-GYSX9k6WM6egBqsUMG",
+              "videoType": "full",
+              "date": "2025.06.10",
+              "duration": "6:03:20",
+              "description": "",
+              "displayOrder": 9,
+              "thumbnailUrl": "https://img.youtube.com/vi/fGcw0V6tTeY/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu640wrjpldo0-8",
+              "title": "🐹250601 [콩밥특별시 8일차] 진짜 개쩌는 귀힐링",
+              "url": "https://www.youtube.com/watch?v=RyTY_JhHayo&list=PLTw3BRYNwUGy3s-GYSX9k6WM6egBqsUMG",
+              "videoType": "full",
+              "date": "2025.06.10",
+              "duration": "3:58:30",
+              "description": "",
+              "displayOrder": 10,
+              "thumbnailUrl": "https://img.youtube.com/vi/RyTY_JhHayo/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu640wrjszrqt-9",
+              "title": "🐹250603 [콩밥특별시 10일차] 마릴라 그 자체로 웃겼던 날",
+              "url": "https://www.youtube.com/watch?v=eDp7DYYpyvg&list=PLTw3BRYNwUGy3s-GYSX9k6WM6egBqsUMG",
+              "videoType": "full",
+              "date": "2025.06.10",
+              "duration": "7:01:21",
+              "description": "",
+              "displayOrder": 11,
+              "thumbnailUrl": "https://img.youtube.com/vi/eDp7DYYpyvg/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu640wrj24aer-10",
+              "title": "🐹250604 [콩밥특별시 11일차] 울지마아아아아....",
+              "url": "https://www.youtube.com/watch?v=QReFcEmSweQ&list=PLTw3BRYNwUGy3s-GYSX9k6WM6egBqsUMG",
+              "videoType": "full",
+              "date": "2025.06.11",
+              "duration": "7:57:03",
+              "description": "",
+              "displayOrder": 12,
+              "thumbnailUrl": "https://img.youtube.com/vi/QReFcEmSweQ/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu640wrjpct0f-11",
+              "title": "🐹250605 [콩밥특별시 12일차] 릴라의 끝이 보인다....",
+              "url": "https://www.youtube.com/watch?v=7Uy5WfbLmAk&list=PLTw3BRYNwUGy3s-GYSX9k6WM6egBqsUMG",
+              "videoType": "full",
+              "date": "2025.06.11",
+              "duration": "2:58:33",
+              "description": "",
+              "displayOrder": 13,
+              "thumbnailUrl": "https://img.youtube.com/vi/7Uy5WfbLmAk/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu640wrjxkaxk-12",
+              "title": "🐹250606 [콩밥특별시 13일차] 아 개웃기넼ㅋㅋㅋㅋㅋㅋ",
+              "url": "https://www.youtube.com/watch?v=A2_VMkv-QK0&list=PLTw3BRYNwUGy3s-GYSX9k6WM6egBqsUMG",
+              "videoType": "full",
+              "date": "2025.06.11",
+              "duration": "6:17:42",
+              "description": "",
+              "displayOrder": 14,
+              "thumbnailUrl": "https://img.youtube.com/vi/A2_VMkv-QK0/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu640wrjip8x3-13",
+              "title": "🐹250607 [콩밥특별시 14일차] 갱 VS 경찰",
+              "url": "https://www.youtube.com/watch?v=35JDDdzO-i0&list=PLTw3BRYNwUGy3s-GYSX9k6WM6egBqsUMG",
+              "videoType": "full",
+              "date": "2025.06.12",
+              "duration": "9:10:29",
+              "description": "",
+              "displayOrder": 15,
+              "thumbnailUrl": "https://img.youtube.com/vi/35JDDdzO-i0/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu640wrjrmqfn-14",
+              "title": "🐹250608 [콩밥특별시 마지막날] 많이 부족했던 릴라 봐주셔서 고맙습니다!",
+              "url": "https://www.youtube.com/watch?v=7ML7spJIcOM&list=PLTw3BRYNwUGy3s-GYSX9k6WM6egBqsUMG",
+              "videoType": "full",
+              "date": "2025.06.12",
+              "duration": "9:25:12",
+              "description": "",
+              "displayOrder": 16,
+              "thumbnailUrl": "https://img.youtube.com/vi/7ML7spJIcOM/hqdefault.jpg"
+            }
+          ],
           "affiliations": [
             {
               "category": "ems",
@@ -10240,18 +10431,63 @@
           "subgroup": null
         },
         {
-          "id": "ems-8",
-          "name": "선화",
-          "streamer": "금휘",
+          "id": "ems-14",
+          "name": "나나시",
+          "streamer": "요아케노 나나시",
           "role": "간호사",
           "swatRole": "",
           "status": "active",
           "badgeColor": "bg-emerald-500",
-          "avatar": "assets/default-avatar.svg",
+          "avatar": "https://yt3.googleusercontent.com/Cqx_P4gAn4sqiBItej3uYsTZCqTgIT22iyO6lMyMJhkVo5GD-W3p3YBBwjehH_AFDlpdqjN0=s160-c-k-c0x00ffffff-no-rj",
           "displayOrder": 8,
-          "subscriberCount": "",
-          "youtubeUrl": "",
-          "videos": [],
+          "subscriberCount": "3,640명",
+          "youtubeUrl": "https://www.youtube.com/@요아케노_나나시",
+          "videos": [
+            {
+              "id": "v-mu647wmrybraf-0",
+              "title": "병원앞에 이상한 사람들이 이쒀... [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=uJGE2xj3knQ&list=PL3MLKXs02ByexolxP6LZJXzaHMJdwpXnZ",
+              "videoType": "clip",
+              "date": "2025.06.06",
+              "duration": "9:26",
+              "description": "",
+              "thumbnailUrl": "https://img.youtube.com/vi/uJGE2xj3knQ/hqdefault.jpg",
+              "displayOrder": 0
+            },
+            {
+              "id": "v-mu647wmrc0dj4-1",
+              "title": "아니 그게 아니라 사실은 [콩밥 특별시]",
+              "url": "https://www.youtube.com/watch?v=w2R68k-Eg18&list=PL3MLKXs02ByexolxP6LZJXzaHMJdwpXnZ",
+              "videoType": "clip",
+              "date": "2025.06.14",
+              "duration": "9:06",
+              "description": "",
+              "thumbnailUrl": "https://img.youtube.com/vi/w2R68k-Eg18/hqdefault.jpg",
+              "displayOrder": 1
+            },
+            {
+              "id": "v-mu647wmr93vh9-2",
+              "title": "제가 짝사랑 해도 될까요..? [콩밥 특별시]",
+              "url": "https://www.youtube.com/watch?v=1sAkige6BZk&list=PL3MLKXs02ByexolxP6LZJXzaHMJdwpXnZ",
+              "videoType": "clip",
+              "date": "2025.06.22",
+              "duration": "8:41",
+              "description": "",
+              "thumbnailUrl": "https://img.youtube.com/vi/1sAkige6BZk/hqdefault.jpg",
+              "displayOrder": 2
+            },
+            {
+              "id": "v-mu647wmrbidvb-3",
+              "title": "나나시 레전드 EMS 편 [콩밥 특별시]",
+              "url": "https://www.youtube.com/watch?v=dS2JgBLZH7U&list=PL3MLKXs02ByexolxP6LZJXzaHMJdwpXnZ",
+              "videoType": "clip",
+              "date": "2025.06.28",
+              "duration": "19:21",
+              "description": "",
+              "thumbnailUrl": "https://img.youtube.com/vi/dS2JgBLZH7U/hqdefault.jpg",
+              "displayOrder": 3
+            }
+          ],
           "affiliations": [
             {
               "category": "ems",
@@ -10267,18 +10503,239 @@
           "subgroup": null
         },
         {
-          "id": "ems-9",
-          "name": "냐몽순",
-          "streamer": "냐오",
+          "id": "ems-8",
+          "name": "선화",
+          "streamer": "금휘",
           "role": "간호사",
           "swatRole": "",
           "status": "active",
           "badgeColor": "bg-emerald-500",
-          "avatar": "assets/default-avatar.svg",
+          "avatar": "https://yt3.googleusercontent.com/yWO5hM5-9dCUUNfCxgiP3sVivbbXGlnfjR_ZUaQuAxgcGbE3z9VR6bHj9KvJAnNsYhNA4onU=s160-c-k-c0x00ffffff-no-rj",
           "displayOrder": 9,
-          "subscriberCount": "",
-          "youtubeUrl": "",
-          "videos": [],
+          "subscriberCount": "24.5만 명",
+          "youtubeUrl": "https://www.youtube.com/@금휘유튜브",
+          "videos": [
+            {
+              "id": "v-mu63ue1bnrnux-0",
+              "title": "[콩밥특별시 | 왕따편] 왕따끼리 친구가 되면 되잖아?",
+              "url": "https://www.youtube.com/watch?v=S3ATCcGvjZE&list=PLntJXSjaDpJ1OGIAe6-3Rrf3GpnMkxag_",
+              "videoType": "clip",
+              "date": "2025.07.05",
+              "duration": "18:19",
+              "description": "",
+              "displayOrder": 0,
+              "thumbnailUrl": "https://img.youtube.com/vi/S3ATCcGvjZE/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu63ue1br8wpn-1",
+              "title": "[콩밥특별시 | 트라우마팀편] 너무 순식간이었어요..",
+              "url": "https://www.youtube.com/watch?v=IUiBCBeolqY&list=PLntJXSjaDpJ1OGIAe6-3Rrf3GpnMkxag_",
+              "videoType": "clip",
+              "date": "2025.08.02",
+              "duration": "20:24",
+              "description": "",
+              "displayOrder": 1,
+              "thumbnailUrl": "https://img.youtube.com/vi/IUiBCBeolqY/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu63ue1b6zq4p-2",
+              "title": "[콩밥 특별시 | 손종수편]욕하고 봤더니 침착맨님이었다",
+              "url": "https://www.youtube.com/watch?v=gBfC1_Mt4mg&list=PLntJXSjaDpJ1OGIAe6-3Rrf3GpnMkxag_",
+              "videoType": "clip",
+              "date": "2025.08.09",
+              "duration": "14:55",
+              "description": "",
+              "displayOrder": 2,
+              "thumbnailUrl": "https://img.youtube.com/vi/gBfC1_Mt4mg/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu63ue1b8ohq8-3",
+              "title": "[콩밥특별시 | 럭스편]여긴 호빠 아니야..?",
+              "url": "https://www.youtube.com/watch?v=waq7Uct3VgI&list=PLntJXSjaDpJ1OGIAe6-3Rrf3GpnMkxag_",
+              "videoType": "clip",
+              "date": "2025.09.13",
+              "duration": "19:13",
+              "description": "",
+              "displayOrder": 3,
+              "thumbnailUrl": "https://img.youtube.com/vi/waq7Uct3VgI/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu63ue1bdp4hn-4",
+              "title": "[콩밥특별시 | 럭스편] 님들은 무슨 점이 더 좋음?",
+              "url": "https://www.youtube.com/watch?v=mA0qvLeeD_Q&list=PLntJXSjaDpJ1OGIAe6-3Rrf3GpnMkxag_",
+              "videoType": "clip",
+              "date": "2025.09.28",
+              "duration": "19:04",
+              "description": "",
+              "displayOrder": 4,
+              "thumbnailUrl": "https://img.youtube.com/vi/mA0qvLeeD_Q/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu63ward4ea5z-0",
+              "title": "내 이름 수선화... 분내를 내보려 했으나 ems의 다른 분내들에 기가 눌려 버린 병풍 간호사이다.",
+              "url": "https://chzzk.naver.com/video/7437065",
+              "videoType": "full",
+              "date": "2025.05.26",
+              "duration": "8:40:22",
+              "description": "",
+              "displayOrder": 5,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250526_171/1748200413449MsQf5_JPEG/Q2DSmyrgCl_03.jpg"
+            },
+            {
+              "id": "v-mu63wardb3bcn-1",
+              "title": "금ㅎ",
+              "url": "https://chzzk.naver.com/video/7452338",
+              "videoType": "full",
+              "date": "2025.05.27",
+              "duration": "12:33:52",
+              "description": "",
+              "displayOrder": 6,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250527_247/1748288079894QhOFY_JPEG/1SbNBQ2hHf_03.jpg"
+            },
+            {
+              "id": "v-mu63wardbeu2h-2",
+              "title": "ems수선화... 비번에는 뭘해야할까",
+              "url": "https://chzzk.naver.com/video/7455279",
+              "videoType": "full",
+              "date": "2025.05.27",
+              "duration": "15:33",
+              "description": "",
+              "displayOrder": 7,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250527_69/1748326914367dcvae_JPEG/d3XyS4itlx_03.jpg"
+            },
+            {
+              "id": "v-mu63wardpv8sy-3",
+              "title": "ems수선화... 비번에는 뭘해야할까",
+              "url": "https://chzzk.naver.com/video/7467512",
+              "videoType": "full",
+              "date": "2025.05.28",
+              "duration": "13:14:14",
+              "description": "",
+              "displayOrder": 8,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250528_107/1748375452823Y0Ptd_JPEG/gqHBiHVOTr_03.jpg"
+            },
+            {
+              "id": "v-mu63ward4m0hs-4",
+              "title": "ems수선화...2번째 간호복",
+              "url": "https://chzzk.naver.com/video/7482749",
+              "videoType": "full",
+              "date": "2025.05.29",
+              "duration": "12:54:14",
+              "description": "",
+              "displayOrder": 9,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250529_117/1748460123581OKjMi_JPEG/wKnPtGNeFg_03.jpg"
+            },
+            {
+              "id": "v-mu63ward6c4a4-5",
+              "title": "ems일가 흑장미일가 수선화는 삶이 너무 바쁘다...",
+              "url": "https://chzzk.naver.com/video/7498124",
+              "videoType": "full",
+              "date": "2025.05.30",
+              "duration": "11:58:06",
+              "description": "",
+              "displayOrder": 10,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250530_40/1748545389597RrX70_JPEG/z90xLMAQxp_03.jpg"
+            },
+            {
+              "id": "v-mu63wardtekfg-6",
+              "title": "ems 수선화 흑장미 수선화..",
+              "url": "https://chzzk.naver.com/video/7531732",
+              "videoType": "full",
+              "date": "2025.06.01",
+              "duration": "12:11:28",
+              "description": "",
+              "displayOrder": 11,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250601_155/1748719450067S12bw_JPEG/gNtkrdHumQ_03.jpg"
+            },
+            {
+              "id": "v-mu63ward3spdh-7",
+              "title": "수선화 진정한 백의의 천사로 살아가기로 결심해써요 EMS의 삶",
+              "url": "https://chzzk.naver.com/video/7548404",
+              "videoType": "full",
+              "date": "2025.06.02",
+              "duration": "13:19:01",
+              "description": "",
+              "displayOrder": 12,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250602_192/1748805028183Q4TvN_JPEG/mcU1SBUfNV_03.jpg"
+            },
+            {
+              "id": "v-mu63wardf7njf-8",
+              "title": "수선화 EMS 3번째 간호사복",
+              "url": "https://chzzk.naver.com/video/7563954",
+              "videoType": "full",
+              "date": "2025.06.03",
+              "duration": "11:07:11",
+              "description": "",
+              "displayOrder": 13,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250603_114/1748891754079KXKwn_JPEG/RCVSXOrFMx_03.jpg"
+            },
+            {
+              "id": "v-mu63wardxsmln-9",
+              "title": "ems 머리꽃밭 간호사 수선화",
+              "url": "https://chzzk.naver.com/video/7580980",
+              "videoType": "full",
+              "date": "2025.06.04",
+              "duration": "12:27:59",
+              "description": "",
+              "displayOrder": 14,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250604_259/1748979474031P0rmP_JPEG/ILxSKKzP8N_03.jpg"
+            },
+            {
+              "id": "v-mu63wardvb6rw-10",
+              "title": "ems 찌든 간호사 수선화",
+              "url": "https://chzzk.naver.com/video/7596091",
+              "videoType": "full",
+              "date": "2025.06.05",
+              "duration": "13:29:41",
+              "description": "",
+              "displayOrder": 15,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250605_150/1749065122978aDKgG_JPEG/ysQVN8CoAt_03.jpg"
+            },
+            {
+              "id": "v-mu63ward2zbbz-11",
+              "title": "ems 살이 4키로나 빠져 버린..간호사 수선화",
+              "url": "https://chzzk.naver.com/video/7611870",
+              "videoType": "full",
+              "date": "2025.06.06",
+              "duration": "12:38:06",
+              "description": "",
+              "displayOrder": 16,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250606_146/17491514046872LM1l_JPEG/qL0BpmvoCp_03.jpg"
+            },
+            {
+              "id": "v-mu63wardxsl39-12",
+              "title": "ems 최고의 다이어트는 콩밥특별시 간호사 수선화",
+              "url": "https://chzzk.naver.com/video/7629037",
+              "videoType": "full",
+              "date": "2025.06.07",
+              "duration": "12:20:19",
+              "description": "",
+              "displayOrder": 17,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250607_179/1749237317390LLo53_JPEG/m0KiAZMPHe_03.jpg"
+            },
+            {
+              "id": "v-mu63wardd9lcq-13",
+              "title": "ems 최고의 44kg 찍어버린 간호사 수선화 마지막날은 뇌빼고 힐링 하겟슴다",
+              "url": "https://chzzk.naver.com/video/7646837",
+              "videoType": "full",
+              "date": "2025.06.08",
+              "duration": "12:04:25",
+              "description": "",
+              "displayOrder": 18,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250608_160/1749326341308lclXA_JPEG/Ijlmx97TRc_03.jpg"
+            },
+            {
+              "id": "v-mu63wardzoy4s-14",
+              "title": "어쩌다보니 데이트 2개가 잡혀버린 ems 간호사 수선화 ",
+              "url": "https://chzzk.naver.com/video/7661619",
+              "videoType": "full",
+              "date": "2025.06.09",
+              "duration": "10:34:25",
+              "description": "",
+              "displayOrder": 19,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250609_36/1749403105690uJfMi_JPEG/hD1ToHq3ca_03.jpg"
+            }
+          ],
           "affiliations": [
             {
               "category": "ems",
@@ -10294,18 +10751,162 @@
           "subgroup": null
         },
         {
-          "id": "ems-10",
-          "name": "레이안느",
-          "streamer": "레아나",
+          "id": "ems-12",
+          "name": "먀복림",
+          "streamer": "먀뮤뮤",
           "role": "간호사",
           "swatRole": "",
           "status": "active",
           "badgeColor": "bg-emerald-500",
-          "avatar": "assets/default-avatar.svg",
+          "avatar": "https://yt3.googleusercontent.com/hB_Yc3-uReFZRkXWx7YwM9-Oj304jchzqjm84BkrjrfuNVjSUCBDwlIj1TOxC7kCx0gKX77c_g=s160-c-k-c0x00ffffff-no-rj",
           "displayOrder": 10,
-          "subscriberCount": "",
-          "youtubeUrl": "",
-          "videos": [],
+          "subscriberCount": "1.1만 명",
+          "youtubeUrl": "https://www.youtube.com/@먀뮤뮤miamumu",
+          "videos": [
+            {
+              "id": "v-mu64384ru7mua-0",
+              "title": "환자를 일으켜 세우는 부활 전문 간호사 먀복림 [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=qGkFvqKH9_U",
+              "videoType": "clip",
+              "date": "2025.07.08",
+              "duration": "15:32",
+              "thumbnailUrl": "https://i.ytimg.com/vi/qGkFvqKH9_U/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 0
+            },
+            {
+              "id": "v-mu644jc0k4qh1-0",
+              "title": "[25.05.25] 콩밥특별시 1일차 - 섹시 분내 EMS 먀복림 쌤",
+              "url": "https://www.youtube.com/watch?v=tPy37AL9hQI",
+              "videoType": "full",
+              "date": "2025.05.27",
+              "duration": "8:33:28",
+              "thumbnailUrl": "https://i.ytimg.com/vi/tPy37AL9hQI/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 1
+            },
+            {
+              "id": "v-mu644jc0ompla-1",
+              "title": "[25.05.26] 콩밥특별시 2일차 - 건설현장 먀복림 쌤",
+              "url": "https://www.youtube.com/watch?v=NtK3GX9-SGY&pp=0gcJCSQMAYcqIYzv",
+              "videoType": "full",
+              "date": "2025.05.27",
+              "duration": "6:52:51",
+              "thumbnailUrl": "https://i.ytimg.com/vi/NtK3GX9-SGY/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 2
+            },
+            {
+              "id": "v-mu644jc0ewff0-2",
+              "title": "[25.05.27] 콩밥특별시 3일차 - EMS 단체행동 먀복림 쌤",
+              "url": "https://www.youtube.com/watch?v=cVMWL6NkyDg",
+              "videoType": "full",
+              "date": "2025.05.28",
+              "duration": "5:35:27",
+              "thumbnailUrl": "https://i.ytimg.com/vi/cVMWL6NkyDg/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 3
+            },
+            {
+              "id": "v-mu644jc00utg0-3",
+              "title": "[25.05.28] 콩밥특별시 4일차 - EMS 퇴근하면 택배 알바 뛰는 먀복림 쌤",
+              "url": "https://www.youtube.com/watch?v=RXUDYvUavBM",
+              "videoType": "full",
+              "date": "2025.05.31",
+              "duration": "9:39:49",
+              "thumbnailUrl": "https://i.ytimg.com/vi/RXUDYvUavBM/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 4
+            },
+            {
+              "id": "v-mu644jc05x37n-4",
+              "title": "[25.05.29] 콩밥특별시 5일차 - EMS 대규모 피습 당한 날 먀복림 쌤",
+              "url": "https://www.youtube.com/watch?v=A268IN8YSv0",
+              "videoType": "full",
+              "date": "2025.05.31",
+              "duration": "7:18:37",
+              "thumbnailUrl": "https://i.ytimg.com/vi/A268IN8YSv0/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 5
+            },
+            {
+              "id": "v-mu644jc0z0fph-5",
+              "title": "[25.05.31] 콩밥특별시 6일차 - 자전거 구매한 EMS 먀복림 쌤",
+              "url": "https://www.youtube.com/watch?v=ougLRWcVPtA&pp=0gcJCSQMAYcqIYzv",
+              "videoType": "full",
+              "date": "2025.06.02",
+              "duration": "8:38:16",
+              "thumbnailUrl": "https://i.ytimg.com/vi/ougLRWcVPtA/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 6
+            },
+            {
+              "id": "v-mu644jc0u9p7z-6",
+              "title": "[25.06.01] 콩밥특별시 7일차 - 슈퍼카 구매한 EMS 먀복림 쌤",
+              "url": "https://www.youtube.com/watch?v=ThUBkh_nQJc",
+              "videoType": "full",
+              "date": "2025.06.02",
+              "duration": "9:18:03",
+              "thumbnailUrl": "https://i.ytimg.com/vi/ThUBkh_nQJc/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 7
+            },
+            {
+              "id": "v-mu644jc0rorea-7",
+              "title": "[25.06.02] 콩밥특별시 8일차 - 땀에 쩔은 EMS 먀복림 쌤의 일탈",
+              "url": "https://www.youtube.com/watch?v=nUrPLo-ufFA",
+              "videoType": "full",
+              "date": "2025.06.04",
+              "duration": "8:06:03",
+              "thumbnailUrl": "https://i.ytimg.com/vi/nUrPLo-ufFA/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 8
+            },
+            {
+              "id": "v-mu644jc0nputa-8",
+              "title": "[25.06.04] 콩밥특별시 9일차 - 레이싱 대회 꼴찌한 EMS 먀복림 쌤 / 노래방송",
+              "url": "https://www.youtube.com/watch?v=flUlzukMSBU",
+              "videoType": "full",
+              "date": "2025.06.06",
+              "duration": "9:39:39",
+              "thumbnailUrl": "https://i.ytimg.com/vi/flUlzukMSBU/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 9
+            },
+            {
+              "id": "v-mu644jc01kyr8-9",
+              "title": "[25.06.04] 닌텐도 스위치2 언박싱 / 마리오 카트 월드 / 콩밥특별시 10일차",
+              "url": "https://www.youtube.com/watch?v=Q1gY4WkACGE",
+              "videoType": "full",
+              "date": "2025.06.07",
+              "duration": "8:32:54",
+              "thumbnailUrl": "https://i.ytimg.com/vi/Q1gY4WkACGE/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 10
+            },
+            {
+              "id": "v-mu644jc0by48a-10",
+              "title": "[25.06.06] 러스티 레이크 - 큐브 이스케이프 컬렉션 (seasons, The Lake, Arles, Harvey's Box) / 콩밥특별시 11일차",
+              "url": "https://www.youtube.com/watch?v=CmHH-fGqkI8",
+              "videoType": "full",
+              "date": "2025.06.09",
+              "duration": "8:44:21",
+              "thumbnailUrl": "https://i.ytimg.com/vi/CmHH-fGqkI8/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 11
+            },
+            {
+              "id": "v-mu644jc0qetsd-11",
+              "title": "[25.06.08] 콩밥특별시 13일차 - 굿바이 콩밥, EMS 야유회 / 콩밥 콘서트 / 레드&상화 서사 보기",
+              "url": "https://www.youtube.com/watch?v=MGC4T6gftL0&t=1s",
+              "videoType": "full",
+              "date": "2025.06.10",
+              "duration": "9:53:55",
+              "thumbnailUrl": "https://i.ytimg.com/vi/MGC4T6gftL0/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 12
+            }
+          ],
           "affiliations": [
             {
               "category": "ems",
@@ -10321,18 +10922,85 @@
           "subgroup": null
         },
         {
-          "id": "ems-11",
-          "name": "마릴라",
-          "streamer": "마우쥐",
+          "id": "ems-16",
+          "name": "임소정",
+          "streamer": "정소림",
           "role": "간호사",
           "swatRole": "",
           "status": "active",
           "badgeColor": "bg-emerald-500",
-          "avatar": "assets/default-avatar.svg",
+          "avatar": "https://yt3.googleusercontent.com/mPAJaNE24Rs3urZQOmPIiIHK70P-6Es-hmE6593i2A8pvQKtXkAvJUudd3jv5tqqJ0WMZ1Q6=s160-c-k-c0x00ffffff-no-rj",
           "displayOrder": 11,
-          "subscriberCount": "",
-          "youtubeUrl": "",
-          "videos": [],
+          "subscriberCount": "12만 명",
+          "youtubeUrl": "https://www.youtube.com/@sorimcaster8477",
+          "videos": [
+            {
+              "id": "v-mu64agwkzmw3x-0",
+              "title": "최고참 캐스터가 막내가 됐더니 벌어진일!! (콩밥특별시)",
+              "url": "https://www.youtube.com/watch?v=fikZvfbZF-I",
+              "videoType": "clip",
+              "date": "2025.05.31",
+              "duration": "11:53",
+              "thumbnailUrl": "https://i.ytimg.com/vi/fikZvfbZF-I/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 0
+            },
+            {
+              "id": "v-mu64agwkxszye-1",
+              "title": "상사 욕하다가 들켰을때... (콩밥특별시)",
+              "url": "https://www.youtube.com/watch?v=icVM1zkVDqs",
+              "videoType": "clip",
+              "date": "2025.06.03",
+              "duration": "10:03",
+              "thumbnailUrl": "https://i.ytimg.com/vi/icVM1zkVDqs/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 1
+            },
+            {
+              "id": "v-mu64agwklke62-2",
+              "title": "스트리머들 사이에서 왕따 당한 게임캐스터 (콩밥)",
+              "url": "https://www.youtube.com/watch?v=-cqWWbWYuTI",
+              "videoType": "clip",
+              "date": "2025.06.09",
+              "duration": "9:23",
+              "thumbnailUrl": "https://i.ytimg.com/vi/-cqWWbWYuTI/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 2
+            },
+            {
+              "id": "v-mu64agwk0z8fe-3",
+              "title": "간호사 신입한테 중계를 시키면 생기는 일!",
+              "url": "https://www.youtube.com/watch?v=a2Hi82VukKI",
+              "videoType": "clip",
+              "date": "2025.06.13",
+              "duration": "10:04",
+              "thumbnailUrl": "https://i.ytimg.com/vi/a2Hi82VukKI/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 3
+            },
+            {
+              "id": "v-mu64agwkfdiy2-4",
+              "title": "로맨틱에서 스릴러로 변한 임소정과 김폭설의 사랑",
+              "url": "https://www.youtube.com/watch?v=fSeN-E0V1TI",
+              "videoType": "clip",
+              "date": "2025.06.19",
+              "duration": "33:36",
+              "thumbnailUrl": "https://i.ytimg.com/vi/fSeN-E0V1TI/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 4
+            },
+            {
+              "id": "v-mu64agwkyv16x-5",
+              "title": "한동숙한테 욕먹고 플레임 재롱보기?? (콩밥)",
+              "url": "https://www.youtube.com/watch?v=2rJeE6ji7EE",
+              "videoType": "clip",
+              "date": "2025.06.23",
+              "duration": "18:55",
+              "thumbnailUrl": "https://i.ytimg.com/vi/2rJeE6ji7EE/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 5
+            }
+          ],
           "affiliations": [
             {
               "category": "ems",
@@ -10348,18 +11016,206 @@
           "subgroup": null
         },
         {
-          "id": "ems-12",
-          "name": "먀복림",
-          "streamer": "먀뮤뮤",
+          "id": "ems-17",
+          "name": "해마망",
+          "streamer": "해블린",
           "role": "간호사",
           "swatRole": "",
           "status": "active",
           "badgeColor": "bg-emerald-500",
-          "avatar": "assets/default-avatar.svg",
+          "avatar": "https://yt3.googleusercontent.com/dyTFAbRTo1SO3AbxN5geo5y7myZ2yobyLxJ1iYlk4CKqFqbnAJD19m6WBsyugKzCjL5x3Oci8g=s160-c-k-c0x00ffffff-no-rj",
           "displayOrder": 12,
-          "subscriberCount": "",
-          "youtubeUrl": "",
-          "videos": [],
+          "subscriberCount": "7,510명",
+          "youtubeUrl": "https://www.youtube.com/@haevelyn",
+          "videos": [
+            {
+              "id": "v-mu64dt8rtr1tw-0",
+              "title": "베타 후열 고고해보자구 ",
+              "url": "https://chzzk.naver.com/video/7414841",
+              "videoType": "full",
+              "date": "2025.05.24",
+              "duration": "7:12:37",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250524_43/1748097013884ItQvA_JPEG/rUB3PzBJL1_03.jpg",
+              "description": "",
+              "displayOrder": 0
+            },
+            {
+              "id": "v-mu64dt8rwrlpv-1",
+              "title": "콩밥시 분내 간호사 [해마망] 출근할게요 ",
+              "url": "https://chzzk.naver.com/video/7424019",
+              "videoType": "full",
+              "date": "2025.05.25",
+              "duration": "1:08",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250525_177/1748149304908agxWJ_JPEG/g03mI9hj6M_03.jpg",
+              "description": "",
+              "displayOrder": 1
+            },
+            {
+              "id": "v-mu64dt8res9m9-2",
+              "title": "콩밥리 간호사 [해마망] 출근완료 ",
+              "url": "https://chzzk.naver.com/video/7433848",
+              "videoType": "full",
+              "date": "2025.05.26",
+              "duration": "10:34:39",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250526_161/1748188114408yC5cq_JPEG/wlW2mrh3mw_03.jpg",
+              "description": "",
+              "displayOrder": 2
+            },
+            {
+              "id": "v-mu64dt8rbs1i1-3",
+              "title": ".굿모닝 잘잤어? ",
+              "url": "https://chzzk.naver.com/video/7438743",
+              "videoType": "full",
+              "date": "2025.05.26",
+              "duration": "3:30:00",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250526_170/1748223827358WeozY_JPEG/ugTZx0aCMG_03.jpg",
+              "description": "",
+              "displayOrder": 3
+            },
+            {
+              "id": "v-mu64dt8rl5s5f-4",
+              "title": "간호사 [해마망] 아들딸 만나러 출근 ",
+              "url": "https://chzzk.naver.com/video/7443356",
+              "videoType": "full",
+              "date": "2025.05.26",
+              "duration": "6:45:06",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250526_134/1748260143773A8MFa_JPEG/xFydDshgQN_03.jpg",
+              "description": "",
+              "displayOrder": 4
+            },
+            {
+              "id": "v-mu64dt8rdgag8-5",
+              "title": "[해마망]  콩밥시 출근중 ",
+              "url": "https://chzzk.naver.com/video/7478042",
+              "videoType": "full",
+              "date": "2025.05.29",
+              "duration": "9:00:46",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250529_26/1748446775982l9RnL_JPEG/sQlW2yQZzk_03.jpg",
+              "description": "",
+              "displayOrder": 5
+            },
+            {
+              "id": "v-mu64dt8rx8zb7-6",
+              "title": "[해마망]  2시까지만 일해도 괜찮을까요?",
+              "url": "https://chzzk.naver.com/video/7481299",
+              "videoType": "full",
+              "date": "2025.05.29",
+              "duration": "1:31:40",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250529_101/1748452733924PFeE1_JPEG/p3MIXqtUAT_03.jpg",
+              "description": "",
+              "displayOrder": 6
+            },
+            {
+              "id": "v-mu64dt8rolxi0-7",
+              "title": "[해마망] 아들 딸 보러 출근 ",
+              "url": "https://chzzk.naver.com/video/7529981",
+              "videoType": "full",
+              "date": "2025.06.01",
+              "duration": "9:27:11",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250601_248/1748712858507zJ8k2_JPEG/ASgRtV3g59_03.jpg",
+              "description": "",
+              "displayOrder": 7
+            },
+            {
+              "id": "v-mu64dt8rilr1t-8",
+              "title": "[해마망] 동요가 이렇게 즐거운거였나? ",
+              "url": "https://chzzk.naver.com/video/7548130",
+              "videoType": "full",
+              "date": "2025.06.02",
+              "duration": "10:36:34",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250602_32/1748803225927QEC0I_JPEG/qBgI7vfpcX_03.jpg",
+              "description": "",
+              "displayOrder": 8
+            },
+            {
+              "id": "v-mu64dt8ro8t0d-9",
+              "title": "잔잔 노래뱅 ",
+              "url": "https://chzzk.naver.com/video/7555269",
+              "videoType": "full",
+              "date": "2025.06.02",
+              "duration": "8:00:07",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250602_28/1748866154149ueO6h_JPEG/q5Adf1qiCt_03.jpg",
+              "description": "",
+              "displayOrder": 9
+            },
+            {
+              "id": "v-mu64dt8r2pb54-10",
+              "title": "[해마망] 회의가 내일이라네 0_<",
+              "url": "https://chzzk.naver.com/video/7558541",
+              "videoType": "full",
+              "date": "2025.06.02",
+              "duration": "2:31:37",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250602_209/17488756475476ElPQ_JPEG/kPmDv7T7mp_03.jpg",
+              "description": "",
+              "displayOrder": 10
+            },
+            {
+              "id": "v-mu64dt8r3vhy8-11",
+              "title": "[해마망] 아들 딸 보러 오늘도 출근해",
+              "url": "https://chzzk.naver.com/video/7577951",
+              "videoType": "full",
+              "date": "2025.06.04",
+              "duration": "7:15:58",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250604_60/1748966967203XIFtk_JPEG/ufqYNCFXDX_03.jpg",
+              "description": "",
+              "displayOrder": 11
+            },
+            {
+              "id": "v-mu64dt8rbro11-12",
+              "title": "[해마망] 아들 딸 보러 출근했어",
+              "url": "https://chzzk.naver.com/video/7593733",
+              "videoType": "full",
+              "date": "2025.06.05",
+              "duration": "9:34:39",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250605_293/1749055375701xOq4p_JPEG/05N8WK78SV_03.jpg",
+              "description": "",
+              "displayOrder": 12
+            },
+            {
+              "id": "v-mu64dt8rbcblw-13",
+              "title": "[해마망] 은행 체험 두근두근",
+              "url": "https://chzzk.naver.com/video/7604198",
+              "videoType": "full",
+              "date": "2025.06.05",
+              "duration": "8:16:50",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250605_166/1749130203932QMkNu_JPEG/6xtw6BjoBr_03.jpg",
+              "description": "",
+              "displayOrder": 13
+            },
+            {
+              "id": "v-mu64dt8r8d8s6-14",
+              "title": "ems 출근하러온 마망 ",
+              "url": "https://chzzk.naver.com/video/7629183",
+              "videoType": "full",
+              "date": "2025.06.07",
+              "duration": "10:39:47",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250607_173/1749237664788Vws4F_JPEG/zc1lEfd2EO_03.jpg",
+              "description": "",
+              "displayOrder": 14
+            },
+            {
+              "id": "v-mu64dt8r6s9wd-15",
+              "title": "쉽운게 하나 없구만 그치만 마무리만 좋음 됐지 ",
+              "url": "https://chzzk.naver.com/video/7646910",
+              "videoType": "full",
+              "date": "2025.06.08",
+              "duration": "11:53:45",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250608_50/1749326862342SRHzs_JPEG/IVTHZIqpio_03.jpg",
+              "description": "",
+              "displayOrder": 15
+            },
+            {
+              "id": "v-mu64dt8rn5a80-16",
+              "title": "나 청혼받았어 ",
+              "url": "https://chzzk.naver.com/video/7659818",
+              "videoType": "full",
+              "date": "2025.06.09",
+              "duration": "7:57:55",
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250609_164/17493981613195aYyb_JPEG/vgsk9sjFEc_03.jpg",
+              "description": "",
+              "displayOrder": 16
+            }
+          ],
           "affiliations": [
             {
               "category": "ems",
@@ -10382,11 +11238,133 @@
           "swatRole": "",
           "status": "active",
           "badgeColor": "bg-emerald-500",
-          "avatar": "assets/default-avatar.svg",
+          "avatar": "https://yt3.googleusercontent.com/3xlfpz96U_CVamTKQ1VgrFvgCIhUX_uYrVdYGAYJQHU5-AOK_tG5r1vJ0ScqrQtFEYztehYT2yA=s160-c-k-c0x00ffffff-no-rj",
           "displayOrder": 13,
-          "subscriberCount": "",
-          "youtubeUrl": "",
-          "videos": [],
+          "subscriberCount": "4.1만 명",
+          "youtubeUrl": "https://www.youtube.com/@AyaUke_Projecti",
+          "videos": [
+            {
+              "id": "v-mu645pkw5iuf",
+              "title": "실시간 12만명이 본 모한우 라이브 축가 [콩밥특별시] 경서 - 첫 키스에 내 심장은 120BPM",
+              "url": "https://www.youtube.com/watch?v=QR0N1H6kWyY",
+              "videoType": "clip",
+              "date": "2025.06.08",
+              "duration": "3:42",
+              "description": "",
+              "displayOrder": 0,
+              "thumbnailUrl": "https://img.youtube.com/vi/QR0N1H6kWyY/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu646wypparc8-0",
+              "title": "[25.05.25] 칼바람&협곡 내전 + 분내 간호사 1일차  [콩밥특별시 모한우]",
+              "url": "https://www.youtube.com/watch?v=oaqU1_fe13w",
+              "videoType": "full",
+              "date": "2025.05.28",
+              "duration": "10:02:34",
+              "thumbnailUrl": "https://i.ytimg.com/vi/oaqU1_fe13w/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 1
+            },
+            {
+              "id": "v-mu646wypnemov-1",
+              "title": "[25.05.26] 분내인지 폐급인지 간호사 2일차입니땅 [콩밥특별시 모한우]",
+              "url": "https://www.youtube.com/watch?v=UrD2jXv75K8",
+              "videoType": "full",
+              "date": "2025.05.29",
+              "duration": "4:54:53",
+              "thumbnailUrl": "https://i.ytimg.com/vi/UrD2jXv75K8/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 2
+            },
+            {
+              "id": "v-mu646wyp8m7vt-2",
+              "title": "[25.05.27] 분내인지 폐급인지 간호사 3일차입니땅 [콩밥특별시 모한우]",
+              "url": "https://www.youtube.com/watch?v=OFulxwvWdi4",
+              "videoType": "full",
+              "date": "2025.05.28",
+              "duration": "9:24:53",
+              "thumbnailUrl": "https://i.ytimg.com/vi/OFulxwvWdi4/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 3
+            },
+            {
+              "id": "v-mu646wypo3g9a-3",
+              "title": "[25.05.28] T1 vs HLE LCK 중계 + 분내인지 폐급인지 간호사 4일차입니땅 [콩밥특별시 모한우]",
+              "url": "https://www.youtube.com/watch?v=2hLBca58F3U",
+              "videoType": "full",
+              "date": "2025.05.30",
+              "duration": "8:42:15",
+              "thumbnailUrl": "https://i.ytimg.com/vi/2hLBca58F3U/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 4
+            },
+            {
+              "id": "v-mu646wyp74z9e-4",
+              "title": "[25.05.29] 분내인지 폐급인지 간호사 5일차입니땅 [콩밥특별시 모한우]",
+              "url": "https://www.youtube.com/watch?v=G04Xn4bfm_0",
+              "videoType": "full",
+              "date": "2025.06.02",
+              "duration": "5:29:18",
+              "thumbnailUrl": "https://i.ytimg.com/vi/G04Xn4bfm_0/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 5
+            },
+            {
+              "id": "v-mu646wyp1svry-5",
+              "title": "[25.06.02]  분내인지 폐급인지 간호사 6일차입니땅  콩밥특별시 모한우]",
+              "url": "https://www.youtube.com/watch?v=bRKpEQWiaVU&pp=0gcJCSQMAYcqIYzv",
+              "videoType": "full",
+              "date": "2025.06.04",
+              "duration": "4:41:44",
+              "thumbnailUrl": "https://i.ytimg.com/vi/bRKpEQWiaVU/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 6
+            },
+            {
+              "id": "v-mu646wyp749wn-6",
+              "title": "[25.06.05] 올리브영 직원인지 폐급인지 간호사 8일차입니땅 [콩밥특별시 모한우]",
+              "url": "https://www.youtube.com/watch?v=eGXj8-YB2TA",
+              "videoType": "full",
+              "date": "2025.06.09",
+              "duration": "5:49:51",
+              "thumbnailUrl": "https://i.ytimg.com/vi/eGXj8-YB2TA/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 7
+            },
+            {
+              "id": "v-mu646wypowb56-7",
+              "title": "[25.06.06] 내 여자친구'였던' 레드 중위 간호사 결혼식 축가부르기 [콩밥특별시 모한우]",
+              "url": "https://www.youtube.com/watch?v=vFQMKnv2h9E",
+              "videoType": "full",
+              "date": "2025.06.09",
+              "duration": "9:01:33",
+              "thumbnailUrl": "https://i.ytimg.com/vi/vFQMKnv2h9E/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 8
+            },
+            {
+              "id": "v-mu646wypnh4i9-8",
+              "title": "[25.06.08] 콩밥특별시 야유회 전 NEW 2집 3D로 저챗 !",
+              "url": "https://www.youtube.com/watch?v=qjXsuf0PzWs",
+              "videoType": "full",
+              "date": "2025.06.09",
+              "duration": "38:41",
+              "thumbnailUrl": "https://i.ytimg.com/vi/qjXsuf0PzWs/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 9
+            },
+            {
+              "id": "v-mu646wyp0wbnd-9",
+              "title": "[25.06.08] 콩밥특별시 EMS 재롱둥이 모한우 간호사였습니다. 안녕!",
+              "url": "https://www.youtube.com/watch?v=Y87E5IV9G6s",
+              "videoType": "full",
+              "date": "2025.06.09",
+              "duration": "6:15:15",
+              "thumbnailUrl": "https://i.ytimg.com/vi/Y87E5IV9G6s/mqdefault.jpg",
+              "description": "",
+              "displayOrder": 10
+            }
+          ],
           "affiliations": [
             {
               "category": "ems",
@@ -10402,124 +11380,16 @@
           "subgroup": null
         },
         {
-          "id": "ems-14",
-          "name": "나나시",
-          "streamer": "요아케노 나나시",
-          "role": "간호사",
-          "swatRole": "",
-          "status": "active",
-          "badgeColor": "bg-emerald-500",
-          "avatar": "assets/default-avatar.svg",
-          "displayOrder": 14,
-          "subscriberCount": "",
-          "youtubeUrl": "",
-          "videos": [],
-          "affiliations": [
-            {
-              "category": "ems",
-              "subgroup": null,
-              "role": "간호사",
-              "swatRole": "",
-              "status": "active",
-              "badgeColor": "bg-emerald-500",
-              "displayOrder": 14
-            }
-          ],
-          "category": "ems",
-          "subgroup": null
-        },
-        {
-          "id": "ems-15",
-          "name": "유도리",
-          "streamer": "유토링",
-          "role": "간호사",
-          "swatRole": "",
-          "status": "active",
-          "badgeColor": "bg-emerald-500",
-          "avatar": "assets/default-avatar.svg",
-          "displayOrder": 15,
-          "subscriberCount": "",
-          "youtubeUrl": "",
-          "videos": [],
-          "affiliations": [
-            {
-              "category": "ems",
-              "subgroup": null,
-              "role": "간호사",
-              "swatRole": "",
-              "status": "active",
-              "badgeColor": "bg-emerald-500",
-              "displayOrder": 15
-            }
-          ],
-          "category": "ems",
-          "subgroup": null
-        },
-        {
-          "id": "ems-16",
-          "name": "임소정",
-          "streamer": "정소림",
-          "role": "간호사",
-          "swatRole": "",
-          "status": "active",
-          "badgeColor": "bg-emerald-500",
-          "avatar": "assets/default-avatar.svg",
-          "displayOrder": 16,
-          "subscriberCount": "",
-          "youtubeUrl": "",
-          "videos": [],
-          "affiliations": [
-            {
-              "category": "ems",
-              "subgroup": null,
-              "role": "간호사",
-              "swatRole": "",
-              "status": "active",
-              "badgeColor": "bg-emerald-500",
-              "displayOrder": 16
-            }
-          ],
-          "category": "ems",
-          "subgroup": null
-        },
-        {
-          "id": "ems-17",
-          "name": "해마망",
-          "streamer": "해블린",
-          "role": "간호사",
-          "swatRole": "",
-          "status": "active",
-          "badgeColor": "bg-emerald-500",
-          "avatar": "assets/default-avatar.svg",
-          "displayOrder": 17,
-          "subscriberCount": "",
-          "youtubeUrl": "",
-          "videos": [],
-          "affiliations": [
-            {
-              "category": "ems",
-              "subgroup": null,
-              "role": "간호사",
-              "swatRole": "",
-              "status": "active",
-              "badgeColor": "bg-emerald-500",
-              "displayOrder": 17
-            }
-          ],
-          "category": "ems",
-          "subgroup": null
-        },
-        {
           "id": "gang-oompa-9",
           "name": "김노션",
           "streamer": "로션욤",
-          "role": "",
+          "role": "간호사",
           "swatRole": "",
           "status": "active",
-          "badgeColor": "bg-zinc-700",
+          "badgeColor": "bg-emerald-500",
           "avatar": "https://yt3.googleusercontent.com/qOnI5Sqr5MHqsJ7jZNSjSDc8fdkDYc8HOJGn1PejIYJrsC9uZvgswN1fjoek1HTy5gAE5K4kIlw=s120-c-k-c0x00ffffff-no-rj",
-          "displayOrder": 6,
-          "subscriberCount": "1.8만 명",
+          "displayOrder": 14,
+          "subscriberCount": "1.9만 명",
           "youtubeUrl": "https://www.youtube.com/@Lotion_",
           "videos": [
             {
@@ -10657,11 +11527,119 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-emerald-500",
+              "displayOrder": 14
+            }
+          ],
+          "category": "ems",
+          "subgroup": null
+        },
+        {
+          "id": "ems-9",
+          "name": "냐몽순",
+          "streamer": "냐오",
+          "role": "간호사",
+          "swatRole": "",
+          "status": "active",
+          "badgeColor": "bg-emerald-500",
+          "avatar": "https://yt3.googleusercontent.com/9tm2OfwNCy_sBzb6XjwL3k31JUM6_KxbAi8kMxadVte-WLgwY1Arbzc2iJaEEfMi0Rsu1PHqEg=s160-c-k-c0x00ffffff-no-rj",
+          "displayOrder": 15,
+          "subscriberCount": "3,820명",
+          "youtubeUrl": "https://www.youtube.com/@catfoot39",
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "ems",
+              "subgroup": null,
+              "role": "간호사",
+              "swatRole": "",
+              "status": "active",
+              "badgeColor": "bg-emerald-500",
+              "displayOrder": 15
+            }
+          ],
+          "category": "ems",
+          "subgroup": null
+        },
+        {
+          "id": "ems-7",
+          "name": "옥수수",
+          "streamer": "옥쓔",
+          "role": "간호사",
+          "swatRole": "",
+          "status": "active",
+          "badgeColor": "bg-emerald-500",
+          "avatar": "https://yt3.googleusercontent.com/ytc/AIdro_lJsoBxKUZlkBAvKUOm8Q5tQF7iZGoXZza-yyBgBBK79g=s160-c-k-c0x00ffffff-no-rj",
+          "displayOrder": 16,
+          "subscriberCount": "1.6만 명",
+          "youtubeUrl": "https://www.youtube.com/@corncorn02",
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "ems",
+              "subgroup": null,
+              "role": "간호사",
+              "swatRole": "",
+              "status": "active",
+              "badgeColor": "bg-emerald-500",
+              "displayOrder": 16
+            }
+          ],
+          "category": "ems",
+          "subgroup": null
+        },
+        {
+          "id": "ems-10",
+          "name": "레이안느",
+          "streamer": "레아나",
+          "role": "간호사",
+          "swatRole": "",
+          "status": "active",
+          "badgeColor": "bg-emerald-500",
+          "avatar": "https://yt3.googleusercontent.com/VcvC9c_A1CjVZcN9GU6S5UO3Gy_YOKRgFGww33i3cunkwOagKc3KgyrqrVLXi32kY5_nSdoQ=s160-c-k-c0x00ffffff-no-rj",
+          "displayOrder": 17,
+          "subscriberCount": "3.5만 명",
+          "youtubeUrl": "https://www.youtube.com/@Reana_",
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "ems",
+              "subgroup": null,
+              "role": "간호사",
+              "swatRole": "",
+              "status": "active",
+              "badgeColor": "bg-emerald-500",
+              "displayOrder": 17
+            }
+          ],
+          "category": "ems",
+          "subgroup": null
+        },
+        {
+          "id": "ems-15",
+          "name": "유도리",
+          "streamer": "유토링",
+          "role": "간호사",
+          "swatRole": "",
+          "status": "active",
+          "badgeColor": "bg-emerald-500",
+          "avatar": "https://yt3.googleusercontent.com/raCSHxbiYX-niVXXOa1oOC-yICJ-SMDaMJBUbYLmp8uIVDBV2s1YpruG2Kc5o2O3ix750fdr7ts=s160-c-k-c0x00ffffff-no-rj",
+          "displayOrder": 18,
+          "subscriberCount": "1,120명",
+          "youtubeUrl": "https://www.youtube.com/@yutoring__",
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "ems",
+              "subgroup": null,
+              "role": "간호사",
+              "swatRole": "",
+              "status": "active",
+              "badgeColor": "bg-emerald-500",
               "displayOrder": 18
             }
           ],
-          "category": "gang",
-          "subgroup": "gang-oompa"
+          "category": "ems",
+          "subgroup": null
         },
         {
           "id": "ems-18",
@@ -10671,10 +11649,10 @@
           "swatRole": "",
           "status": "active",
           "badgeColor": "bg-emerald-500",
-          "avatar": "assets/default-avatar.svg",
+          "avatar": "https://yt3.googleusercontent.com/Xnjm79LtdBImICJj8oYxWs46B0yfFhxX-lgMwoAaE0z-nQB8YBvWfci9t2BtwK3rODfiG_BneA=s160-c-k-c0x00ffffff-no-rj",
           "displayOrder": 19,
-          "subscriberCount": "",
-          "youtubeUrl": "",
+          "subscriberCount": "9,780명",
+          "youtubeUrl": "https://www.youtube.com/@양메이",
           "videos": [],
           "affiliations": [
             {
@@ -10698,10 +11676,10 @@
           "swatRole": "",
           "status": "active",
           "badgeColor": "bg-emerald-500",
-          "avatar": "assets/default-avatar.svg",
+          "avatar": "https://yt3.googleusercontent.com/LTFvqt-se0v3cm-_rK08An3QqeB8218iQX1wB1ubPCG8EYfrR7XcHf-AUmSkFEC2VM8EuX0If14=s160-c-k-c0x00ffffff-no-rj",
           "displayOrder": 20,
-          "subscriberCount": "",
-          "youtubeUrl": "",
+          "subscriberCount": "9,250명",
+          "youtubeUrl": "https://www.youtube.com/@HaruNuna",
           "videos": [],
           "affiliations": [
             {
@@ -10718,17 +11696,17 @@
           "subgroup": null
         },
         {
-          "id": "ems-20",
-          "name": "오리눈나",
-          "streamer": "토종 아오리",
+          "id": "ems-21",
+          "name": "개덤",
+          "streamer": "심해덤",
           "role": "간호사",
           "swatRole": "",
           "status": "retired",
           "badgeColor": "bg-emerald-500",
-          "avatar": "assets/default-avatar.svg",
+          "avatar": "https://yt3.googleusercontent.com/TgS_KFJyXi9XCJIQd2TODJajD3LA2QLjK8-o8DM-atFam0tDoK4M4khfbF3LF9-nLurlPhYkXw=s160-c-k-c0x00ffffff-no-rj",
           "displayOrder": 21,
-          "subscriberCount": "",
-          "youtubeUrl": "",
+          "subscriberCount": "4,160명",
+          "youtubeUrl": "https://www.youtube.com/@심해덤",
           "videos": [],
           "affiliations": [
             {
@@ -10745,18 +11723,129 @@
           "subgroup": null
         },
         {
-          "id": "ems-21",
-          "name": "개덤",
-          "streamer": "심해덤",
+          "id": "ems-20",
+          "name": "오리눈나",
+          "streamer": "토종 아오리",
           "role": "간호사",
           "swatRole": "",
           "status": "retired",
           "badgeColor": "bg-emerald-500",
-          "avatar": "assets/default-avatar.svg",
+          "avatar": "https://yt3.googleusercontent.com/d4_c4a-XW8TKWYzH-N-LFsSUlP5UbUO4SGhQsBe3wUND_vQfORs4FB5ig53Vyyj-mrIwSzS-ow=s160-c-k-c0x00ffffff-no-rj",
           "displayOrder": 22,
-          "subscriberCount": "",
-          "youtubeUrl": "",
-          "videos": [],
+          "subscriberCount": "1.2만 명",
+          "youtubeUrl": "https://www.youtube.com/@aori2313",
+          "videos": [
+            {
+              "id": "v-mu64gktmr3uzs-0",
+              "title": "[콩밥특별시] ep.01 |  EMS는 사람 살리는 곳이 아니었나요?!",
+              "url": "https://www.youtube.com/watch?v=uIskPZuu9BE&list=PLGdjrCbf5GEncVKYEMgs2Po1hqvgyKgmm",
+              "videoType": "clip",
+              "date": "2025.06.07",
+              "duration": "13:45",
+              "description": "",
+              "thumbnailUrl": "https://img.youtube.com/vi/uIskPZuu9BE/hqdefault.jpg",
+              "displayOrder": 0
+            },
+            {
+              "id": "v-mu64gktm89g43-1",
+              "title": "[콩밥특별시] ep.02 |  EMS 퇴사 후 갱스터가 된 오리눈나",
+              "url": "https://www.youtube.com/watch?v=roJ8C1YAHKQ&list=PLGdjrCbf5GEncVKYEMgs2Po1hqvgyKgmm",
+              "videoType": "clip",
+              "date": "2025.06.12",
+              "duration": "14:47",
+              "description": "",
+              "thumbnailUrl": "https://img.youtube.com/vi/roJ8C1YAHKQ/hqdefault.jpg",
+              "displayOrder": 1
+            },
+            {
+              "id": "v-mu64gktm82xk0-2",
+              "title": "[콩밥특별시] ep.03 |  KOI 레스토랑 취업 성공! 매립형 쥬크박스 오리눈나",
+              "url": "https://www.youtube.com/watch?v=P1i_7P3MwPg&list=PLGdjrCbf5GEncVKYEMgs2Po1hqvgyKgmm",
+              "videoType": "clip",
+              "date": "2025.06.14",
+              "duration": "14:38",
+              "description": "",
+              "thumbnailUrl": "https://img.youtube.com/vi/P1i_7P3MwPg/hqdefault.jpg",
+              "displayOrder": 2
+            },
+            {
+              "id": "v-mu64gktmu8jol-3",
+              "title": "[콩밥특별시] ep.04 |  윤성 선생님.. 여기서 이러시면 안됩니다..!! (LUX에서 피아노치는 오리눈나)",
+              "url": "https://www.youtube.com/watch?v=NxdkbEZF6V8&list=PLGdjrCbf5GEncVKYEMgs2Po1hqvgyKgmm",
+              "videoType": "clip",
+              "date": "2025.06.18",
+              "duration": "13:15",
+              "description": "",
+              "thumbnailUrl": "https://img.youtube.com/vi/NxdkbEZF6V8/hqdefault.jpg",
+              "displayOrder": 3
+            },
+            {
+              "id": "v-mu64gktmgac32-4",
+              "title": "[콩밥특별시] ep.05 |  KOI 레스토랑 일일 메이드 오리눈나",
+              "url": "https://www.youtube.com/watch?v=lkwD3MWr22s&list=PLGdjrCbf5GEncVKYEMgs2Po1hqvgyKgmm",
+              "videoType": "clip",
+              "date": "2025.06.23",
+              "duration": "14:40",
+              "description": "",
+              "thumbnailUrl": "https://img.youtube.com/vi/lkwD3MWr22s/hqdefault.jpg",
+              "displayOrder": 4
+            },
+            {
+              "id": "v-mu64gktmdzct8-5",
+              "title": "[콩밥특별시] ep.06 | 우연히 들어간 갱이 알고 보니 안이끼 사쵸를 위한 곳이었다",
+              "url": "https://www.youtube.com/watch?v=-bEfShnFago&list=PLGdjrCbf5GEncVKYEMgs2Po1hqvgyKgmm",
+              "videoType": "clip",
+              "date": "2025.06.29",
+              "duration": "12:13",
+              "description": "",
+              "thumbnailUrl": "https://img.youtube.com/vi/-bEfShnFago/hqdefault.jpg",
+              "displayOrder": 5
+            },
+            {
+              "id": "v-mu64gktmyvft9-6",
+              "title": "[콩밥특별시] ep.07 | 은행 털다 교도소에 간 오리눈나ㅣ난 이제 나쁜 사람이야",
+              "url": "https://www.youtube.com/watch?v=o-to_SJj3fU&list=PLGdjrCbf5GEncVKYEMgs2Po1hqvgyKgmm",
+              "videoType": "clip",
+              "date": "2025.07.01",
+              "duration": "12:33",
+              "description": "",
+              "thumbnailUrl": "https://img.youtube.com/vi/o-to_SJj3fU/hqdefault.jpg",
+              "displayOrder": 6
+            },
+            {
+              "id": "v-mu64gktmx5wr8-7",
+              "title": "[콩밥특별시] ep.08 | 깨갱의 세빈 경감님 납치 사건",
+              "url": "https://www.youtube.com/watch?v=x622vDV5cBM&list=PLGdjrCbf5GEncVKYEMgs2Po1hqvgyKgmm",
+              "videoType": "clip",
+              "date": "2025.07.06",
+              "duration": "12:42",
+              "description": "",
+              "thumbnailUrl": "https://img.youtube.com/vi/x622vDV5cBM/hqdefault.jpg",
+              "displayOrder": 7
+            },
+            {
+              "id": "v-mu64gktmwemiw-8",
+              "title": "[콩밥특별시] ep.09 | 갱VS경찰 전쟁 결코 전쟁!",
+              "url": "https://www.youtube.com/watch?v=AgOryDul9Qk&list=PLGdjrCbf5GEncVKYEMgs2Po1hqvgyKgmm",
+              "videoType": "clip",
+              "date": "2025.07.10",
+              "duration": "11:53",
+              "description": "",
+              "thumbnailUrl": "https://img.youtube.com/vi/AgOryDul9Qk/hqdefault.jpg",
+              "displayOrder": 8
+            },
+            {
+              "id": "v-mu64gktmfy72n-9",
+              "title": "[콩밥특별시] 완 | 안녕, 콩밥시.. 안녕, 깨갱..!",
+              "url": "https://www.youtube.com/watch?v=w5NA9JfIkNM&list=PLGdjrCbf5GEncVKYEMgs2Po1hqvgyKgmm",
+              "videoType": "clip",
+              "date": "2025.07.19",
+              "duration": "13:36",
+              "description": "",
+              "thumbnailUrl": "https://img.youtube.com/vi/w5NA9JfIkNM/hqdefault.jpg",
+              "displayOrder": 9
+            }
+          ],
           "affiliations": [
             {
               "category": "ems",
@@ -11454,6 +12543,10 @@
                 {
                   "category": "gang",
                   "subgroup": "gang-bigdick",
+                  "role": "리더",
+                  "swatRole": "",
+                  "status": "active",
+                  "badgeColor": "bg-red-600",
                   "displayOrder": 1
                 }
               ],
@@ -12144,7 +13237,20 @@
                 {
                   "category": "gang",
                   "subgroup": "gang-bigdick",
+                  "role": "",
+                  "swatRole": "",
+                  "status": "active",
+                  "badgeColor": "bg-zinc-700",
                   "displayOrder": 5
+                },
+                {
+                  "category": "press",
+                  "subgroup": null,
+                  "role": "기자",
+                  "swatRole": "",
+                  "status": "resigned",
+                  "badgeColor": "bg-sky-500",
+                  "displayOrder": 7
                 }
               ],
               "category": "gang",
@@ -12576,12 +13682,12 @@
               "id": "gang-bd-9",
               "name": "코코팜 / 야고곡",
               "streamer": "야코코",
-              "role": "",
+              "role": "교육생",
               "swatRole": "",
-              "status": "active",
-              "badgeColor": "bg-red-900",
+              "status": "retired",
+              "badgeColor": "bg-yellow-400",
               "avatar": "https://yt3.googleusercontent.com/esE3TJPUIjG3y22QYpKLOTcEWLmWymJfPlUQu0oIfkUETQjtczV4YCXaPhrCvptcy5bqtnL-=s160-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 8,
+              "displayOrder": 51,
               "subscriberCount": "21만 명",
               "youtubeUrl": "https://www.youtube.com/@0630",
               "videos": [
@@ -12859,19 +13965,19 @@
                   "displayOrder": 8
                 }
               ],
-              "category": "gang",
-              "subgroup": "gang-bigdick"
+              "category": "police",
+              "subgroup": null
             },
             {
               "id": "gang-bd-8",
               "name": "아카콩",
               "streamer": "아카캉",
-              "role": "",
+              "role": "교육생",
               "swatRole": "",
-              "status": "active",
-              "badgeColor": "bg-zinc-700",
+              "status": "resigned",
+              "badgeColor": "bg-yellow-400",
               "avatar": "https://yt3.googleusercontent.com/22RAHXxC1uETHtstGdHQ-Jz0iYybtZRGXRIQxd9NinF4zByflh1x-t-df6cGkmTvcStx1_f6gg=s160-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 9,
+              "displayOrder": 52,
               "subscriberCount": "37.4만 명",
               "youtubeUrl": "https://www.youtube.com/@아카캉",
               "videos": [
@@ -12951,8 +14057,8 @@
                   "displayOrder": 9
                 }
               ],
-              "category": "gang",
-              "subgroup": "gang-bigdick"
+              "category": "police",
+              "subgroup": null
             }
           ]
         },
@@ -13365,6 +14471,10 @@
                 {
                   "category": "gang",
                   "subgroup": "gang-oompa",
+                  "role": "보스",
+                  "swatRole": "",
+                  "status": "active",
+                  "badgeColor": "bg-red-600",
                   "displayOrder": 0
                 }
               ],
@@ -13375,7 +14485,7 @@
               "id": "gang-oompa-2",
               "name": "유명한",
               "streamer": "짜누",
-              "role": "",
+              "role": "간부",
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
@@ -13521,6 +14631,10 @@
                 {
                   "category": "gang",
                   "subgroup": "gang-oompa",
+                  "role": "간부",
+                  "swatRole": "",
+                  "status": "active",
+                  "badgeColor": "bg-zinc-700",
                   "displayOrder": 1
                 }
               ],
@@ -13531,7 +14645,7 @@
               "id": "gang-oompa-3",
               "name": "ㅈ대로",
               "streamer": "김똘복",
-              "role": "",
+              "role": "간부",
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
@@ -13710,6 +14824,10 @@
                 {
                   "category": "gang",
                   "subgroup": "gang-oompa",
+                  "role": "간부",
+                  "swatRole": "",
+                  "status": "active",
+                  "badgeColor": "bg-zinc-700",
                   "displayOrder": 2
                 }
               ],
@@ -14661,13 +15779,13 @@
               "id": "gang-oompa-9",
               "name": "김노션",
               "streamer": "로션욤",
-              "role": "",
+              "role": "간호사",
               "swatRole": "",
               "status": "active",
-              "badgeColor": "bg-zinc-700",
+              "badgeColor": "bg-emerald-500",
               "avatar": "https://yt3.googleusercontent.com/qOnI5Sqr5MHqsJ7jZNSjSDc8fdkDYc8HOJGn1PejIYJrsC9uZvgswN1fjoek1HTy5gAE5K4kIlw=s120-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 6,
-              "subscriberCount": "1.8만 명",
+              "displayOrder": 14,
+              "subscriberCount": "1.9만 명",
               "youtubeUrl": "https://www.youtube.com/@Lotion_",
               "videos": [
                 {
@@ -14805,11 +15923,11 @@
                   "swatRole": "",
                   "status": "active",
                   "badgeColor": "bg-emerald-500",
-                  "displayOrder": 18
+                  "displayOrder": 14
                 }
               ],
-              "category": "gang",
-              "subgroup": "gang-oompa"
+              "category": "ems",
+              "subgroup": null
             },
             {
               "id": "gang-oompa-6",
@@ -15882,6 +17000,10 @@
                 {
                   "category": "gang",
                   "subgroup": "gang-sangryeon",
+                  "role": "부두목",
+                  "swatRole": "",
+                  "status": "active",
+                  "badgeColor": "bg-purple-600",
                   "displayOrder": 1
                 }
               ],
@@ -16285,7 +17407,7 @@
               "badgeColor": "bg-zinc-700",
               "avatar": "https://yt3.googleusercontent.com/dR-DU6i-sb5UfS33j2PpfXaYcVvBWNs8KI60JtI6Z11keYo7O43P6OisgTHkNWPtfYzn2DV61w=s120-c-k-c0x00ffffff-no-rj",
               "displayOrder": 3,
-              "subscriberCount": "3,990명",
+              "subscriberCount": "4,000명",
               "youtubeUrl": "https://www.youtube.com/@odanming",
               "videos": [
                 {
@@ -16775,7 +17897,7 @@
               "badgeColor": "bg-zinc-700",
               "avatar": "https://yt3.googleusercontent.com/CZQvuyQ4oE7WfcJ3dPUSsEJl7KoDfQyUZuUZ3OXQdmNJVaaMKrGyAptZltexQwZGhehDod0efQ=s120-c-k-c0x00ffffff-no-rj",
               "displayOrder": 6,
-              "subscriberCount": "488명",
+              "subscriberCount": "491명",
               "youtubeUrl": "https://www.youtube.com/@me_youuuu",
               "videos": [],
               "affiliations": [
@@ -17003,36 +18125,39 @@
             },
             {
               "id": "gang-sangryeon-10",
-              "name": "선마녀 / 악마녀",
+              "name": "악마녀 / 선마녀",
               "streamer": "끠월마녀",
-              "role": "탈퇴",
+              "role": "2대 간호부장",
               "swatRole": "",
               "status": "active",
-              "badgeColor": "bg-red-600",
+              "badgeColor": "bg-teal-600",
               "avatar": "https://yt3.googleusercontent.com/Fv-x7MPzdWtEedCZZCKI0aKwx7hOTjBs_LEq4_9OxnuR3KRBKrZqKmTKsV6CbLLjekaL9QvY=s120-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 10,
-              "subscriberCount": "2,100명",
+              "displayOrder": 4,
+              "subscriberCount": "2,090명",
               "youtubeUrl": "https://www.youtube.com/@MaNyeo919",
               "videos": [],
               "affiliations": [
-                {
-                  "category": "gang",
-                  "subgroup": "gang-sangryeon",
-                  "role": "탈퇴",
-                  "displayOrder": 10
-                },
                 {
                   "category": "ems",
                   "subgroup": null,
                   "role": "2대 간호부장",
                   "swatRole": "",
                   "status": "active",
-                  "badgeColor": "bg-teal-700",
+                  "badgeColor": "bg-teal-600",
                   "displayOrder": 4
+                },
+                {
+                  "category": "gang",
+                  "subgroup": "gang-sangryeon",
+                  "role": "탈퇴",
+                  "swatRole": "",
+                  "status": "active",
+                  "badgeColor": "bg-teal-600",
+                  "displayOrder": 10
                 }
               ],
-              "category": "gang",
-              "subgroup": "gang-sangryeon"
+              "category": "ems",
+              "subgroup": null
             }
           ]
         },
@@ -17410,6 +18535,10 @@
                 {
                   "category": "business",
                   "subgroup": "biz-lux",
+                  "role": "안대표",
+                  "swatRole": "",
+                  "status": "active",
+                  "badgeColor": "bg-amber-600",
                   "displayOrder": 0
                 }
               ],
@@ -17786,6 +18915,10 @@
                 {
                   "category": "business",
                   "subgroup": "biz-lux",
+                  "role": "M상무",
+                  "swatRole": "",
+                  "status": "active",
+                  "badgeColor": "bg-purple-600",
                   "displayOrder": 1
                 }
               ],
@@ -17931,6 +19064,10 @@
                 {
                   "category": "business",
                   "subgroup": "biz-lux",
+                  "role": "채고문",
+                  "swatRole": "",
+                  "status": "active",
+                  "badgeColor": "bg-purple-600",
                   "displayOrder": 2
                 }
               ],
@@ -18241,6 +19378,10 @@
                 {
                   "category": "business",
                   "subgroup": "biz-lux",
+                  "role": "영이사",
+                  "swatRole": "",
+                  "status": "active",
+                  "badgeColor": "bg-purple-600",
                   "displayOrder": 3
                 }
               ],
@@ -18277,7 +19418,822 @@
       "icon": "camera",
       "color": "sky",
       "hasSubgroups": false,
-      "members": []
+      "members": [
+        {
+          "id": "m-press-1",
+          "name": "야수지",
+          "streamer": "야튀",
+          "role": "국장",
+          "swatRole": "",
+          "status": "active",
+          "badgeColor": "bg-sky-700",
+          "avatar": "https://yt3.googleusercontent.com/YBeF6ABtXQmtr4Ol2p3jOon3NmZznkAWf50QoIp_kE2fPUqmwmDEtmUjvTLaZ2zmjfk1B3FyQSA=s160-c-k-c0x00ffffff-no-rj",
+          "displayOrder": 0,
+          "subscriberCount": "7,040명",
+          "youtubeUrl": "https://www.youtube.com/@yati_0301",
+          "videos": [
+            {
+              "id": "v-mu5y0su9vs4fl-0",
+              "title": "2025 05 24 콩밥RP정하기 / 점심룰렛(마라핫치킨) / 콩밥 서버 테스트",
+              "url": "https://www.youtube.com/watch?v=5k3WIyseJLE",
+              "videoType": "clip",
+              "date": "2025.06.13",
+              "duration": "7:13:27",
+              "description": "",
+              "displayOrder": 0,
+              "thumbnailUrl": "https://i.ytimg.com/vi/5k3WIyseJLE/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5y0su9adn45-1",
+              "title": "2025 05 25 콩밥 1일차",
+              "url": "https://www.youtube.com/watch?v=x4QV4dt1dIM",
+              "videoType": "clip",
+              "date": "2025.06.13",
+              "duration": "7:32:18",
+              "description": "",
+              "displayOrder": 1,
+              "thumbnailUrl": "https://i.ytimg.com/vi/x4QV4dt1dIM/mqdefault.jpg"
+            }
+          ],
+          "affiliations": [
+            {
+              "category": "press",
+              "subgroup": null,
+              "role": "국장",
+              "swatRole": "",
+              "status": "active",
+              "badgeColor": "bg-sky-700",
+              "displayOrder": 0
+            }
+          ],
+          "category": "press",
+          "subgroup": null
+        },
+        {
+          "id": "m-press-2",
+          "name": "미도종",
+          "streamer": "플레임",
+          "role": "기자",
+          "swatRole": "",
+          "status": "active",
+          "badgeColor": "bg-sky-500",
+          "avatar": "https://yt3.googleusercontent.com/ytc/AIdro_mzjdib5aZzwoxqTxqyKighpPWoKeGqi6w5NTRZZwEAgA=s160-c-k-c0x00ffffff-no-rj",
+          "displayOrder": 1,
+          "subscriberCount": "10.5만 명",
+          "youtubeUrl": "https://www.youtube.com/@플레임",
+          "videos": [
+            {
+              "id": "v-mu5y2c9hobrna-0",
+              "title": "나 한번만 미도종 [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=94l91-kjyb8&list=PLUe45bhs7z7f0H1Sli5tjSE4s5ARmIBV3",
+              "videoType": "clip",
+              "date": "2025.05.28",
+              "duration": "25:35",
+              "description": "",
+              "displayOrder": 0,
+              "thumbnailUrl": "https://img.youtube.com/vi/94l91-kjyb8/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu5y2c9hxmld0-1",
+              "title": "개노답 4인방 [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=YVVn3NofcCE&list=PLUe45bhs7z7f0H1Sli5tjSE4s5ARmIBV3",
+              "videoType": "clip",
+              "date": "2025.06.01",
+              "duration": "22:50",
+              "description": "",
+              "displayOrder": 1,
+              "thumbnailUrl": "https://img.youtube.com/vi/YVVn3NofcCE/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu5y2c9hil6m1-2",
+              "title": "남성인권기자 미도종 [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=EBoNDiQunGo&list=PLUe45bhs7z7f0H1Sli5tjSE4s5ARmIBV3",
+              "videoType": "clip",
+              "date": "2025.06.05",
+              "duration": "16:50",
+              "description": "",
+              "displayOrder": 2,
+              "thumbnailUrl": "https://img.youtube.com/vi/EBoNDiQunGo/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu5y2c9h9rspt-3",
+              "title": "젓갈이 되어도 공론화 하리라 [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=lfXUQTOhi3s&list=PLUe45bhs7z7f0H1Sli5tjSE4s5ARmIBV3",
+              "videoType": "clip",
+              "date": "2025.06.07",
+              "duration": "34:04",
+              "description": "",
+              "displayOrder": 3,
+              "thumbnailUrl": "https://img.youtube.com/vi/lfXUQTOhi3s/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu5y2c9h4armh-4",
+              "title": "빅딕 소속 장지환이 인정한 기자, 미도종 [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=AyrwdHWUXpQ&list=PLUe45bhs7z7f0H1Sli5tjSE4s5ARmIBV3",
+              "videoType": "clip",
+              "date": "2025.06.11",
+              "duration": "34:49",
+              "description": "",
+              "displayOrder": 4,
+              "thumbnailUrl": "https://img.youtube.com/vi/AyrwdHWUXpQ/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu5y2c9hv5773-5",
+              "title": "기자였던 미도종...고수익 선수 데뷔? [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=NxUGr8KF2wI&list=PLUe45bhs7z7f0H1Sli5tjSE4s5ARmIBV3",
+              "videoType": "clip",
+              "date": "2025.06.14",
+              "duration": "35:34",
+              "description": "",
+              "displayOrder": 5,
+              "thumbnailUrl": "https://img.youtube.com/vi/NxUGr8KF2wI/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu5y2c9hzj09u-6",
+              "title": "누나들 마음에 불지르는 럭스 클럽의 (미도)종사마 출격! [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=qjTu-MfAi6U&list=PLUe45bhs7z7f0H1Sli5tjSE4s5ARmIBV3",
+              "videoType": "clip",
+              "date": "2025.06.16",
+              "duration": "21:43",
+              "description": "",
+              "displayOrder": 6,
+              "thumbnailUrl": "https://img.youtube.com/vi/qjTu-MfAi6U/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu5y2c9h677ed-7",
+              "title": "오늘 내 코끼리를 삼켜줄 보아뱀 있어? [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=mXfZeUZCifY&list=PLUe45bhs7z7f0H1Sli5tjSE4s5ARmIBV3",
+              "videoType": "clip",
+              "date": "2025.06.19",
+              "duration": "30:26",
+              "description": "",
+              "displayOrder": 7,
+              "thumbnailUrl": "https://img.youtube.com/vi/mXfZeUZCifY/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu5y2c9hlsgfk-8",
+              "title": "그렇게 어린 왕자는 외로이 생을 마감하였답니다. [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=uy1OtNe_iiM&list=PLUe45bhs7z7f0H1Sli5tjSE4s5ARmIBV3",
+              "videoType": "clip",
+              "date": "2025.06.21",
+              "duration": "34:55",
+              "description": "",
+              "displayOrder": 8,
+              "thumbnailUrl": "https://img.youtube.com/vi/uy1OtNe_iiM/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu5y5b9wgwisb-0",
+              "title": "미도종의 삶 콩밥 특별시 오픈런",
+              "url": "https://chzzk.naver.com/video/7437228",
+              "videoType": "full",
+              "date": "2025.05.26",
+              "duration": "14:02:36",
+              "description": "",
+              "displayOrder": 9,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250526_87/1748201425703RIQu5_JPEG/ZBR1Ay7qkv_03.jpg"
+            },
+            {
+              "id": "v-mu5y5b9wkm2hc-1",
+              "title": "미도종의 삶 콩밥 특별시 오픈런",
+              "url": "https://chzzk.naver.com/video/7441775",
+              "videoType": "full",
+              "date": "2025.05.26",
+              "duration": "4:53:21",
+              "description": "",
+              "displayOrder": 10,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250526_179/1748251807301AQ7pp_JPEG/aQqWDH03Yk_03.jpg"
+            },
+            {
+              "id": "v-mu5y5b9wsojrz-2",
+              "title": "정의의 기자 미도종",
+              "url": "https://chzzk.naver.com/video/7467227",
+              "videoType": "full",
+              "date": "2025.05.28",
+              "duration": "14:43:54",
+              "description": "",
+              "displayOrder": 11,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250528_51/1748373783005ElKNm_JPEG/FsrSoOgulZ_03.jpg"
+            },
+            {
+              "id": "v-mu5y5b9whotof-3",
+              "title": "인권 운동가 정의의 기자 미도종",
+              "url": "https://chzzk.naver.com/video/7482062",
+              "videoType": "full",
+              "date": "2025.05.29",
+              "duration": "9:05:11",
+              "description": "",
+              "displayOrder": 12,
+              "thumbnailUrl": "assets/default-thumbnail.svg"
+            },
+            {
+              "id": "v-mu5y5b9wareyw-4",
+              "title": "정의의 기자 미도종 오늘도 세상을 구한다",
+              "url": "https://chzzk.naver.com/video/7498463",
+              "videoType": "full",
+              "date": "2025.05.30",
+              "duration": "12:28:07",
+              "description": "",
+              "displayOrder": 13,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250530_205/1748547280075B6A8a_JPEG/NzI3WGIOh2_03.jpg"
+            },
+            {
+              "id": "v-mu5y5b9wxwbsz-5",
+              "title": "부패한 콩밥특별시 이대로 괸찮은가 정의의 기자 미도종",
+              "url": "https://chzzk.naver.com/video/7532059",
+              "videoType": "full",
+              "date": "2025.06.01",
+              "duration": "12:17:05",
+              "description": "",
+              "displayOrder": 14,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250601_19/1748720921357wp6GS_JPEG/WzvicZkYdz_03.jpg"
+            },
+            {
+              "id": "v-mu5y5b9wk23hn-6",
+              "title": "낮엔 기자 밤엔 가라오케 강함순위 1위가 될 남자",
+              "url": "https://chzzk.naver.com/video/7548458",
+              "videoType": "full",
+              "date": "2025.06.02",
+              "duration": "12:07:17",
+              "description": "",
+              "displayOrder": 15,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250602_229/1748805215486jW3N4_JPEG/qVhmCgGqtn_03.jpg"
+            },
+            {
+              "id": "v-mu5y5b9wsk123-7",
+              "title": "콩밥특별시 8일차 미도종",
+              "url": "https://chzzk.naver.com/video/7556592",
+              "videoType": "full",
+              "date": "2025.06.02",
+              "duration": "5:04:07",
+              "description": "",
+              "displayOrder": 16,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250602_242/1748870600293nBRUH_JPEG/eTTtRafRzr_03.jpg"
+            },
+            {
+              "id": "v-mu5y5b9wzga12-8",
+              "title": "1부 스타 연습 2부 기자의 삶",
+              "url": "https://chzzk.naver.com/video/7581813",
+              "videoType": "full",
+              "date": "2025.06.04",
+              "duration": "15:17:51",
+              "description": "",
+              "displayOrder": 17,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250604_136/1748989220492NX8Gj_JPEG/FZuzXzyKCW_03.jpg"
+            },
+            {
+              "id": "v-mu5y5b9w6cbei-9",
+              "title": "미도종의 삶",
+              "url": "https://chzzk.naver.com/video/7596079",
+              "videoType": "full",
+              "date": "2025.06.05",
+              "duration": "3:27:51",
+              "description": "",
+              "displayOrder": 18,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250605_82/17490644520095Vpak_JPEG/bkTK0ODUQL_03.jpg"
+            },
+            {
+              "id": "v-mu5y5b9wvdvxq-10",
+              "title": "1부 세기말 미도종의 삶",
+              "url": "https://chzzk.naver.com/video/7621471",
+              "videoType": "full",
+              "date": "2025.06.06",
+              "duration": "6:58:06",
+              "description": "",
+              "displayOrder": 19,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250606_159/1749215508272XxpWh_JPEG/VpfUp3W35W_03.jpg"
+            },
+            {
+              "id": "v-mu5y5b9wdfb50-11",
+              "title": "종군기자 미도종",
+              "url": "https://chzzk.naver.com/video/7644829",
+              "videoType": "full",
+              "date": "2025.06.08",
+              "duration": "8:22:36",
+              "description": "",
+              "displayOrder": 20,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250608_240/1749318362765dvPq9_JPEG/LwgqiEfPge_03.jpg"
+            },
+            {
+              "id": "v-mu5y5b9w26dw5-12",
+              "title": "마지막날 야유회? 공연?",
+              "url": "https://chzzk.naver.com/video/7655267",
+              "videoType": "full",
+              "date": "2025.06.08",
+              "duration": "3:55:03",
+              "description": "",
+              "displayOrder": 21,
+              "thumbnailUrl": "https://video-phinf.pstatic.net/20250608_28/1749386065151asgWt_JPEG/uKYzfORdef_03.jpg"
+            }
+          ],
+          "affiliations": [
+            {
+              "category": "press",
+              "subgroup": null,
+              "role": "기자",
+              "swatRole": "",
+              "status": "active",
+              "badgeColor": "bg-sky-500",
+              "displayOrder": 1
+            }
+          ],
+          "category": "press",
+          "subgroup": null
+        },
+        {
+          "id": "m-press-3",
+          "name": "한단희",
+          "streamer": "이춘향",
+          "role": "기자",
+          "swatRole": "",
+          "status": "active",
+          "badgeColor": "bg-sky-500",
+          "avatar": "https://yt3.googleusercontent.com/BKpL1UUJpCwGnmlHuTp7CQ5JDv8ZvlBolmaFtWZrak1aN2Mn1OtiPin17EELfzFLuvu-l-lpMw=s160-c-k-c0x00ffffff-no-rj",
+          "displayOrder": 2,
+          "subscriberCount": "20.5만 명",
+          "youtubeUrl": "https://www.youtube.com/@이춘향",
+          "videos": [
+            {
+              "id": "v-mu5y6rn01aptt-0",
+              "title": "번호 달라고!!!!!! [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=B5XkOFbEOF0",
+              "videoType": "clip",
+              "date": "2025.06.01",
+              "duration": "16:45",
+              "description": "",
+              "displayOrder": 0,
+              "thumbnailUrl": "https://i.ytimg.com/vi/B5XkOFbEOF0/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5y78hvwt1c",
+              "title": "나에게 집착하는 사람 [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=LEmm5JqrFks",
+              "videoType": "clip",
+              "date": "2025.06.08",
+              "duration": "25:41",
+              "description": "",
+              "displayOrder": 1,
+              "thumbnailUrl": "https://img.youtube.com/vi/LEmm5JqrFks/hqdefault.jpg"
+            },
+            {
+              "id": "v-mu5y6rn070jmz-1",
+              "title": "기자와 용사는 사실 합이 잘 맞는 게 아닐까? [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=-RUswmQ_6h8",
+              "videoType": "clip",
+              "date": "2025.06.14",
+              "duration": "21:48",
+              "description": "",
+              "displayOrder": 2,
+              "thumbnailUrl": "https://i.ytimg.com/vi/-RUswmQ_6h8/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5y6rn0plawb-2",
+              "title": "장난전화 누구야!!! [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=bkGv1g3vxhk&pp=0gcJCSQMAYcqIYzv",
+              "videoType": "clip",
+              "date": "2025.06.28",
+              "duration": "21:07",
+              "description": "",
+              "displayOrder": 3,
+              "thumbnailUrl": "https://i.ytimg.com/vi/bkGv1g3vxhk/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5y6rn0enyds-3",
+              "title": "앗! 이춘향이 누구지?????????? [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=UsplXFF8G0I",
+              "videoType": "clip",
+              "date": "2025.07.12",
+              "duration": "18:13",
+              "description": "",
+              "displayOrder": 4,
+              "thumbnailUrl": "https://i.ytimg.com/vi/UsplXFF8G0I/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5y6rn0dqk6b-4",
+              "title": "아니 침착맨님!! 우리 동기예요!! [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=qY7uQVMdnms",
+              "videoType": "clip",
+              "date": "2025.07.23",
+              "duration": "23:36",
+              "description": "",
+              "displayOrder": 5,
+              "thumbnailUrl": "https://i.ytimg.com/vi/qY7uQVMdnms/mqdefault.jpg"
+            }
+          ],
+          "affiliations": [
+            {
+              "category": "press",
+              "subgroup": null,
+              "role": "기자",
+              "swatRole": "",
+              "status": "active",
+              "badgeColor": "bg-sky-500",
+              "displayOrder": 2
+            }
+          ],
+          "category": "press",
+          "subgroup": null
+        },
+        {
+          "id": "m-press-6",
+          "name": "시위야",
+          "streamer": "시이야",
+          "role": "기자",
+          "swatRole": "",
+          "status": "active",
+          "badgeColor": "bg-sky-500",
+          "avatar": "https://yt3.googleusercontent.com/cd8mnRFfS6tGJWQb-kD6VXUpeHNKjAgsdPy3-AFOOTkn3gOw0QzJT0NL5EFU8xsT8jtuZF7v3Q=s160-c-k-c0x00ffffff-no-rj",
+          "displayOrder": 3,
+          "subscriberCount": "7,480명",
+          "youtubeUrl": "https://www.youtube.com/@tldldi0319",
+          "videos": [
+            {
+              "id": "v-mu5ycls3840lr-0",
+              "title": "폐급 듀오의 탄생 [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=lZ-zDM9t5FY",
+              "videoType": "clip",
+              "date": "2025.06.09",
+              "duration": "14:57",
+              "description": "",
+              "displayOrder": 0,
+              "thumbnailUrl": "https://i.ytimg.com/vi/lZ-zDM9t5FY/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5ycls3gxuaz-1",
+              "title": "뭐 이런 폐급이 들어왔어 [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=G_IL694lWPo",
+              "videoType": "clip",
+              "date": "2025.06.16",
+              "duration": "10:06",
+              "description": "",
+              "displayOrder": 1,
+              "thumbnailUrl": "https://i.ytimg.com/vi/G_IL694lWPo/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5ycls3n5ujk-2",
+              "title": "건드리면 안되는 사람들 / 다시 만난 종수씨 [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=YF7wJb1lN-c",
+              "videoType": "clip",
+              "date": "2025.06.19",
+              "duration": "17:49",
+              "description": "",
+              "displayOrder": 2,
+              "thumbnailUrl": "https://i.ytimg.com/vi/YF7wJb1lN-c/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5ycls3t4brv-3",
+              "title": "대필기자의 최후 [콩밥특별시]",
+              "url": "https://www.youtube.com/watch?v=KTQtAwttY6Y",
+              "videoType": "clip",
+              "date": "2025.06.29",
+              "duration": "26:17",
+              "description": "",
+              "displayOrder": 3,
+              "thumbnailUrl": "https://i.ytimg.com/vi/KTQtAwttY6Y/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5ygsgb0kywl-0",
+              "title": "솔랭 그리고 콩밥특별시 1일차 수습기자 시위야 (솔랭, GTA5 /2025.06.02 풀영상1)",
+              "url": "https://www.youtube.com/watch?v=VMNH7GezFok",
+              "videoType": "full",
+              "date": "2025.06.04",
+              "duration": "8:21:46",
+              "description": "",
+              "displayOrder": 4,
+              "thumbnailUrl": "https://i.ytimg.com/vi/VMNH7GezFok/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5ygsgb11wey-1",
+              "title": "콩밥특별시 1일차 수습기자 시위야2 (GTA5 /2025.06.02 풀영상2)",
+              "url": "https://www.youtube.com/watch?v=yexApjvi3vM",
+              "videoType": "full",
+              "date": "2025.06.04",
+              "duration": "8:29:53",
+              "description": "",
+              "displayOrder": 5,
+              "thumbnailUrl": "https://i.ytimg.com/vi/yexApjvi3vM/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5ygsgbc10c0-2",
+              "title": "콩밥특별시 3일차 기자 시위야 (gta5 콩밥특별시 3일차 /2025.06.05 풀영상)",
+              "url": "https://www.youtube.com/watch?v=qmmQORejL74",
+              "videoType": "full",
+              "date": "2025.06.09",
+              "duration": "6:10:03",
+              "description": "",
+              "displayOrder": 6,
+              "thumbnailUrl": "https://i.ytimg.com/vi/qmmQORejL74/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5ygsgb1useo-3",
+              "title": "콩밥특별시 4일차 기자 시위야 거지환과 함께 종군기자를 하다? (솔랭, GTA5 /2025.06.06 풀영상1)",
+              "url": "https://www.youtube.com/watch?v=Vi2U_oDpYGc&pp=0gcJCSQMAYcqIYzv",
+              "videoType": "full",
+              "date": "2025.06.10",
+              "duration": "7:00:01",
+              "description": "",
+              "displayOrder": 7,
+              "thumbnailUrl": "https://i.ytimg.com/vi/Vi2U_oDpYGc/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5ygsgbcyxho-4",
+              "title": "콩밥특별시 4일차 기자 시위야 거지환과 함께 종군기자를 하다? (솔랭, GTA5 /2025.06.06 풀영상2)",
+              "url": "https://www.youtube.com/watch?v=Zt0qexw3IEE",
+              "videoType": "full",
+              "date": "2025.06.10",
+              "duration": "6:05:45",
+              "description": "",
+              "displayOrder": 8,
+              "thumbnailUrl": "https://i.ytimg.com/vi/Zt0qexw3IEE/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5ygsgb9b74m-5",
+              "title": "콩밥특별시 경찰vs갱 전쟁 래퍼핑 전담 기자 출동 (gta5 콩밥특별시 5일차/2025.06.07 풀영상1)",
+              "url": "https://www.youtube.com/watch?v=41WslQbCpuQ",
+              "videoType": "full",
+              "date": "2025.06.10",
+              "duration": "7:00:01",
+              "description": "",
+              "displayOrder": 9,
+              "thumbnailUrl": "https://i.ytimg.com/vi/41WslQbCpuQ/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5ygsgblhkqt-6",
+              "title": "콩밥특별시 경찰vs갱 전쟁 래퍼핑 전담 기자 출동 (gta5 콩밥특별시 5일차/2025.06.07 풀영상2)",
+              "url": "https://www.youtube.com/watch?v=rTMikLmrkoE",
+              "videoType": "full",
+              "date": "2025.06.10",
+              "duration": "6:22:00",
+              "description": "",
+              "displayOrder": 10,
+              "thumbnailUrl": "https://i.ytimg.com/vi/rTMikLmrkoE/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5ygsgbwi3hh-7",
+              "title": "콩밥특별시 종말의 날 기자 시위야의 마지막 (gta5 콩밥특별시 6일차/2025.06.08 풀영상)",
+              "url": "https://www.youtube.com/watch?v=dhdK37Sdftg",
+              "videoType": "full",
+              "date": "2025.06.09",
+              "duration": "9:15:04",
+              "description": "",
+              "displayOrder": 11,
+              "thumbnailUrl": "https://i.ytimg.com/vi/dhdK37Sdftg/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5ygsgb6hqks-8",
+              "title": "콩밥특별시 기자들끼리 모여서 마지막 토크! (솔랭, 콩밥특별시 기자 야유회/2025.06.17 풀영상)",
+              "url": "https://www.youtube.com/watch?v=5MORczi-0yE",
+              "videoType": "full",
+              "date": "2025.06.17",
+              "duration": "4:29:29",
+              "description": "",
+              "displayOrder": 12,
+              "thumbnailUrl": "https://i.ytimg.com/vi/5MORczi-0yE/mqdefault.jpg"
+            }
+          ],
+          "affiliations": [
+            {
+              "category": "press",
+              "subgroup": null,
+              "role": "기자",
+              "swatRole": "",
+              "status": "active",
+              "badgeColor": "bg-sky-500",
+              "displayOrder": 3
+            }
+          ],
+          "category": "press",
+          "subgroup": null
+        },
+        {
+          "id": "m-press-5",
+          "name": "곰산당",
+          "streamer": "윤리즈",
+          "role": "기자",
+          "swatRole": "",
+          "status": "active",
+          "badgeColor": "bg-sky-500",
+          "avatar": "https://yt3.googleusercontent.com/wwwm-SiW252GMz1ymsKcQaMkFSvPKJrfpgx27J2JHwH8HvSxYVRV8gyaxPTQEi7Md4bt1hEA=s160-c-k-c0x00ffffff-no-rj",
+          "displayOrder": 4,
+          "subscriberCount": "2,280명",
+          "youtubeUrl": "https://www.youtube.com/@ylizhi0331",
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "press",
+              "subgroup": null,
+              "role": "기자",
+              "swatRole": "",
+              "status": "active",
+              "badgeColor": "bg-sky-500",
+              "displayOrder": 4
+            }
+          ],
+          "category": "press",
+          "subgroup": null
+        },
+        {
+          "id": "m-press-4",
+          "name": "감자",
+          "streamer": "강요미",
+          "role": "기자",
+          "swatRole": "",
+          "status": "active",
+          "badgeColor": "bg-sky-500",
+          "avatar": "https://yt3.googleusercontent.com/cOX4wV3bAtbXmw7UPqhDpDU6nb9UqDLjB1BBllu9Wfso7_Ar1yi3OK87-WqQvN7X6G6oG1en=s160-c-k-c0x00ffffff-no-rj",
+          "displayOrder": 5,
+          "subscriberCount": "5,150명",
+          "youtubeUrl": "https://www.youtube.com/@kang_yomi",
+          "videos": [],
+          "affiliations": [
+            {
+              "category": "press",
+              "subgroup": null,
+              "role": "기자",
+              "swatRole": "",
+              "status": "active",
+              "badgeColor": "bg-sky-500",
+              "displayOrder": 5
+            }
+          ],
+          "category": "press",
+          "subgroup": null
+        },
+        {
+          "id": "m-press-7",
+          "name": "쌍대기 / 쌍필연",
+          "streamer": "쌍베",
+          "role": "기자",
+          "swatRole": "",
+          "status": "retired",
+          "badgeColor": "bg-sky-500",
+          "avatar": "https://yt3.googleusercontent.com/RDGgPIs-GVMqWQeYwxqd5WSAod8gsFDIfGX_W0G0rtrRPNhM65w9UoYxk9GO63PE5Wn_WcSryA=s160-c-k-c0x00ffffff-no-rj",
+          "displayOrder": 6,
+          "subscriberCount": "15.7만 명",
+          "youtubeUrl": "https://www.youtube.com/@쌍튜브",
+          "videos": [
+            {
+              "id": "v-mu5yi6xpcr5fc-0",
+              "title": "안녕하세요 KBC 콩밥특별시 뉴스 쌍베입니다 (2025년 5월 25일자)",
+              "url": "https://www.youtube.com/watch?v=pGvZQt9BOr4",
+              "videoType": "clip",
+              "date": "2025.05.27",
+              "duration": "23:22",
+              "description": "",
+              "displayOrder": 0,
+              "thumbnailUrl": "https://i.ytimg.com/vi/pGvZQt9BOr4/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5yi6xpa0tr8-1",
+              "title": "2025년 5월 26일 콩밥특별시 KBC뉴스 쌍베입니다",
+              "url": "https://www.youtube.com/watch?v=sh15fiHhTvk",
+              "videoType": "clip",
+              "date": "2025.05.27",
+              "duration": "15:41",
+              "description": "",
+              "displayOrder": 1,
+              "thumbnailUrl": "https://i.ytimg.com/vi/sh15fiHhTvk/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5yi6xpyfv6d-2",
+              "title": "2025년 5월 27일 콩밥특별시 KBC뉴스 쌍베입니다",
+              "url": "https://www.youtube.com/watch?v=DyuRgCxNItg&pp=0gcJCSQMAYcqIYzv",
+              "videoType": "clip",
+              "date": "2025.05.29",
+              "duration": "19:59",
+              "description": "",
+              "displayOrder": 2,
+              "thumbnailUrl": "https://i.ytimg.com/vi/DyuRgCxNItg/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5yi6xppe166-3",
+              "title": "2025년 5월 28일 콩밥특별시 KBC뉴스 쌍베입니다",
+              "url": "https://www.youtube.com/watch?v=SMmBoG37t0A",
+              "videoType": "clip",
+              "date": "2025.05.30",
+              "duration": "27:21",
+              "description": "",
+              "displayOrder": 3,
+              "thumbnailUrl": "https://i.ytimg.com/vi/SMmBoG37t0A/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5yi6xpsv252-4",
+              "title": "2025년 5월 29일 콩밥특별시 KBC뉴스 쌍베입니다",
+              "url": "https://www.youtube.com/watch?v=EKC9j70v1aM",
+              "videoType": "clip",
+              "date": "2025.05.30",
+              "duration": "11:43",
+              "description": "",
+              "displayOrder": 4,
+              "thumbnailUrl": "https://i.ytimg.com/vi/EKC9j70v1aM/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5yj6vz9bz4z-0",
+              "title": "[25.05.25] 콩밥특별시 1일차",
+              "url": "https://www.youtube.com/watch?v=VEPa0Y19W10",
+              "videoType": "full",
+              "date": "2025.05.26",
+              "duration": "53:31",
+              "description": "",
+              "displayOrder": 5,
+              "thumbnailUrl": "https://i.ytimg.com/vi/VEPa0Y19W10/mqdefault.jpg"
+            },
+            {
+              "id": "v-mu5yj6vz5mwwp-1",
+              "title": "[25.05.27] 콩밥특별시 쌍대기 기자의 삶",
+              "url": "https://www.youtube.com/watch?v=6X9fO8HQCnM",
+              "videoType": "full",
+              "date": "2025.05.28",
+              "duration": "4:36:00",
+              "description": "",
+              "displayOrder": 6,
+              "thumbnailUrl": "https://i.ytimg.com/vi/6X9fO8HQCnM/mqdefault.jpg"
+            }
+          ],
+          "affiliations": [
+            {
+              "category": "press",
+              "subgroup": null,
+              "role": "기자",
+              "swatRole": "",
+              "status": "retired",
+              "badgeColor": "bg-sky-500",
+              "displayOrder": 6
+            }
+          ],
+          "category": "press",
+          "subgroup": null
+        },
+        {
+          "id": "gang-bd-6",
+          "name": "나루호도에비덴뿌라",
+          "streamer": "새우새우",
+          "role": "",
+          "swatRole": "",
+          "status": "active",
+          "badgeColor": "bg-zinc-700",
+          "avatar": "https://yt3.googleusercontent.com/_aa2OpD-XsvACA7GgvrtQuaPkZq7pZUGKvyKM6z3iVqBSiZjzvmLwvnhJzyMONarm1CDx9eT=s120-c-k-c0x00ffffff-no-rj",
+          "displayOrder": 5,
+          "subscriberCount": "8만 명",
+          "youtubeUrl": "https://www.youtube.com/@새우새우",
+          "videos": [
+            {
+              "id": "v-mtvcpl9wymk2",
+              "title": "멤버 구독자 수 총합 \"267만\".. 이 거물들이랑 갱을 하라고요? 【콩밥특별시 1화】",
+              "url": "https://youtu.be/U9QqnaTQBqI",
+              "videoType": "clip",
+              "date": "2025.07.17",
+              "duration": "11:09",
+              "description": "",
+              "displayOrder": 0,
+              "thumbnailUrl": null
+            },
+            {
+              "id": "v-mtvcpti9dxig",
+              "title": "이 도시 무력 최강 갱 \"빅딕\"의 덴뿌라입니다 【콩밥특별시 2화】",
+              "url": "https://youtu.be/SoKAs1u8gJA",
+              "videoType": "clip",
+              "date": "2025.08.09",
+              "duration": "11:42",
+              "description": "",
+              "displayOrder": 1,
+              "thumbnailUrl": null
+            },
+            {
+              "id": "v-mtvcry92zl63",
+              "title": "덴뿌라, 6번 무전으로.",
+              "url": "https://youtu.be/YA0ks9WmDrs",
+              "videoType": "clip",
+              "date": "2025.09.10",
+              "duration": "13:04",
+              "description": "",
+              "displayOrder": 2,
+              "thumbnailUrl": null
+            }
+          ],
+          "affiliations": [
+            {
+              "category": "gang",
+              "subgroup": "gang-bigdick",
+              "role": "",
+              "swatRole": "",
+              "status": "active",
+              "badgeColor": "bg-zinc-700",
+              "displayOrder": 5
+            },
+            {
+              "category": "press",
+              "subgroup": null,
+              "role": "기자",
+              "swatRole": "",
+              "status": "resigned",
+              "badgeColor": "bg-sky-500",
+              "displayOrder": 7
+            }
+          ],
+          "category": "gang",
+          "subgroup": "gang-bigdick"
+        }
+      ]
     },
     {
       "id": "citizen",
@@ -18598,7 +20554,7 @@
           "badgeColor": "bg-red-600",
           "avatar": "https://yt3.googleusercontent.com/dgb7xWejv0czVQ_3_NS6AZ-8NdlY1d4LP8-gx-Vs5ahLW4pr8Rrqg6r2w7T3K94rzCgLrgYs=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 4,
-          "subscriberCount": "2,160명",
+          "subscriberCount": "2,170명",
           "youtubeUrl": "https://www.youtube.com/@레스-04",
           "videos": [
             {

@@ -102,7 +102,7 @@ function loadAffDataIntoForm(key) {
     const rawStatus = data.status || "active";
     if (rawStatus === "martyred" || rawStatus === "순직") {
       statusEl.value = "martyred";
-    } else if (rawStatus === "retired" || rawStatus === "퇴직" || rawStatus === "은퇴") {
+    } else if (rawStatus === "retired" || rawStatus === "면직" || rawStatus === "퇴직" || rawStatus === "은퇴") {
       statusEl.value = "retired";
     } else if (rawStatus === "resigned" || rawStatus === "사직") {
       statusEl.value = "resigned";
@@ -213,7 +213,7 @@ function renderModalAffTabs() {
     const itemData = _modalAffData[k] || {};
     const hasRole = !!itemData.role;
     const isMartyred = itemData.status === 'martyred' || (itemData.status && itemData.status.includes('순직'));
-    const isRetired = !isMartyred && (itemData.status === 'retired' || (itemData.status && (itemData.status.includes('퇴직') || itemData.status.includes('은퇴'))));
+    const isRetired = !isMartyred && (itemData.status === 'retired' || (itemData.status && (itemData.status.includes('면직') || itemData.status.includes('퇴직') || itemData.status.includes('은퇴'))));
     const isResigned = !isMartyred && !isRetired && (itemData.status === 'resigned' || (itemData.status && itemData.status.includes('사직')));
 
     const activeClasses = isActive 
@@ -229,7 +229,7 @@ function renderModalAffTabs() {
         <span>${emoji}</span>
         <span>${name}</span>
         ${hasRole ? `<span class="text-[10px] opacity-80 font-semibold">(${itemData.role})</span>` : '<span class="text-[10px] opacity-60 font-normal italic">(직위 미입력)</span>'}
-        ${isMartyred ? `<span class="text-[9px] px-1 py-0.2 rounded bg-black/60 text-red-400 border border-red-800/60 font-black">순직</span>` : (isRetired ? `<span class="text-[9px] px-1 py-0.2 rounded bg-black/60 text-zinc-300 border border-zinc-600/60 font-black">퇴직</span>` : (isResigned ? `<span class="text-[9px] px-1 py-0.2 rounded bg-black/60 text-amber-400 border border-amber-800/60 font-black">사직</span>` : ''))}
+        ${isMartyred ? `<span class="text-[9px] px-1 py-0.2 rounded bg-black/60 text-red-400 border border-red-800/60 font-black">순직</span>` : (isRetired ? `<span class="text-[9px] px-1 py-0.2 rounded bg-black/60 text-zinc-300 border border-zinc-600/60 font-black">면직</span>` : (isResigned ? `<span class="text-[9px] px-1 py-0.2 rounded bg-black/60 text-amber-400 border border-amber-800/60 font-black">사직</span>` : ''))}
       </button>
     `;
   }).join("");
@@ -245,11 +245,11 @@ window.switchModalAffTab = switchModalAffTab;
 function findMemberLocation(memberId) {
   for (const cat of KONGBAB_DATA.categories) {
     if (!cat.hasSubgroups) {
-      const found = (cat.members || []).find(m => m.id === memberId);
+      const found = (cat.members || []).find(m => String(m.id) === String(memberId));
       if (found) return { category: cat, group: null, member: found };
     } else {
       for (const g of (cat.groups || [])) {
-        const found = (g.members || []).find(m => m.id === memberId);
+        const found = (g.members || []).find(m => String(m.id) === String(memberId));
         if (found) return { category: cat, group: g, member: found };
       }
     }
@@ -261,11 +261,11 @@ function findAllMemberLocations(memberId) {
   const locs = [];
   for (const cat of KONGBAB_DATA.categories) {
     if (!cat.hasSubgroups) {
-      const found = (cat.members || []).find(m => m.id === memberId);
+      const found = (cat.members || []).find(m => String(m.id) === String(memberId));
       if (found) locs.push({ category: cat, group: null, member: found });
     } else {
       for (const g of (cat.groups || [])) {
-        const found = (g.members || []).find(m => m.id === memberId);
+        const found = (g.members || []).find(m => String(m.id) === String(memberId));
         if (found) locs.push({ category: cat, group: g, member: found });
       }
     }
@@ -418,6 +418,10 @@ function handleRoleInputForPoliceColor(roleVal) {
   const curAff = _activeModalAffKey ? _modalAffData[_activeModalAffKey] : null;
   const isPolice = curAff ? (curAff.category === 'police') : !!document.getElementById("aff-check-police")?.checked;
   const isEMS = curAff ? (curAff.category === 'ems') : !!document.getElementById("aff-check-ems")?.checked;
+  const isPress = (curAff ? curAff.category === 'press' : !!document.getElementById("aff-check-press")?.checked) || ["국장", "기자"].some(k => r.includes(k));
+  const isGang = (curAff ? curAff.category === 'gang' : !!document.getElementById("aff-check-gang")?.checked) || ["보스", "부두목", "간부", "조직원"].some(k => r.includes(k));
+  const isLux = (curAff ? (curAff.subgroup === 'biz-lux' || curAff.category === 'business') : !!document.getElementById("aff-check-business")?.checked) || ["대표", "이사"].some(k => r.includes(k));
+
   if (isPolice) {
     if (r.includes("부청장") || r.includes("서장") || r.includes("경정") || r.includes("경감")) {
       badgeSelect.value = "bg-red-600";
@@ -438,17 +442,49 @@ function handleRoleInputForPoliceColor(roleVal) {
     }
   } else if (isEMS || ["병원장", "간호실장", "간호부장", "간호사"].some(k => r.includes(k))) {
     if (r.includes("병원장")) {
-      badgeSelect.value = "bg-teal-900";
+      badgeSelect.value = "bg-teal-500";
     } else if (r.includes("간호부장")) {
-      badgeSelect.value = "bg-teal-700";
+      badgeSelect.value = "bg-teal-600";
     } else if (r.includes("간호실장")) {
       badgeSelect.value = "bg-cyan-600";
     } else if (r.includes("간호사")) {
       badgeSelect.value = "bg-emerald-500";
     }
+  } else if (isPress) {
+    if (r.includes("국장")) {
+      badgeSelect.value = "bg-sky-700";
+    } else if (r.includes("기자")) {
+      badgeSelect.value = "bg-sky-500";
+    }
+  } else if (isGang) {
+    if (r.includes("보스")) {
+      badgeSelect.value = "bg-red-600";
+    } else if (r.includes("부두목")) {
+      badgeSelect.value = "bg-purple-600";
+    } else if (r.includes("간부")) {
+      badgeSelect.value = "bg-orange-700";
+    } else if (r.includes("조직원")) {
+      badgeSelect.value = "bg-zinc-700";
+    }
+  } else if (isLux) {
+    if (r.includes("대표")) {
+      badgeSelect.value = "bg-amber-600";
+    } else if (r.includes("이사")) {
+      badgeSelect.value = "bg-purple-600";
+    }
   } else {
     if (r.includes("보스")) {
       badgeSelect.value = "bg-red-600";
+    } else if (r.includes("부두목")) {
+      badgeSelect.value = "bg-purple-600";
+    } else if (r.includes("간부")) {
+      badgeSelect.value = "bg-orange-700";
+    } else if (r.includes("조직원")) {
+      badgeSelect.value = "bg-zinc-700";
+    } else if (r.includes("대표")) {
+      badgeSelect.value = "bg-amber-600";
+    } else if (r.includes("이사")) {
+      badgeSelect.value = "bg-purple-600";
     } else if (r.includes("서버장")) {
       badgeSelect.value = "bg-emerald-500";
     } else if (r.includes("가이드")) {
@@ -670,9 +706,9 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
       if (rawSwat.includes("순직")) {
         statusVal = "martyred";
         rawSwat = rawSwat.replace(/순직/g, "").replace(/\s*·\s*/g, "").trim();
-      } else if (rawSwat.includes("퇴직") || rawSwat.includes("은퇴")) {
+      } else if (rawSwat.includes("면직") || rawSwat.includes("퇴직") || rawSwat.includes("은퇴")) {
         statusVal = "retired";
-        rawSwat = rawSwat.replace(/퇴직|은퇴/g, "").replace(/\s*·\s*/g, "").trim();
+        rawSwat = rawSwat.replace(/면직|퇴직|은퇴/g, "").replace(/\s*·\s*/g, "").trim();
       } else if (rawSwat.includes("사직")) {
         statusVal = "resigned";
         rawSwat = rawSwat.replace(/사직/g, "").replace(/\s*·\s*/g, "").trim();
@@ -869,6 +905,11 @@ function handleYoutubeUrlPaste(e) {
 async function handleSaveMember(e) {
   if (e) e.preventDefault();
   if (!isAdmin()) return;
+
+  if (typeof requireServerConnection === "function") {
+    const isConnected = await requireServerConnection(editingMemberId ? "인원 정보 수정" : "신규 인원 추가");
+    if (!isConnected) return;
+  }
 
   // 현재 열려 있는 탭의 입력값을 _modalAffData에 즉시 저장
   saveFormIntoAffData(_activeModalAffKey);
@@ -1154,8 +1195,13 @@ async function handleSaveMember(e) {
 
 let pendingDeleteMemberContext = null;
 
-function deleteMember(memberId) {
+async function deleteMember(memberId) {
   if (!isAdmin()) return;
+
+  if (typeof requireServerConnection === "function") {
+    const isConnected = await requireServerConnection("인원 삭제");
+    if (!isConnected) return;
+  }
 
   const allLocs = findAllMemberLocations(memberId);
   if (allLocs.length === 0) return;
@@ -1261,6 +1307,11 @@ function closeDeleteMemberModal() {
 async function handleConfirmDeleteMember(e) {
   if (e) e.preventDefault();
   if (!pendingDeleteMemberContext) return;
+
+  if (typeof requireServerConnection === "function") {
+    const isConnected = await requireServerConnection("인원 삭제");
+    if (!isConnected) return;
+  }
 
   const { memberId, member, affs } = pendingDeleteMemberContext;
   const isGlobalScope = !affs || affs.length <= 1 || !!document.getElementById("delete-scope-global")?.checked;

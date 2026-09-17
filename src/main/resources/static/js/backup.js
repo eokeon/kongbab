@@ -1,4 +1,4 @@
-const BACKUP_SERVER_URL = "";
+const BACKUP_SERVER_URL = typeof API_BASE !== "undefined" ? API_BASE : "";
 let serverBackupInfo = null;
 let isServerConnected = false;
 let isBackupModalOpen = false;
@@ -7,7 +7,7 @@ function getBackupDirectoryPath() {
   return serverBackupInfo?.directory || "D:\\백업 파일\\KONGBAB_BACKUPS_JSON";
 }
 
-async function checkBackupServerHealth() {
+async function checkBackupServerHealth(notifyToast = false) {
   try {
     const res = await fetch(`${BACKUP_SERVER_URL}/api/status`, { cache: "no-store" });
     if (res.ok) {
@@ -16,6 +16,13 @@ async function checkBackupServerHealth() {
         isServerConnected = true;
         serverBackupInfo = data;
         updateServerStatusBadge();
+        const offlineModal = document.getElementById("backend-offline-modal");
+        if (offlineModal && !offlineModal.classList.contains("hidden")) {
+          offlineModal.classList.add("hidden");
+        }
+        if (notifyToast) {
+          showToast("🟢 백엔드 서버(8080)와 정상 연결되었습니다.");
+        }
         return true;
       }
     }
@@ -23,8 +30,106 @@ async function checkBackupServerHealth() {
   isServerConnected = false;
   serverBackupInfo = null;
   updateServerStatusBadge();
+  if (notifyToast) {
+    showToast("🔴 백엔드 서버(8080)에 연결할 수 없습니다. IntelliJ에서 서버를 실행해주세요.");
+  }
   return false;
 }
+
+function showBackendOfflineModal(actionName = "저장 및 변경") {
+  if (typeof isLocalEnvironment === "function" && !isLocalEnvironment()) {
+    return;
+  }
+
+  let modal = document.getElementById("backend-offline-modal");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "backend-offline-modal";
+    modal.className = "fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 select-none animate-fade-in";
+    modal.innerHTML = `
+      <div class="bg-zinc-900 border-2 border-red-500/80 rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl text-zinc-100 ring-1 ring-red-500/30">
+        <div class="flex items-start gap-3.5 text-red-400 mb-4 pb-3.5 border-b border-zinc-800">
+          <div class="w-12 h-12 rounded-xl bg-red-500/20 border border-red-500/40 flex items-center justify-center text-2xl flex-shrink-0">
+            ⚠️
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+              <span>백엔드 서버 미연결 경고</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/40 font-bold">저장 차단됨</span>
+            </h3>
+            <p class="text-xs text-red-300/90 mt-0.5">데이터 유실 방지를 위해 안전하게 작업이 차단되었습니다.</p>
+          </div>
+        </div>
+
+        <div class="bg-zinc-950/90 rounded-xl p-4 border border-zinc-800 text-xs sm:text-sm space-y-2.5 mb-5">
+          <p class="text-zinc-200 font-medium leading-relaxed">
+            현재 <span class="text-amber-300 font-bold">Spring Boot 백엔드 서버(localhost:8080)</span>가 실행되지 않은 상태입니다.
+          </p>
+          <p class="text-zinc-400 leading-relaxed text-xs">
+            서버가 꺼진 상태에서 <span id="backend-offline-action-name" class="text-red-400 font-bold">[작업]</span>을 진행하면 DB 및 백업 파일에 영구 저장되지 않고 임시 캐시에만 남아 새로고침 시 <span class="text-red-300 font-semibold underline">데이터가 모두 유실</span>될 수 있습니다.
+          </p>
+          <div class="pt-2.5 border-t border-zinc-800/80 text-xs space-y-1.5">
+            <div class="font-bold text-amber-300 flex items-center gap-1">
+              <span>💡</span>
+              <span>해결 방법 (30초 소요):</span>
+            </div>
+            <div class="text-zinc-300 pl-4 border-l-2 border-amber-500/40 space-y-1">
+              <div>1. <span class="text-white font-semibold">IntelliJ IDEA</span> 또는 터미널에서 Spring Boot 애플리케이션을 실행해주세요.</div>
+              <div>2. 서버 실행(8080 포트) 후 아래 <span class="text-emerald-400 font-bold">"서버 연결 재확인"</span> 버튼을 눌러주세요.</div>
+              <div class="text-[11px] text-zinc-400 mt-1.5">* 입력하신 내용 및 양식은 그대로 유지되어 있으니 창을 닫지 마세요.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2">
+          <button type="button" id="backend-offline-retry-btn" class="px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold text-xs shadow-lg shadow-red-600/30 transition-all cursor-pointer flex items-center gap-1.5">
+            <span>🔄</span>
+            <span>서버 연결 재확인</span>
+          </button>
+          <button type="button" onclick="document.getElementById('backend-offline-modal').classList.add('hidden')" class="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-xs transition-all cursor-pointer">
+            닫기
+          </button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    document.getElementById("backend-offline-retry-btn").onclick = async () => {
+      const btn = document.getElementById("backend-offline-retry-btn");
+      btn.textContent = "연결 확인 중...";
+      btn.disabled = true;
+      const ok = await checkBackupServerHealth(false);
+      btn.disabled = false;
+      btn.innerHTML = `<span>🔄</span><span>서버 연결 재확인</span>`;
+      if (ok) {
+        modal.classList.add("hidden");
+        showToast("🟢 백엔드 서버와 연결되었습니다! 이제 저장을 진행하실 수 있습니다.");
+      } else {
+        alert("아직 백엔드 서버(8080)에 연결할 수 없습니다.\nIntelliJ에서 Spring Boot 서버가 정상 실행되었는지 확인해주세요.");
+      }
+    };
+  }
+
+  const actionSpan = document.getElementById("backend-offline-action-name");
+  if (actionSpan) actionSpan.textContent = `[${actionName}]`;
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+
+  showToast(`❌ 백엔드(8080) 미연결: 데이터 유실 방지를 위해 [${actionName}] 작업이 차단되었습니다.`);
+}
+
+async function requireServerConnection(actionName = "저장 및 변경") {
+  const connected = await checkBackupServerHealth();
+  if (!connected) {
+    showBackendOfflineModal(actionName);
+    return false;
+  }
+  return true;
+}
+
+window.requireServerConnection = requireServerConnection;
+window.showBackendOfflineModal = showBackendOfflineModal;
+window.checkBackupServerHealth = checkBackupServerHealth;
 
 async function syncToBackupServer(payload, showToastFeedback = false) {
   try {
@@ -54,7 +159,7 @@ async function syncToBackupServer(payload, showToastFeedback = false) {
   isServerConnected = false;
   updateServerStatusBadge();
   if (showToastFeedback) {
-    showToast(`⚠️ 백엔드(8080) 미연결: 브라우저 캐시에만 보관됩니다.`);
+    showToast(`❌ 백엔드(8080) 서버 미연결: 백업 파일이 저장되지 않았습니다. 서버를 실행해주세요.`);
   }
   return false;
 }
@@ -104,38 +209,62 @@ function createBackupSnapshot(actionReason = "데이터 변경", showFeedback = 
   syncToBackupServer(payload, showFeedback);
 }
 
+function isLocalEnvironment() {
+  const host = window.location.hostname;
+  return host === "localhost" || 
+         host === "127.0.0.1" || 
+         window.location.protocol === "file:" || 
+         host === "";
+}
+
 function initBackupStorage() {
+  if (!isLocalEnvironment()) {
+    // GitHub Pages 등 정적 배포 환경에서는 로컬 8080 백엔드 헬스체크 및 오프라인 경고를 비활성화 (순수 시청자 모드)
+    isServerConnected = false;
+    updateServerStatusBadge();
+    return;
+  }
   checkBackupServerHealth();
-  setInterval(checkBackupServerHealth, 10000);
+  setInterval(checkBackupServerHealth, 8000);
 }
 
 function updateServerStatusBadge() {
   const badge = document.getElementById("backend-status-badge");
-  if (!badge) return;
+  const banner = document.getElementById("backend-offline-banner");
 
-  const dir = getBackupDirectoryPath();
+  if (banner) {
+    // 로컬 환경(localhost)이면서 관리자 로그인 상태일 때만 백엔드 미연결 배너 표시 (배포 사이트에서는 절대 미표시)
+    if (isLocalEnvironment() && !isServerConnected && typeof isAdmin === "function" && isAdmin()) {
+      banner.classList.remove("hidden");
+      banner.classList.add("flex");
+    } else {
+      banner.classList.add("hidden");
+      banner.classList.remove("flex");
+    }
+  }
 
-  if (isServerConnected) {
-    const count = serverBackupInfo?.count ?? "-";
-    badge.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-500/60 text-emerald-300 text-xs font-bold shadow-sm cursor-pointer hover:bg-emerald-900/90 transition-all";
-    badge.title = `클릭하여 DB / 백업 관리 센터 열기 (즉시저장, 백업 기록, 불러오기)\n지정 백업 폴더: ${dir} (${count}개 보관 중)`;
-    badge.innerHTML = `
-      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-      <span>🟢 DB / 백업 연동 (${count}개)</span>
-    `;
-    badge.onclick = () => {
-      openBackupModal();
-    };
-  } else {
-    badge.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-400 text-xs font-medium cursor-pointer hover:bg-zinc-800 transition-all";
-    badge.title = "백엔드 미연결 (클릭하여 상태 확인 및 백업 관리)";
-    badge.innerHTML = `
-      <span class="w-2 h-2 rounded-full bg-zinc-500"></span>
-      <span>백엔드 미연결 (8080)</span>
-    `;
-    badge.onclick = () => {
-      openBackupModal();
-    };
+  if (badge) {
+    if (isServerConnected || !isLocalEnvironment()) {
+      badge.className = "hidden";
+      badge.innerHTML = "";
+    } else {
+      badge.className = "inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-red-950/80 border border-red-500/60 text-red-300 text-[11px] sm:text-xs font-bold shadow-sm cursor-pointer hover:bg-red-900/90 transition-all whitespace-nowrap animate-pulse";
+      badge.title = "백엔드 미연결 (클릭하여 상태 확인 및 실행 안내)";
+      badge.innerHTML = `
+        <span class="w-2 h-2 rounded-full bg-red-400"></span>
+        <span>🔴 8080 미연결</span>
+      `;
+      badge.onclick = () => {
+        showBackendOfflineModal("서버 상태 확인");
+      };
+    }
+  }
+
+  const modalStatus = document.getElementById("backup-modal-server-status");
+  if (modalStatus) {
+    modalStatus.innerHTML = isServerConnected 
+      ? `<span class="text-emerald-400 font-semibold">🟢 MariaDB / 백엔드 정상 연동 중</span>` 
+      : `<span class="text-red-400 font-semibold">🔴 백엔드 미연결 (IntelliJ에서 8080 서버 실행 필요)</span>`;
   }
 }
 

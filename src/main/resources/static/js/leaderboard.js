@@ -56,7 +56,7 @@ function getAllMembersWithLeaderboardStats() {
             : null;
           let sRole = currentAff?.swatRole ? String(currentAff.swatRole).trim() : (!Array.isArray(m.affiliations) ? (m.swatRole || '') : '');
           if (sRole) {
-            existing.swatRole = sRole.replace(/순직|사직|퇴직|은퇴/g, "").replace(/\s*·\s*/g, "").replace(/^\s*,\s*|\s*,\s*$/g, "").trim();
+            existing.swatRole = sRole.replace(/순직|사직|면직|퇴직|은퇴/g, "").replace(/\s*·\s*/g, "").replace(/^\s*,\s*|\s*,\s*$/g, "").trim();
           }
         }
       }
@@ -143,7 +143,7 @@ function computeMemberLeaderboardStats(m, cat, group) {
     memberSwatRole = (m.swatRole != null) ? String(m.swatRole).trim() : "";
   }
   if (memberSwatRole) {
-    memberSwatRole = memberSwatRole.replace(/순직|사직|퇴직|은퇴/g, "").replace(/\s*·\s*/g, "").replace(/^\s*,\s*|\s*,\s*$/g, "").trim();
+    memberSwatRole = memberSwatRole.replace(/순직|사직|면직|퇴직|은퇴/g, "").replace(/\s*·\s*/g, "").replace(/^\s*,\s*|\s*,\s*$/g, "").trim();
   }
 
   return {
@@ -868,7 +868,7 @@ function selectMemberFromLeaderboard(catId, groupId, memberName, memberId = null
   const cat = (KONGBAB_DATA.categories || []).find(c => c.id === catId);
   if (!cat) return;
 
-  const matchFn = m => (memberId && m.id === memberId) || m.name === memberName || m.streamer === memberName;
+  const matchFn = m => (memberId && String(m.id) === String(memberId)) || m.name === memberName || m.streamer === memberName;
 
   // 2. 그룹 설정
   if (groupId && cat.hasSubgroups) {

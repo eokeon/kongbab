@@ -198,7 +198,8 @@ public class StreamerService {
                 streamer.setYoutubeUrl(dto.getYoutubeUrl());
             }
 
-            if (dto.getVideos() != null) {
+            // 영상 목록이 전달된 경우에만 동기화 수행 (빈 배열이나 null인 경우 기존 DB 영상을 절대 삭제하지 않도록 보호)
+            if (dto.getVideos() != null && !dto.getVideos().isEmpty()) {
                 List<Video> currentVideos = streamer.getVideos();
                 if (currentVideos == null) {
                     currentVideos = new ArrayList<>();

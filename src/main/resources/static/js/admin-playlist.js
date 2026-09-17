@@ -511,6 +511,12 @@ async function handleBatchImportPlaylist(e) {
   if (e) e.preventDefault();
   if (!isAdmin()) return;
   if (!state.currentMember) return;
+
+  if (typeof requireServerConnection === "function") {
+    const isConnected = await requireServerConnection("재생목록 일괄 등록");
+    if (!isConnected) return;
+  }
+
   if (!loadedPlaylistVideos || loadedPlaylistVideos.length === 0) {
     showToast("먼저 재생목록을 불러와주세요.");
     return;

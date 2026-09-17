@@ -113,7 +113,7 @@ function openVideoModal(mode = 'add', videoId = null) {
   const radioBinge = document.querySelector('input[name="video-form-type"][value="binge"]');
 
   if (mode === 'edit' && videoId) {
-    const video = (state.currentMember.videos || []).find(v => v.id === videoId);
+    const video = (state.currentMember.videos || []).find(v => String(v.id) === String(videoId));
     if (!video) return;
 
     if (modeTabs) modeTabs.classList.add("hidden");
@@ -642,6 +642,11 @@ async function submitMultiVideos() {
   if (!isAdmin()) return;
   if (!state.currentMember) return;
 
+  if (typeof requireServerConnection === "function") {
+    const isConnected = await requireServerConnection("영상 다중 일괄 등록");
+    if (!isConnected) return;
+  }
+
   const selectedVideos = loadedMultiVideos.filter(v => v.selected !== false);
   if (selectedVideos.length === 0) {
     alert("등록할 영상을 1개 이상 선택해주세요.");
@@ -724,6 +729,11 @@ async function handleSaveVideo(e) {
   if (!isAdmin()) return;
   if (!state.currentMember) return;
 
+  if (typeof requireServerConnection === "function") {
+    const isConnected = await requireServerConnection(editingVideoId ? "영상 수정" : "영상 추가");
+    if (!isConnected) return;
+  }
+
   const url = document.getElementById("video-form-url").value.trim();
   const title = document.getElementById("video-form-title").value.trim();
   const date = document.getElementById("video-form-date").value.trim() || getTodayDateString();
@@ -743,11 +753,11 @@ async function handleSaveVideo(e) {
 
   const thumbnailUrl = (lastFetchedVideoInfo && lastFetchedVideoInfo.url === url && lastFetchedVideoInfo.thumbnailUrl)
     ? lastFetchedVideoInfo.thumbnailUrl
-    : (editingVideoId ? (state.currentMember.videos.find(v => v.id === editingVideoId)?.thumbnailUrl || '') : '');
+    : (editingVideoId ? (state.currentMember.videos.find(v => String(v.id) === String(editingVideoId))?.thumbnailUrl || '') : '');
 
   let savedVideo = null;
   if (editingVideoId) {
-    const idx = state.currentMember.videos.findIndex(v => v.id === editingVideoId);
+    const idx = state.currentMember.videos.findIndex(v => String(v.id) === String(editingVideoId));
     if (idx !== -1) {
       state.currentMember.videos[idx] = {
         ...state.currentMember.videos[idx],
@@ -807,13 +817,18 @@ async function deleteVideo(videoId) {
   if (!isAdmin()) return;
   if (!state.currentMember?.videos) return;
 
-  const target = state.currentMember.videos.find(v => v.id === videoId);
+  if (typeof requireServerConnection === "function") {
+    const isConnected = await requireServerConnection("영상 삭제");
+    if (!isConnected) return;
+  }
+
+  const target = state.currentMember.videos.find(v => String(v.id) === String(videoId));
   const title = target ? `"${target.title}"` : "이 영상";
 
   if (!confirm(`${title}을(를) 삭제하시겠습니까?`)) return;
 
   const deletedTitle = target ? target.title : "";
-  state.currentMember.videos = state.currentMember.videos.filter(v => v.id !== videoId);
+  state.currentMember.videos = state.currentMember.videos.filter(v => String(v.id) !== String(videoId));
   // 남은 영상들 displayOrder 재부여
   state.currentMember.videos.forEach((v, idx) => { v.displayOrder = idx; });
   await deleteVideoFromDb(videoId);
@@ -838,6 +853,11 @@ async function sortMemberVideosByDate() {
     return;
   }
 
+  if (typeof requireServerConnection === "function") {
+    const isConnected = await requireServerConnection("영상 날짜순 정렬");
+    if (!isConnected) return;
+  }
+
   if (!confirm(`"${state.currentMember.streamer}"의 모든 영상을 게시일자가 빠른 순(1번부터)으로 재정렬하시겠습니까?`)) {
     return;
   }
@@ -856,7 +876,7 @@ async function sortMemberVideosByDate() {
   if (container) renderMemberVideos(container);
 }
 
-function confirmDeleteAllMemberVideos() {
+async function confirmDeleteAllMemberVideos() {
   if (!isAdmin()) {
     alert("어드민 전용 기능입니다.");
     return;
@@ -866,20 +886,37 @@ function confirmDeleteAllMemberVideos() {
     return;
   }
 
+  if (typeof requireServerConnection === "function") {
+    const isConnected = await requireServerConnection("영상 전체 삭제");
+    if (!isConnected) return;
+  }
+
   const memberName = `${state.currentMember.streamer} (${state.currentMember.name})`;
   const videoCount = state.currentMember.videos.length;
   const input = prompt(`⚠️ 경고: [${memberName}]의 모든 영상(${videoCount}개)을 일괄 삭제하시겠습니까?\n\n삭제를 진행하려면 아래에 [모두삭제] 라고 정확히 입력해주세요.`);
   
   if (input === "모두삭제") {
-    deleteAllMemberVideos();
+    await deleteAllMemberVideos();
   } else if (input !== null) {
     alert("입력값이 일치하지 않아 삭제가 취소되었습니다.");
   }
 }
 
 async function deleteAllMemberVideos() {
+  if (typeof requireServerConnection === "function") {
+    const isConnected = await requireServerConnection("영상 전체 삭제");
+    if (!isConnected) return;
+  }
+
   const memberName = `${state.currentMember.streamer} (${state.currentMember.name})`;
   const videoCount = state.currentMember.videos.length;
+
+  const videosToDelete = [...state.currentMember.videos];
+  for (const v of videosToDelete) {
+    if (v.id) {
+      await deleteVideoFromDb(v.id);
+    }
+  }
 
   state.currentMember.videos = [];
   persistData();

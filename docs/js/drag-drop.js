@@ -1,5 +1,8 @@
 let cardDragSource = null;
 let isDraggingCard = false;
+let hasActuallyDragged = false;
+let dragStartX = null;
+let dragStartY = null;
 
 // 드래그 중 마우스 좌표 및 자동 스크롤 관리
 let lastDragX = null;
@@ -160,8 +163,11 @@ window.addEventListener("dragend", () => {
   clearCardDragOverStyles();
   setTimeout(() => {
     isDraggingCard = false;
+    hasActuallyDragged = false;
     cardDragSource = null;
-  }, 100);
+    dragStartX = null;
+    dragStartY = null;
+  }, 80);
 });
 
 // 마우스 버튼을 뗐을 때도 드래그 플래그 안전 해제
@@ -171,8 +177,11 @@ window.addEventListener("mouseup", () => {
     clearCardDragOverStyles();
     setTimeout(() => {
       isDraggingCard = false;
+      hasActuallyDragged = false;
       cardDragSource = null;
-    }, 50);
+      dragStartX = null;
+      dragStartY = null;
+    }, 40);
   }
 });
 
@@ -182,7 +191,10 @@ function handleCardDragStart(e, type, id) {
     return false;
   }
   isDraggingCard = true;
+  hasActuallyDragged = false;
   cardDragSource = { type, id };
+  dragStartX = e.clientX;
+  dragStartY = e.clientY;
   lastDragX = e.clientX;
   lastDragY = e.clientY;
 
@@ -200,6 +212,12 @@ function handleCardDragOver(e) {
   if (typeof isAdmin === "function" && !isAdmin()) return;
   e.preventDefault();
   if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
+
+  if (dragStartX !== null && dragStartY !== null) {
+    if (Math.hypot(e.clientX - dragStartX, e.clientY - dragStartY) > 6) {
+      hasActuallyDragged = true;
+    }
+  }
 
   lastDragX = e.clientX;
   lastDragY = e.clientY;
@@ -223,8 +241,11 @@ function handleCardDragEnd(e) {
   if (card) card.classList.remove("card-drag-source");
   setTimeout(() => {
     isDraggingCard = false;
+    hasActuallyDragged = false;
     cardDragSource = null;
-  }, 100);
+    dragStartX = null;
+    dragStartY = null;
+  }, 80);
 }
 
 function clearCardDragOverStyles() {
@@ -237,6 +258,7 @@ async function handleCardDrop(e, type, targetId) {
   e.stopPropagation();
   stopAutoScroll();
   clearCardDragOverStyles();
+  hasActuallyDragged = true;
 
   if (typeof isAdmin === "function" && !isAdmin()) return;
   if (!cardDragSource || cardDragSource.type !== type || cardDragSource.id === targetId) return;
@@ -272,6 +294,17 @@ async function handleCardDrop(e, type, targetId) {
   const fromIdx = list.findIndex(item => item.id === sourceId);
   const toIdx = list.findIndex(item => item.id === targetId);
   if (fromIdx === -1 || toIdx === -1) return;
+  if (fromIdx === toIdx) return;
+
+  if (typeof isServerConnected !== "undefined" && !isServerConnected) {
+    if (typeof showBackendOfflineModal === "function") {
+      showBackendOfflineModal("순서 변경 저장");
+    } else {
+      showToast("❌ 백엔드(8080) 미연결: 순서 변경 저장이 차단되었습니다.");
+    }
+    renderContent();
+    return;
+  }
 
   const [moved] = list.splice(fromIdx, 1);
   list.splice(toIdx, 0, moved);
@@ -332,4 +365,14 @@ async function handleCardDrop(e, type, targetId) {
   }
 
   showToast(`✓ 순서가 변경되어 저장되었습니다.<br><span class="text-[11px] text-amber-300">${reason}</span>`);
+  setTimeout(() => {
+    isDraggingCard = false;
+    hasActuallyDragged = false;
+    cardDragSource = null;
+    dragStartX = null;
+    dragStartY = null;
+  }, 100);
 }
+
+window.isDraggingCard = () => isDraggingCard;
+window.hasActuallyDragged = () => hasActuallyDragged;

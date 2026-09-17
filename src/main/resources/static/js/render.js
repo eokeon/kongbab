@@ -53,19 +53,19 @@ function getMemberAffiliationInfo(member, categoryId = null, subgroupId = null) 
   const isMartyred = statusStr === "martyred" || statusStr === "순직" ||
                      swatStr.includes("순직") || roleStr.includes("순직");
 
-  const isRetired = !isMartyred && (statusStr === "retired" || statusStr === "퇴직" || statusStr === "은퇴" ||
-                    swatStr.includes("퇴직") || swatStr.includes("은퇴") ||
-                    roleStr.includes("퇴직") || roleStr.includes("은퇴"));
+  const isRetired = !isMartyred && (statusStr === "retired" || statusStr === "면직" || statusStr === "퇴직" || statusStr === "은퇴" ||
+                    swatStr.includes("면직") || swatStr.includes("퇴직") || swatStr.includes("은퇴") ||
+                    roleStr.includes("면직") || roleStr.includes("퇴직") || roleStr.includes("은퇴"));
 
   const isResigned = !isMartyred && !isRetired && (statusStr === "resigned" || statusStr === "사직" ||
                      swatStr.includes("사직") || roleStr.includes("사직"));
 
   const isInactive = isMartyred || isRetired || isResigned;
 
-  // swatRole에서 순직/사직/퇴직/은퇴 텍스트는 순수 추가직책(특공대장, 특공대원, 정보부, 가이드)과 분리
+  // swatRole에서 순직/사직/면직/퇴직/은퇴 텍스트는 순수 추가직책(특공대장, 특공대원, 정보부, 가이드)과 분리
   let swatRole = swatStr;
-  if (swatRole.includes("순직") || swatRole.includes("사직") || swatRole.includes("퇴직") || swatRole.includes("은퇴")) {
-    swatRole = swatRole.replace(/순직|사직|퇴직|은퇴/g, "").replace(/\s*·\s*/g, "").replace(/^\s*,\s*|\s*,\s*$/g, "").trim();
+  if (swatRole.includes("순직") || swatRole.includes("사직") || swatRole.includes("면직") || swatRole.includes("퇴직") || swatRole.includes("은퇴")) {
+    swatRole = swatRole.replace(/순직|사직|면직|퇴직|은퇴/g, "").replace(/\s*·\s*/g, "").replace(/^\s*,\s*|\s*,\s*$/g, "").trim();
   }
 
   return {
@@ -87,7 +87,7 @@ function isMemberResigned(member, categoryId = null, subgroupId = null) {
   return getMemberAffiliationInfo(member, categoryId, subgroupId).isResigned;
 }
 
-// 퇴직 / 은퇴 여부 판별
+// 면직 / 은퇴 여부 판별
 function isMemberRetired(member, categoryId = null, subgroupId = null) {
   if (!member) return false;
   return getMemberAffiliationInfo(member, categoryId, subgroupId).isRetired;
@@ -99,7 +99,7 @@ function isMemberMartyred(member, categoryId = null, subgroupId = null) {
   return getMemberAffiliationInfo(member, categoryId, subgroupId).isMartyred;
 }
 
-// 비활동(사직/순직) 여부 판별
+// 비활동(사직/순직/면직) 여부 판별
 function isMemberInactive(member, categoryId = null, subgroupId = null) {
   if (!member) return false;
   return getMemberAffiliationInfo(member, categoryId, subgroupId).isInactive;
@@ -112,7 +112,7 @@ function getMemberRoleBadgeClass(member, categoryHint = null) {
   const role = (info.role || '').trim();
   if (!role) return "";
 
-  if (info.isInactive && (role.includes("사직") || role.includes("퇴직") || role.includes("은퇴") || role.includes("순직"))) {
+  if (info.isInactive && (role.includes("사직") || role.includes("면직") || role.includes("퇴직") || role.includes("은퇴") || role.includes("순직"))) {
     return "bg-zinc-800/90 text-zinc-400 border border-zinc-700/80";
   }
 
@@ -141,10 +141,41 @@ function getMemberRoleBadgeClass(member, categoryHint = null) {
     ["병원장", "간호실장", "간호부장", "간호사"].some(r => role.includes(r));
 
   if (isEMS) {
-    if (role.includes("병원장")) return "bg-teal-900 text-white border border-teal-400/70 shadow-sm";
-    if (role.includes("간호부장")) return "bg-teal-700 text-white";
+    if (role.includes("병원장")) return "bg-teal-500 text-zinc-950 font-bold border border-teal-200/80 shadow-sm";
+    if (role.includes("간호부장")) return "bg-teal-600 text-white";
     if (role.includes("간호실장")) return "bg-cyan-600 text-white";
     if (role.includes("간호사")) return "bg-emerald-500 text-zinc-950 font-bold";
+  }
+
+  const isPress = categoryHint === 'press' ||
+    (state && state.currentCategory === 'press') ||
+    member.category === 'press' ||
+    ["국장", "기자"].some(r => role.includes(r));
+
+  if (isPress) {
+    if (role.includes("국장")) return "bg-sky-700 text-white border border-sky-400/60 shadow-sm";
+    if (role.includes("기자")) return "bg-sky-500 text-white";
+  }
+
+  const isGang = categoryHint === 'gang' ||
+    (state && state.currentCategory === 'gang') ||
+    member.category === 'gang' ||
+    ["보스", "부두목", "간부", "조직원"].some(r => role.includes(r));
+
+  if (isGang) {
+    if (role.includes("보스")) return "bg-red-600 text-white";
+    if (role.includes("부두목")) return "bg-purple-600 text-white";
+    if (role.includes("간부")) return "bg-orange-700 text-white";
+    if (role.includes("조직원")) return "bg-zinc-700 text-white";
+  }
+
+  const isLux = (categoryHint === 'business' && (member.subgroup === 'biz-lux' || (state && state.currentGroup && state.currentGroup.id === 'biz-lux'))) ||
+    member.subgroup === 'biz-lux' ||
+    ["대표", "이사"].some(r => role.includes(r));
+
+  if (isLux) {
+    if (role.includes("대표")) return "bg-amber-600 text-white";
+    if (role.includes("이사")) return "bg-purple-600 text-white";
   }
 
   if (role.includes("서버장")) return "bg-emerald-500 text-white border border-emerald-300/60 shadow-sm";
@@ -156,8 +187,23 @@ function getMemberRoleBadgeClass(member, categoryHint = null) {
   if (info.badgeColor === 'bg-emerald-500') {
     return "bg-emerald-500 text-zinc-950 font-bold";
   }
+  if (info.badgeColor === 'bg-teal-500') {
+    return "bg-teal-500 text-zinc-950 font-bold border border-teal-200/80 shadow-sm";
+  }
+  if (info.badgeColor === 'bg-teal-600') {
+    return "bg-teal-600 text-white";
+  }
   if (info.badgeColor === 'bg-teal-900') {
-    return "bg-teal-900 text-white border border-teal-400/70 shadow-sm";
+    return "bg-teal-500 text-zinc-950 font-bold border border-teal-200/80 shadow-sm";
+  }
+  if (info.badgeColor === 'bg-teal-700') {
+    return "bg-teal-600 text-white";
+  }
+  if (info.badgeColor === 'bg-sky-700') {
+    return "bg-sky-700 text-white border border-sky-400/60 shadow-sm";
+  }
+  if (info.badgeColor === 'bg-sky-500') {
+    return "bg-sky-500 text-white";
   }
 
   return `${info.badgeColor || member.badgeColor || 'bg-zinc-800'} text-white`;
@@ -173,7 +219,7 @@ function getSwatBadgeHtml(swatRole, size = 'md') {
   const isGuide = !isServerBoss && roleStr.includes('가이드');
   const isInfo = roleStr.includes('정보부');
   const isMartyred = roleStr.includes('순직');
-  const isRetired = roleStr.includes('퇴직') || roleStr.includes('은퇴');
+  const isRetired = roleStr.includes('면직') || roleStr.includes('퇴직') || roleStr.includes('은퇴');
   const isResigned = roleStr.includes('사직');
 
   let colorClasses = '';
@@ -187,7 +233,7 @@ function getSwatBadgeHtml(swatRole, size = 'md') {
       colorClasses = 'bg-zinc-950/95 text-red-400 border border-red-800/90 shadow-md ring-1 ring-red-900/40';
     }
   } else if (isRetired) {
-    // 퇴직 전용 스탬프 뱃지 (다크 블랙 + 실버/그레이 텍스트/테두리)
+    // 면직 전용 스탬프 뱃지 (다크 블랙 + 실버/그레이 텍스트/테두리)
     if (size === 'lg') {
       colorClasses = 'bg-zinc-950/95 text-zinc-300 border border-zinc-600/90 shadow-xl shadow-zinc-950/40 ring-1 ring-zinc-700/40';
     } else if (size === 'sm') {
@@ -299,6 +345,9 @@ function renderHeaderAuth() {
         </button>
       </div>
     `;
+    if (typeof updateServerStatusBadge === "function") {
+      updateServerStatusBadge();
+    }
   } else {
     container.innerHTML = `
       <div class="flex items-center gap-1.5 sm:gap-2">
@@ -609,8 +658,8 @@ function renderMemberCard(member, dragType, clickFn) {
                 <span>순직</span>
               </span>
             ` : (retired ? `
-              <span class="absolute -top-1.5 -right-1.5 z-20 text-[9px] font-black px-1.5 py-0.5 rounded-md bg-zinc-950/95 text-zinc-300 border border-zinc-600/90 shadow ring-1 ring-zinc-700/40 rotate-12 flex items-center justify-center whitespace-nowrap tracking-tight select-none" title="퇴직">
-                <span>퇴직</span>
+              <span class="absolute -top-1.5 -right-1.5 z-20 text-[9px] font-black px-1.5 py-0.5 rounded-md bg-zinc-950/95 text-zinc-300 border border-zinc-600/90 shadow ring-1 ring-zinc-700/40 rotate-12 flex items-center justify-center whitespace-nowrap tracking-tight select-none" title="면직">
+                <span>면직</span>
               </span>
             ` : (resigned ? `
               <span class="absolute -top-1.5 -right-1.5 z-20 text-[9px] font-black px-1.5 py-0.5 rounded-md bg-zinc-950/95 text-amber-400 border border-amber-600/90 shadow ring-1 ring-amber-900/40 rotate-12 flex items-center justify-center whitespace-nowrap tracking-tight select-none" title="사직">
@@ -1023,10 +1072,12 @@ function renderMemberVideos(container) {
 
   const groupName = group ? group.name : (cat ? cat.name : '');
   const groupEmoji = group ? (group.emoji || '') : (cat ? (cat.emoji || '') : '');
-  const backButtonHtml = (!cat.hasSubgroups || !group) ? `
-    <button onclick="goBackFromMember('category', '${cat.id}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-4 cursor-pointer">
+  const catName = cat ? cat.name : '인원';
+  const catId = cat ? cat.id : 'police';
+  const backButtonHtml = (!cat || !cat.hasSubgroups || !group) ? `
+    <button onclick="goBackFromMember('category', '${catId}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-4 cursor-pointer">
       ${SVG_ICONS.back}
-      <span>${cat.name} 인원 목록으로 돌아가기</span>
+      <span>${catName} 인원 목록으로 돌아가기</span>
     </button>
   ` : `
     <button onclick="goBackFromMember('group', '${group.id}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-4 cursor-pointer">
@@ -1159,9 +1210,10 @@ function renderMemberVideos(container) {
     `;
   }).join("");
 
+  const totalValidVideos = clipCount + fullCount + bingeCount;
   if (displayedVideos.length === 0) {
-    if (allVideos.length === 0) {
-      videosHtml = renderEmptyState(SVG_ICONS.youtube, "등록된 유튜브 영상이 없습니다.");
+    if (totalValidVideos === 0) {
+      videosHtml = renderEmptyState(SVG_ICONS.youtube, "등록된 영상이 없습니다.");
     } else if (currentTab === "clip") {
       videosHtml = `
         <div class="col-span-full py-16 text-center bg-zinc-900/40 rounded-2xl border border-zinc-800/50">
@@ -1238,8 +1290,8 @@ function renderMemberVideos(container) {
                 <span>순직</span>
               </span>
             ` : (retired ? `
-              <span class="absolute -top-2.5 -right-2.5 z-20 text-xs font-black px-2.5 py-1 rounded-xl bg-zinc-950/95 text-zinc-300 border border-zinc-600/90 shadow-xl shadow-zinc-950/40 ring-1 ring-zinc-700/40 rotate-12 flex items-center justify-center whitespace-nowrap tracking-tight select-none" title="퇴직">
-                <span>퇴직</span>
+              <span class="absolute -top-2.5 -right-2.5 z-20 text-xs font-black px-2.5 py-1 rounded-xl bg-zinc-950/95 text-zinc-300 border border-zinc-600/90 shadow-xl shadow-zinc-950/40 ring-1 ring-zinc-700/40 rotate-12 flex items-center justify-center whitespace-nowrap tracking-tight select-none" title="면직">
+                <span>면직</span>
               </span>
             ` : (resigned ? `
               <span class="absolute -top-2.5 -right-2.5 z-20 text-xs font-black px-2.5 py-1 rounded-xl bg-zinc-950/95 text-amber-400 border border-amber-600/90 shadow-xl shadow-amber-950/40 ring-1 ring-amber-900/40 rotate-12 flex items-center justify-center whitespace-nowrap tracking-tight select-none" title="사직">

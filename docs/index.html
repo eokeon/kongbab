@@ -84,6 +84,20 @@
     </div>
   </header>
 
+  <!-- 백엔드 서버 미연결 경고 배너 (관리자 모드에서 8080 서버 미연결 시 즉시 표시) -->
+  <div id="backend-offline-banner" class="hidden bg-gradient-to-r from-red-950 via-red-900 to-red-950 border-b-2 border-red-500/80 px-4 py-2.5 text-xs sm:text-sm text-red-100 items-center justify-between shadow-xl select-none z-40 sticky top-16 sm:top-20">
+    <div class="flex items-center gap-2.5 font-bold">
+      <span class="w-3 h-3 rounded-full bg-red-500 animate-ping flex-shrink-0"></span>
+      <span>⚠️ [백엔드 8080 미연결] Spring Boot 서버가 꺼져 있어 데이터 유실 방지를 위해 모든 등록/수정/삭제 저장이 잠겨 있습니다.</span>
+    </div>
+    <div class="flex items-center gap-2 flex-shrink-0 ml-3">
+      <button onclick="checkBackupServerHealth(true)" class="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer flex items-center gap-1">
+        <span>🔄</span>
+        <span>연결 확인</span>
+      </button>
+    </div>
+  </div>
+
   <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
     <div class="mb-5 sm:mb-6 flex flex-col xl:flex-row xl:items-center justify-between gap-3 sm:gap-4 border-b border-zinc-800/80 pb-4 sm:pb-5">
       <div id="category-tabs" class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1 sm:py-0 flex-nowrap min-w-0 max-w-full"></div>
@@ -727,7 +741,7 @@
             >
               <option value="active">🟢 현직</option>
               <option value="resigned">🟡 사직</option>
-              <option value="retired">⚪ 퇴직</option>
+              <option value="retired">⚪ 면직</option>
               <option value="martyred">🔴 순직</option>
             </select>
           </div>
@@ -749,19 +763,24 @@
                 <option value="bg-yellow-400">🟡 노란색 (교육생)</option>
               </optgroup>
               <optgroup label="EMS 직책 전용 색상">
-                <option value="bg-teal-900">🩺 짙은청록 (병원장)</option>
-                <option value="bg-teal-700">🩺 딥청록 (간호부장)</option>
+                <option value="bg-teal-500">🩺 민트청록 (병원장)</option>
+                <option value="bg-teal-600">🩺 선명한청록 (간호부장)</option>
                 <option value="bg-cyan-600">🩺 밝은시안 (간호실장)</option>
                 <option value="bg-emerald-500">🩺 에메랄드/민트 (간호사)</option>
               </optgroup>
-              <optgroup label="기타 / 공통">
+              <optgroup label="기자 직책 전용 색상">
+                <option value="bg-sky-700">📰 짙은스카이 (국장)</option>
+                <option value="bg-sky-500">📰 스카이/하늘 (기자)</option>
+              </optgroup>
+              <optgroup label="럭스 전용 색상">
+                <option value="bg-amber-600">🟡 황금 (대표)</option>
+                <option value="bg-purple-600">🟣 보라 (이사)</option>
+              </optgroup>
+              <optgroup label="갱단 전용 색상">
                 <option value="bg-red-600">🔴 빨강 (보스)</option>
-                <option value="bg-emerald-500">🟢 밝은초록 (서버장)</option>
-                <option value="bg-emerald-600">🟢 초록 (가이드)</option>
-                <option value="bg-amber-600">🟡 황금 (사업체/대표)</option>
-                <option value="bg-teal-600">🟢 청록 (EMS/의료)</option>
-                <option value="bg-purple-600">🟣 보라 (시민/클럽)</option>
-                <option value="bg-zinc-700">⚪ 회색 (일반/조직원)</option>
+                <option value="bg-purple-600">🟣 보라 (부두목)</option>
+                <option value="bg-orange-700">🟠 짙은주황 (간부)</option>
+                <option value="bg-zinc-700">⚪ 회색 (조직원)</option>
               </optgroup>
             </select>
           </div>
@@ -932,7 +951,7 @@
           <span id="backup-modal-dir-path" class="font-mono text-amber-300 font-semibold truncate max-w-md"></span>
         </div>
         <div class="flex items-center justify-between text-[11px] text-zinc-500 pt-1 border-t border-zinc-800/50">
-          <span>최대 20개 자동 순환 보관 (초과 시 오래된 백업부터 자동 정리)</span>
+          <span>최대 100개 자동 순환 보관 (초과 시 오래된 백업부터 자동 정리)</span>
           <span id="backup-modal-server-status" class="text-emerald-400 font-semibold">🟢 백엔드 정상 연동 중</span>
         </div>
       </div>
@@ -1112,18 +1131,18 @@
     </div>
   </div>
 
-  <script src="./js/state.js?v=20260918_opt"></script>
-  <script src="./js/api.js?v=20260918_opt"></script>
-  <script src="./js/subscriber-sync.js?v=20260913_01"></script>
-  <script src="./js/drag-drop.js?v=20260911_01"></script>
-  <script src="./js/backup.js?v=20260911_01"></script>
-  <script src="./js/admin-video.js?v=20260918_opt"></script>
-  <script src="./js/admin-member.js?v=20260918_opt"></script>
-  <script src="./js/admin-playlist.js?v=20260918_opt"></script>
-  <script src="./js/admin.js?v=20260913_01"></script>
-  <script src="./js/render.js?v=20260918_opt"></script>
-  <script src="./js/navigation.js?v=20260918_opt"></script>
-  <script src="./js/leaderboard.js?v=20260918_opt"></script>
-  <script src="./js/app.js?v=20260918_opt"></script>
+  <script src="./js/state.js?v=20260918_press_v2"></script>
+  <script src="./js/api.js?v=20260918_press_v2"></script>
+  <script src="./js/subscriber-sync.js?v=20260918_press_v2"></script>
+  <script src="./js/drag-drop.js?v=20260918_press_v2"></script>
+  <script src="./js/backup.js?v=20260918_press_v2"></script>
+  <script src="./js/admin-video.js?v=20260918_press_v2"></script>
+  <script src="./js/admin-member.js?v=20260918_press_v2"></script>
+  <script src="./js/admin-playlist.js?v=20260918_press_v2"></script>
+  <script src="./js/admin.js?v=20260918_press_v2"></script>
+  <script src="./js/render.js?v=20260918_press_v2"></script>
+  <script src="./js/navigation.js?v=20260918_press_v2"></script>
+  <script src="./js/leaderboard.js?v=20260918_press_v2"></script>
+  <script src="./js/app.js?v=20260918_press_v2"></script>
 </body>
 </html>

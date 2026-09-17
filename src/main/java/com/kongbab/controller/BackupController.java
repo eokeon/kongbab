@@ -41,7 +41,7 @@ public class BackupController {
     @Value("${kongbab.backup.directory:}")
     private String backupDirectory;
 
-    @Value("${kongbab.backup.max-count:20}")
+    @Value("${kongbab.backup.max-count:100}")
     private int maxBackups;
 
     private static final DateTimeFormatter FILE_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
@@ -255,7 +255,13 @@ public class BackupController {
                 streamerService.syncStreamers(streamerDtoList);
             }
 
-            // 복원된 전체 백업 json을 static 및 docs의 streamers.json에도 즉시 동기화
+            // 복원된 전체 백업 json을 backup 디렉토리의 backup.json 및 static, docs의 streamers.json에도 즉시 동기화
+            File dir = getTargetDir();
+            Path latestBackupPath = Paths.get(dir.getAbsolutePath(), "backup.json");
+            try {
+                Files.writeString(latestBackupPath, jsonContent, StandardCharsets.UTF_8);
+            } catch (Exception ignored) {}
+
             List<Path> targets = List.of(
                     Paths.get("src", "main", "resources", "static", "streamers.json"),
                     Paths.get("build", "resources", "main", "static", "streamers.json"),

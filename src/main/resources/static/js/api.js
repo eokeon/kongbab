@@ -152,6 +152,27 @@ async function saveCategoryStructureToDb(categories) {
   return null;
 }
 
+function countTotalVideosInCategories(categories) {
+  if (!Array.isArray(categories)) return 0;
+  let count = 0;
+  categories.forEach(cat => {
+    if (cat.hasSubgroups && Array.isArray(cat.groups)) {
+      cat.groups.forEach(g => {
+        if (Array.isArray(g.members)) {
+          g.members.forEach(m => {
+            if (Array.isArray(m.videos)) count += m.videos.length;
+          });
+        }
+      });
+    } else if (Array.isArray(cat.members)) {
+      cat.members.forEach(m => {
+        if (Array.isArray(m.videos)) count += m.videos.length;
+      });
+    }
+  });
+  return count;
+}
+
 async function fetchStreamersFromDb() {
   try {
     const res = await fetch(`${API_BASE}/api/streamers`, { cache: "no-store" });
@@ -172,6 +193,15 @@ async function fetchStreamersFromDb() {
       const staticData = await staticRes.json();
       if (staticData) {
         if (Array.isArray(staticData.categories) && staticData.categories.length > 0) {
+          // 오프라인 데이터 보호: 로컬 캐시(localStorage)에 이미 영상 데이터가 존재하고,
+          // 정적 streamers.json보다 영상 수가 같거나 많으면 덮어쓰지 않고 로컬 데이터를 온전히 유지
+          const localVideosCount = countTotalVideosInCategories(KONGBAB_DATA?.categories);
+          const staticVideosCount = countTotalVideosInCategories(staticData.categories);
+          if (localVideosCount > 0 && localVideosCount >= staticVideosCount) {
+            console.log(`[데이터 보호] 로컬 캐시 영상 수(${localVideosCount}개)가 정적 파일(${staticVideosCount}개) 이상이므로 정적 덮어쓰기를 건너뜁니다.`);
+            return "STATIC_CATEGORIES_LOADED";
+          }
+
           if (typeof applyCategoryStructure === "function") {
             applyCategoryStructure(staticData.categories);
           }
