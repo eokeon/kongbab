@@ -173,6 +173,47 @@ function countTotalVideosInCategories(categories) {
   return count;
 }
 
+function countTotalMembersInCategories(categories) {
+  if (!Array.isArray(categories)) return 0;
+  const memberSet = new Set();
+  categories.forEach(cat => {
+    if (cat.hasSubgroups && Array.isArray(cat.groups)) {
+      cat.groups.forEach(g => {
+        if (Array.isArray(g.members)) {
+          g.members.forEach(m => { if (m && m.id) memberSet.add(m.id); });
+        }
+      });
+    } else if (Array.isArray(cat.members)) {
+      cat.members.forEach(m => { if (m && m.id) memberSet.add(m.id); });
+    }
+  });
+  return memberSet.size;
+}
+
+function mergeStaticStreamersWithLocalVideos(staticStreamers) {
+  const localVideoMap = new Map();
+  if (KONGBAB_DATA && Array.isArray(KONGBAB_DATA.categories)) {
+    KONGBAB_DATA.categories.forEach(cat => {
+      const mems = cat.hasSubgroups ? (cat.groups || []).flatMap(g => g.members || []) : (cat.members || []);
+      mems.forEach(m => {
+        if (m && m.id && Array.isArray(m.videos) && m.videos.length > 0) {
+          if (!localVideoMap.has(m.id) || localVideoMap.get(m.id).length < m.videos.length) {
+            localVideoMap.set(m.id, m.videos);
+          }
+        }
+      });
+    });
+  }
+
+  return staticStreamers.map(s => {
+    const localVideos = localVideoMap.get(s.id);
+    if (localVideos && localVideos.length > (s.videos ? s.videos.length : 0)) {
+      return { ...s, videos: localVideos };
+    }
+    return s;
+  });
+}
+
 async function fetchStreamersFromDb() {
   try {
     const res = await fetch(`${API_BASE}/api/streamers`, { cache: "no-store" });
@@ -193,20 +234,33 @@ async function fetchStreamersFromDb() {
       const staticData = await staticRes.json();
       if (staticData) {
         if (Array.isArray(staticData.categories) && staticData.categories.length > 0) {
-          // 오프라인 데이터 보호: 로컬 캐시(localStorage)에 이미 영상 데이터가 존재하고,
-          // 정적 streamers.json보다 영상 수가 같거나 많으면 덮어쓰지 않고 로컬 데이터를 온전히 유지
           const localVideosCount = countTotalVideosInCategories(KONGBAB_DATA?.categories);
           const staticVideosCount = countTotalVideosInCategories(staticData.categories);
-          if (localVideosCount > 0 && localVideosCount >= staticVideosCount) {
-            console.log(`[데이터 보호] 로컬 캐시 영상 수(${localVideosCount}개)가 정적 파일(${staticVideosCount}개) 이상이므로 정적 덮어쓰기를 건너뜁니다.`);
+          const localMembersCount = countTotalMembersInCategories(KONGBAB_DATA?.categories);
+          const staticMembersCount = countTotalMembersInCategories(staticData.categories);
+
+          // 새 인원이 추가되었거나 멤버 수가 증가했으면 즉시 스마트 병합 로드
+          const hasNewMembers = staticMembersCount > localMembersCount;
+          const needsStaticReload = !localVideosCount || staticVideosCount > localVideosCount || hasNewMembers;
+
+          if (!needsStaticReload && localVideosCount > 0) {
+            console.log(`[데이터 보호] 로컬 캐시 데이터(영상 ${localVideosCount}개, 인원 ${localMembersCount}명)가 최신 상태입니다.`);
             return "STATIC_CATEGORIES_LOADED";
           }
 
           if (typeof applyCategoryStructure === "function") {
             applyCategoryStructure(staticData.categories);
           }
-          applyStreamersToKongbabData(extractAllStreamersFromStatic(staticData));
-          persistData();
+          const rawStaticList = extractAllStreamersFromStatic(staticData);
+          const mergedList = mergeStaticStreamersWithLocalVideos(rawStaticList);
+          applyStreamersToKongbabData(mergedList);
+          persistData(true);
+          console.log(`[데이터 동기화] 최신 인원(${staticMembersCount}명) 및 데이터 갱신 완료.`);
+
+          if (typeof renderCategoryTabs === "function") renderCategoryTabs();
+          if (typeof renderContent === "function") renderContent();
+          if (typeof updateStats === "function") updateStats();
+
           return "STATIC_CATEGORIES_LOADED";
         } else if (Array.isArray(staticData)) {
           return staticData;
@@ -321,6 +375,10 @@ async function deleteVideoFromDb(videoId) {
 }
 
 async function syncAllStreamersToDb(streamersList) {
+  if (!Array.isArray(streamersList) || streamersList.length < 140) {
+    console.warn(`[DB 동기화 차단] 전달된 인원 수가 비정상적으로 적습니다 (${streamersList ? streamersList.length : 0}명 < 146명). 데이터 유실 방지를 위해 DB 동기화를 차단합니다.`);
+    return null;
+  }
   try {
     const res = await fetch(`${API_BASE}/api/streamers/sync`, {
       method: "POST",

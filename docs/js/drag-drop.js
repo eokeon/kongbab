@@ -354,7 +354,12 @@ async function handleCardDrop(e, type, targetId) {
     syncPromises.push(saveCategoryStructureToDb(KONGBAB_DATA.categories));
   }
   if (typeof syncAllStreamersToDb === "function") {
-    syncPromises.push(syncAllStreamersToDb(extractAllStreamersFromKongbabData()));
+    const allStreamers = extractAllStreamersFromKongbabData();
+    if (allStreamers && allStreamers.length >= 140) {
+      syncPromises.push(syncAllStreamersToDb(allStreamers));
+    } else {
+      console.warn(`[동기화 차단] 인원 누락 감지 (현재 ${allStreamers ? allStreamers.length : 0}명 < 146명). DB 데이터 보호를 위해 일괄 동기화를 건너뜁니다.`);
+    }
   }
   createBackupSnapshot(reason, false);
 

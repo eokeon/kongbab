@@ -133,6 +133,28 @@ function loadStoredData() {
     if (saved) {
       const parsed = JSON.parse(saved);
       if (parsed && Array.isArray(parsed.categories)) {
+        // 캐시 무결성 검사: 만약 저장된 고유 멤버 수가 146명 미만이거나 정비소(biz-yastation) 인원이 없으면 구버전 캐시로 판별하여 무효화
+        const cachedMemberSet = new Set();
+        let yastationMemberCount = 0;
+        parsed.categories.forEach(cat => {
+          if (cat.hasSubgroups && Array.isArray(cat.groups)) {
+            cat.groups.forEach(g => {
+              if (Array.isArray(g.members)) {
+                g.members.forEach(m => { if (m && m.id) cachedMemberSet.add(m.id); });
+                if (g.id === "biz-yastation") yastationMemberCount = g.members.length;
+              }
+            });
+          } else if (Array.isArray(cat.members)) {
+            cat.members.forEach(m => { if (m && m.id) cachedMemberSet.add(m.id); });
+          }
+        });
+
+        if (cachedMemberSet.size < 146 || yastationMemberCount === 0) {
+          console.log(`[캐시 갱신] 최신 인원(146명) 반영을 위해 구버전 로컬 캐시(인원: ${cachedMemberSet.size}명, 정비소: ${yastationMemberCount}명)를 무효화합니다.`);
+          localStorage.removeItem("kongbab_custom_data");
+          return;
+        }
+
         applyCategoryStructure(parsed.categories);
 
         parsed.categories.forEach(savedCat => {

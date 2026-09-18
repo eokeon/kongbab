@@ -169,13 +169,49 @@ function getMemberRoleBadgeClass(member, categoryHint = null) {
     if (role.includes("조직원")) return "bg-zinc-700 text-white";
   }
 
+  // 럭스 클럽 전용 직책 뱃지 색상
   const isLux = (categoryHint === 'business' && (member.subgroup === 'biz-lux' || (state && state.currentGroup && state.currentGroup.id === 'biz-lux'))) ||
     member.subgroup === 'biz-lux' ||
-    ["대표", "이사"].some(r => role.includes(r));
+    (categoryHint !== 'business' && ["대표", "이사"].some(r => role.includes(r)));
 
   if (isLux) {
     if (role.includes("대표")) return "bg-amber-600 text-white";
     if (role.includes("이사")) return "bg-purple-600 text-white";
+  }
+
+  // 정비소 (야스테이션) 전용 직책 뱃지 색상 (사장/메카닉 1기/메카닉 2기/홍보)
+  const isYastation = (categoryHint === 'business' && (member.subgroup === 'biz-yastation' || (state && state.currentGroup && state.currentGroup.id === 'biz-yastation'))) ||
+    member.subgroup === 'biz-yastation' ||
+    ["사장", "메카닉", "홍보"].some(r => role.includes(r));
+
+  if (isYastation) {
+    if (role.includes("사장")) return "bg-amber-500 text-zinc-950 font-black border border-amber-300 shadow-sm";
+    if (role.includes("메카닉 1기")) return "bg-indigo-600 text-white border border-indigo-400/40 shadow-sm font-semibold";
+    if (role.includes("메카닉 2기")) return "bg-cyan-700 text-white border border-cyan-400/40 shadow-sm font-semibold";
+    if (role.includes("홍보")) return "bg-rose-500 text-white border border-rose-300/40 shadow-sm font-semibold";
+  }
+
+  // 영써티원 전용 직책 뱃지 색상 (대표/매니저/직원/알바생)
+  const isYoung31 = (categoryHint === 'business' && (member.subgroup === 'biz-young31' || (state && state.currentGroup && state.currentGroup.id === 'biz-young31'))) ||
+    member.subgroup === 'biz-young31' ||
+    ["대표", "매니저", "직원", "알바생"].some(r => role.includes(r));
+
+  if (isYoung31) {
+    if (role.includes("대표")) return "bg-rose-600 text-white border border-rose-400/50 shadow-sm font-bold";
+    if (role.includes("매니저")) return "bg-orange-500 text-white border border-orange-300/40 shadow-sm font-semibold";
+    if (role.includes("직원")) return "bg-green-600 text-white border border-green-400/40 shadow-sm font-semibold";
+    if (role.includes("알바생")) return "bg-lime-500 text-zinc-950 font-bold border border-lime-300/50 shadow-sm";
+  }
+
+  // 코이 레스토랑 전용 직책 뱃지 색상 (메이드장/메이드/집사)
+  const isKoi = (categoryHint === 'business' && (member.subgroup === 'biz-koi' || (state && state.currentGroup && state.currentGroup.id === 'biz-koi'))) ||
+    member.subgroup === 'biz-koi' ||
+    ["메이드장", "메이드", "집사"].some(r => role.includes(r));
+
+  if (isKoi) {
+    if (role.includes("메이드장")) return "bg-violet-600 text-white border border-violet-400/50 shadow-sm font-bold";
+    if (role.includes("메이드")) return "bg-fuchsia-500 text-white border border-fuchsia-300/40 shadow-sm font-semibold";
+    if (role.includes("집사")) return "bg-slate-700 text-white border border-slate-500/50 shadow-sm font-semibold";
   }
 
   if (role.includes("서버장")) return "bg-emerald-500 text-white border border-emerald-300/60 shadow-sm";
@@ -183,6 +219,45 @@ function getMemberRoleBadgeClass(member, categoryHint = null) {
 
   if (info.badgeColor === 'bg-white') {
     return "bg-white text-zinc-950 font-bold border border-zinc-300 shadow-sm";
+  }
+  if (info.badgeColor === 'bg-amber-500') {
+    return "bg-amber-500 text-zinc-950 font-black border border-amber-300 shadow-sm";
+  }
+  if (info.badgeColor === 'bg-indigo-600') {
+    return "bg-indigo-600 text-white border border-indigo-400/40 shadow-sm font-semibold";
+  }
+  if (info.badgeColor === 'bg-cyan-700') {
+    return "bg-cyan-700 text-white border border-cyan-400/40 shadow-sm font-semibold";
+  }
+  if (info.badgeColor === 'bg-rose-500') {
+    return "bg-rose-500 text-white border border-rose-300/40 shadow-sm font-semibold";
+  }
+  if (info.badgeColor === 'bg-rose-600') {
+    return "bg-rose-600 text-white border border-rose-400/50 shadow-sm font-bold";
+  }
+  if (info.badgeColor === 'bg-orange-500') {
+    return "bg-orange-500 text-white border border-orange-300/40 shadow-sm font-semibold";
+  }
+  if (info.badgeColor === 'bg-green-600') {
+    return "bg-green-600 text-white border border-green-400/40 shadow-sm font-semibold";
+  }
+  if (info.badgeColor === 'bg-lime-500') {
+    return "bg-lime-500 text-zinc-950 font-bold border border-lime-300/50 shadow-sm";
+  }
+  if (info.badgeColor === 'bg-violet-600') {
+    return "bg-violet-600 text-white border border-violet-400/50 shadow-sm font-bold";
+  }
+  if (info.badgeColor === 'bg-fuchsia-500') {
+    return "bg-fuchsia-500 text-white border border-fuchsia-300/40 shadow-sm font-semibold";
+  }
+  if (info.badgeColor === 'bg-slate-700') {
+    return "bg-slate-700 text-white border border-slate-500/50 shadow-sm font-semibold";
+  }
+  if (info.badgeColor === 'bg-yellow-400') {
+    return "bg-yellow-400 text-zinc-950 font-bold";
+  }
+  if (info.badgeColor === 'bg-pink-600') {
+    return "bg-pink-600 text-white";
   }
   if (info.badgeColor === 'bg-emerald-500') {
     return "bg-emerald-500 text-zinc-950 font-bold";

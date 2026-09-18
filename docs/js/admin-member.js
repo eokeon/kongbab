@@ -420,7 +420,10 @@ function handleRoleInputForPoliceColor(roleVal) {
   const isEMS = curAff ? (curAff.category === 'ems') : !!document.getElementById("aff-check-ems")?.checked;
   const isPress = (curAff ? curAff.category === 'press' : !!document.getElementById("aff-check-press")?.checked) || ["국장", "기자"].some(k => r.includes(k));
   const isGang = (curAff ? curAff.category === 'gang' : !!document.getElementById("aff-check-gang")?.checked) || ["보스", "부두목", "간부", "조직원"].some(k => r.includes(k));
-  const isLux = (curAff ? (curAff.subgroup === 'biz-lux' || curAff.category === 'business') : !!document.getElementById("aff-check-business")?.checked) || ["대표", "이사"].some(k => r.includes(k));
+  const isLux = curAff ? (curAff.subgroup === 'biz-lux') : false;
+  const isYastation = curAff ? (curAff.subgroup === 'biz-yastation') : false;
+  const isYoung31 = curAff ? (curAff.subgroup === 'biz-young31') : false;
+  const isKoi = curAff ? (curAff.subgroup === 'biz-koi') : false;
 
   if (isPolice) {
     if (r.includes("부청장") || r.includes("서장") || r.includes("경정") || r.includes("경감")) {
@@ -466,6 +469,34 @@ function handleRoleInputForPoliceColor(roleVal) {
     } else if (r.includes("조직원")) {
       badgeSelect.value = "bg-zinc-700";
     }
+  } else if (isYastation) {
+    if (r.includes("사장")) {
+      badgeSelect.value = "bg-amber-500";
+    } else if (r.includes("메카닉 1기")) {
+      badgeSelect.value = "bg-indigo-600";
+    } else if (r.includes("메카닉 2기")) {
+      badgeSelect.value = "bg-cyan-700";
+    } else if (r.includes("홍보")) {
+      badgeSelect.value = "bg-rose-500";
+    }
+  } else if (isYoung31) {
+    if (r.includes("대표")) {
+      badgeSelect.value = "bg-rose-600";
+    } else if (r.includes("매니저")) {
+      badgeSelect.value = "bg-orange-500";
+    } else if (r.includes("직원")) {
+      badgeSelect.value = "bg-green-600";
+    } else if (r.includes("알바생")) {
+      badgeSelect.value = "bg-lime-500";
+    }
+  } else if (isKoi) {
+    if (r.includes("메이드장")) {
+      badgeSelect.value = "bg-violet-600";
+    } else if (r.includes("메이드")) {
+      badgeSelect.value = "bg-fuchsia-500";
+    } else if (r.includes("집사")) {
+      badgeSelect.value = "bg-slate-700";
+    }
   } else if (isLux) {
     if (r.includes("대표")) {
       badgeSelect.value = "bg-amber-600";
@@ -481,6 +512,26 @@ function handleRoleInputForPoliceColor(roleVal) {
       badgeSelect.value = "bg-orange-700";
     } else if (r.includes("조직원")) {
       badgeSelect.value = "bg-zinc-700";
+    } else if (r.includes("메카닉 1기")) {
+      badgeSelect.value = "bg-indigo-600";
+    } else if (r.includes("메카닉 2기")) {
+      badgeSelect.value = "bg-cyan-700";
+    } else if (r.includes("홍보")) {
+      badgeSelect.value = "bg-rose-500";
+    } else if (r.includes("사장")) {
+      badgeSelect.value = "bg-amber-500";
+    } else if (r.includes("알바생")) {
+      badgeSelect.value = "bg-lime-500";
+    } else if (r.includes("매니저")) {
+      badgeSelect.value = "bg-orange-500";
+    } else if (r.includes("직원")) {
+      badgeSelect.value = "bg-green-600";
+    } else if (r.includes("메이드장")) {
+      badgeSelect.value = "bg-violet-600";
+    } else if (r.includes("메이드")) {
+      badgeSelect.value = "bg-fuchsia-500";
+    } else if (r.includes("집사")) {
+      badgeSelect.value = "bg-slate-700";
     } else if (r.includes("대표")) {
       badgeSelect.value = "bg-amber-600";
     } else if (r.includes("이사")) {
