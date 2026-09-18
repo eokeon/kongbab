@@ -239,8 +239,8 @@ function renderModalAffTabs() {
         class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs border transition-all cursor-pointer select-none ${activeClasses}"
       >
         <span>${emoji}</span>
-        <span>${name}</span>
-        ${hasRole ? `<span class="text-[10px] opacity-80 font-semibold">(${itemData.role})</span>` : '<span class="text-[10px] opacity-60 font-normal italic">(직위 미입력)</span>'}
+        <span>${typeof escapeHtml === 'function' ? escapeHtml(name) : name}</span>
+        ${hasRole ? `<span class="text-[10px] opacity-80 font-semibold">(${typeof escapeHtml === 'function' ? escapeHtml(itemData.role) : itemData.role})</span>` : '<span class="text-[10px] opacity-60 font-normal italic">(직위 미입력)</span>'}
         ${isMartyred ? `<span class="text-[9px] px-1 py-0.2 rounded bg-black/60 text-red-400 border border-red-800/60 font-black">순직</span>` : (isRetired ? `<span class="text-[9px] px-1 py-0.2 rounded bg-black/60 text-zinc-300 border border-zinc-600/60 font-black">면직</span>` : (isResigned ? `<span class="text-[9px] px-1 py-0.2 rounded bg-black/60 text-amber-400 border border-amber-800/60 font-black">사직</span>` : ''))}
       </button>
     `;
@@ -1357,10 +1357,10 @@ async function deleteMember(memberId) {
         return;
       }
     }
-    const inputPw = prompt(`⚠️ [인원 영구 삭제]\n'${targetName}' 인원을 DB에서 완전히 삭제하시겠습니까?\n\n진행하려면 비밀번호를 입력해주세요:`);
+    const inputPw = prompt(`⚠️ [인원 영구 삭제]\n'${targetName}' 인원을 DB에서 완전히 삭제하시겠습니까?\n\n진행하려면 관리자 비밀번호를 입력해주세요:`);
     if (inputPw === null) return;
-    if (inputPw.trim() !== "kongbab1234") {
-      alert("❌ 비밀번호가 올바르지 않습니다.");
+    if (!inputPw.trim()) {
+      alert("비밀번호를 입력해주세요.");
       return;
     }
     executeDeleteMember(memberId, inputPw.trim());
@@ -1428,20 +1428,19 @@ async function handleConfirmDeleteMember(e) {
     return;
   }
 
-  if (inputPw !== "kongbab1234") {
+  const success = await executeDeleteMember(memberId, inputPw);
+  if (success) {
+    closeDeleteMemberModal();
+  } else {
     if (errorMsg) {
-      errorMsg.textContent = "❌ 비밀번호가 올바르지 않습니다.";
+      errorMsg.textContent = "❌ 관리자 비밀번호가 올바르지 않거나 삭제에 실패했습니다.";
       errorMsg.classList.remove("hidden");
     }
     if (passInput) {
       passInput.focus();
       passInput.select();
     }
-    return;
   }
-
-  closeDeleteMemberModal();
-  executeDeleteMember(memberId, inputPw);
 }
 
 async function executeRemoveMemberAffiliation(memberId, catId, groupId = null) {
@@ -1519,11 +1518,17 @@ async function executeRemoveMemberAffiliation(memberId, catId, groupId = null) {
   showToast(`✓ '${targetName}' 인원이 [${tabLabel}] 소속에서 제외되었습니다.`);
 }
 
-function executeDeleteMember(memberId, password = "kongbab1234") {
+async function executeDeleteMember(memberId, password = "") {
   const allLocs = findAllMemberLocations(memberId);
-  if (allLocs.length === 0) return;
+  if (allLocs.length === 0) return false;
 
   const targetName = `${allLocs[0].member.name} (${allLocs[0].member.streamer})`;
+
+  // 백엔드 DB 삭제 요청 및 관리자 비밀번호 검증
+  const res = await deleteStreamerFromDb(memberId, password);
+  if (!res || !res.success) {
+    return false;
+  }
 
   allLocs.forEach(loc => {
     if (!loc.category.hasSubgroups) {
@@ -1539,13 +1544,12 @@ function executeDeleteMember(memberId, password = "kongbab1234") {
     if (typeof replaceNavHistory === "function") replaceNavHistory();
   }
 
-  deleteStreamerFromDb(memberId, password);
-
   persistData();
   updateStats();
   createBackupSnapshot(`인원 삭제: ${targetName}`);
   renderContent();
   showToast(`🗑️ '${targetName}' 인원이 삭제되었습니다.`);
+  return true;
 }
 
 function quickSetSwatRole(val) {

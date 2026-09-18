@@ -2,8 +2,10 @@ package com.kongbab.controller;
 
 import com.kongbab.dto.StreamerDto;
 import com.kongbab.dto.VideoDto;
+import com.kongbab.service.AdminTokenService;
 import com.kongbab.service.StreamerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,14 +13,11 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class StreamerController {
 
     private final StreamerService streamerService;
-
-    public StreamerController(StreamerService streamerService) {
-        this.streamerService = streamerService;
-    }
+    private final AdminTokenService adminTokenService;
 
     @GetMapping("/streamers")
     public ResponseEntity<List<StreamerDto>> getAllStreamers(@RequestParam(required = false) String category) {
@@ -51,11 +50,12 @@ public class StreamerController {
                 ? passwordHeader
                 : passwordParam;
 
-        if (inputPassword == null || !inputPassword.trim().equals("kongbab1234")) {
+        // 하드코딩된 비밀번호 비교를 제거하고, AdminTokenService를 통한 안전한 암호화 검증 수행
+        if (!adminTokenService.matchesAdminPassword(inputPassword)) {
             Map<String, Object> res = new HashMap<>();
             res.put("success", false);
-            res.put("message", "인원 삭제를 위한 비밀번호가 일치하지 않습니다.");
-            return ResponseEntity.status(403).body(res);
+            res.put("message", "인원 삭제를 위한 관리자 비밀번호가 일치하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
         }
 
         boolean deleted = streamerService.deleteStreamer(id);
@@ -66,7 +66,7 @@ public class StreamerController {
             return ResponseEntity.ok(res);
         } else {
             res.put("message", "해당 스트리머를 찾을 수 없습니다.");
-            return ResponseEntity.status(404).body(res);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
         }
     }
 
@@ -86,7 +86,7 @@ public class StreamerController {
             return ResponseEntity.ok(res);
         } else {
             res.put("message", "해당 영상을 찾을 수 없습니다.");
-            return ResponseEntity.status(404).body(res);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
         }
     }
 

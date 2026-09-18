@@ -87,13 +87,15 @@ function renderSearchResults(container) {
     }
   });
 
+  const safeSearchQuery = typeof escapeHtml === 'function' ? escapeHtml(state.searchQuery) : state.searchQuery;
+
   if (matchedMembers.length === 0) {
     container.innerHTML = `
       <div class="py-20 text-center bg-zinc-900/40 rounded-3xl border border-zinc-800">
         <div class="w-16 h-16 mx-auto rounded-full bg-zinc-800 flex items-center justify-center text-zinc-500 mb-4">
           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         </div>
-        <h3 class="text-xl font-bold text-white mb-2">"${state.searchQuery}"에 대한 인원 검색 결과가 없습니다</h3>
+        <h3 class="text-xl font-bold text-white mb-2">"${safeSearchQuery}"에 대한 인원 검색 결과가 없습니다</h3>
         <p class="text-zinc-400 text-sm mb-6">스트리머명, 캐릭터명, 소속(경찰, 갱단, 사업체 등), 직책으로 다시 검색해보세요.</p>
         <button onclick="clearSearch()" class="px-5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-medium text-sm transition-colors cursor-pointer">
           검색 초기화
@@ -110,7 +112,7 @@ function renderSearchResults(container) {
           <span>인원 검색 결과</span>
           <span class="text-sm px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 font-bold">${matchedMembers.length}명</span>
         </h3>
-        <p class="text-xs text-zinc-400 mt-1">"${state.searchQuery}" 검색 조건과 일치하는 인원(스트리머) 목록입니다.</p>
+        <p class="text-xs text-zinc-400 mt-1">"${safeSearchQuery}" 검색 조건과 일치하는 인원(스트리머) 목록입니다.</p>
       </div>
       <button onclick="clearSearch()" class="px-3.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm">
         <span>✕</span>
@@ -196,32 +198,39 @@ function renderSearchResults(container) {
 
     // 구독자/팔로워 뱃지
     let subBadgeHtml = '';
+    const safeSubCount = typeof escapeHtml === 'function' ? escapeHtml(m.subscriberCount) : m.subscriberCount;
     if (m.subscriberCount) {
       const isChzzk = typeof isMemberChzzk === 'function' ? isMemberChzzk(m) : false;
       if (isChzzk) {
         subBadgeHtml = `
-          <span class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-[#00ffa3] bg-[#00ffa3]/10 border border-[#00ffa3]/40 px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="치지직 채널 팔로워 수: ${m.subscriberCount}">
+          <span class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-[#00ffa3] bg-[#00ffa3]/10 border border-[#00ffa3]/40 px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="치지직 채널 팔로워 수: ${safeSubCount}">
             <svg class="w-2.5 h-2.5 text-[#00ffa3] fill-current flex-shrink-0" viewBox="105 97 300 300"><polygon points="224,101 325,101 294,144 396,144 270,318 385,318 385,393 114,393 241,217 140,217"/></svg>
-            <span>${m.subscriberCount}</span>
+            <span>${safeSubCount}</span>
           </span>
         `;
       } else {
         subBadgeHtml = `
-          <span class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-red-300 bg-red-950/80 border border-red-700/50 px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="유튜브 채널 구독자 수: ${m.subscriberCount}">
+          <span class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-red-300 bg-red-950/80 border border-red-700/50 px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="유튜브 채널 구독자 수: ${safeSubCount}">
             <svg class="w-2.5 h-2.5 text-red-500 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            <span>${m.subscriberCount}</span>
+            <span>${safeSubCount}</span>
           </span>
         `;
       }
     }
 
-    const affTitle = `${cat.name}${group ? ` > ${group.name}` : ''}`;
-    const affLabel = `${cat.emoji ? `<span class="mr-1">${cat.emoji}</span>` : ''}${cat.name}${group ? ` <span class="text-zinc-500">›</span> ${group.emoji ? `<span class="mr-0.5">${group.emoji}</span>` : ''}${group.name}` : ''}`;
+    const safeMemberId = typeof sanitizeAttr === 'function' ? sanitizeAttr(m.id) : m.id;
+    const safeMemberName = typeof escapeHtml === 'function' ? escapeHtml(m.name) : m.name;
+    const safeStreamer = typeof escapeHtml === 'function' ? escapeHtml(m.streamer) : m.streamer;
+    const safeRole = typeof escapeHtml === 'function' ? escapeHtml(effectiveRole) : effectiveRole;
+    const safeSwat = typeof escapeHtml === 'function' ? escapeHtml(cleanSwat) : cleanSwat;
+
+    const affTitle = typeof escapeHtml === 'function' ? escapeHtml(`${cat.name}${group ? ` > ${group.name}` : ''}`) : `${cat.name}${group ? ` > ${group.name}` : ''}`;
+    const affLabel = `${cat.emoji ? `<span class="mr-1">${cat.emoji}</span>` : ''}${escapeHtml(cat.name)}${group ? ` <span class="text-zinc-500">›</span> ${group.emoji ? `<span class="mr-0.5">${group.emoji}</span>` : ''}${escapeHtml(group.name)}` : ''}`;
 
     html += `
       <div 
-        id="member-card-${m.id}"
-        onclick="selectMemberFromSearch('${cat.id}', ${group ? `'${group.id}'` : 'null'}, '${m.id}')"
+        id="member-card-${safeMemberId}"
+        onclick="selectMemberFromSearch('${cat.id}', ${group ? `'${group.id}'` : 'null'}, '${safeMemberId}')"
         class="group member-card-interactive bg-zinc-900/80 border border-zinc-800/80 hover:border-amber-400/50 rounded-2xl p-4 sm:p-5 cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col justify-between select-none"
       >
         <div>
@@ -238,7 +247,7 @@ function renderSearchResults(container) {
             <div class="relative flex-shrink-0">
               <img 
                 src="${getMemberAvatar(m)}" 
-                alt="${m.name}" 
+                alt="${safeMemberName}" 
                 loading="lazy"
                 decoding="async"
                 referrerpolicy="no-referrer"
@@ -247,23 +256,23 @@ function renderSearchResults(container) {
               />
               ${cleanSwat ? (typeof getSwatBadgeHtml === 'function' ? getSwatBadgeHtml(cleanSwat, 'md') : '') : ''}
               ${statusOverlayHtml}
-              ${effectiveRole ? `<span class="absolute -bottom-1 -right-1 text-[10px] font-bold px-1.5 py-0.5 rounded ${roleBadgeClass} shadow">${effectiveRole}</span>` : ''}
+              ${safeRole ? `<span class="absolute -bottom-1 -right-1 text-[10px] font-bold px-1.5 py-0.5 rounded ${roleBadgeClass} shadow">${safeRole}</span>` : ''}
             </div>
 
             <div class="flex-1 min-w-0">
-              <h4 class="text-lg sm:text-xl font-bold text-white group-hover:text-amber-400 transition-colors truncate" title="${m.streamer}">
-                ${m.streamer}
+              <h4 class="text-lg sm:text-xl font-bold text-white group-hover:text-amber-400 transition-colors truncate" title="${safeStreamer}">
+                ${safeStreamer}
               </h4>
-              <div class="flex items-center gap-1.5 mt-1 text-sm font-medium text-amber-400/90 truncate" title="RP 캐릭터: ${m.name}">
+              <div class="flex items-center gap-1.5 mt-1 text-sm font-medium text-amber-400/90 truncate" title="RP 캐릭터: ${safeMemberName}">
                 <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                <span class="truncate">${m.name}</span>
+                <span class="truncate">${safeMemberName}</span>
               </div>
               ${cleanSwat && effectiveRole ? `
-                <p class="text-xs text-zinc-400 mt-1 truncate" title="${effectiveRole} · ${cleanSwat}">
-                  ${effectiveRole} · <span class="text-sky-300 font-medium">${cleanSwat}</span>
+                <p class="text-xs text-zinc-400 mt-1 truncate" title="${safeRole} · ${safeSwat}">
+                  ${safeRole} · <span class="text-sky-300 font-medium">${safeSwat}</span>
                 </p>
               ` : (effectiveRole ? `
-                <p class="text-xs text-zinc-400 mt-1 truncate" title="${effectiveRole}">${effectiveRole}</p>
+                <p class="text-xs text-zinc-400 mt-1 truncate" title="${safeRole}">${safeRole}</p>
               ` : '')}
             </div>
           </div>

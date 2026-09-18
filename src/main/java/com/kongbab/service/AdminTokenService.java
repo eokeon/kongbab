@@ -5,8 +5,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
@@ -17,10 +20,13 @@ import java.util.Base64;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AdminTokenService {
 
     public static final String TOKEN_COOKIE_NAME = "KONGBAB_ADMIN_TOKEN";
     public static final long TOKEN_VALIDITY_MILLIS = 30L * 24 * 60 * 60 * 1000L; // 30일 동안 로그인 유지
+
+    private final PasswordEncoderService passwordEncoderService;
 
     @Value("${kongbab.admin.username:admin}")
     private String adminUsername;
@@ -28,11 +34,38 @@ public class AdminTokenService {
     @Value("${kongbab.admin.password:kongbab1234}")
     private String adminPassword;
 
+    @Value("${kongbab.security.token-secret:}")
+    private String customTokenSecret;
+
+    @Value("${kongbab.security.cookie.secure:false}")
+    private boolean forceCookieSecure;
+
     private static final String HMAC_ALGORITHM = "HmacSHA256";
-    private static final String STATIC_SALT = "KONGBAB_SECRET_SALT_2026";
+    private static final String DEFAULT_SALT = "KONGBAB_SECRET_SALT_2026_SECURE";
+
+    /**
+     * 관리자 비밀번호가 일치하는지 안전하게 검증합니다.
+     */
+    public boolean matchesAdminPassword(String rawPassword) {
+        if (rawPassword == null || rawPassword.isBlank()) {
+            return false;
+        }
+        return passwordEncoderService.matches(rawPassword.trim(), adminPassword);
+    }
+
+    public String getAdminUsername() {
+        return adminUsername;
+    }
+
+    public String getAdminPassword() {
+        return adminPassword;
+    }
 
     private String getSecretKey() {
-        return adminPassword + "_" + STATIC_SALT;
+        String secret = (customTokenSecret != null && !customTokenSecret.isBlank())
+                ? customTokenSecret.trim()
+                : DEFAULT_SALT;
+        return adminPassword + "_" + secret;
     }
 
     public String generateToken(String username) {
@@ -77,6 +110,8 @@ public class AdminTokenService {
     }
 
     public String extractToken(HttpServletRequest request) {
+        if (request == null) return null;
+
         // 1. Authorization: Bearer <token> 헤더 확인
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -103,6 +138,8 @@ public class AdminTokenService {
     }
 
     public boolean validateAndRestoreSession(HttpServletRequest request, HttpServletResponse response) {
+        if (request == null) return false;
+
         // 1. 이미 유효한 세션이 있다면 패스
         HttpSession session = request.getSession(false);
         if (session != null) {
@@ -119,10 +156,10 @@ public class AdminTokenService {
             newSession.setAttribute(AuthController.SESSION_USER_KEY, adminUsername);
             newSession.setAttribute(AuthController.SESSION_LOGIN_TIME_KEY, System.currentTimeMillis());
             newSession.setMaxInactiveInterval((int) (TOKEN_VALIDITY_MILLIS / 1000L));
-            
-            // 쿠키 만료시간 갱신 (Sliding Expiration)
+
+            // 쿠키 만료시간 갱신 (Sliding Expiration) 및 SameSite 보안 헤더 적용
             if (response != null) {
-                addTokenCookie(response, token);
+                addTokenCookie(response, token, isHttpsRequest(request));
             }
             log.info("서버 재시작 후 영구 토큰으로 관리자 세션이 자동 복구되었습니다: {}", adminUsername);
             return true;
@@ -132,19 +169,42 @@ public class AdminTokenService {
     }
 
     public void addTokenCookie(HttpServletResponse response, String token) {
-        Cookie cookie = new Cookie(TOKEN_COOKIE_NAME, token);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge((int) (TOKEN_VALIDITY_MILLIS / 1000L)); // 30일
-        response.addCookie(cookie);
+        addTokenCookie(response, token, false);
+    }
+
+    public void addTokenCookie(HttpServletResponse response, String token, boolean isSecure) {
+        boolean secure = forceCookieSecure || isSecure;
+        ResponseCookie cookie = ResponseCookie.from(TOKEN_COOKIE_NAME, token)
+                .path("/")
+                .httpOnly(true)
+                .secure(secure)
+                .sameSite("Lax")
+                .maxAge(TOKEN_VALIDITY_MILLIS / 1000L)
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 
     public void removeTokenCookie(HttpServletResponse response) {
-        Cookie cookie = new Cookie(TOKEN_COOKIE_NAME, "");
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+        removeTokenCookie(response, false);
+    }
+
+    public void removeTokenCookie(HttpServletResponse response, boolean isSecure) {
+        boolean secure = forceCookieSecure || isSecure;
+        ResponseCookie cookie = ResponseCookie.from(TOKEN_COOKIE_NAME, "")
+                .path("/")
+                .httpOnly(true)
+                .secure(secure)
+                .sameSite("Lax")
+                .maxAge(0)
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    }
+
+    public boolean isHttpsRequest(HttpServletRequest request) {
+        if (request == null) return false;
+        if (request.isSecure()) return true;
+        String proto = request.getHeader("X-Forwarded-Proto");
+        return "https".equalsIgnoreCase(proto);
     }
 
     private String sign(String data) {

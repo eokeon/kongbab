@@ -16,9 +16,19 @@ spring.jpa.properties.hibernate.format_sql=false
 kongbab.backup.directory=D:/백업 파일/KONGBAB_BACKUPS_JSON
 kongbab.backup.max-count=20
 
-# 관리자 계정 설정
+# 관리자 계정 설정 (BCrypt 해시 또는 평문 비밀번호 모두 지원)
 kongbab.admin.username=admin
 kongbab.admin.password=your_admin_password_here
+
+# 보안 설정 (Brute-Force 방어 및 토큰/쿠키 보안)
+kongbab.security.max-login-attempts=5
+kongbab.security.lockout-duration-minutes=15
+# 토큰 서명용 비밀키 (미입력 시 기본 난수/솔트 적용)
+kongbab.security.token-secret=your_strong_random_token_secret_here
+# HTTPS 환경에서 운영 시 true로 설정 (SameSite=Lax 쿠키에 Secure 플래그 적용)
+kongbab.security.cookie.secure=false
+# CORS 허용 도메인 (쉼표로 구분)
+kongbab.cors.allowed-origins=http://localhost:8080,http://localhost:63342,http://127.0.0.1:8080,http://127.0.0.1:63342
 
 # 세션 유효시간 1시간 설정 (브라우저를 닫았다 열어도 1시간 유지)
 server.servlet.session.timeout=1h

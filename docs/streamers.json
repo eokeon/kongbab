@@ -1,8 +1,8 @@
 {
   "appName": "kongbab-gta-rp",
   "version": "1.0",
-  "createdAt": "2026.09.18 23:33:01",
-  "reason": "인원 수정: 멍카롱 (멍카롱) - 소속 2개",
+  "createdAt": "2026.09.19 04:14:12",
+  "reason": "조직 순서 변경: [갱단] 흑장미 (7번 → 12번)",
   "stats": {
     "totalCategories": 7,
     "totalMembers": 146,
@@ -7837,7 +7837,7 @@
           "badgeColor": "bg-emerald-600",
           "avatar": "https://yt3.googleusercontent.com/XS-gcx_eu-Ao6ssrv0HySUvARgWbOvThZ0eMFVyay0JyqN3TUR0WTfx3CAaIhiU-ivBOOrxPVg=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 37,
-          "subscriberCount": "664명",
+          "subscriberCount": "663명",
           "youtubeUrl": "https://www.youtube.com/@wishing_konata",
           "videos": [
             {
@@ -8435,7 +8435,7 @@
           "badgeColor": "bg-blue-600",
           "avatar": "https://yt3.googleusercontent.com/JRCLswfV3q0yow0NkUveH8vXdIX92rBa1uJysv3wo3sJNU2ECy6gjj9zS1qc7TeZnJ5akdHD8g=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 44,
-          "subscriberCount": "7.3만 명",
+          "subscriberCount": "7.2만 명",
           "youtubeUrl": "https://www.youtube.com/@mallang_mandii",
           "videos": [
             {
@@ -8593,7 +8593,7 @@
           "badgeColor": "bg-blue-600",
           "avatar": "https://yt3.googleusercontent.com/MBvhcnQuDImz_XkKjRUOn_b0QjmYZtyQ15kqy4pi1YlRVx1WHTM8GGZb3DQO6nYCV0KwWMopYg=s120-c-k-c0x00ffffff-no-rj",
           "displayOrder": 45,
-          "subscriberCount": "5.1만 명",
+          "subscriberCount": "5.2만 명",
           "youtubeUrl": "https://www.youtube.com/@moyaji77",
           "videos": [
             {
@@ -11769,7 +11769,7 @@
           "badgeColor": "bg-emerald-500",
           "avatar": "https://yt3.googleusercontent.com/TgS_KFJyXi9XCJIQd2TODJajD3LA2QLjK8-o8DM-atFam0tDoK4M4khfbF3LF9-nLurlPhYkXw=s160-c-k-c0x00ffffff-no-rj",
           "displayOrder": 21,
-          "subscriberCount": "4,360명",
+          "subscriberCount": "4,420명",
           "youtubeUrl": "https://www.youtube.com/@심해덤",
           "videos": [],
           "affiliations": [
@@ -18276,54 +18276,62 @@
           "id": "gang-goldmoon",
           "name": "골드문",
           "emoji": "🌙",
+          "bgImage": "assets/골드문.webp",
           "members": []
         },
         {
           "id": "gang-nonghyup",
           "name": "농협",
           "emoji": "🌾",
+          "bgImage": "assets/농협.webp",
           "members": []
         },
         {
           "id": "gang-girlbang",
           "name": "GIRL BANG",
           "emoji": "🐷",
-          "members": []
-        },
-        {
-          "id": "gang-blackrose",
-          "name": "흑장미",
-          "emoji": "🌹",
+          "bgImage": "assets/걸뱅.webp",
           "members": []
         },
         {
           "id": "gang-doremifa",
           "name": "도레미파",
           "emoji": "🎹",
+          "bgImage": "assets/도레미파.webp",
           "members": []
         },
         {
           "id": "gang-metalunion",
           "name": "금속노조",
           "emoji": "⛏️",
+          "bgImage": "assets/금속노조.webp",
           "members": []
         },
         {
           "id": "gang-adventure",
           "name": "어드벤처",
           "emoji": "🐯",
+          "bgImage": "assets/어드벤처.webp",
           "members": []
         },
         {
           "id": "gang-kgaeng",
           "name": "깨갱",
           "emoji": "🐶",
+          "bgImage": "assets/깨갱.webp",
           "members": []
         },
         {
           "id": "gang-streetcat",
           "name": "길고양이 연합",
           "emoji": "😺",
+          "bgImage": "assets/길고양이.webp",
+          "members": []
+        },
+        {
+          "id": "gang-blackrose",
+          "name": "흑장미",
+          "emoji": "🌹",
           "members": []
         }
       ]
@@ -19046,7 +19054,7 @@
               "badgeColor": "bg-amber-600",
               "avatar": "https://yt3.googleusercontent.com/z-ZyQwrXbhAjIR5vwBeMFd4o7lQYza-0pPTDj5ABb1k9fe5AJ-RhfsfzLV6fu0m9qciNxtIf=s120-c-k-c0x00ffffff-no-rj",
               "displayOrder": 2,
-              "subscriberCount": "4,190명",
+              "subscriberCount": "4,200명",
               "youtubeUrl": "https://www.youtube.com/@ChaeRocky",
               "videos": [
                 {
@@ -19903,10 +19911,10 @@
               "swatRole": "가이드",
               "status": "active",
               "badgeColor": "bg-emerald-600",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://nng-phinf.pstatic.net/MjAyNTExMjhfMTUg/MDAxNzY0MjU2NTY1OTk3.TsX1dO7wA4izjftg3tb3lYFm3dLKOseKVyqYK9BqwqMg.eyudhLrrKO_ziV4Z1mOwNVGcZbtEA3XVHP6aGs5vnVwg.PNG/image.png?type=f120_120_na",
               "displayOrder": 3,
-              "subscriberCount": "",
-              "youtubeUrl": "",
+              "subscriberCount": "1,386명",
+              "youtubeUrl": "https://chzzk.naver.com/1cae33bbf5a9bcc4adeab1381aa14d2c",
               "videos": [],
               "affiliations": [
                 {
@@ -21873,7 +21881,7 @@
               "badgeColor": "bg-blue-600",
               "avatar": "https://yt3.googleusercontent.com/JRCLswfV3q0yow0NkUveH8vXdIX92rBa1uJysv3wo3sJNU2ECy6gjj9zS1qc7TeZnJ5akdHD8g=s120-c-k-c0x00ffffff-no-rj",
               "displayOrder": 44,
-              "subscriberCount": "7.3만 명",
+              "subscriberCount": "7.2만 명",
               "youtubeUrl": "https://www.youtube.com/@mallang_mandii",
               "videos": [
                 {
@@ -24425,7 +24433,7 @@
               "badgeColor": "bg-green-600",
               "avatar": "https://nng-phinf.pstatic.net/MjAyNjA0MDJfNTIg/MDAxNzc1MDY3MzU4MjA0.2Ab2JSrO7GqOWSx7f5EWOHiL81lOFSorRFLRoBNOdZcg.Zcs0y1YVY70yDxSuGNshoD-Cn1F0vuz76TKwLJX3HkIg.PNG/image.png?type=f120_120_na",
               "displayOrder": 7,
-              "subscriberCount": "4,776명",
+              "subscriberCount": "4,777명",
               "youtubeUrl": "https://chzzk.naver.com/8a79129b34e042fcd825fbffc3f52c99",
               "videos": [],
               "affiliations": [
@@ -24977,7 +24985,7 @@
               "badgeColor": "bg-lime-500",
               "avatar": "https://nng-phinf.pstatic.net/MjAyNTA1MjZfOTgg/MDAxNzQ4MjMzNzA0NDU1.ZF0Bkft4vMnEJhYl3yQzXPW0NlXFq1DDyJoWolA55QUg.ReNIPAOtkm2NRRn7ufZMWHZ8V9wODaFKGGA_d8exJs0g.JPEG/%ED%94%84%EB%A1%9C%ED%95%84_%EC%9D%B4%EB%AF%B8%EC%A7%80.jpg?type=f120_120_na",
               "displayOrder": 10,
-              "subscriberCount": "5,081명",
+              "subscriberCount": "5,080명",
               "youtubeUrl": "https://chzzk.naver.com/08cbcf6f38129e27612712d7207664a2",
               "videos": [
                 {
@@ -26255,7 +26263,7 @@
               "badgeColor": "bg-fuchsia-500",
               "avatar": "https://yt3.googleusercontent.com/Zgmj3BDtKLRvhJfVjPEqr3Yjoldtkkj0VYSzZlVyho-ILYoTTkbX4s0sJRyMGcIRJXlHytFv=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 3,
-              "subscriberCount": "6,010명",
+              "subscriberCount": "6,020명",
               "youtubeUrl": "https://www.youtube.com/@Gimaenggo",
               "videos": [
                 {
@@ -27917,10 +27925,10 @@
           "swatRole": "가이드",
           "status": "active",
           "badgeColor": "bg-emerald-600",
-          "avatar": "assets/default-avatar.svg",
+          "avatar": "https://nng-phinf.pstatic.net/MjAyNTExMjhfMTUg/MDAxNzY0MjU2NTY1OTk3.TsX1dO7wA4izjftg3tb3lYFm3dLKOseKVyqYK9BqwqMg.eyudhLrrKO_ziV4Z1mOwNVGcZbtEA3XVHP6aGs5vnVwg.PNG/image.png?type=f120_120_na",
           "displayOrder": 3,
-          "subscriberCount": "",
-          "youtubeUrl": "",
+          "subscriberCount": "1,386명",
+          "youtubeUrl": "https://chzzk.naver.com/1cae33bbf5a9bcc4adeab1381aa14d2c",
           "videos": [],
           "affiliations": [
             {

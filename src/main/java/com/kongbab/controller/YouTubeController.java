@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/youtube")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class YouTubeController {
 

@@ -321,7 +321,7 @@ async function saveStreamerToDb(dto) {
   return null;
 }
 
-async function deleteStreamerFromDb(streamerId, password = "kongbab1234") {
+async function deleteStreamerFromDb(streamerId, password = "") {
   try {
     const headers = { ...getAuthHeaders() };
     if (password) {

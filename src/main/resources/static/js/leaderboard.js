@@ -648,6 +648,24 @@ function renderLeaderboardDynamicContent() {
     const top1Aff = top1.displayAffiliation || (top1.groupName ? `${top1.groupEmoji || ''} ${top1.groupName}` : `${top1.catEmoji || ''} ${top1.catBadge}`);
     const top3Aff = top3.displayAffiliation || (top3.groupName ? `${top3.groupEmoji || ''} ${top3.groupName}` : `${top3.catEmoji || ''} ${top3.catBadge}`);
 
+    const safeTop1Streamer = typeof escapeHtml === 'function' ? escapeHtml(top1.streamerName || top1.name) : (top1.streamerName || top1.name);
+    const safeTop1Name = typeof escapeHtml === 'function' ? escapeHtml(top1.name) : top1.name;
+    const safeTop1Role = typeof escapeHtml === 'function' ? escapeHtml(top1Role) : top1Role;
+    const safeTop1Aff = typeof escapeHtml === 'function' ? escapeHtml(top1Aff) : top1Aff;
+    const safeTop1SingleRole = typeof escapeHtml === 'function' ? escapeHtml(top1.role) : top1.role;
+
+    const safeTop2Streamer = typeof escapeHtml === 'function' ? escapeHtml(top2.streamerName || top2.name) : (top2.streamerName || top2.name);
+    const safeTop2Name = typeof escapeHtml === 'function' ? escapeHtml(top2.name) : top2.name;
+    const safeTop2Role = typeof escapeHtml === 'function' ? escapeHtml(top2Role) : top2Role;
+    const safeTop2Aff = typeof escapeHtml === 'function' ? escapeHtml(top2Aff) : top2Aff;
+    const safeTop2SingleRole = typeof escapeHtml === 'function' ? escapeHtml(top2.role) : top2.role;
+
+    const safeTop3Streamer = typeof escapeHtml === 'function' ? escapeHtml(top3.streamerName || top3.name) : (top3.streamerName || top3.name);
+    const safeTop3Name = typeof escapeHtml === 'function' ? escapeHtml(top3.name) : top3.name;
+    const safeTop3Role = typeof escapeHtml === 'function' ? escapeHtml(top3Role) : top3Role;
+    const safeTop3Aff = typeof escapeHtml === 'function' ? escapeHtml(top3Aff) : top3Aff;
+    const safeTop3SingleRole = typeof escapeHtml === 'function' ? escapeHtml(top3.role) : top3.role;
+
     html += `
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-6 pt-3">
         <!-- 2위 🥈 -->
@@ -661,20 +679,20 @@ function renderLeaderboardDynamicContent() {
               <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top2) : (top2.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" loading="lazy" decoding="async" class="podium-avatar-img w-full h-full object-cover" />
             </div>
             ${(typeof getSwatBadgeHtml === 'function' && top2.swatRole) ? getSwatBadgeHtml(top2.swatRole, 'sm') : ''}
-            ${top2.role ? `
+            ${safeTop2SingleRole ? `
               <span class="absolute -bottom-1 -right-1 z-20 text-[9.5px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(top2, top2.catId) : 'bg-zinc-800 text-white'} shadow-md">
-                ${top2.role}
+                ${safeTop2SingleRole}
               </span>
             ` : ''}
           </div>
           <h4 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors flex items-center justify-center gap-1.5 mt-1 truncate max-w-full flex-wrap">
-            <span>${top2.streamerName || top2.name}</span>
+            <span>${safeTop2Streamer}</span>
           </h4>
-          <p class="text-xs text-zinc-300 mb-2 truncate max-w-full" title="${top2.name}">
-            <span>${top2.name}</span>${top2Role ? ` <span class="text-zinc-500 text-[11px]">(${top2Role})</span>` : ''}
+          <p class="text-xs text-zinc-300 mb-2 truncate max-w-full" title="${safeTop2Name}">
+            <span>${safeTop2Name}</span>${safeTop2Role ? ` <span class="text-zinc-500 text-[11px]">(${safeTop2Role})</span>` : ''}
           </p>
-          <div class="text-xs font-semibold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 mb-3 border border-zinc-700/50 truncate max-w-[90%]" title="${top2Aff}">
-            ${top2Aff}
+          <div class="text-xs font-semibold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 mb-3 border border-zinc-700/50 truncate max-w-[90%]" title="${safeTop2Aff}">
+            ${safeTop2Aff}
           </div>
           <div class="w-full pt-2 border-t border-zinc-800 flex flex-col items-center">
             <span class="text-base font-bold text-white">${getTabMetric(top2).valStr}</span>
@@ -693,20 +711,20 @@ function renderLeaderboardDynamicContent() {
               <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top1) : (top1.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" loading="lazy" decoding="async" class="podium-avatar-img w-full h-full object-cover" />
             </div>
             ${(typeof getSwatBadgeHtml === 'function' && top1.swatRole) ? getSwatBadgeHtml(top1.swatRole, 'sm') : ''}
-            ${top1.role ? `
+            ${safeTop1SingleRole ? `
               <span class="absolute -bottom-1 -right-1 z-20 text-[9.5px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(top1, top1.catId) : 'bg-zinc-800 text-white'} shadow-md">
-                ${top1.role}
+                ${safeTop1SingleRole}
               </span>
             ` : ''}
           </div>
           <h4 class="text-lg font-bold text-white group-hover:text-amber-400 transition-colors flex items-center justify-center gap-1.5 mt-1 truncate max-w-full flex-wrap">
-            <span>${top1.streamerName || top1.name}</span>
+            <span>${safeTop1Streamer}</span>
           </h4>
-          <p class="text-xs text-amber-200/90 font-medium mb-2 truncate max-w-full" title="${top1.name}">
-            <span>${top1.name}</span>${top1Role ? ` <span class="text-amber-400/80 text-[11px]">(${top1Role})</span>` : ''}
+          <p class="text-xs text-amber-200/90 font-medium mb-2 truncate max-w-full" title="${safeTop1Name}">
+            <span>${safeTop1Name}</span>${safeTop1Role ? ` <span class="text-amber-400/80 text-[11px]">(${safeTop1Role})</span>` : ''}
           </p>
-          <div class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-950/80 text-amber-300 mb-3 border border-amber-500/50 truncate max-w-[90%]" title="${top1Aff}">
-            ${top1Aff}
+          <div class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-950/80 text-amber-300 mb-3 border border-amber-500/50 truncate max-w-[90%]" title="${safeTop1Aff}">
+            ${safeTop1Aff}
           </div>
           <div class="w-full pt-2 border-t border-zinc-800 flex flex-col items-center">
             <span class="text-lg font-black text-amber-400">${getTabMetric(top1).valStr}</span>
@@ -725,20 +743,20 @@ function renderLeaderboardDynamicContent() {
               <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top3) : (top3.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" loading="lazy" decoding="async" class="podium-avatar-img w-full h-full object-cover" />
             </div>
             ${(typeof getSwatBadgeHtml === 'function' && top3.swatRole) ? getSwatBadgeHtml(top3.swatRole, 'sm') : ''}
-            ${top3.role ? `
+            ${safeTop3SingleRole ? `
               <span class="absolute -bottom-1 -right-1 z-20 text-[9.5px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(top3, top3.catId) : 'bg-zinc-800 text-white'} shadow-md">
-                ${top3.role}
+                ${safeTop3SingleRole}
               </span>
             ` : ''}
           </div>
           <h4 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors flex items-center justify-center gap-1.5 mt-1 truncate max-w-full flex-wrap">
-            <span>${top3.streamerName || top3.name}</span>
+            <span>${safeTop3Streamer}</span>
           </h4>
-          <p class="text-xs text-zinc-300 mb-2 truncate max-w-full" title="${top3.name}">
-            <span>${top3.name}</span>${top3Role ? ` <span class="text-zinc-500 text-[11px]">(${top3Role})</span>` : ''}
+          <p class="text-xs text-zinc-300 mb-2 truncate max-w-full" title="${safeTop3Name}">
+            <span>${safeTop3Name}</span>${safeTop3Role ? ` <span class="text-zinc-500 text-[11px]">(${safeTop3Role})</span>` : ''}
           </p>
-          <div class="text-xs font-semibold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 mb-3 border border-zinc-700/50 truncate max-w-[90%]" title="${top3Aff}">
-            ${top3Aff}
+          <div class="text-xs font-semibold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 mb-3 border border-zinc-700/50 truncate max-w-[90%]" title="${safeTop3Aff}">
+            ${safeTop3Aff}
           </div>
           <div class="w-full pt-2 border-t border-zinc-800 flex flex-col items-center">
             <span class="text-base font-bold text-white">${getTabMetric(top3).valStr}</span>
@@ -765,7 +783,7 @@ function renderLeaderboardDynamicContent() {
           <div class="py-16 text-center text-zinc-500">
             <div class="text-3xl mb-2">🔍</div>
             <p class="text-sm font-bold text-zinc-400 mb-1">검색 결과가 없습니다</p>
-            <p class="text-xs text-zinc-500">'${leaderboardSearchQuery}' 검색어와 일치하는 스트리머 또는 그룹이 없습니다.</p>
+            <p class="text-xs text-zinc-500">'${typeof escapeHtml === 'function' ? escapeHtml(leaderboardSearchQuery) : leaderboardSearchQuery}' 검색어와 일치하는 스트리머 또는 그룹이 없습니다.</p>
           </div>
         ` : sortedMembers.map((m, idx) => {
           const rank = idx + 1;
@@ -778,15 +796,24 @@ function renderLeaderboardDynamicContent() {
           else if (rank === 2) medalBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-zinc-400/20 text-zinc-300 font-bold text-xs border border-zinc-400/40">🥈</span>`;
           else if (rank === 3) medalBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-800/20 text-amber-500 font-bold text-xs border border-amber-700/40">🥉</span>`;
 
-          const groupLabel = m.displayAffiliation || (m.groupName 
+          const rawGroupLabel = m.displayAffiliation || (m.groupName 
             ? `${m.groupEmoji || ''} ${m.groupName}` 
             : `${m.catEmoji || ''} ${m.catBadge}`);
+          const groupLabel = typeof escapeHtml === 'function' ? escapeHtml(rawGroupLabel) : rawGroupLabel;
 
-          const mRole = [m.role, m.swatRole].filter(Boolean).join(' · ');
+          const rawMRole = [m.role, m.swatRole].filter(Boolean).join(' · ');
+          const mRole = typeof escapeHtml === 'function' ? escapeHtml(rawMRole) : rawMRole;
+          const safeStreamer = typeof escapeHtml === 'function' ? escapeHtml(m.streamerName || m.name) : (m.streamerName || m.name);
+          const safeName = typeof escapeHtml === 'function' ? escapeHtml(m.name) : m.name;
+          const safeSingleRole = typeof escapeHtml === 'function' ? escapeHtml(m.role) : m.role;
+
+          const safeCatId = typeof sanitizeAttr === 'function' ? sanitizeAttr(m.catId) : m.catId;
+          const safeGroupId = typeof sanitizeAttr === 'function' ? sanitizeAttr(m.groupId || '') : (m.groupId || '');
+          const safeMemberId = typeof sanitizeAttr === 'function' ? sanitizeAttr(m.id || '') : (m.id || '');
 
           return `
             <div 
-              onclick="selectMemberFromLeaderboard('${m.catId}', '${m.groupId || ''}', '${m.name}', '${m.id || ''}')"
+              onclick="selectMemberFromLeaderboard('${safeCatId}', '${safeGroupId}', '${safeName}', '${safeMemberId}')"
               class="px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between hover:bg-zinc-800/50 transition-colors cursor-pointer group"
             >
               <!-- 순위 -->
@@ -800,23 +827,23 @@ function renderLeaderboardDynamicContent() {
                   <img 
                     src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(m) : (m.avatar || 'assets/default-avatar.svg')}" 
                     onerror="this.src='assets/default-avatar.svg'" 
-                    loading="lazy"
+                    loading="lazy" 
                     decoding="async"
                     class="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border border-zinc-700 bg-zinc-800 flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
                   />
                   ${(typeof getSwatBadgeHtml === 'function' && m.swatRole) ? getSwatBadgeHtml(m.swatRole, 'sm') : ''}
-                  ${m.role ? `
+                  ${safeSingleRole ? `
                     <span class="absolute -bottom-1 -right-1 z-20 text-[8px] sm:text-[8.5px] font-bold px-1 py-0.2 rounded ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(m, m.catId) : 'bg-zinc-800 text-white'} shadow">
-                      ${m.role}
+                      ${safeSingleRole}
                     </span>
                   ` : ''}
                 </div>
                 <div class="min-w-0 flex-1">
                   <div class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
-                    <span class="font-bold text-xs sm:text-sm text-white group-hover:text-amber-400 transition-colors truncate">${m.streamerName || m.name}</span>
+                    <span class="font-bold text-xs sm:text-sm text-white group-hover:text-amber-400 transition-colors truncate">${safeStreamer}</span>
                   </div>
                   <div class="text-[11px] sm:text-xs text-zinc-400 truncate">
-                    <span class="text-amber-400/90 font-medium">${m.name}</span>${mRole ? ` <span class="text-zinc-500 text-[10px] sm:text-[11px]">(${mRole})</span>` : ''}
+                    <span class="text-amber-400/90 font-medium">${safeName}</span>${mRole ? ` <span class="text-zinc-500 text-[10px] sm:text-[11px]">(${mRole})</span>` : ''}
                   </div>
                 </div>
               </div>

@@ -5,17 +5,21 @@ import com.kongbab.dto.AuthResponse;
 import com.kongbab.dto.LoginRequest;
 import com.kongbab.repository.AdminLoginLogRepository;
 import com.kongbab.service.AdminTokenService;
+import com.kongbab.service.LoginAttemptService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -27,12 +31,10 @@ public class AuthController {
 
     private final AdminLoginLogRepository adminLoginLogRepository;
     private final AdminTokenService adminTokenService;
+    private final LoginAttemptService loginAttemptService;
 
     @Value("${kongbab.admin.username:admin}")
     private String adminUsername;
-
-    @Value("${kongbab.admin.password:kongbab1234}")
-    private String adminPassword;
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request, 
@@ -46,7 +48,7 @@ public class AuthController {
         }
 
         if (request == null || request.getUsername() == null || request.getPassword() == null) {
-            return ResponseEntity.status(400).body(AuthResponse.builder()
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(AuthResponse.builder()
                     .success(false)
                     .role("guest")
                     .username("게스트")
@@ -54,11 +56,32 @@ public class AuthController {
                     .build());
         }
 
-        boolean isValid = adminUsername.equals(request.getUsername().trim()) && adminPassword.equals(request.getPassword());
+        String inputUsername = request.getUsername().trim();
+
+        // 1. Brute-Force 공격 방어: IP 및 계정 잠금 여부 확인
+        if (loginAttemptService.isBlocked(clientIp) || loginAttemptService.isBlocked(inputUsername)) {
+            long remainingSeconds = Math.max(
+                    loginAttemptService.getRemainingLockTimeSeconds(clientIp),
+                    loginAttemptService.getRemainingLockTimeSeconds(inputUsername)
+            );
+            long remainingMinutes = (remainingSeconds / 60) + 1;
+            log.warn("차단된 계정/IP의 로그인 시도 차단: user={}, IP={}", inputUsername, clientIp);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(AuthResponse.builder()
+                    .success(false)
+                    .role("guest")
+                    .username("게스트")
+                    .message(String.format("연속된 로그인 실패로 인해 일시적으로 차단되었습니다. 약 %d분 후 다시 시도해주세요.", remainingMinutes))
+                    .build());
+        }
+
+        // 2. 비밀번호 암호화 검증 (BCrypt 및 타이밍 공격 방지 안전 비교)
+        boolean isUsernameValid = adminUsername.equals(inputUsername);
+        boolean isPasswordValid = adminTokenService.matchesAdminPassword(request.getPassword());
+        boolean isValid = isUsernameValid && isPasswordValid;
 
         // DB에 로그인 기록 저장
         AdminLoginLog logEntry = AdminLoginLog.builder()
-                .username(request.getUsername().trim())
+                .username(inputUsername)
                 .ipAddress(clientIp)
                 .loginTime(LocalDateTime.now())
                 .status(isValid ? "SUCCESS" : "FAILED")
@@ -67,14 +90,19 @@ public class AuthController {
         adminLoginLogRepository.save(logEntry);
 
         if (isValid) {
+            // 로그인 성공: 실패 카운트 초기화
+            loginAttemptService.loginSucceeded(clientIp);
+            loginAttemptService.loginSucceeded(inputUsername);
+
             long now = System.currentTimeMillis();
             session.setMaxInactiveInterval(SESSION_TIMEOUT_SECONDS);
-            session.setAttribute(SESSION_USER_KEY, "admin");
+            session.setAttribute(SESSION_USER_KEY, adminUsername);
             session.setAttribute(SESSION_LOGIN_TIME_KEY, now);
 
-            // 서버 재시작 후에도 로그인 유지를 위한 영구 토큰 및 쿠키 발급
-            String token = adminTokenService.generateToken("admin");
-            adminTokenService.addTokenCookie(httpResponse, token);
+            // 서버 재시작 후에도 로그인 유지를 위한 영구 토큰 및 SameSite 쿠키 발급
+            String token = adminTokenService.generateToken(adminUsername);
+            boolean isSecure = adminTokenService.isHttpsRequest(httpRequest);
+            adminTokenService.addTokenCookie(httpResponse, token, isSecure);
 
             return ResponseEntity.ok(AuthResponse.builder()
                     .success(true)
@@ -87,11 +115,21 @@ public class AuthController {
                     .build());
         }
 
-        return ResponseEntity.status(401).body(AuthResponse.builder()
+        // 로그인 실패 기록
+        loginAttemptService.loginFailed(clientIp);
+        loginAttemptService.loginFailed(inputUsername);
+
+        int currentAttempts = Math.max(loginAttemptService.getAttempts(clientIp), loginAttemptService.getAttempts(inputUsername));
+        int remainingAttempts = Math.max(0, 5 - currentAttempts);
+        String failMsg = remainingAttempts > 0
+                ? String.format("아이디 또는 비밀번호가 일치하지 않습니다. (남은 시도: %d회)", remainingAttempts)
+                : "로그인 실패 횟수를 초과하여 계정이 일시적으로 잠겼습니다.";
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(AuthResponse.builder()
                 .success(false)
                 .role("guest")
                 .username("게스트")
-                .message("아이디 또는 비밀번호가 일치하지 않습니다.")
+                .message(failMsg)
                 .build());
     }
 
@@ -103,7 +141,8 @@ public class AuthController {
             session.removeAttribute(SESSION_LOGIN_TIME_KEY);
             session.invalidate();
         }
-        adminTokenService.removeTokenCookie(response);
+        boolean isSecure = adminTokenService.isHttpsRequest(request);
+        adminTokenService.removeTokenCookie(response, isSecure);
 
         return ResponseEntity.ok(AuthResponse.builder()
                 .success(true)
@@ -123,15 +162,16 @@ public class AuthController {
         HttpSession currentSession = request.getSession(false);
         if (currentSession != null) {
             Object user = currentSession.getAttribute(SESSION_USER_KEY);
-            if (user != null && "admin".equals(user.toString())) {
+            if (user != null && adminUsername.equals(user.toString())) {
                 Long loginTime = (Long) currentSession.getAttribute(SESSION_LOGIN_TIME_KEY);
                 long now = System.currentTimeMillis();
                 if (loginTime == null) loginTime = now;
 
                 String token = adminTokenService.extractToken(request);
                 if (token == null) {
-                    token = adminTokenService.generateToken("admin");
-                    adminTokenService.addTokenCookie(response, token);
+                    token = adminTokenService.generateToken(adminUsername);
+                    boolean isSecure = adminTokenService.isHttpsRequest(request);
+                    adminTokenService.addTokenCookie(response, token, isSecure);
                 }
 
                 return ResponseEntity.ok(AuthResponse.builder()
@@ -160,26 +200,29 @@ public class AuthController {
                                                             HttpSession session) {
         adminTokenService.validateAndRestoreSession(request, response);
         HttpSession currentSession = request.getSession(false);
-        if (currentSession == null || !"admin".equals(String.valueOf(currentSession.getAttribute(SESSION_USER_KEY)))) {
-            return ResponseEntity.status(401).build();
+        if (currentSession == null || !adminUsername.equals(String.valueOf(currentSession.getAttribute(SESSION_USER_KEY)))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         return ResponseEntity.ok(adminLoginLogRepository.findTop20ByOrderByLoginTimeDesc());
     }
 
     private String getClientIp(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
-        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
+        if (ip != null && !ip.isEmpty() && !"unknown".equalsIgnoreCase(ip)) {
+            // 다중 프록시인 경우 첫 번째 클라이언트 IP 추출
+            if (ip.contains(",")) {
+                ip = ip.split(",")[0].trim();
+            }
+            return ip;
         }
-        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
+        ip = request.getHeader("Proxy-Client-IP");
+        if (ip != null && !ip.isEmpty() && !"unknown".equalsIgnoreCase(ip)) {
+            return ip;
         }
-        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
+        ip = request.getHeader("WL-Proxy-Client-IP");
+        if (ip != null && !ip.isEmpty() && !"unknown".equalsIgnoreCase(ip)) {
+            return ip;
         }
-        if (ip != null && ip.contains(",")) {
-            ip = ip.split(",")[0].trim();
-        }
-        return ip;
+        return request.getRemoteAddr();
     }
 }

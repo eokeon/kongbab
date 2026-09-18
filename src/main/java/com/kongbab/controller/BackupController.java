@@ -10,6 +10,7 @@ import com.kongbab.service.StreamerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Pattern;
 
 @Slf4j
 @RestController
@@ -45,6 +47,26 @@ public class BackupController {
     private int maxBackups;
 
     private static final DateTimeFormatter FILE_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+    private static final Pattern SAFE_BACKUP_FILENAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_\\-\\.]+\\.json$");
+
+    private boolean isValidBackupFileName(String fileName) {
+        if (fileName == null || fileName.isBlank()) return false;
+        if (fileName.contains("..") || fileName.contains("/") || fileName.contains("\\") || fileName.contains(":")) {
+            return false;
+        }
+        return SAFE_BACKUP_FILENAME_PATTERN.matcher(fileName.trim()).matches();
+    }
+
+    private boolean isSafeFilePath(File dir, File targetFile) {
+        if (dir == null || targetFile == null) return false;
+        try {
+            Path targetPath = targetFile.toPath().toAbsolutePath().normalize();
+            Path dirPath = dir.toPath().toAbsolutePath().normalize();
+            return targetPath.startsWith(dirPath);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     private File getTargetDir() {
         File dir;
@@ -214,13 +236,18 @@ public class BackupController {
             if (directContent != null && !directContent.isBlank()) {
                 jsonContent = directContent;
             } else if (fileName != null && !fileName.isBlank()) {
-                if (fileName.contains("..") || fileName.contains("/") || fileName.contains("\\")) {
+                if (!isValidBackupFileName(fileName)) {
                     res.put("success", false);
                     res.put("message", "유효하지 않은 파일 이름입니다.");
                     return ResponseEntity.badRequest().body(res);
                 }
                 File dir = getTargetDir();
-                File targetFile = new File(dir, fileName);
+                File targetFile = new File(dir, fileName.trim());
+                if (!isSafeFilePath(dir, targetFile)) {
+                    res.put("success", false);
+                    res.put("message", "비정상적인 파일 경로 접근이 감지되었습니다.");
+                    return ResponseEntity.badRequest().body(res);
+                }
                 if (!targetFile.exists()) {
                     res.put("success", false);
                     res.put("message", "백업 파일을 찾을 수 없습니다: " + fileName);
@@ -255,25 +282,14 @@ public class BackupController {
                 streamerService.syncStreamers(streamerDtoList);
             }
 
-            // 복원된 전체 백업 json을 backup 디렉토리의 backup.json 및 static, docs의 streamers.json에도 즉시 동기화
+            // 복원된 전체 백업 json을 backup 디렉토리의 backup.json 및 streamers.json / streamers.dat에 동기화
             File dir = getTargetDir();
             Path latestBackupPath = Paths.get(dir.getAbsolutePath(), "backup.json");
             try {
                 Files.writeString(latestBackupPath, jsonContent, StandardCharsets.UTF_8);
             } catch (Exception ignored) {}
 
-            List<Path> targets = List.of(
-                    Paths.get("src", "main", "resources", "static", "streamers.json"),
-                    Paths.get("build", "resources", "main", "static", "streamers.json"),
-                    Paths.get("docs", "streamers.json")
-            );
-            for (Path p : targets) {
-                try {
-                    if (Files.exists(p.getParent())) {
-                        Files.writeString(p, jsonContent, StandardCharsets.UTF_8);
-                    }
-                } catch (Exception ignored) {}
-            }
+            syncStreamersFiles(jsonContent);
 
             res.put("success", true);
             res.put("message", "백업 데이터가 성공적으로 복원되었습니다.");
@@ -290,18 +306,24 @@ public class BackupController {
 
     @GetMapping("/backup/download/{fileName}")
     public ResponseEntity<byte[]> downloadBackup(@PathVariable String fileName) {
-        if (fileName.contains("..") || fileName.contains("/") || fileName.contains("\\")) {
+        if (!isValidBackupFileName(fileName)) {
             return ResponseEntity.badRequest().build();
         }
         File dir = getTargetDir();
-        File file = new File(dir, fileName);
+        File file = new File(dir, fileName.trim());
+        if (!isSafeFilePath(dir, file)) {
+            return ResponseEntity.badRequest().build();
+        }
         if (!file.exists()) {
             return ResponseEntity.notFound().build();
         }
         try {
             byte[] bytes = Files.readAllBytes(file.toPath());
+            ContentDisposition disposition = ContentDisposition.attachment()
+                    .filename(fileName.trim(), StandardCharsets.UTF_8)
+                    .build();
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(bytes);
         } catch (IOException e) {
@@ -322,19 +344,8 @@ public class BackupController {
             Files.writeString(backupPath, payload, StandardCharsets.UTF_8);
             Files.writeString(latestPath, payload, StandardCharsets.UTF_8);
 
-            // static 및 docs, build 폴더의 streamers.json에도 최신 백업 데이터(순서 포함) 자동 동기화
-            List<Path> targets = List.of(
-                    Paths.get("src", "main", "resources", "static", "streamers.json"),
-                    Paths.get("build", "resources", "main", "static", "streamers.json"),
-                    Paths.get("docs", "streamers.json")
-            );
-            for (Path p : targets) {
-                try {
-                    if (Files.exists(p.getParent())) {
-                        Files.writeString(p, payload, StandardCharsets.UTF_8);
-                    }
-                } catch (Exception ignored) {}
-            }
+            // static 및 docs, build 폴더의 streamers.json 및 암호화 streamers.dat 자동 동기화
+            syncStreamersFiles(payload);
 
             cleanOldBackups(dir);
 
@@ -494,6 +505,24 @@ public class BackupController {
             log.info("카테고리/조직 구조가 MariaDB app_config에 영구 저장되었습니다.");
         } catch (Exception e) {
             log.error("MariaDB 카테고리 설정 저장 실패", e);
+        }
+    }
+
+    private void syncStreamersFiles(String jsonContent) {
+        if (jsonContent == null || jsonContent.isBlank()) return;
+
+        // streamers.json 자동 동기화
+        List<Path> targets = List.of(
+                Paths.get("src", "main", "resources", "static", "streamers.json"),
+                Paths.get("build", "resources", "main", "static", "streamers.json"),
+                Paths.get("docs", "streamers.json")
+        );
+        for (Path p : targets) {
+            try {
+                if (Files.exists(p.getParent())) {
+                    Files.writeString(p, jsonContent, StandardCharsets.UTF_8);
+                }
+            } catch (Exception ignored) {}
         }
     }
 

@@ -321,27 +321,28 @@ function getSwatBadgeHtml(swatRole, size = 'md') {
   }
 
   const roleText = roleStr.replace(/\(.*?\)/g, '').trim();
+  const safeRoleText = typeof escapeHtml === 'function' ? escapeHtml(roleText) : roleText;
 
   if (size === 'lg') {
     return `
-      <span class="absolute -top-2.5 -left-2.5 z-20 text-xs font-black px-2.5 py-1 rounded-xl ${colorClasses} -rotate-12 flex items-center justify-center whitespace-nowrap select-none tracking-tight" title="추가 직책: ${roleText}">
-        <span>${roleText}</span>
+      <span class="absolute -top-2.5 -left-2.5 z-20 text-xs font-black px-2.5 py-1 rounded-xl ${colorClasses} -rotate-12 flex items-center justify-center whitespace-nowrap select-none tracking-tight" title="추가 직책: ${safeRoleText}">
+        <span>${safeRoleText}</span>
       </span>
     `;
   }
 
   if (size === 'sm') {
     return `
-      <span class="absolute -top-1.5 -left-1.5 z-20 text-[9px] font-black px-1.5 py-0.5 rounded-md ${colorClasses} -rotate-12 flex items-center justify-center whitespace-nowrap select-none tracking-tight" title="추가 직책: ${roleText}">
-        <span>${roleText}</span>
+      <span class="absolute -top-1.5 -left-1.5 z-20 text-[9px] font-black px-1.5 py-0.5 rounded-md ${colorClasses} -rotate-12 flex items-center justify-center whitespace-nowrap select-none tracking-tight" title="추가 직책: ${safeRoleText}">
+        <span>${safeRoleText}</span>
       </span>
     `;
   }
 
   // md size (카드 아바타)
   return `
-    <span class="absolute -top-2 -left-2 z-20 text-[9.5px] font-black px-2 py-0.5 rounded-md ${colorClasses} -rotate-12 flex items-center justify-center whitespace-nowrap select-none tracking-tight" title="추가 직책: ${roleText}">
-      <span>${roleText}</span>
+    <span class="absolute -top-2 -left-2 z-20 text-[9.5px] font-black px-2 py-0.5 rounded-md ${colorClasses} -rotate-12 flex items-center justify-center whitespace-nowrap select-none tracking-tight" title="추가 직책: ${safeRoleText}">
+      <span>${safeRoleText}</span>
     </span>
   `;
 }
@@ -656,12 +657,18 @@ function renderMemberCard(member, dragType, clickFn, categoryId = null, subgroup
   const cardBorderClass = inactive ? "border-zinc-800/40 opacity-85 hover:opacity-100 hover:border-zinc-700" : "border-zinc-800/80 hover:border-zinc-700";
   const cursorClass = admin ? "cursor-grab active:cursor-grabbing" : "cursor-pointer";
 
+  const mId = typeof sanitizeAttr === 'function' ? sanitizeAttr(member.id) : member.id;
+  const mName = typeof escapeHtml === 'function' ? escapeHtml(member.name) : member.name;
+  const mStreamer = typeof escapeHtml === 'function' ? escapeHtml(member.streamer) : member.streamer;
+  const safeRole = typeof escapeHtml === 'function' ? escapeHtml(effectiveRole) : effectiveRole;
+  const safeSubCount = typeof escapeHtml === 'function' ? escapeHtml(member.subscriberCount) : member.subscriberCount;
+
   return `
     <div 
-      id="member-card-${member.id}"
-      data-member-id="${member.id}"
+      id="member-card-${mId}"
+      data-member-id="${mId}"
       ${dragAttrs}
-      onclick="${clickFn}('${member.id}')"
+      onclick="${clickFn}('${mId}')"
       class="group member-card-interactive bg-zinc-900/80 border ${cardBorderClass} rounded-2xl p-4 sm:p-5 ${cursorClass} shadow-lg hover:shadow-2xl flex flex-col justify-between select-none"
     >
       <div>
@@ -669,7 +676,7 @@ function renderMemberCard(member, dragType, clickFn, categoryId = null, subgroup
           <div class="relative flex-shrink-0">
             <img 
               src="${getMemberAvatar(member)}" 
-              alt="${member.name}" 
+              alt="${mName}" 
               draggable="false" 
               loading="lazy"
               decoding="async"
@@ -691,40 +698,40 @@ function renderMemberCard(member, dragType, clickFn, categoryId = null, subgroup
                 <span>사직</span>
               </span>
             ` : ''))}
-            ${effectiveRole ? `<span class="absolute -bottom-1 -right-1 text-[10px] font-bold px-1.5 py-0.5 rounded ${getMemberRoleBadgeClass(member, curCat, curGrp)} shadow">${effectiveRole}</span>` : ''}
+            ${safeRole ? `<span class="absolute -bottom-1 -right-1 text-[10px] font-bold px-1.5 py-0.5 rounded ${getMemberRoleBadgeClass(member, curCat, curGrp)} shadow">${safeRole}</span>` : ''}
           </div>
           
           <div class="flex-1 min-w-0">
             <div class="flex items-center justify-between gap-2">
               <div class="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-0 flex-wrap">
-                <h4 class="text-lg sm:text-xl font-bold text-white group-hover:text-amber-400 transition-colors truncate" title="${member.streamer}">
-                  ${member.streamer}
+                <h4 class="text-lg sm:text-xl font-bold text-white group-hover:text-amber-400 transition-colors truncate" title="${mStreamer}">
+                  ${mStreamer}
                 </h4>
                 ${member.subscriberCount ? (
                   isMemberChzzk(member) ? `
                     <span class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-[#00ffa3] bg-[#00ffa3]/10 border border-[#00ffa3]/40 px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="치지직 채널 팔로워 수">
                       <svg class="w-3 h-3 text-[#00ffa3] fill-current" viewBox="105 97 300 300"><polygon points="224,101 325,101 294,144 396,144 270,318 385,318 385,393 114,393 241,217 140,217"/></svg>
-                      <span>${member.subscriberCount}</span>
+                      <span>${safeSubCount}</span>
                     </span>
                   ` : `
                     <span class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-red-300 bg-red-950/80 border border-red-700/50 px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm flex-shrink-0" title="유튜브 채널 구독자 수">
                       <svg class="w-3 h-3 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                      <span>${member.subscriberCount}</span>
+                      <span>${safeSubCount}</span>
                     </span>
                   `
                 ) : ''}
               </div>
               ${isAdmin() ? `
                 <div class="flex items-center gap-1.5 ml-2 flex-shrink-0 card-header-actions" onclick="event.stopPropagation()">
-                  <button onclick="openMemberModal('edit', '${member.id}')" title="수정" class="p-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white text-xs cursor-pointer flex-shrink-0">✏️</button>
-                  <button onclick="deleteMember('${member.id}')" title="삭제" class="p-1 rounded-lg bg-red-950/70 hover:bg-red-900 text-red-300 hover:text-white text-xs border border-red-800/40 cursor-pointer flex-shrink-0">🗑️</button>
+                  <button onclick="openMemberModal('edit', '${mId}')" title="수정" class="p-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white text-xs cursor-pointer flex-shrink-0">✏️</button>
+                  <button onclick="deleteMember('${mId}')" title="삭제" class="p-1 rounded-lg bg-red-950/70 hover:bg-red-900 text-red-300 hover:text-white text-xs border border-red-800/40 cursor-pointer flex-shrink-0">🗑️</button>
                 </div>
               ` : ''}
             </div>
             <div class="flex items-center gap-2 mt-1 flex-wrap">
-              <p class="text-sm font-medium text-amber-400/90 flex items-center gap-1.5" title="RP 캐릭터: ${member.name}">
+              <p class="text-sm font-medium text-amber-400/90 flex items-center gap-1.5" title="RP 캐릭터: ${mName}">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                <span>${member.name}</span>
+                <span>${mName}</span>
               </p>
             </div>
           </div>
@@ -936,24 +943,27 @@ function renderSubgroupList(container, cat) {
 
   const cardsHtml = cat.groups.map(group => {
     const totalVideos = group.members.reduce((sum, m) => sum + (m.videos || []).length, 0);
+    const safeGroupId = typeof sanitizeAttr === 'function' ? sanitizeAttr(group.id) : group.id;
+    const safeGroupName = typeof escapeHtml === 'function' ? escapeHtml(group.name) : group.name;
     const dragAttrs = admin ? `
         draggable="true"
         data-drag-type="group"
-        data-drag-id="${group.id}"
-        ondragstart="handleCardDragStart(event, 'group', '${group.id}')"
+        data-drag-id="${safeGroupId}"
+        ondragstart="handleCardDragStart(event, 'group', '${safeGroupId}')"
         ondragover="handleCardDragOver(event)"
         ondragleave="handleCardDragLeave(event)"
-        ondrop="handleCardDrop(event, 'group', '${group.id}')"
+        ondrop="handleCardDrop(event, 'group', '${safeGroupId}')"
         ondragend="handleCardDragEnd(event)"
     ` : `draggable="false"`;
     const cursorClass = admin ? "cursor-grab active:cursor-grabbing" : "cursor-pointer";
-    const bgImage = typeof getGroupBgImage === "function" ? getGroupBgImage(group) : (group.bgImage || (group.id === "gang-bigdick" || group.name === "빅딕" ? "assets/빅딕.webp" : null));
+    const rawBgImage = typeof getGroupBgImage === "function" ? getGroupBgImage(group) : (group.bgImage || (group.id === "gang-bigdick" || group.name === "빅딕" ? "assets/빅딕.webp" : null));
+    const bgImage = rawBgImage ? (typeof sanitizeUrl === 'function' ? sanitizeUrl(rawBgImage) : rawBgImage) : null;
 
-    if (bgImage) {
+    if (bgImage && bgImage !== '#') {
       return `
         <div 
           ${dragAttrs}
-          onclick="selectGroup('${group.id}')"
+          onclick="selectGroup('${safeGroupId}')"
           class="group member-card-interactive relative overflow-hidden bg-zinc-950 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl p-4 sm:p-5 ${cursorClass} shadow-xl ${theme.glow} select-none min-h-[140px] flex flex-col justify-between"
         >
           <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -965,9 +975,9 @@ function renderSubgroupList(container, cat) {
           </div>
 
           <div class="relative z-10 flex items-center justify-between gap-2 mb-4">
-            <h3 class="text-xl sm:text-2xl font-black text-white group-hover:text-amber-400 transition-colors flex items-center gap-2 truncate min-w-0 flex-1 drop-shadow-md" title="${group.name}">
+            <h3 class="text-xl sm:text-2xl font-black text-white group-hover:text-amber-400 transition-colors flex items-center gap-2 truncate min-w-0 flex-1 drop-shadow-md" title="${safeGroupName}">
               <span class="flex-shrink-0">${group.emoji || ''}</span>
-              <span class="truncate">${group.name}</span>
+              <span class="truncate">${safeGroupName}</span>
             </h3>
             <div class="w-8 h-8 rounded-xl bg-black/60 backdrop-blur-md border border-zinc-700/60 flex items-center justify-center text-zinc-300 group-hover:bg-amber-500 group-hover:text-black group-hover:border-amber-500 transition-all flex-shrink-0 shadow">
               ${SVG_ICONS.chevronRight}
@@ -990,13 +1000,13 @@ function renderSubgroupList(container, cat) {
     return `
       <div 
         ${dragAttrs}
-        onclick="selectGroup('${group.id}')"
+        onclick="selectGroup('${safeGroupId}')"
         class="group member-card-interactive relative bg-gradient-to-b from-zinc-900/90 to-zinc-950/90 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl p-4 sm:p-5 ${cursorClass} shadow-xl ${theme.glow} select-none"
       >
         <div class="flex items-center justify-between gap-2 mb-4">
-          <h3 class="text-xl sm:text-2xl font-bold text-white group-hover:text-amber-400 transition-colors flex items-center gap-2 truncate min-w-0 flex-1" title="${group.name}">
+          <h3 class="text-xl sm:text-2xl font-bold text-white group-hover:text-amber-400 transition-colors flex items-center gap-2 truncate min-w-0 flex-1" title="${safeGroupName}">
             <span class="flex-shrink-0">${group.emoji || ''}</span>
-            <span class="truncate">${group.name}</span>
+            <span class="truncate">${safeGroupName}</span>
           </h3>
           <div class="w-8 h-8 rounded-xl bg-zinc-800/80 flex items-center justify-center text-zinc-400 group-hover:bg-amber-500 group-hover:text-black transition-all flex-shrink-0">
             ${SVG_ICONS.chevronRight}
@@ -1057,10 +1067,10 @@ function renderGroupMembers(container) {
           <span>${cat.name} 목록으로 돌아가기</span>
         </button>
         <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
-          ${bgImage ? `<img src="${bgImage}" alt="${group.name}" loading="lazy" decoding="async" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-cover border-2 border-amber-500/60 shadow-lg shadow-amber-500/20 flex-shrink-0" />` : ''}
+          ${(bgImage && sanitizeUrl(bgImage) !== '#') ? `<img src="${sanitizeUrl(bgImage)}" alt="${escapeHtml(group.name)}" loading="lazy" decoding="async" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-cover border-2 border-amber-500/60 shadow-lg shadow-amber-500/20 flex-shrink-0" />` : ''}
           <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2 flex-shrink-0">
             <span>${group.emoji || ''}</span>
-            <span>${group.name}</span>
+            <span>${escapeHtml(group.name)}</span>
           </h2>
           ${subscriberBadgesHtml}
           ${isAdmin() ? `
@@ -1148,10 +1158,18 @@ function renderMemberVideos(container) {
   const admin = isAdmin();
   let videosHtml = displayedVideos.map((video, vIndex) => {
     const videoNum = vIndex + 1;
-    const vUrl = (video.url && video.url !== "undefined") ? video.url : (video.videoId ? `https://www.youtube.com/watch?v=${video.videoId}` : "");
+    const rawVUrl = (video.url && video.url !== "undefined") ? video.url : (video.videoId ? `https://www.youtube.com/watch?v=${video.videoId}` : "");
+    const vUrl = typeof sanitizeUrl === 'function' ? sanitizeUrl(rawVUrl) : rawVUrl;
     const isChzzk = typeof isChzzkUrl === "function" && isChzzkUrl(vUrl);
     const platformLabel = isChzzk ? '치지직' : '유튜브';
-    const thumbUrl = video.thumbnailUrl || getYoutubeThumbnail(vUrl);
+    const rawThumbUrl = video.thumbnailUrl || getYoutubeThumbnail(vUrl);
+    const thumbUrl = typeof sanitizeUrl === 'function' ? sanitizeUrl(rawThumbUrl) : rawThumbUrl;
+    const safeVidId = typeof sanitizeAttr === 'function' ? sanitizeAttr(video.id) : video.id;
+    const safeTitle = typeof escapeHtml === 'function' ? escapeHtml(video.title) : video.title;
+    const safeDesc = typeof escapeHtml === 'function' ? escapeHtml(video.description) : video.description;
+    const safeDate = typeof escapeHtml === 'function' ? escapeHtml(video.date) : video.date;
+    const safeDuration = typeof escapeHtml === 'function' ? escapeHtml(video.duration) : video.duration;
+
     const vType = getVideoType(video);
     let typeBadgeClass = 'bg-red-950/90 text-red-300 border-red-700/60';
     let typeBadgeText = '🎬 편집 영상';
@@ -1165,11 +1183,11 @@ function renderMemberVideos(container) {
     const dragAttrs = admin ? `
         draggable="true"
         data-drag-type="video"
-        data-drag-id="${video.id}"
-        ondragstart="handleCardDragStart(event, 'video', '${video.id}')"
+        data-drag-id="${safeVidId}"
+        ondragstart="handleCardDragStart(event, 'video', '${safeVidId}')"
         ondragover="handleCardDragOver(event)"
         ondragleave="handleCardDragLeave(event)"
-        ondrop="handleCardDrop(event, 'video', '${video.id}')"
+        ondrop="handleCardDrop(event, 'video', '${safeVidId}')"
         ondragend="handleCardDragEnd(event)"
     ` : `draggable="false"`;
     const cursorClass = admin ? "cursor-grab active:cursor-grabbing" : "";
@@ -1184,12 +1202,12 @@ function renderMemberVideos(container) {
             href="${vUrl || '#'}" 
             target="_blank" 
             rel="noopener noreferrer" 
-            draggable="false"
+            draggable="false" 
             onclick="if (isDraggingCard || !this.getAttribute('href') || this.getAttribute('href') === '#') { event.preventDefault(); return false; }"
             class="relative block aspect-video bg-black overflow-hidden group cursor-pointer"
             title="${platformLabel}에서 영상 보기 (새 탭)"
           >
-            <img src="${thumbUrl}" alt="${video.title}" draggable="false" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
+            <img src="${thumbUrl}" alt="${safeTitle}" draggable="false" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
             
             <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 z-10 select-none">
               <div class="${typeBadgeClass} border backdrop-blur-md text-[11px] font-bold px-2.5 py-1 rounded-lg shadow flex items-center gap-1 whitespace-nowrap flex-shrink-0">
@@ -1220,7 +1238,7 @@ function renderMemberVideos(container) {
             ${video.date ? `
               <div class="absolute bottom-2 left-2 bg-black/85 backdrop-blur-sm text-[11px] font-medium text-zinc-300 px-2 py-0.5 rounded-md z-10 flex items-center gap-1 select-none shadow-sm">
                 <svg class="w-3 h-3 text-zinc-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                <span>${video.date}</span>
+                <span>${safeDate}</span>
               </div>
             ` : `
               <div class="absolute bottom-2 left-2 bg-black/85 backdrop-blur-sm text-[11px] font-medium text-zinc-400 px-2 py-0.5 rounded-md z-10 flex items-center gap-1 select-none shadow-sm">
@@ -1229,7 +1247,7 @@ function renderMemberVideos(container) {
             `}
 
             <div class="absolute bottom-2 right-2 bg-black/90 backdrop-blur-sm text-[11px] font-bold font-mono text-zinc-100 px-2 py-0.5 rounded-md z-10 shadow-sm flex items-center gap-1 select-none">
-              ${video.duration ? `<span>${video.duration}</span>` : `<span>영상</span>`}
+              ${video.duration ? `<span>${safeDuration}</span>` : `<span>영상</span>`}
             </div>
           </a>
 
@@ -1242,13 +1260,13 @@ function renderMemberVideos(container) {
                 draggable="false" 
                 onclick="if (isDraggingCard || !this.getAttribute('href') || this.getAttribute('href') === '#') { event.preventDefault(); return false; }"
                 class="block text-sm sm:text-base font-bold text-white ${isChzzk ? 'hover:text-emerald-400' : 'hover:text-red-400'} transition-colors line-clamp-2 leading-snug cursor-pointer ${video.description ? 'mb-2' : ''}"
-                title="${video.title}"
+                title="${safeTitle}"
               >
-                ${video.title}
+                ${safeTitle}
               </a>
               ${video.description ? `
                 <p class="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
-                  ${video.description}
+                  ${safeDesc}
                 </p>
               ` : ''}
             </div>
@@ -1260,8 +1278,8 @@ function renderMemberVideos(container) {
           <div class="px-4 sm:px-5 py-2.5 bg-zinc-950 border-t border-zinc-800/80 flex items-center justify-between">
             <span class="text-[11px] text-amber-400 font-bold flex items-center gap-1">🛡️ 어드민 관리</span>
             <div class="flex items-center gap-1.5">
-              <button onclick="openVideoModal('edit', '${video.id}')" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold transition-colors cursor-pointer">✏️ 수정</button>
-              <button onclick="deleteVideo('${video.id}')" class="px-2.5 py-1 rounded-lg bg-red-950/70 hover:bg-red-900 text-red-300 text-xs font-semibold border border-red-800/50 transition-colors cursor-pointer">🗑️ 삭제</button>
+              <button onclick="openVideoModal('edit', '${safeVidId}')" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold transition-colors cursor-pointer">✏️ 수정</button>
+              <button onclick="deleteVideo('${safeVidId}')" class="px-2.5 py-1 rounded-lg bg-red-950/70 hover:bg-red-900 text-red-300 text-xs font-semibold border border-red-800/50 transition-colors cursor-pointer">🗑️ 삭제</button>
             </div>
           </div>
         ` : ''}
@@ -1331,17 +1349,33 @@ function renderMemberVideos(container) {
   const martyred = info.isMartyred;
   const inactive = info.isInactive;
 
+  const mDetailId = typeof sanitizeAttr === 'function' ? sanitizeAttr(member.id) : member.id;
+  const mDetailName = typeof escapeHtml === 'function' ? escapeHtml(member.name) : member.name;
+  const mDetailStreamer = typeof escapeHtml === 'function' ? escapeHtml(member.streamer) : member.streamer;
+  const safeDetailRole = typeof escapeHtml === 'function' ? escapeHtml(effectiveRole) : effectiveRole;
+  const safeDetailSubCount = typeof escapeHtml === 'function' ? escapeHtml(member.subscriberCount) : member.subscriberCount;
+  const safeAffiliationsText = typeof escapeHtml === 'function' ? escapeHtml(affiliationsText) : affiliationsText;
+
+  let channelUrl = '#';
+  if (member.youtubeUrl) {
+    if (isMemberChzzk(member)) {
+      channelUrl = member.youtubeUrl.startsWith('http') ? sanitizeUrl(member.youtubeUrl) : sanitizeUrl(`https://chzzk.naver.com/${member.youtubeUrl}`);
+    } else {
+      channelUrl = member.youtubeUrl.startsWith('http') ? sanitizeUrl(member.youtubeUrl) : sanitizeUrl(`https://www.youtube.com/${member.youtubeUrl}`);
+    }
+  }
+
   container.innerHTML = `
     <div class="mb-6 sm:mb-8">
       ${backButtonHtml}
       <div class="bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-950 border border-zinc-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6 shadow-2xl relative overflow-hidden">
         <div class="flex items-start sm:items-center gap-4 sm:gap-6 relative z-10">
           <div class="relative flex-shrink-0">
-            <img src="${getMemberAvatar(member)}" alt="${member.name}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='assets/default-avatar.svg'" class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl sm:rounded-3xl object-cover border-4 border-zinc-800 shadow-2xl transition-all duration-300 ${inactive ? 'grayscale contrast-125 opacity-80 hover:grayscale-0 hover:contrast-100 hover:opacity-100 cursor-pointer' : ''}" />
+            <img src="${getMemberAvatar(member)}" alt="${mDetailName}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='assets/default-avatar.svg'" class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl sm:rounded-3xl object-cover border-4 border-zinc-800 shadow-2xl transition-all duration-300 ${inactive ? 'grayscale contrast-125 opacity-80 hover:grayscale-0 hover:contrast-100 hover:opacity-100 cursor-pointer' : ''}" />
             ${effectiveSwatRole ? getSwatBadgeHtml(effectiveSwatRole, 'lg') : ''}
-            ${effectiveRole ? `
+            ${safeDetailRole ? `
               <span class="absolute -bottom-2 -right-2 z-20 text-xs font-bold px-2.5 py-1 rounded-xl ${getMemberRoleBadgeClass(member, cat.id, group?.id)} shadow-xl border border-white/20">
-                ${effectiveRole}
+                ${safeDetailRole}
               </span>
             ` : ''}
             ${martyred ? `
@@ -1360,32 +1394,32 @@ function renderMemberVideos(container) {
           </div>
           <div class="min-w-0 flex-1">
             <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-              ${effectiveRole ? `<span class="text-xs font-bold px-2.5 py-1 rounded-md ${getMemberRoleBadgeClass(member, cat.id, group?.id)}">${effectiveRole}</span>` : ''}
-              <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-300">소속: ${affiliationsText}</span>
+              ${safeDetailRole ? `<span class="text-xs font-bold px-2.5 py-1 rounded-md ${getMemberRoleBadgeClass(member, cat.id, group?.id)}">${safeDetailRole}</span>` : ''}
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-300">소속: ${safeAffiliationsText}</span>
             </div>
             <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
-              <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight truncate">${member.streamer}</h2>
+              <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight truncate">${mDetailStreamer}</h2>
               ${member.subscriberCount ? (
                 isMemberChzzk(member) ? `
-                  <a href="${member.youtubeUrl && member.youtubeUrl.startsWith('http') ? member.youtubeUrl : (member.youtubeUrl ? `https://chzzk.naver.com/${member.youtubeUrl}` : '#')}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#00ffa3] bg-[#00ffa3]/10 hover:bg-[#00ffa3]/20 border border-[#00ffa3]/40 px-2.5 py-1 rounded-lg shadow-sm transition-colors cursor-pointer" title="치지직 채널 바로가기 (팔로워 ${member.subscriberCount})">
+                  <a href="${channelUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#00ffa3] bg-[#00ffa3]/10 hover:bg-[#00ffa3]/20 border border-[#00ffa3]/40 px-2.5 py-1 rounded-lg shadow-sm transition-colors cursor-pointer" title="치지직 채널 바로가기 (팔로워 ${safeDetailSubCount})">
                     <svg class="w-3.5 h-3.5 text-[#00ffa3] fill-current" viewBox="105 97 300 300"><polygon points="224,101 325,101 294,144 396,144 270,318 385,318 385,393 114,393 241,217 140,217"/></svg>
-                    <span>${member.subscriberCount}</span>
+                    <span>${safeDetailSubCount}</span>
                     <svg class="w-3 h-3 text-[#00ffa3]/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                   </a>
                 ` : `
-                  <a href="${member.youtubeUrl && member.youtubeUrl.startsWith('http') ? member.youtubeUrl : (member.youtubeUrl ? `https://www.youtube.com/${member.youtubeUrl}` : '#')}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-bold text-red-300 bg-red-950/80 hover:bg-red-900/90 border border-red-700/50 px-2.5 py-1 rounded-lg shadow-sm transition-colors cursor-pointer" title="유튜브 채널 바로가기 (구독자 ${member.subscriberCount})">
+                  <a href="${channelUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-bold text-red-300 bg-red-950/80 hover:bg-red-900/90 border border-red-700/50 px-2.5 py-1 rounded-lg shadow-sm transition-colors cursor-pointer" title="유튜브 채널 바로가기 (구독자 ${safeDetailSubCount})">
                     <svg class="w-3.5 h-3.5 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                    <span>${member.subscriberCount}</span>
+                    <span>${safeDetailSubCount}</span>
                     <svg class="w-3 h-3 text-red-400/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                   </a>
                 `
               ) : ''}
             </div>
-            <p class="text-amber-400 text-sm sm:text-base font-semibold mt-1">RP 캐릭터: ${member.name}</p>
+            <p class="text-amber-400 text-sm sm:text-base font-semibold mt-1">RP 캐릭터: ${mDetailName}</p>
             ${isAdmin() ? `
               <div class="flex items-center gap-2 mt-3">
-                <button onclick="openMemberModal('edit', '${member.id}')" class="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white text-xs font-semibold transition-colors cursor-pointer inline-flex items-center gap-1">✏️ 정보 수정</button>
-                <button onclick="deleteMember('${member.id}')" class="px-3 py-1.5 rounded-xl bg-red-950/80 hover:bg-red-900 text-red-300 hover:text-white text-xs font-semibold border border-red-800/50 transition-colors cursor-pointer inline-flex items-center gap-1">🗑️ 인원 삭제</button>
+                <button onclick="openMemberModal('edit', '${mDetailId}')" class="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white text-xs font-semibold transition-colors cursor-pointer inline-flex items-center gap-1">✏️ 정보 수정</button>
+                <button onclick="deleteMember('${mDetailId}')" class="px-3 py-1.5 rounded-xl bg-red-950/80 hover:bg-red-900 text-red-300 hover:text-white text-xs font-semibold border border-red-800/50 transition-colors cursor-pointer inline-flex items-center gap-1">🗑️ 인원 삭제</button>
               </div>
             ` : ''}
           </div>

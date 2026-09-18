@@ -7,15 +7,15 @@ const DEFAULT_CATEGORIES = [
       { id: "gang-bigdick", name: "빅딕", emoji: "🍌", bgImage: "assets/빅딕.webp", members: [] },
       { id: "gang-oompa", name: "움파룸파", emoji: "😜", bgImage: "assets/움파룸파.webp", members: [] },
       { id: "gang-sangryeon", name: "상련", emoji: "👠", bgImage: "assets/상련.webp", members: [] },
-      { id: "gang-goldmoon", name: "골드문", emoji: "🌙", members: [] },
-      { id: "gang-nonghyup", name: "농협", emoji: "🌾", members: [] },
-      { id: "gang-girlbang", name: "GIRL BANG", emoji: "🐷", members: [] },
+      { id: "gang-goldmoon", name: "골드문", emoji: "🌙", bgImage: "assets/골드문.webp", members: [] },
+      { id: "gang-nonghyup", name: "농협", emoji: "🌾", bgImage: "assets/농협.webp", members: [] },
+      { id: "gang-girlbang", name: "GIRL BANG", emoji: "🐷", bgImage: "assets/걸뱅.webp", members: [] },
       { id: "gang-blackrose", name: "흑장미", emoji: "🌹", members: [] },
-      { id: "gang-doremifa", name: "도레미파", emoji: "🎹", members: [] },
-      { id: "gang-metalunion", name: "금속노조", emoji: "⛏️", members: [] },
-      { id: "gang-adventure", name: "어드벤처", emoji: "🐯", members: [] },
-      { id: "gang-kgaeng", name: "깨갱", emoji: "🐶", members: [] },
-      { id: "gang-streetcat", name: "길고양이 연합", emoji: "😺", members: [] }
+      { id: "gang-doremifa", name: "도레미파", emoji: "🎹", bgImage: "assets/도레미파.webp", members: [] },
+      { id: "gang-metalunion", name: "금속노조", emoji: "⛏️", bgImage: "assets/금속노조.webp", members: [] },
+      { id: "gang-adventure", name: "어드벤처", emoji: "🐯", bgImage: "assets/어드벤처.webp", members: [] },
+      { id: "gang-kgaeng", name: "깨갱", emoji: "🐶", bgImage: "assets/깨갱.webp", members: [] },
+      { id: "gang-streetcat", name: "길고양이 연합", emoji: "😺", bgImage: "assets/길고양이.webp", members: [] }
     ]
   },
   {
@@ -69,10 +69,48 @@ function loadStoredAuth() {
 
 const DEFAULT_AVATAR = "assets/default-avatar.svg";
 
+// ==========================================
+// 정적 배포(docs) XSS 및 악성 URL 인젝션 방어 유틸리티
+// ==========================================
+function escapeHtml(str) {
+  if (str === null || str === undefined) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+window.escapeHtml = escapeHtml;
+
+function sanitizeUrl(url) {
+  if (!url || typeof url !== "string") return "";
+  const trimmed = url.trim();
+  const lower = trimmed.toLowerCase();
+  // javascript:, vbscript:, data:text/html 등 악의적 실행 프로토콜 차단
+  if (lower.startsWith("javascript:") || lower.startsWith("vbscript:") || lower.startsWith("data:text/")) {
+    return "#";
+  }
+  // http://, https://, 상대경로, data:image/ 만 허용
+  if (lower.startsWith("http://") || lower.startsWith("https://") || lower.startsWith("./") || lower.startsWith("/") || lower.startsWith("assets/") || lower.startsWith("data:image/")) {
+    return trimmed;
+  }
+  return "#";
+}
+window.sanitizeUrl = sanitizeUrl;
+
+function sanitizeAttr(str) {
+  if (str === null || str === undefined) return "";
+  return escapeHtml(String(str));
+}
+window.sanitizeAttr = sanitizeAttr;
+
 function getMemberAvatar(member) {
   if (!member) return DEFAULT_AVATAR;
   const av = typeof member === "string" ? member : (member.avatar || "");
-  return (!av || av.includes("images.unsplash.com")) ? DEFAULT_AVATAR : av;
+  if (!av || av.includes("images.unsplash.com")) return DEFAULT_AVATAR;
+  const safe = sanitizeUrl(av);
+  return (safe === "#") ? DEFAULT_AVATAR : safe;
 }
 
 function applyCategoryStructure(structureCategories) {
@@ -269,16 +307,34 @@ const SVG_ICONS = {
 const GROUP_BACKGROUND_IMAGES = {
   "gang-bigdick": "assets/빅딕.webp",
   "gang-oompa": "assets/움파룸파.webp",
-  "gang-sangryeon": "assets/상련.webp"
+  "gang-sangryeon": "assets/상련.webp",
+  "gang-goldmoon": "assets/골드문.webp",
+  "gang-nonghyup": "assets/농협.webp",
+  "gang-girlbang": "assets/걸뱅.webp",
+  "gang-doremifa": "assets/도레미파.webp",
+  "gang-metalunion": "assets/금속노조.webp",
+  "gang-adventure": "assets/어드벤처.webp",
+  "gang-kgaeng": "assets/깨갱.webp",
+  "gang-streetcat": "assets/길고양이.webp"
 };
 
 function getGroupBgImage(group) {
   if (!group) return null;
   if (group.bgImage) return group.bgImage;
-  if (GROUP_BACKGROUND_IMAGES[group.id]) return GROUP_BACKGROUND_IMAGES[group.id];
-  if (group.name === "빅딕") return "assets/빅딕.webp";
-  if (group.name === "움파룸파") return "assets/움파룸파.webp";
-  if (group.name === "상련") return "assets/상련.webp";
+  if (group.id && GROUP_BACKGROUND_IMAGES[group.id]) return GROUP_BACKGROUND_IMAGES[group.id];
+  if (group.name) {
+    if (group.name === "빅딕") return "assets/빅딕.webp";
+    if (group.name === "움파룸파") return "assets/움파룸파.webp";
+    if (group.name === "상련") return "assets/상련.webp";
+    if (group.name === "골드문") return "assets/골드문.webp";
+    if (group.name === "농협") return "assets/농협.webp";
+    if (group.name === "GIRL BANG" || group.name === "걸뱅") return "assets/걸뱅.webp";
+    if (group.name === "도레미파") return "assets/도레미파.webp";
+    if (group.name === "금속노조") return "assets/금속노조.webp";
+    if (group.name === "어드벤처") return "assets/어드벤처.webp";
+    if (group.name === "깨갱") return "assets/깨갱.webp";
+    if (group.name === "길고양이 연합" || group.name === "길고양이") return "assets/길고양이.webp";
+  }
   return null;
 }
 
