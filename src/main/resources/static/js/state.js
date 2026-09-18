@@ -411,11 +411,43 @@ function showToast(msg) {
 function getCategoryMembers(cat) {
   if (!cat) return [];
   if (!cat.hasSubgroups) return cat.members || [];
-  return (cat.groups || []).flatMap(g => g.members || []);
+
+  const rawMembers = (cat.groups || []).flatMap(g => g.members || []);
+  const uniqueMembers = [];
+  const seenKeys = new Set();
+
+  for (let i = 0; i < rawMembers.length; i++) {
+    const m = rawMembers[i];
+    if (!m) continue;
+    const idKey = m.id ? `id:${m.id}` : null;
+    const urlKey = (m.youtubeUrl && typeof m.youtubeUrl === 'string' && m.youtubeUrl.trim())
+      ? `url:${m.youtubeUrl.trim().toLowerCase().replace(/\/+$/, '')}`
+      : null;
+    const streamerKey = (m.streamer && typeof m.streamer === 'string' && m.streamer.trim())
+      ? `s:${m.streamer.trim().toLowerCase()}`
+      : null;
+    const fallbackKey = m.name ? `name:${m.name.trim().toLowerCase()}` : null;
+
+    if ((idKey && seenKeys.has(idKey)) || 
+        (urlKey && seenKeys.has(urlKey)) || 
+        (streamerKey && seenKeys.has(streamerKey))) {
+      continue;
+    }
+
+    if (idKey) seenKeys.add(idKey);
+    if (urlKey) seenKeys.add(urlKey);
+    if (streamerKey) seenKeys.add(streamerKey);
+    if (fallbackKey) seenKeys.add(fallbackKey);
+
+    uniqueMembers.push(m);
+  }
+
+  return uniqueMembers;
 }
 
 function updateStats() {
   const uniqueMembers = new Map();
+  const seenVideoUrls = new Set();
   let totalVideos = 0;
 
   if (KONGBAB_DATA && KONGBAB_DATA.categories) {
@@ -428,9 +460,18 @@ function updateStats() {
 
         if (!uniqueMembers.has(mKey)) {
           uniqueMembers.set(mKey, m);
-          const validVideos = (m.videos || []).filter(v => v && v.url && v.url !== "undefined" && v.url.trim() !== "");
-          totalVideos += validVideos.length;
         }
+
+        const validVideos = (m.videos || []).filter(v => v && v.url && v.url !== "undefined" && v.url.trim() !== "");
+        validVideos.forEach(v => {
+          const vKey = (v.url || v.id || '').trim().toLowerCase();
+          if (vKey && !seenVideoUrls.has(vKey)) {
+            seenVideoUrls.add(vKey);
+            totalVideos++;
+          } else if (!vKey) {
+            totalVideos++;
+          }
+        });
       });
     });
   }

@@ -50,9 +50,25 @@ function calculateGroupTotalSubscribers(members) {
 
   for (const m of members) {
     if (!m) continue;
-    const key = m.id || (m.streamer ? m.streamer : m.name);
-    if (key && seen.has(key)) continue;
-    if (key) seen.add(key);
+    const idKey = m.id ? `id:${m.id}` : null;
+    const urlKey = (m.youtubeUrl && typeof m.youtubeUrl === 'string' && m.youtubeUrl.trim())
+      ? `url:${m.youtubeUrl.trim().toLowerCase().replace(/\/+$/, '')}`
+      : null;
+    const streamerKey = (m.streamer && typeof m.streamer === 'string' && m.streamer.trim())
+      ? `s:${m.streamer.trim().toLowerCase()}`
+      : null;
+    const fallbackKey = m.name ? `name:${m.name.trim().toLowerCase()}` : null;
+
+    if ((idKey && seen.has(idKey)) || 
+        (urlKey && seen.has(urlKey)) || 
+        (streamerKey && seen.has(streamerKey))) {
+      continue;
+    }
+
+    if (idKey) seen.add(idKey);
+    if (urlKey) seen.add(urlKey);
+    if (streamerKey) seen.add(streamerKey);
+    if (fallbackKey) seen.add(fallbackKey);
 
     const count = parseSubscriberCount(m.subscriberCount);
     if (count > 0) {
@@ -83,9 +99,25 @@ function calculateGroupPlatformSubscribers(members) {
 
   for (const m of members) {
     if (!m) continue;
-    const key = m.id || (m.streamer ? m.streamer : m.name);
-    if (key && seen.has(key)) continue;
-    if (key) seen.add(key);
+    const idKey = m.id ? `id:${m.id}` : null;
+    const urlKey = (m.youtubeUrl && typeof m.youtubeUrl === 'string' && m.youtubeUrl.trim())
+      ? `url:${m.youtubeUrl.trim().toLowerCase().replace(/\/+$/, '')}`
+      : null;
+    const streamerKey = (m.streamer && typeof m.streamer === 'string' && m.streamer.trim())
+      ? `s:${m.streamer.trim().toLowerCase()}`
+      : null;
+    const fallbackKey = m.name ? `name:${m.name.trim().toLowerCase()}` : null;
+
+    if ((idKey && seen.has(idKey)) || 
+        (urlKey && seen.has(urlKey)) || 
+        (streamerKey && seen.has(streamerKey))) {
+      continue;
+    }
+
+    if (idKey) seen.add(idKey);
+    if (urlKey) seen.add(urlKey);
+    if (streamerKey) seen.add(streamerKey);
+    if (fallbackKey) seen.add(fallbackKey);
 
     const count = parseSubscriberCount(m.subscriberCount);
     if (count > 0) {

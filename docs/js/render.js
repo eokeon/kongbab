@@ -744,7 +744,36 @@ function renderMemberCard(member, dragType, clickFn, categoryId = null, subgroup
 }
 
 function renderGroupVideoStats(members) {
-  const memberList = members || [];
+  const rawMemberList = members || [];
+  const memberList = [];
+  const seenKeys = new Set();
+
+  for (let i = 0; i < rawMemberList.length; i++) {
+    const m = rawMemberList[i];
+    if (!m) continue;
+    const idKey = m.id ? `id:${m.id}` : null;
+    const urlKey = (m.youtubeUrl && typeof m.youtubeUrl === 'string' && m.youtubeUrl.trim())
+      ? `url:${m.youtubeUrl.trim().toLowerCase().replace(/\/+$/, '')}`
+      : null;
+    const streamerKey = (m.streamer && typeof m.streamer === 'string' && m.streamer.trim())
+      ? `s:${m.streamer.trim().toLowerCase()}`
+      : null;
+    const fallbackKey = m.name ? `name:${m.name.trim().toLowerCase()}` : null;
+
+    if ((idKey && seenKeys.has(idKey)) || 
+        (urlKey && seenKeys.has(urlKey)) || 
+        (streamerKey && seenKeys.has(streamerKey))) {
+      continue;
+    }
+
+    if (idKey) seenKeys.add(idKey);
+    if (urlKey) seenKeys.add(urlKey);
+    if (streamerKey) seenKeys.add(streamerKey);
+    if (fallbackKey) seenKeys.add(fallbackKey);
+
+    memberList.push(m);
+  }
+
   let clipCount = 0;
   let fullCount = 0;
   let bingeCount = 0;
@@ -752,6 +781,7 @@ function renderGroupVideoStats(members) {
   let clipSec = 0;
   let fullSec = 0;
   let bingeSec = 0;
+  const seenVideoUrls = new Set();
 
   for (let i = 0; i < memberList.length; i++) {
     const vList = memberList[i]?.videos;
@@ -759,6 +789,10 @@ function renderGroupVideoStats(members) {
     for (let j = 0; j < vList.length; j++) {
       const v = vList[j];
       if (!v || !v.url || v.url === "undefined" || !v.url.trim()) continue;
+      const vKey = (v.url || v.id || '').trim().toLowerCase();
+      if (vKey && seenVideoUrls.has(vKey)) continue;
+      if (vKey) seenVideoUrls.add(vKey);
+
       totalVideoCount++;
       const type = getVideoType(v);
       const sec = typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0;
