@@ -241,10 +241,28 @@ function loadStoredData() {
 }
 
 let persistTimer = null;
-function persistData(immediate = false) {
-  if (typeof invalidateLeaderboardCache === "function") {
-    invalidateLeaderboardCache();
+function invalidateRuntimeCaches() {
+  if (KONGBAB_DATA && Array.isArray(KONGBAB_DATA.categories)) {
+    KONGBAB_DATA.categories.forEach(c => {
+      c._cachedMembers = null;
+      c._cachedVideoStats = null;
+      c._cachedSubBadges = null;
+      if (c.hasSubgroups && Array.isArray(c.groups)) {
+        c.groups.forEach(g => {
+          g._cachedVideoStats = null;
+          g._cachedSubBadges = null;
+        });
+      }
+    });
   }
+  if (typeof clearAffiliationCache === "function") clearAffiliationCache();
+  if (typeof clearRenderStatsCache === "function") clearRenderStatsCache();
+  if (typeof invalidateLeaderboardCache === "function") invalidateLeaderboardCache();
+}
+window.invalidateRuntimeCaches = invalidateRuntimeCaches;
+
+function persistData(immediate = false) {
+  invalidateRuntimeCaches();
 
   const saveToStorage = () => {
     try {
@@ -390,14 +408,22 @@ function getDefaultVideoTab(videos) {
   return 'clip';
 }
 
+const _youtubeIdCache = new Map();
 function extractYoutubeId(url) {
   if (!url) return null;
   const str = String(url).trim();
   if (str.length === 11 && /^[a-zA-Z0-9_-]{11}$/.test(str)) {
     return str;
   }
+  const cached = _youtubeIdCache.get(str);
+  if (cached !== undefined) return cached;
+
   const match = str.match(/^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/|live\/)([^#&?]*).*/);
-  return (match && match[2] && match[2].length === 11) ? match[2] : null;
+  const result = (match && match[2] && match[2].length === 11) ? match[2] : null;
+  if (_youtubeIdCache.size < 4000) {
+    _youtubeIdCache.set(str, result);
+  }
+  return result;
 }
 
 function isChzzkUrl(url) {
@@ -491,7 +517,11 @@ function showToast(msg) {
 
 function getCategoryMembers(cat) {
   if (!cat) return [];
-  if (!cat.hasSubgroups) return cat.members || [];
+  if (cat._cachedMembers) return cat._cachedMembers;
+  if (!cat.hasSubgroups) {
+    cat._cachedMembers = cat.members || [];
+    return cat._cachedMembers;
+  }
 
   const rawMembers = (cat.groups || []).flatMap(g => g.members || []);
   const uniqueMembers = [];
@@ -523,6 +553,7 @@ function getCategoryMembers(cat) {
     uniqueMembers.push(m);
   }
 
+  cat._cachedMembers = uniqueMembers;
   return uniqueMembers;
 }
 
@@ -630,12 +661,17 @@ function sortVideosByDateAsc(videos) {
   return videos;
 }
 
-// 영상 재생 시간(H:MM:SS, MM:SS, ISO)을 초 단위로 변환 (중간 배열 생성 없이 고속 파싱)
+// 영상 재생 시간(H:MM:SS, MM:SS, ISO)을 초 단위로 변환 (캐싱 및 중간 배열 생성 없이 고속 파싱)
+const _durationCache = new Map();
 function parseDurationToSeconds(durationStr) {
   if (!durationStr || typeof durationStr !== "string") return 0;
   const str = durationStr.trim();
   if (!str) return 0;
 
+  const cached = _durationCache.get(str);
+  if (cached !== undefined) return cached;
+
+  let totalSeconds = 0;
   if (str.charCodeAt(0) === 80) { // 'P' (ISO-8601: PT#H#M#S)
     let hours = 0, minutes = 0, seconds = 0;
     const hMatch = str.match(/(\d+)H/i);
@@ -644,25 +680,31 @@ function parseDurationToSeconds(durationStr) {
     if (hMatch) hours = parseInt(hMatch[1], 10);
     if (mMatch) minutes = parseInt(mMatch[1], 10);
     if (sMatch) seconds = parseInt(sMatch[1], 10);
-    return hours * 3600 + minutes * 60 + seconds;
+    totalSeconds = hours * 3600 + minutes * 60 + seconds;
+  } else {
+    const c1 = str.indexOf(':');
+    if (c1 === -1) {
+      const val = parseInt(str, 10);
+      totalSeconds = isNaN(val) ? 0 : val;
+    } else {
+      const c2 = str.indexOf(':', c1 + 1);
+      if (c2 !== -1) {
+        const h = parseInt(str.substring(0, c1), 10);
+        const m = parseInt(str.substring(c1 + 1, c2), 10);
+        const s = parseInt(str.substring(c2 + 1), 10);
+        totalSeconds = (isNaN(h) ? 0 : h * 3600) + (isNaN(m) ? 0 : m * 60) + (isNaN(s) ? 0 : s);
+      } else {
+        const m = parseInt(str.substring(0, c1), 10);
+        const s = parseInt(str.substring(c1 + 1), 10);
+        totalSeconds = (isNaN(m) ? 0 : m * 60) + (isNaN(s) ? 0 : s);
+      }
+    }
   }
 
-  const c1 = str.indexOf(':');
-  if (c1 === -1) {
-    const val = parseInt(str, 10);
-    return isNaN(val) ? 0 : val;
+  if (_durationCache.size < 4000) {
+    _durationCache.set(str, totalSeconds);
   }
-  const c2 = str.indexOf(':', c1 + 1);
-  if (c2 !== -1) {
-    const h = parseInt(str.substring(0, c1), 10);
-    const m = parseInt(str.substring(c1 + 1, c2), 10);
-    const s = parseInt(str.substring(c2 + 1), 10);
-    return (isNaN(h) ? 0 : h * 3600) + (isNaN(m) ? 0 : m * 60) + (isNaN(s) ? 0 : s);
-  } else {
-    const m = parseInt(str.substring(0, c1), 10);
-    const s = parseInt(str.substring(c1 + 1), 10);
-    return (isNaN(m) ? 0 : m * 60) + (isNaN(s) ? 0 : s);
-  }
+  return totalSeconds;
 }
 
 // 초 단위를 한글 시간 표기(X시간 Y분 / X분 Y초)로 변환

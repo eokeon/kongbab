@@ -676,7 +676,7 @@ function renderLeaderboardDynamicContent() {
           <div class="podium-badge -top-3 w-7 h-7 rounded-full bg-zinc-400/20 border border-zinc-400 flex items-center justify-center text-sm shadow">🥈</div>
           <div class="relative my-2">
             <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-zinc-400/60 group-hover:border-zinc-300 transition-colors duration-300 ease-out bg-zinc-800 shadow-md" style="mask-image: -webkit-radial-gradient(white, black); -webkit-mask-image: -webkit-radial-gradient(white, black);">
-              <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top2) : (top2.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" loading="lazy" decoding="async" class="podium-avatar-img w-full h-full object-cover" />
+              <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top2) : (top2.avatar || 'assets/default-avatar.svg')}" onerror="this.onerror=null; this.src='assets/default-avatar.svg'" loading="eager" decoding="async" referrerpolicy="no-referrer" class="podium-avatar-img w-full h-full object-cover" />
             </div>
             ${(typeof getSwatBadgeHtml === 'function' && top2.swatRole) ? getSwatBadgeHtml(top2.swatRole, 'sm') : ''}
             ${(typeof isRoleBadgeHidden === 'function' ? !isRoleBadgeHidden(safeTop2SingleRole) : (safeTop2SingleRole !== '조직원' && safeTop2SingleRole !== '조합원')) && safeTop2SingleRole ? `
@@ -708,7 +708,7 @@ function renderLeaderboardDynamicContent() {
           <div class="podium-badge -top-4 w-9 h-9 rounded-full bg-amber-500 text-black font-bold flex items-center justify-center text-base shadow-lg shadow-amber-500/40">👑</div>
           <div class="relative my-2">
             <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-amber-400 group-hover:border-amber-300 transition-colors duration-300 ease-out bg-zinc-800 shadow-md" style="mask-image: -webkit-radial-gradient(white, black); -webkit-mask-image: -webkit-radial-gradient(white, black);">
-              <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top1) : (top1.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" loading="lazy" decoding="async" class="podium-avatar-img w-full h-full object-cover" />
+              <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top1) : (top1.avatar || 'assets/default-avatar.svg')}" onerror="this.onerror=null; this.src='assets/default-avatar.svg'" loading="eager" fetchpriority="high" decoding="async" referrerpolicy="no-referrer" class="podium-avatar-img w-full h-full object-cover" />
             </div>
             ${(typeof getSwatBadgeHtml === 'function' && top1.swatRole) ? getSwatBadgeHtml(top1.swatRole, 'sm') : ''}
             ${(typeof isRoleBadgeHidden === 'function' ? !isRoleBadgeHidden(safeTop1SingleRole) : (safeTop1SingleRole !== '조직원' && safeTop1SingleRole !== '조합원')) && safeTop1SingleRole ? `
@@ -740,7 +740,7 @@ function renderLeaderboardDynamicContent() {
           <div class="podium-badge -top-3 w-7 h-7 rounded-full bg-amber-800/30 border border-amber-700 flex items-center justify-center text-sm shadow">🥉</div>
           <div class="relative my-2">
             <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-amber-700/60 group-hover:border-amber-600 transition-colors duration-300 ease-out bg-zinc-800 shadow-md" style="mask-image: -webkit-radial-gradient(white, black); -webkit-mask-image: -webkit-radial-gradient(white, black);">
-              <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top3) : (top3.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" loading="lazy" decoding="async" class="podium-avatar-img w-full h-full object-cover" />
+              <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top3) : (top3.avatar || 'assets/default-avatar.svg')}" onerror="this.onerror=null; this.src='assets/default-avatar.svg'" loading="eager" decoding="async" referrerpolicy="no-referrer" class="podium-avatar-img w-full h-full object-cover" />
             </div>
             ${(typeof getSwatBadgeHtml === 'function' && top3.swatRole) ? getSwatBadgeHtml(top3.swatRole, 'sm') : ''}
             ${(typeof isRoleBadgeHidden === 'function' ? !isRoleBadgeHidden(safeTop3SingleRole) : (safeTop3SingleRole !== '조직원' && safeTop3SingleRole !== '조합원')) && safeTop3SingleRole ? `
@@ -826,9 +826,10 @@ function renderLeaderboardDynamicContent() {
                 <div class="relative flex-shrink-0">
                   <img 
                     src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(m) : (m.avatar || 'assets/default-avatar.svg')}" 
-                    onerror="this.src='assets/default-avatar.svg'" 
-                    loading="lazy" 
+                    onerror="this.onerror=null; this.src='assets/default-avatar.svg'" 
+                    loading="${idx < 10 ? 'eager' : 'lazy'}" 
                     decoding="async"
+                    referrerpolicy="no-referrer"
                     class="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border border-zinc-700 bg-zinc-800 flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
                   />
                   ${(typeof getSwatBadgeHtml === 'function' && m.swatRole) ? getSwatBadgeHtml(m.swatRole, 'sm') : ''}

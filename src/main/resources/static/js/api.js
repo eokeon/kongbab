@@ -84,6 +84,23 @@ async function apiGetLoginLogs() {
   return [];
 }
 
+let _staticStreamersPromise = null;
+function getStaticStreamersData() {
+  if (!_staticStreamersPromise) {
+    const version = window.CURRENT_DATA_VERSION || "20260919_gang_mariadb_sync_v6";
+    _staticStreamersPromise = fetch(`./streamers.json?v=${version}`)
+      .then(res => {
+        if (res.ok) return res.json();
+        return null;
+      })
+      .catch(err => {
+        console.warn("정적 streamers.json 로드 실패:", err);
+        return null;
+      });
+  }
+  return _staticStreamersPromise;
+}
+
 async function fetchCategoryStructure() {
   try {
     const res = await fetch(`${API_BASE}/api/config/structure`, {
@@ -106,20 +123,17 @@ async function fetchCategoryStructure() {
     console.warn("서버 카테고리/조직 구조 조회 실패 (정적 파일 탐색):", e);
   }
 
-  // GitHub Pages 정적 배포 fallback (streamers.json 에서 카테고리/조직 구조 동기화)
+  // GitHub Pages 정적 배포 fallback (streamers.json 에서 카테고리/조직 구조 동기화 - 단일 공유 로더 사용)
   try {
-    const staticRes = await fetch(`./streamers.json?v=20260919_gang_mariadb_sync_v6&t=${Date.now()}`);
-    if (staticRes.ok) {
-      const staticData = await staticRes.json();
-      if (staticData && Array.isArray(staticData.categories) && staticData.categories.length > 0) {
-        if (typeof applyCategoryStructure === "function") {
-          applyCategoryStructure(staticData.categories);
-        }
-        if (typeof countTotalMembersInCategories === "function" && countTotalMembersInCategories(KONGBAB_DATA?.categories) > 0) {
-          persistData();
-        }
-        return staticData.categories;
+    const staticData = await getStaticStreamersData();
+    if (staticData && Array.isArray(staticData.categories) && staticData.categories.length > 0) {
+      if (typeof applyCategoryStructure === "function") {
+        applyCategoryStructure(staticData.categories);
       }
+      if (typeof countTotalMembersInCategories === "function" && countTotalMembersInCategories(KONGBAB_DATA?.categories) > 0) {
+        persistData();
+      }
+      return staticData.categories;
     }
   } catch (err) {}
 
@@ -232,13 +246,10 @@ async function fetchStreamersFromDb() {
     console.warn("백엔드 API 미연결 (정적 배포 모드 탐색):", e);
   }
 
-  // 정적 streamers.json 로드 (캐시 버스팅 쿼리 포함하여 항상 최신 228명 겸직 연동 데이터 확보)
+  // 정적 streamers.json 로드 (공유 단일 다운로드 및 브라우저 캐싱 적용)
   let staticData = null;
   try {
-    const staticRes = await fetch(`./streamers.json?v=20260919_gang_mariadb_sync_v6&t=${Date.now()}`);
-    if (staticRes.ok) {
-      staticData = await staticRes.json();
-    }
+    staticData = await getStaticStreamersData();
   } catch (err) {
     console.warn("정적 streamers.json 로드 실패:", err);
   }

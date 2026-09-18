@@ -29,43 +29,47 @@ function renderSearchResults(container) {
       const memberKey = member.id || `${member.streamer}_${member.name}`;
       if (seenMemberKeys.has(memberKey)) return;
 
-      const nameStr = (member.name || '').toLowerCase();
-      const streamerStr = (member.streamer || member.streamerName || '').toLowerCase();
-      const catNameStr = (cat.name || '').toLowerCase();
-      const groupNameStr = (group ? group.name : '').toLowerCase();
-      const roleStr = (member.role || '').toLowerCase();
-      const swatStr = (member.swatRole || '').toLowerCase();
+      let searchHaystack = member._searchHaystack;
+      if (!searchHaystack) {
+        const nameStr = (member.name || '').toLowerCase();
+        const streamerStr = (member.streamer || member.streamerName || '').toLowerCase();
+        const catNameStr = (cat.name || '').toLowerCase();
+        const groupNameStr = (group ? group.name : '').toLowerCase();
+        const roleStr = (member.role || '').toLowerCase();
+        const swatStr = (member.swatRole || '').toLowerCase();
 
-      // 소속 및 겸직 텍스트 수집 (맵 활용 O(1) 조회)
-      const affParts = [];
-      if (Array.isArray(member.affiliations)) {
-        for (let i = 0; i < member.affiliations.length; i++) {
-          const a = member.affiliations[i];
-          if (!a) continue;
-          if (a.role) affParts.push(String(a.role).toLowerCase());
-          if (a.swatRole) affParts.push(String(a.swatRole).toLowerCase());
-          if (a.category) {
-            const c = catMap.get(a.category);
-            if (c) {
-              affParts.push((c.name || '').toLowerCase());
-              if (c.hasSubgroups && a.subgroup) {
-                const g = grpMap.get(a.subgroup);
-                if (g) affParts.push((g.name || '').toLowerCase());
+        // 소속 및 겸직 텍스트 수집 (맵 활용 O(1) 조회)
+        const affParts = [];
+        if (Array.isArray(member.affiliations)) {
+          for (let i = 0; i < member.affiliations.length; i++) {
+            const a = member.affiliations[i];
+            if (!a) continue;
+            if (a.role) affParts.push(String(a.role).toLowerCase());
+            if (a.swatRole) affParts.push(String(a.swatRole).toLowerCase());
+            if (a.category) {
+              const c = catMap.get(a.category);
+              if (c) {
+                affParts.push((c.name || '').toLowerCase());
+                if (c.hasSubgroups && a.subgroup) {
+                  const g = grpMap.get(a.subgroup);
+                  if (g) affParts.push((g.name || '').toLowerCase());
+                }
               }
             }
           }
         }
-      }
 
-      const searchHaystack = [
-        nameStr,
-        streamerStr,
-        catNameStr,
-        groupNameStr,
-        roleStr,
-        swatStr,
-        ...affParts
-      ].join(' ');
+        searchHaystack = [
+          nameStr,
+          streamerStr,
+          catNameStr,
+          groupNameStr,
+          roleStr,
+          swatStr,
+          ...affParts
+        ].join(' ');
+        member._searchHaystack = searchHaystack;
+      }
 
       const isMatch = terms.every(term => searchHaystack.includes(term));
       if (isMatch) {
@@ -122,22 +126,28 @@ function renderSearchResults(container) {
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
   `;
 
-  matchedMembers.forEach(({ member: m, group, category: cat }) => {
-    let ytCount = 0;
-    let chzzkCount = 0;
-    const vList = m.videos;
-    if (Array.isArray(vList)) {
-      for (let i = 0; i < vList.length; i++) {
-        const v = vList[i];
-        if (!v) continue;
-        const u = (v.url && v.url !== "undefined") ? v.url : "";
-        if (!u && !v.videoId) continue;
-        if (typeof isChzzkUrl === "function" && isChzzkUrl(u)) {
-          chzzkCount++;
-        } else {
-          ytCount++;
+  matchedMembers.forEach(({ member: m, group, category: cat }, mIdx) => {
+    let ytCount = m._ytCount;
+    let chzzkCount = m._chzzkCount;
+    if (ytCount === undefined || chzzkCount === undefined) {
+      ytCount = 0;
+      chzzkCount = 0;
+      const vList = m.videos;
+      if (Array.isArray(vList)) {
+        for (let i = 0; i < vList.length; i++) {
+          const v = vList[i];
+          if (!v) continue;
+          const u = (v.url && v.url !== "undefined") ? v.url : "";
+          if (!u && !v.videoId) continue;
+          if (typeof isChzzkUrl === "function" && isChzzkUrl(u)) {
+            chzzkCount++;
+          } else {
+            ytCount++;
+          }
         }
       }
+      m._ytCount = ytCount;
+      m._chzzkCount = chzzkCount;
     }
 
     let videoStatHtml = '';
@@ -248,7 +258,8 @@ function renderSearchResults(container) {
               <img 
                 src="${getMemberAvatar(m)}" 
                 alt="${safeMemberName}" 
-                loading="lazy"
+                loading="${mIdx < 6 ? 'eager' : 'lazy'}"
+                ${mIdx < 2 ? 'fetchpriority="high"' : ''}
                 decoding="async"
                 referrerpolicy="no-referrer"
                 onerror="this.onerror=null; this.src='assets/default-avatar.svg'"
@@ -752,7 +763,7 @@ function selectCategory(catId) {
   saveNavigationState();
   pushNavHistory();
   renderContent();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo(0, 0);
 }
 
 function resetToCategory(catId) {
@@ -782,7 +793,7 @@ function resetToCategory(catId) {
         if (wasOnMember && (lastSelectedMemberId || typeof lastMemberScrollY === 'number')) {
           restoreMemberScrollPosition();
         } else {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.scrollTo(0, 0);
         }
       }
     }, 120);
@@ -797,7 +808,7 @@ function resetToCategory(catId) {
   } else {
     lastMemberScrollY = null;
     lastSelectedMemberId = null;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
   }
 }
 
@@ -822,7 +833,7 @@ function selectGroup(groupId) {
     } else {
       lastMemberScrollY = null;
       lastSelectedMemberId = null;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo(0, 0);
     }
   }
 }
@@ -870,7 +881,7 @@ function selectDirectMember(memberId) {
     saveNavigationState();
     pushNavHistory();
     renderContent();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
   }
 }
 
@@ -916,7 +927,7 @@ function selectGroupMember(memberId) {
     saveNavigationState();
     pushNavHistory();
     renderContent();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
   }
 }
 
@@ -932,7 +943,7 @@ function selectGroupFromSearch(catId, groupId) {
     saveNavigationState();
     pushNavHistory();
     renderContent();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
   }
 }
 
@@ -989,7 +1000,7 @@ function selectMemberFromSearch(catId, groupId, memberId) {
   saveNavigationState();
   pushNavHistory();
   renderContent();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo(0, 0);
 }
 
 function clearSearch() {

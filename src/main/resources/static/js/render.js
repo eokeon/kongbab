@@ -1,4 +1,10 @@
-// 인원의 현재 카테고리/소속별 정보(직위, 특공대직책, 활동상태, 뱃지색상 등) 조회 (겸직 정보 격리)
+// 인원의 현재 카테고리/소속별 정보(직위, 특공대직책, 활동상태, 뱃지색상 등) 조회 (캐싱 및 겸직 정보 격리)
+const _affiliationCache = new Map();
+function clearAffiliationCache() {
+  _affiliationCache.clear();
+}
+window.clearAffiliationCache = clearAffiliationCache;
+
 function getMemberAffiliationInfo(member, categoryId = null, subgroupId = null) {
   if (!member) {
     return { role: "", swatRole: "", status: "active", badgeColor: "bg-zinc-800", isResigned: false };
@@ -6,6 +12,10 @@ function getMemberAffiliationInfo(member, categoryId = null, subgroupId = null) 
 
   const catId = categoryId || (state && state.currentCategory) || member.category;
   const grpId = subgroupId !== undefined ? subgroupId : (state && state.currentGroup ? state.currentGroup.id : member.subgroup);
+
+  const cacheKey = `${member.id || member.name}_${catId || ''}_${grpId || ''}`;
+  const cached = _affiliationCache.get(cacheKey);
+  if (cached) return cached;
 
   let aff = null;
   if (Array.isArray(member.affiliations)) {
@@ -68,7 +78,7 @@ function getMemberAffiliationInfo(member, categoryId = null, subgroupId = null) 
     swatRole = swatRole.replace(/순직|사직|면직|퇴직|은퇴/g, "").replace(/\s*·\s*/g, "").replace(/^\s*,\s*|\s*,\s*$/g, "").trim();
   }
 
-  return {
+  const result = {
     role,
     swatRole,
     status,
@@ -79,6 +89,11 @@ function getMemberAffiliationInfo(member, categoryId = null, subgroupId = null) 
     isInactive,
     aff
   };
+
+  if (_affiliationCache.size < 4000) {
+    _affiliationCache.set(cacheKey, result);
+  }
+  return result;
 }
 
 // 사직 여부 판별
@@ -407,7 +422,17 @@ function setVideoTab(tab) {
     replaceNavHistory();
   }
   const container = document.getElementById("main-content");
-  if (container && state.currentMember) renderMemberVideos(container);
+  if (!container || !state.currentMember) return;
+
+  const currentMemberHeader = document.getElementById(`member-profile-header-${state.currentMember.id}`);
+  const videoGrid = document.getElementById("member-videos-grid");
+
+  if (currentMemberHeader && videoGrid && typeof updateMemberVideoTabContent === "function") {
+    updateMemberVideoTabContent(state.currentMember);
+  } else {
+    renderMemberVideos(container);
+  }
+
   if (typeof updateFloatingCategoryNavVisibility === "function") {
     updateFloatingCategoryNavVisibility();
   }
@@ -606,22 +631,28 @@ function renderEmptyState(emoji, title) {
   `;
 }
 
-function renderMemberCard(member, dragType, clickFn, categoryId = null, subgroupId = null) {
-  let ytCount = 0;
-  let chzzkCount = 0;
-  const rawVideos = member.videos;
-  if (Array.isArray(rawVideos)) {
-    for (let i = 0; i < rawVideos.length; i++) {
-      const v = rawVideos[i];
-      if (!v) continue;
-      const u = (v.url && v.url !== "undefined") ? v.url : "";
-      if (!u && !v.videoId) continue;
-      if (typeof isChzzkUrl === "function" && isChzzkUrl(u)) {
-        chzzkCount++;
-      } else {
-        ytCount++;
+function renderMemberCard(member, dragType, clickFn, categoryId = null, subgroupId = null, cardIndex = 0) {
+  let ytCount = member._ytCount;
+  let chzzkCount = member._chzzkCount;
+  if (ytCount === undefined || chzzkCount === undefined) {
+    ytCount = 0;
+    chzzkCount = 0;
+    const rawVideos = member.videos;
+    if (Array.isArray(rawVideos)) {
+      for (let i = 0; i < rawVideos.length; i++) {
+        const v = rawVideos[i];
+        if (!v) continue;
+        const u = (v.url && v.url !== "undefined") ? v.url : "";
+        if (!u && !v.videoId) continue;
+        if (typeof isChzzkUrl === "function" && isChzzkUrl(u)) {
+          chzzkCount++;
+        } else {
+          ytCount++;
+        }
       }
     }
+    member._ytCount = ytCount;
+    member._chzzkCount = chzzkCount;
   }
   const videoCount = ytCount + chzzkCount;
   const isDualRole = Array.isArray(member.affiliations) && member.affiliations.length > 1;
@@ -676,6 +707,10 @@ function renderMemberCard(member, dragType, clickFn, categoryId = null, subgroup
   const safeRole = typeof escapeHtml === 'function' ? escapeHtml(effectiveRole) : effectiveRole;
   const safeSubCount = typeof escapeHtml === 'function' ? escapeHtml(member.subscriberCount) : member.subscriberCount;
 
+  const isAboveTheFold = cardIndex < 6;
+  const avatarLoading = isAboveTheFold ? 'loading="eager"' : 'loading="lazy"';
+  const avatarPriority = cardIndex < 2 ? 'fetchpriority="high"' : '';
+
   return `
     <div 
       id="member-card-${mId}"
@@ -691,7 +726,8 @@ function renderMemberCard(member, dragType, clickFn, categoryId = null, subgroup
               src="${getMemberAvatar(member)}" 
               alt="${mName}" 
               draggable="false" 
-              loading="lazy"
+              ${avatarLoading}
+              ${avatarPriority}
               decoding="async"
               referrerpolicy="no-referrer"
               onerror="this.onerror=null; this.src='assets/default-avatar.svg'"
@@ -763,8 +799,26 @@ function renderMemberCard(member, dragType, clickFn, categoryId = null, subgroup
   `;
 }
 
+const _groupVideoStatsCache = new Map();
+const _groupSubBadgesCache = new Map();
+
+function clearRenderStatsCache() {
+  _groupVideoStatsCache.clear();
+  _groupSubBadgesCache.clear();
+}
+window.clearRenderStatsCache = clearRenderStatsCache;
+
 function renderGroupVideoStats(members) {
   const rawMemberList = members || [];
+  if (rawMemberList.length === 0) return "";
+
+  const cacheKey = rawMemberList.length > 3
+    ? `${rawMemberList.length}_${rawMemberList[0]?.id || ''}_${rawMemberList[rawMemberList.length - 1]?.id || ''}`
+    : rawMemberList.map(m => m.id).join(',');
+
+  const cached = _groupVideoStatsCache.get(cacheKey);
+  if (cached) return cached;
+
   const memberList = [];
   const seenKeys = new Set();
 
@@ -835,7 +889,7 @@ function renderGroupVideoStats(members) {
   const bingeDur = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(bingeSec) : "0분";
   const totalDur = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(totalSec) : "0분";
 
-  return `
+  const resultHtml = `
     <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-1.5 sm:p-2.5 flex items-center gap-1 sm:gap-2 flex-nowrap max-w-full overflow-x-auto no-scrollbar flex-shrink-0 shadow-xl select-none">
       <!-- 편집 영상 -->
       <div class="flex flex-col items-center justify-center text-center min-w-[66px] sm:min-w-[84px] px-1.5 sm:px-2.5 py-1">
@@ -884,10 +938,22 @@ function renderGroupVideoStats(members) {
       </div>
     </div>
   `;
+
+  if (_groupVideoStatsCache.size < 500) {
+    _groupVideoStatsCache.set(cacheKey, resultHtml);
+  }
+  return resultHtml;
 }
 
 function renderGroupSubscriberBadgesHtml(members, titleContext = "") {
   if (typeof calculateGroupPlatformSubscribers !== "function") return "";
+  const rawMemberList = members || [];
+  if (rawMemberList.length === 0) return "";
+
+  const cacheKey = `${titleContext}_${rawMemberList.length > 3 ? `${rawMemberList.length}_${rawMemberList[0]?.id || ''}_${rawMemberList[rawMemberList.length - 1]?.id || ''}` : rawMemberList.map(m => m.id).join(',')}`;
+  const cached = _groupSubBadgesCache.get(cacheKey);
+  if (cached) return cached;
+
   const stats = calculateGroupPlatformSubscribers(members);
   const badges = [];
 
@@ -909,13 +975,17 @@ function renderGroupSubscriberBadgesHtml(members, titleContext = "") {
     `);
   }
 
-  return badges.join("");
+  const resultHtml = badges.join("");
+  if (_groupSubBadgesCache.size < 500) {
+    _groupSubBadgesCache.set(cacheKey, resultHtml);
+  }
+  return resultHtml;
 }
 
 function renderDirectCategoryMembers(container, cat) {
   const members = cat.members || [];
   const membersHtml = members.length > 0
-    ? members.map(m => renderMemberCard(m, 'direct-member', 'selectDirectMember', cat.id, null)).join("")
+    ? members.map((m, idx) => renderMemberCard(m, 'direct-member', 'selectDirectMember', cat.id, null, idx)).join("")
     : renderEmptyState(cat.emoji || '👥', "등록된 인원이 없습니다.");
 
   const subscriberBadgesHtml = renderGroupSubscriberBadgesHtml(members, cat.name);
@@ -1067,7 +1137,7 @@ function renderGroupMembers(container) {
   const members = group.members || [];
   const bgImage = typeof getGroupBgImage === "function" ? getGroupBgImage(group) : (group.bgImage || (group.id === "gang-bigdick" || group.name === "빅딕" ? "assets/빅딕.webp" : null));
   const membersHtml = members.length > 0
-    ? members.map(m => renderMemberCard(m, 'group-member', 'selectGroupMember', cat.id, group.id)).join("")
+    ? members.map((m, idx) => renderMemberCard(m, 'group-member', 'selectGroupMember', cat.id, group.id, idx)).join("")
     : renderEmptyState(group.emoji || '👥', "등록된 인원이 없습니다.");
 
   const subscriberBadgesHtml = renderGroupSubscriberBadgesHtml(members, group.name);
@@ -1104,12 +1174,21 @@ function renderGroupMembers(container) {
   `;
 }
 
-function renderMemberVideos(container) {
-  const member = state.currentMember;
-  const group = state.currentGroup;
-  const cat = getCurrentCategory();
+// 멤버별 영상 요약 통계(단일 패스 계산 및 레퍼런스 기반 캐싱)
+function getMemberVideoSummary(member) {
+  if (!member) {
+    return {
+      clipVideos: [], fullVideos: [], bingeVideos: [],
+      clipCount: 0, fullCount: 0, bingeCount: 0,
+      clipTotalDuration: "0분", fullTotalDuration: "0분", bingeTotalDuration: "0분"
+    };
+  }
 
-  // 유효한 영상만 필터링 및 탭별 분류·시간 합산 (단일 패스 처리)
+  const rawVideos = member.videos || [];
+  if (member._videoSummary && member._videoSummaryRef === rawVideos && member._videoSummaryLen === rawVideos.length) {
+    return member._videoSummary;
+  }
+
   const clipVideos = [];
   const fullVideos = [];
   const bingeVideos = [];
@@ -1117,7 +1196,6 @@ function renderMemberVideos(container) {
   let fullTotalSeconds = 0;
   let bingeTotalSeconds = 0;
 
-  const rawVideos = member.videos || [];
   for (let i = 0; i < rawVideos.length; i++) {
     const v = rawVideos[i];
     if (!v || !v.url || v.url === "undefined" || !v.url.trim()) continue;
@@ -1135,41 +1213,113 @@ function renderMemberVideos(container) {
     }
   }
 
-  const clipCount = clipVideos.length;
-  const fullCount = fullVideos.length;
-  const bingeCount = bingeVideos.length;
+  const summary = {
+    clipVideos,
+    fullVideos,
+    bingeVideos,
+    clipCount: clipVideos.length,
+    fullCount: fullVideos.length,
+    bingeCount: bingeVideos.length,
+    clipTotalDuration: typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(clipTotalSeconds) : "0분",
+    fullTotalDuration: typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(fullTotalSeconds) : "0분",
+    bingeTotalDuration: typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(bingeTotalSeconds) : "0분",
+  };
 
-  const clipTotalDuration = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(clipTotalSeconds) : "0분";
-  const fullTotalDuration = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(fullTotalSeconds) : "0분";
-  const bingeTotalDuration = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(bingeTotalSeconds) : "0분";
+  member._videoSummary = summary;
+  member._videoSummaryRef = rawVideos;
+  member._videoSummaryLen = rawVideos.length;
+  return summary;
+}
 
-  const currentTab = state.currentVideoTab === "binge" ? "binge" : (state.currentVideoTab === "full" ? "full" : "clip");
-
-  let displayedVideos = clipVideos;
-  if (currentTab === "binge") {
-    displayedVideos = bingeVideos;
-  } else if (currentTab === "full") {
-    displayedVideos = fullVideos;
-  }
-
-  const groupName = group ? group.name : (cat ? cat.name : '');
-  const groupEmoji = group ? (group.emoji || '') : (cat ? (cat.emoji || '') : '');
-  const catName = cat ? cat.name : '인원';
-  const catId = cat ? cat.id : 'police';
-  const backButtonHtml = (!cat || !cat.hasSubgroups || !group) ? `
-    <button onclick="goBackFromMember('category', '${catId}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-4 cursor-pointer">
-      ${SVG_ICONS.back}
-      <span>${catName} 인원 목록으로 돌아가기</span>
+// 상단 요약 통계 탭 버튼 HTML 생성
+function renderMemberVideoTabsTopHtml(summary, currentTab) {
+  const { clipCount, fullCount, bingeCount, clipTotalDuration, fullTotalDuration, bingeTotalDuration } = summary;
+  return `
+    <button onclick="setVideoTab('clip')" title="편집 영상만 보기" class="bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'clip' ? 'border-red-500 ring-2 ring-red-500/30 bg-red-950/20' : 'border-zinc-800'} rounded-xl sm:rounded-2xl p-2.5 sm:px-5 sm:py-3 text-center sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
+      <span class="text-xs sm:text-sm text-zinc-300 block font-bold group-hover:text-white transition-colors">🎬 편집 영상</span>
+      <span class="text-xl sm:text-3xl font-black text-red-400 my-0.5 block tracking-tight">${clipCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
+      <span class="text-[11px] sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${clipTotalDuration}</span>
     </button>
-  ` : `
-    <button onclick="goBackFromMember('group', '${group.id}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-4 cursor-pointer">
-      ${SVG_ICONS.back}
-      <span>${groupEmoji} ${groupName} 인원 목록으로 돌아가기</span>
+    <button onclick="setVideoTab('full')" title="풀 영상만 보기" class="bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'full' ? 'border-indigo-500 ring-2 ring-indigo-500/30 bg-indigo-950/20' : 'border-zinc-800'} rounded-xl sm:rounded-2xl p-2.5 sm:px-5 sm:py-3 text-center sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
+      <span class="text-xs sm:text-sm text-zinc-300 block font-bold group-hover:text-white transition-colors">📹 풀 영상</span>
+      <span class="text-xl sm:text-3xl font-black text-indigo-400 my-0.5 block tracking-tight">${fullCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
+      <span class="text-[11px] sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${fullTotalDuration}</span>
+    </button>
+    ${bingeCount > 0 ? `
+      <button onclick="setVideoTab('binge')" title="몰아보기 영상만 보기" class="col-span-2 sm:col-span-1 bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'binge' ? 'border-amber-500 ring-2 ring-amber-500/30 bg-amber-950/20' : 'border-zinc-800'} rounded-xl sm:rounded-2xl p-2.5 sm:px-5 sm:py-3 text-center sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
+        <span class="text-xs sm:text-sm text-zinc-300 block font-bold group-hover:text-white transition-colors">🍿 몰아보기</span>
+        <span class="text-xl sm:text-3xl font-black text-amber-400 my-0.5 block tracking-tight">${bingeCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
+        <span class="text-[11px] sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${bingeTotalDuration}</span>
+      </button>
+    ` : ''}
+  `;
+}
+
+// 하단 탭 필터 알약 버튼 HTML 생성
+function renderMemberVideoTabsPillsHtml(summary, currentTab) {
+  const { clipCount, fullCount, bingeCount } = summary;
+  return `
+    <button onclick="setVideoTab('clip')" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${currentTab === 'clip' ? 'bg-red-600 text-white shadow-lg shadow-red-600/30' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'}">
+      <span>🎬 편집 영상</span>
+      <span class="text-[11px] px-1.5 py-0.5 rounded-full ${currentTab === 'clip' ? 'bg-black/30 text-white' : 'bg-zinc-800 text-zinc-400'}">${clipCount}</span>
+    </button>
+    <button onclick="setVideoTab('full')" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${currentTab === 'full' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'}">
+      <span>📹 풀 영상</span>
+      <span class="text-[11px] px-1.5 py-0.5 rounded-full ${currentTab === 'full' ? 'bg-black/30 text-white' : 'bg-zinc-800 text-zinc-400'}">${fullCount}</span>
+    </button>
+    <button onclick="setVideoTab('binge')" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${currentTab === 'binge' ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/30' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'}">
+      <span>🍿 몰아보기</span>
+      <span class="text-[11px] px-1.5 py-0.5 rounded-full ${currentTab === 'binge' ? 'bg-black/20 text-black font-extrabold' : 'bg-zinc-800 text-zinc-400'}">${bingeCount}</span>
     </button>
   `;
+}
+
+// 영상 카드 목록 그리드 HTML 생성 (지연/즉시 로딩 및 썸네일 폴백 최적화)
+function renderMemberVideoCardsHtml(displayedVideos, summary, currentTab) {
+  const { clipCount, fullCount, bingeCount } = summary;
+  const totalValidVideos = clipCount + fullCount + bingeCount;
+
+  if (!displayedVideos || displayedVideos.length === 0) {
+    if (totalValidVideos === 0) {
+      return renderEmptyState(SVG_ICONS.youtube, "등록된 영상이 없습니다.");
+    } else if (currentTab === "clip") {
+      return `
+        <div class="col-span-full py-16 text-center bg-zinc-900/40 rounded-2xl border border-zinc-800/50">
+          <div class="w-14 h-14 mx-auto rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 mb-3 text-2xl">🎬</div>
+          <h4 class="text-lg font-bold text-zinc-300">등록된 편집 영상이 없습니다.</h4>
+          <div class="mt-4 flex items-center justify-center gap-2 flex-wrap">
+            ${fullCount > 0 ? `<button onclick="setVideoTab('full')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-indigo-600/30"><span>📹 풀 영상 (${fullCount}개) 보러가기</span></button>` : ''}
+            ${bingeCount > 0 ? `<button onclick="setVideoTab('binge')" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-amber-600/30"><span>🍿 몰아보기 (${bingeCount}개) 보러가기</span></button>` : ''}
+          </div>
+        </div>
+      `;
+    } else if (currentTab === "full") {
+      return `
+        <div class="col-span-full py-16 text-center bg-zinc-900/40 rounded-2xl border border-zinc-800/50">
+          <div class="w-14 h-14 mx-auto rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 mb-3 text-2xl">📹</div>
+          <h4 class="text-lg font-bold text-zinc-300">등록된 풀 영상이 없습니다.</h4>
+          <div class="mt-4 flex items-center justify-center gap-2 flex-wrap">
+            ${clipCount > 0 ? `<button onclick="setVideoTab('clip')" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-red-600/30"><span>🎬 편집 영상 (${clipCount}개) 보러가기</span></button>` : ''}
+            ${bingeCount > 0 ? `<button onclick="setVideoTab('binge')" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-amber-600/30"><span>🍿 몰아보기 (${bingeCount}개) 보러가기</span></button>` : ''}
+          </div>
+        </div>
+      `;
+    } else {
+      return `
+        <div class="col-span-full py-16 text-center bg-zinc-900/40 rounded-2xl border border-zinc-800/50">
+          <div class="w-14 h-14 mx-auto rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 mb-3 text-2xl">🍿</div>
+          <h4 class="text-lg font-bold text-zinc-300">등록된 몰아보기 영상이 없습니다.</h4>
+          <div class="mt-4 flex items-center justify-center gap-2 flex-wrap">
+            ${clipCount > 0 ? `<button onclick="setVideoTab('clip')" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-red-600/30"><span>🎬 편집 영상 (${clipCount}개) 보러가기</span></button>` : ''}
+            ${fullCount > 0 ? `<button onclick="setVideoTab('full')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-indigo-600/30"><span>📹 풀 영상 (${fullCount}개) 보러가기</span></button>` : ''}
+          </div>
+        </div>
+      `;
+    }
+  }
 
   const admin = isAdmin();
-  let videosHtml = displayedVideos.map((video, vIndex) => {
+  return displayedVideos.map((video, vIndex) => {
     const videoNum = vIndex + 1;
     const rawVUrl = (video.url && video.url !== "undefined") ? video.url : (video.videoId ? `https://www.youtube.com/watch?v=${video.videoId}` : "");
     const vUrl = typeof sanitizeUrl === 'function' ? sanitizeUrl(rawVUrl) : rawVUrl;
@@ -1204,6 +1354,8 @@ function renderMemberVideos(container) {
         ondragend="handleCardDragEnd(event)"
     ` : `draggable="false"`;
     const cursorClass = admin ? "cursor-grab active:cursor-grabbing" : "";
+    const imgLoadingAttr = vIndex < 6 ? 'loading="eager"' : 'loading="lazy"';
+    const imgFetchPriorityAttr = vIndex < 2 ? 'fetchpriority="high"' : '';
 
     return `
       <div 
@@ -1220,7 +1372,7 @@ function renderMemberVideos(container) {
             class="relative block aspect-video bg-black overflow-hidden group cursor-pointer"
             title="${platformLabel}에서 영상 보기 (새 탭)"
           >
-            <img src="${thumbUrl}" alt="${safeTitle}" draggable="false" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
+            <img src="${thumbUrl}" alt="${safeTitle}" draggable="false" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" ${imgLoadingAttr} ${imgFetchPriorityAttr} decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='assets/default-thumbnail.svg'" />
             
             <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 z-10 select-none">
               <div class="${typeBadgeClass} border backdrop-blur-md text-[11px] font-bold px-2.5 py-1 rounded-lg shadow flex items-center gap-1 whitespace-nowrap flex-shrink-0">
@@ -1286,7 +1438,6 @@ function renderMemberVideos(container) {
           </div>
         </div>
 
-
         ${isAdmin() ? `
           <div class="px-4 sm:px-5 py-2.5 bg-zinc-950 border-t border-zinc-800/80 flex items-center justify-between">
             <span class="text-[11px] text-amber-400 font-bold flex items-center gap-1">🛡️ 어드민 관리</span>
@@ -1299,46 +1450,65 @@ function renderMemberVideos(container) {
       </div>
     `;
   }).join("");
+}
 
-  const totalValidVideos = clipCount + fullCount + bingeCount;
-  if (displayedVideos.length === 0) {
-    if (totalValidVideos === 0) {
-      videosHtml = renderEmptyState(SVG_ICONS.youtube, "등록된 영상이 없습니다.");
-    } else if (currentTab === "clip") {
-      videosHtml = `
-        <div class="col-span-full py-16 text-center bg-zinc-900/40 rounded-2xl border border-zinc-800/50">
-          <div class="w-14 h-14 mx-auto rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 mb-3 text-2xl">🎬</div>
-          <h4 class="text-lg font-bold text-zinc-300">등록된 편집 영상이 없습니다.</h4>
-          <div class="mt-4 flex items-center justify-center gap-2 flex-wrap">
-            ${fullCount > 0 ? `<button onclick="setVideoTab('full')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-indigo-600/30"><span>📹 풀 영상 (${fullCount}개) 보러가기</span></button>` : ''}
-            ${bingeCount > 0 ? `<button onclick="setVideoTab('binge')" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-amber-600/30"><span>🍿 몰아보기 (${bingeCount}개) 보러가기</span></button>` : ''}
-          </div>
-        </div>
-      `;
-    } else if (currentTab === "full") {
-      videosHtml = `
-        <div class="col-span-full py-16 text-center bg-zinc-900/40 rounded-2xl border border-zinc-800/50">
-          <div class="w-14 h-14 mx-auto rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 mb-3 text-2xl">📹</div>
-          <h4 class="text-lg font-bold text-zinc-300">등록된 풀 영상이 없습니다.</h4>
-          <div class="mt-4 flex items-center justify-center gap-2 flex-wrap">
-            ${clipCount > 0 ? `<button onclick="setVideoTab('clip')" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-red-600/30"><span>🎬 편집 영상 (${clipCount}개) 보러가기</span></button>` : ''}
-            ${bingeCount > 0 ? `<button onclick="setVideoTab('binge')" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-amber-600/30"><span>🍿 몰아보기 (${bingeCount}개) 보러가기</span></button>` : ''}
-          </div>
-        </div>
-      `;
-    } else {
-      videosHtml = `
-        <div class="col-span-full py-16 text-center bg-zinc-900/40 rounded-2xl border border-zinc-800/50">
-          <div class="w-14 h-14 mx-auto rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 mb-3 text-2xl">🍿</div>
-          <h4 class="text-lg font-bold text-zinc-300">등록된 몰아보기 영상이 없습니다.</h4>
-          <div class="mt-4 flex items-center justify-center gap-2 flex-wrap">
-            ${clipCount > 0 ? `<button onclick="setVideoTab('clip')" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-red-600/30"><span>🎬 편집 영상 (${clipCount}개) 보러가기</span></button>` : ''}
-            ${fullCount > 0 ? `<button onclick="setVideoTab('full')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-lg shadow-indigo-600/30"><span>📹 풀 영상 (${fullCount}개) 보러가기</span></button>` : ''}
-          </div>
-        </div>
-      `;
-    }
+// 탭 전환 시 프로필 헤더 재생성 없이 탭 버튼 및 영상 그리드만 즉시 업데이트(2ms 초고속 전환)
+function updateMemberVideoTabContent(member) {
+  const summary = getMemberVideoSummary(member);
+  const currentTab = state.currentVideoTab === "binge" ? "binge" : (state.currentVideoTab === "full" ? "full" : "clip");
+  let displayedVideos = summary.clipVideos;
+  if (currentTab === "binge") {
+    displayedVideos = summary.bingeVideos;
+  } else if (currentTab === "full") {
+    displayedVideos = summary.fullVideos;
   }
+
+  const topTabsEl = document.getElementById("member-profile-tabs-top");
+  if (topTabsEl) {
+    topTabsEl.innerHTML = renderMemberVideoTabsTopHtml(summary, currentTab);
+  }
+
+  const pillsEl = document.getElementById("member-profile-tabs-pills");
+  if (pillsEl) {
+    pillsEl.innerHTML = renderMemberVideoTabsPillsHtml(summary, currentTab);
+  }
+
+  const videoGridEl = document.getElementById("member-videos-grid");
+  if (videoGridEl) {
+    videoGridEl.innerHTML = renderMemberVideoCardsHtml(displayedVideos, summary, currentTab);
+  }
+}
+
+function renderMemberVideos(container) {
+  const member = state.currentMember;
+  const group = state.currentGroup;
+  const cat = getCurrentCategory();
+
+  const summary = getMemberVideoSummary(member);
+  const currentTab = state.currentVideoTab === "binge" ? "binge" : (state.currentVideoTab === "full" ? "full" : "clip");
+
+  let displayedVideos = summary.clipVideos;
+  if (currentTab === "binge") {
+    displayedVideos = summary.bingeVideos;
+  } else if (currentTab === "full") {
+    displayedVideos = summary.fullVideos;
+  }
+
+  const groupName = group ? group.name : (cat ? cat.name : '');
+  const groupEmoji = group ? (group.emoji || '') : (cat ? (cat.emoji || '') : '');
+  const catName = cat ? cat.name : '인원';
+  const catId = cat ? cat.id : 'police';
+  const backButtonHtml = (!cat || !cat.hasSubgroups || !group) ? `
+    <button onclick="goBackFromMember('category', '${catId}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-4 cursor-pointer">
+      ${SVG_ICONS.back}
+      <span>${catName} 인원 목록으로 돌아가기</span>
+    </button>
+  ` : `
+    <button onclick="goBackFromMember('group', '${group.id}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-4 cursor-pointer">
+      ${SVG_ICONS.back}
+      <span>${groupEmoji} ${groupName} 인원 목록으로 돌아가기</span>
+    </button>
+  `;
 
   const baseAffiliation = (cat.hasSubgroups && group) ? `${group.emoji || ''} ${group.name}` : `${cat.emoji || ''} ${cat.name}`;
   let affiliationsText = baseAffiliation;
@@ -1378,13 +1548,15 @@ function renderMemberVideos(container) {
     }
   }
 
+  const videosHtml = renderMemberVideoCardsHtml(displayedVideos, summary, currentTab);
+
   container.innerHTML = `
     <div class="mb-6 sm:mb-8">
       ${backButtonHtml}
-      <div class="bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-950 border border-zinc-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6 shadow-2xl relative overflow-hidden">
+      <div id="member-profile-header-${mDetailId}" class="bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-950 border border-zinc-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6 shadow-2xl relative overflow-hidden">
         <div class="flex items-start sm:items-center gap-4 sm:gap-6 relative z-10">
           <div class="relative flex-shrink-0">
-            <img src="${getMemberAvatar(member)}" alt="${mDetailName}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='assets/default-avatar.svg'" class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl sm:rounded-3xl object-cover border-4 border-zinc-800 shadow-2xl transition-all duration-300 ${inactive ? 'grayscale contrast-125 opacity-80 hover:grayscale-0 hover:contrast-100 hover:opacity-100 cursor-pointer' : ''}" />
+            <img src="${getMemberAvatar(member)}" alt="${mDetailName}" loading="eager" fetchpriority="high" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='assets/default-avatar.svg'" class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl sm:rounded-3xl object-cover border-4 border-zinc-800 shadow-2xl transition-all duration-300 ${inactive ? 'grayscale contrast-125 opacity-80 hover:grayscale-0 hover:contrast-100 hover:opacity-100 cursor-pointer' : ''}" />
             ${effectiveSwatRole ? getSwatBadgeHtml(effectiveSwatRole, 'lg') : ''}
             ${(!isRoleBadgeHidden(safeDetailRole) && safeDetailRole) ? `
               <span class="absolute -bottom-2 -right-2 z-20 text-xs font-bold px-2.5 py-1 rounded-xl ${getMemberRoleBadgeClass(member, cat.id, group?.id)} shadow-xl border border-white/20">
@@ -1438,43 +1610,16 @@ function renderMemberVideos(container) {
           </div>
         </div>
 
-        <div class="grid grid-cols-2 sm:flex sm:items-center gap-2.5 sm:gap-3 w-full md:w-auto border-t md:border-t-0 border-zinc-800/80 pt-4 md:pt-0">
-          <button onclick="setVideoTab('clip')" title="편집 영상만 보기" class="bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'clip' ? 'border-red-500 ring-2 ring-red-500/30 bg-red-950/20' : 'border-zinc-800'} rounded-xl sm:rounded-2xl p-2.5 sm:px-5 sm:py-3 text-center sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
-            <span class="text-xs sm:text-sm text-zinc-300 block font-bold group-hover:text-white transition-colors">🎬 편집 영상</span>
-            <span class="text-xl sm:text-3xl font-black text-red-400 my-0.5 block tracking-tight">${clipCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
-            <span class="text-[11px] sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${clipTotalDuration}</span>
-          </button>
-          <button onclick="setVideoTab('full')" title="풀 영상만 보기" class="bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'full' ? 'border-indigo-500 ring-2 ring-indigo-500/30 bg-indigo-950/20' : 'border-zinc-800'} rounded-xl sm:rounded-2xl p-2.5 sm:px-5 sm:py-3 text-center sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
-            <span class="text-xs sm:text-sm text-zinc-300 block font-bold group-hover:text-white transition-colors">📹 풀 영상</span>
-            <span class="text-xl sm:text-3xl font-black text-indigo-400 my-0.5 block tracking-tight">${fullCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
-            <span class="text-[11px] sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${fullTotalDuration}</span>
-          </button>
-          ${bingeCount > 0 ? `
-            <button onclick="setVideoTab('binge')" title="몰아보기 영상만 보기" class="col-span-2 sm:col-span-1 bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'binge' ? 'border-amber-500 ring-2 ring-amber-500/30 bg-amber-950/20' : 'border-zinc-800'} rounded-xl sm:rounded-2xl p-2.5 sm:px-5 sm:py-3 text-center sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
-              <span class="text-xs sm:text-sm text-zinc-300 block font-bold group-hover:text-white transition-colors">🍿 몰아보기</span>
-              <span class="text-xl sm:text-3xl font-black text-amber-400 my-0.5 block tracking-tight">${bingeCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
-              <span class="text-[11px] sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${bingeTotalDuration}</span>
-            </button>
-          ` : ''}
+        <div id="member-profile-tabs-top" class="grid grid-cols-2 sm:flex sm:items-center gap-2.5 sm:gap-3 w-full md:w-auto border-t md:border-t-0 border-zinc-800/80 pt-4 md:pt-0">
+          ${renderMemberVideoTabsTopHtml(summary, currentTab)}
         </div>
       </div>
     </div>
 
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-5 sm:mb-6">
       <div class="flex items-center gap-2 sm:gap-3 flex-wrap w-full sm:w-auto">
-        <div class="flex items-center gap-1 sm:gap-1.5 p-1 bg-zinc-900/90 border border-zinc-800 rounded-2xl w-full sm:w-fit overflow-x-auto no-scrollbar">
-          <button onclick="setVideoTab('clip')" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${currentTab === 'clip' ? 'bg-red-600 text-white shadow-lg shadow-red-600/30' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'}">
-            <span>🎬 편집 영상</span>
-            <span class="text-[11px] px-1.5 py-0.5 rounded-full ${currentTab === 'clip' ? 'bg-black/30 text-white' : 'bg-zinc-800 text-zinc-400'}">${clipCount}</span>
-          </button>
-          <button onclick="setVideoTab('full')" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${currentTab === 'full' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'}">
-            <span>📹 풀 영상</span>
-            <span class="text-[11px] px-1.5 py-0.5 rounded-full ${currentTab === 'full' ? 'bg-black/30 text-white' : 'bg-zinc-800 text-zinc-400'}">${fullCount}</span>
-          </button>
-          <button onclick="setVideoTab('binge')" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${currentTab === 'binge' ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/30' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'}">
-            <span>🍿 몰아보기</span>
-            <span class="text-[11px] px-1.5 py-0.5 rounded-full ${currentTab === 'binge' ? 'bg-black/20 text-black font-extrabold' : 'bg-zinc-800 text-zinc-400'}">${bingeCount}</span>
-          </button>
+        <div id="member-profile-tabs-pills" class="flex items-center gap-1 sm:gap-1.5 p-1 bg-zinc-900/90 border border-zinc-800 rounded-2xl w-full sm:w-fit overflow-x-auto no-scrollbar">
+          ${renderMemberVideoTabsPillsHtml(summary, currentTab)}
         </div>
 
         ${isAdmin() ? `
@@ -1492,7 +1637,7 @@ function renderMemberVideos(container) {
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+    <div id="member-videos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
       ${videosHtml}
     </div>
   `;

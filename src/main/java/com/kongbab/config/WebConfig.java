@@ -3,13 +3,16 @@ package com.kongbab.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.CacheControl;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 @RequiredArgsConstructor
@@ -53,5 +56,21 @@ public class WebConfig implements WebMvcConfigurer {
         // /api 하위 모든 경로에 대해 인터셉터를 적용하며, 세부 권한(화이트리스트 등)은 AdminAuthInterceptor 내에서 중앙 제어
         registry.addInterceptor(adminAuthInterceptor)
                 .addPathPatterns("/api/**");
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // 이미지, 스타일시트, JS 등 정적 자원에 브라우저 캐싱 헤더 적용
+        registry.addResourceHandler("/assets/**")
+                .addResourceLocations("classpath:/static/assets/")
+                .setCacheControl(CacheControl.maxAge(30, TimeUnit.DAYS).cachePublic());
+
+        registry.addResourceHandler("/css/**")
+                .addResourceLocations("classpath:/static/css/")
+                .setCacheControl(CacheControl.maxAge(7, TimeUnit.DAYS).cachePublic());
+
+        registry.addResourceHandler("/js/**")
+                .addResourceLocations("classpath:/static/js/")
+                .setCacheControl(CacheControl.maxAge(7, TimeUnit.DAYS).cachePublic());
     }
 }
