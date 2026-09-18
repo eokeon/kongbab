@@ -10,6 +10,23 @@ function getAffKey(category, subgroup = null) {
   return `${category}_${subgroup || 'null'}`;
 }
 
+function getDefaultBadgeForAffiliation(category, subgroup = null) {
+  if (category === 'police') return "bg-blue-600";
+  if (category === 'ems') return "bg-teal-600";
+  if (category === 'gang') return "bg-zinc-700";
+  if (category === 'press') return "bg-sky-600";
+  if (category === 'citizen') return "bg-purple-600";
+  if (category === 'guide') return "bg-emerald-600";
+  if (category === 'business') {
+    if (subgroup === 'biz-yastation') return "bg-cyan-700";
+    if (subgroup === 'biz-young31') return "bg-green-600";
+    if (subgroup === 'biz-koi') return "bg-slate-700";
+    if (subgroup === 'biz-lux') return "bg-amber-600";
+    return "bg-amber-600";
+  }
+  return "bg-blue-600";
+}
+
 function saveFormIntoAffData(key) {
   if (!key) return;
   const roleVal = document.getElementById("member-form-role")?.value?.trim() || "";
@@ -111,7 +128,7 @@ function loadAffDataIntoForm(key) {
     }
   }
 
-  if (badgeEl) badgeEl.value = data.badgeColor || (data.category === 'police' ? "bg-blue-600" : "bg-red-600");
+  if (badgeEl) badgeEl.value = data.badgeColor || getDefaultBadgeForAffiliation(data.category, data.subgroup);
 
   const swatContainer = document.getElementById("member-form-swat-container");
   const roleRow = document.getElementById("member-form-role-row");
@@ -186,7 +203,7 @@ function renderModalAffTabs() {
         role: "",
         swatRole: "",
         status: "active",
-        badgeColor: defaultBadges[a.category] || "bg-blue-600"
+        badgeColor: getDefaultBadgeForAffiliation(a.category, a.subgroup)
       };
     }
   });
@@ -362,7 +379,7 @@ function handleAffiliationCheckboxChange(options = {}) {
         role: "",
         swatRole: "",
         status: "active",
-        badgeColor: defaultBadges[a.category] || "bg-blue-600"
+        badgeColor: getDefaultBadgeForAffiliation(a.category, a.subgroup)
       };
       newlyAddedKey = k;
     }
@@ -783,7 +800,7 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
         role: roleVal,
         swatRole: rawSwat,
         status: statusVal,
-        badgeColor: aff.badgeColor !== undefined ? aff.badgeColor : (primaryMember.badgeColor || "bg-blue-600")
+        badgeColor: (aff.badgeColor !== undefined && aff.badgeColor !== null && aff.badgeColor !== "") ? aff.badgeColor : (primaryMember.badgeColor || getDefaultBadgeForAffiliation(aff.category, aff.subgroup))
       };
     });
 
@@ -816,16 +833,6 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
       if (bizInput) bizInput.checked = true;
     }
 
-    const defaultBadges = {
-      police: "bg-blue-600",
-      ems: "bg-teal-600",
-      gang: "bg-red-600",
-      business: "bg-amber-600",
-      press: "bg-sky-600",
-      citizen: "bg-purple-600",
-      guide: "bg-emerald-600"
-    };
-
     const initialKey = getAffKey(targetCatId, targetGroupId);
     _modalAffData[initialKey] = {
       category: targetCatId,
@@ -833,7 +840,7 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
       role: "",
       swatRole: "",
       status: "active",
-      badgeColor: defaultBadges[targetCatId] || "bg-blue-600"
+      badgeColor: getDefaultBadgeForAffiliation(targetCatId, targetGroupId)
     };
     _activeModalAffKey = initialKey;
 
@@ -1004,7 +1011,7 @@ async function handleSaveMember(e) {
     aff.role = d.role || "";
     aff.swatRole = d.swatRole || "";
     aff.status = d.status || "active";
-    aff.badgeColor = d.badgeColor || (defaultBadges[aff.category] || "bg-blue-600");
+    aff.badgeColor = d.badgeColor || getDefaultBadgeForAffiliation(aff.category, aff.subgroup);
 
     // 기존 소속의 displayOrder 보존, 신규 추가 소속은 해당 소속 맨 뒤로 지정하여 기존 소속 위치가 바뀌지 않도록 보호
     if (existingMember) {
@@ -1062,19 +1069,27 @@ async function handleSaveMember(e) {
 
     const memberObj = allLocs[0].member;
     allLocs.forEach(loc => {
+      const locCatId = loc.category.id;
+      const locSubId = loc.category.hasSubgroups && loc.group ? loc.group.id : null;
+      const aff = selectedAffiliations.find(a => a.category === locCatId && (locSubId ? a.subgroup === locSubId : !a.subgroup))
+               || selectedAffiliations.find(a => a.category === locCatId)
+               || primaryAff;
+      const affKey = getAffKey(aff.category, aff.subgroup);
+      const affData = _modalAffData[affKey] || aff;
+
       loc.member.name = name;
       loc.member.streamer = streamer;
-      loc.member.role = primaryData.role || "";
-      loc.member.swatRole = primaryData.swatRole || "";
-      loc.member.status = primaryData.status || "active";
-      loc.member.badgeColor = primaryData.badgeColor || (defaultBadges[primaryAff.category] || "bg-blue-600");
+      loc.member.role = affData.role || "";
+      loc.member.swatRole = affData.swatRole || "";
+      loc.member.status = affData.status || "active";
+      loc.member.badgeColor = affData.badgeColor || getDefaultBadgeForAffiliation(locCatId, locSubId);
       loc.member.avatar = avatar;
       loc.member.youtubeUrl = youtubeUrl;
       loc.member.affiliations = selectedAffiliations;
-      loc.member.category = primaryAff.category;
-      loc.member.subgroup = primaryAff.subgroup || null;
-      if (primaryAff.displayOrder != null) {
-        loc.member.displayOrder = primaryAff.displayOrder;
+      loc.member.category = locCatId;
+      loc.member.subgroup = locSubId;
+      if (aff.displayOrder != null) {
+        loc.member.displayOrder = aff.displayOrder;
       }
     });
 
@@ -1097,23 +1112,48 @@ async function handleSaveMember(e) {
       }
     });
 
-    // 2) 새로 선택된 소속에 아직 포함되지 않았으면 추가
+    // 2) 새로 선택된 소속에 아직 포함되지 않았으면 추가 (각 소속별 직위/직책/뱃지색상 격리 주입)
     selectedAffiliations.forEach(aff => {
       const cat = KONGBAB_DATA.categories.find(c => c.id === aff.category);
       if (!cat) return;
+
+      const affKey = getAffKey(aff.category, aff.subgroup);
+      const affData = _modalAffData[affKey] || aff;
 
       if (cat.hasSubgroups) {
         const group = (cat.groups || []).find(g => g.id === aff.subgroup) || cat.groups[0];
         if (group) {
           if (!group.members) group.members = [];
           if (!group.members.some(m => m.id === memberObj.id)) {
-            group.members.push(memberObj);
+            const groupMember = {
+              ...memberObj,
+              role: affData.role || "",
+              swatRole: affData.swatRole || "",
+              status: affData.status || "active",
+              badgeColor: affData.badgeColor || getDefaultBadgeForAffiliation(cat.id, group.id),
+              category: cat.id,
+              subgroup: group.id,
+              affiliations: selectedAffiliations,
+              displayOrder: aff.displayOrder ?? 0
+            };
+            group.members.push(groupMember);
           }
         }
       } else {
         if (!cat.members) cat.members = [];
         if (!cat.members.some(m => m.id === memberObj.id)) {
-          cat.members.push(memberObj);
+          const catMember = {
+            ...memberObj,
+            role: affData.role || "",
+            swatRole: affData.swatRole || "",
+            status: affData.status || "active",
+            badgeColor: affData.badgeColor || getDefaultBadgeForAffiliation(cat.id, null),
+            category: cat.id,
+            subgroup: null,
+            affiliations: selectedAffiliations,
+            displayOrder: aff.displayOrder ?? 0
+          };
+          cat.members.push(catMember);
         }
       }
     });
@@ -1128,7 +1168,7 @@ async function handleSaveMember(e) {
       category: primaryAff.category,
       subgroup: primaryAff.subgroup || null,
       affiliations: JSON.stringify(selectedAffiliations),
-      badgeColor: primaryData.badgeColor || (defaultBadges[primaryAff.category] || "bg-blue-600"),
+      badgeColor: primaryData.badgeColor || getDefaultBadgeForAffiliation(primaryAff.category, primaryAff.subgroup),
       avatar,
       youtubeUrl,
       subscriberCount: memberObj.subscriberCount || "",
@@ -1150,7 +1190,7 @@ async function handleSaveMember(e) {
       role: primaryData.role || "",
       swatRole: primaryData.swatRole || "",
       status: primaryData.status || "active",
-      badgeColor: primaryData.badgeColor || (defaultBadges[primaryAff.category] || "bg-blue-600"),
+      badgeColor: primaryData.badgeColor || getDefaultBadgeForAffiliation(primaryAff.category, primaryAff.subgroup),
       avatar,
       youtubeUrl,
       subscriberCount: "",
@@ -1161,20 +1201,34 @@ async function handleSaveMember(e) {
       affiliations: selectedAffiliations
     };
 
-    // 선택된 모든 소속에 새 멤버 추가
+    // 선택된 모든 소속에 새 멤버 추가 (각 소속별 직위/직책/뱃지색상 격리 주입)
     selectedAffiliations.forEach(aff => {
       const cat = KONGBAB_DATA.categories.find(c => c.id === aff.category);
       if (!cat) return;
+
+      const affKey = getAffKey(aff.category, aff.subgroup);
+      const affData = _modalAffData[affKey] || aff;
+
+      const itemMember = {
+        ...newMember,
+        role: affData.role || "",
+        swatRole: affData.swatRole || "",
+        status: affData.status || "active",
+        badgeColor: affData.badgeColor || getDefaultBadgeForAffiliation(aff.category, aff.subgroup),
+        category: aff.category,
+        subgroup: aff.subgroup || null,
+        displayOrder: aff.displayOrder ?? 0
+      };
 
       if (cat.hasSubgroups) {
         const group = (cat.groups || []).find(g => g.id === aff.subgroup) || cat.groups[0];
         if (group) {
           if (!group.members) group.members = [];
-          group.members.push(newMember);
+          group.members.push(itemMember);
         }
       } else {
         if (!cat.members) cat.members = [];
-        cat.members.push(newMember);
+        cat.members.push(itemMember);
       }
     });
 
@@ -1188,7 +1242,7 @@ async function handleSaveMember(e) {
       category: primaryAff.category,
       subgroup: primaryAff.subgroup || null,
       affiliations: JSON.stringify(selectedAffiliations),
-      badgeColor: primaryData.badgeColor || (defaultBadges[primaryAff.category] || "bg-blue-600"),
+      badgeColor: primaryData.badgeColor || getDefaultBadgeForAffiliation(primaryAff.category, primaryAff.subgroup),
       avatar,
       youtubeUrl,
       subscriberCount: "",

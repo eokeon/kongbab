@@ -9,13 +9,13 @@ function getMemberAffiliationInfo(member, categoryId = null, subgroupId = null) 
 
   let aff = null;
   if (Array.isArray(member.affiliations)) {
-    // 1순위: category와 subgroup 모두 일치
-    aff = member.affiliations.find(a => {
-      if (a.category !== catId) return false;
-      if (grpId) return a.subgroup === grpId;
-      return true;
-    });
-    // 2순위: category 일치
+    // 1순위: category와 subgroup 모두 일치 (grpId가 있으면 subgroup 일치, 없으면 subgroup이 없거나 null인 것 우선)
+    if (grpId) {
+      aff = member.affiliations.find(a => a.category === catId && a.subgroup === grpId);
+    } else {
+      aff = member.affiliations.find(a => a.category === catId && !a.subgroup);
+    }
+    // 2순위: category만 일치
     if (!aff) {
       aff = member.affiliations.find(a => a.category === catId);
     }
@@ -32,8 +32,8 @@ function getMemberAffiliationInfo(member, categoryId = null, subgroupId = null) 
     rawSwat = (aff.swatRole !== undefined && aff.swatRole !== null) ? String(aff.swatRole).trim() : "";
     status = (aff.status !== undefined && aff.status !== null && aff.status !== "") ? aff.status : (member.status || "active");
     badgeColor = (aff.badgeColor !== undefined && aff.badgeColor !== null && aff.badgeColor !== "") ? aff.badgeColor : (member.badgeColor || "bg-blue-600");
-  } else if (!Array.isArray(member.affiliations) || member.affiliations.length === 0) {
-    // affiliations 배열이 없는 레거시 단일 소속 멤버 호환용
+  } else if (!Array.isArray(member.affiliations) || member.affiliations.length === 0 || (member.category === catId && (!grpId || member.subgroup === grpId))) {
+    // affiliations 배열이 없는 레거시 또는 현재 소속 객체 자체인 경우
     role = (member.role !== undefined && member.role !== null) ? String(member.role).trim() : "";
     rawSwat = (member.swatRole !== undefined && member.swatRole !== null) ? String(member.swatRole).trim() : "";
     status = (member.status !== undefined && member.status !== null && member.status !== "") ? member.status : "active";
@@ -106,9 +106,9 @@ function isMemberInactive(member, categoryId = null, subgroupId = null) {
 }
 
 // 경찰 계급별 전용 색상 및 공통 직책 뱃지 색상 판별 (탭별 소속 격리 반영)
-function getMemberRoleBadgeClass(member, categoryHint = null) {
+function getMemberRoleBadgeClass(member, categoryHint = null, subgroupId = null) {
   if (!member) return "";
-  const info = getMemberAffiliationInfo(member, categoryHint);
+  const info = getMemberAffiliationInfo(member, categoryHint, subgroupId);
   const role = (info.role || '').trim();
   if (!role) return "";
 
@@ -116,74 +116,94 @@ function getMemberRoleBadgeClass(member, categoryHint = null) {
     return "bg-zinc-800/90 text-zinc-400 border border-zinc-700/80";
   }
 
-  const isPolice = categoryHint === 'police' || 
-    (state && state.currentCategory === 'police') ||
-    member.category === 'police' || 
-    ["순경", "경장", "경사", "경위", "경정", "청장", "부청장", "서장", "팀장", "교육생"].some(r => role.includes(r));
+  const badgeColorMap = {
+    'bg-white': 'bg-white text-zinc-950 font-bold border border-zinc-300 shadow-sm',
+    'bg-amber-500': 'bg-amber-500 text-zinc-950 font-black border border-amber-300 shadow-sm',
+    'bg-indigo-600': 'bg-indigo-600 text-white border border-indigo-400/40 shadow-sm font-semibold',
+    'bg-cyan-700': 'bg-cyan-700 text-white border border-cyan-400/40 shadow-sm font-semibold',
+    'bg-rose-500': 'bg-rose-500 text-white border border-rose-300/40 shadow-sm font-semibold',
+    'bg-rose-600': 'bg-rose-600 text-white border border-rose-400/50 shadow-sm font-bold',
+    'bg-orange-500': 'bg-orange-500 text-white border border-orange-300/40 shadow-sm font-semibold',
+    'bg-green-600': 'bg-green-600 text-white border border-green-400/40 shadow-sm font-semibold',
+    'bg-lime-500': 'bg-lime-500 text-zinc-950 font-bold border border-lime-300/50 shadow-sm',
+    'bg-violet-600': 'bg-violet-600 text-white border border-violet-400/50 shadow-sm font-bold',
+    'bg-fuchsia-500': 'bg-fuchsia-500 text-white border border-fuchsia-300/40 shadow-sm font-semibold',
+    'bg-slate-700': 'bg-slate-700 text-white border border-slate-500/50 shadow-sm font-semibold',
+    'bg-yellow-400': 'bg-yellow-400 text-zinc-950 font-bold shadow-sm',
+    'bg-pink-600': 'bg-pink-600 text-white shadow-sm font-semibold',
+    'bg-pink-500': 'bg-pink-500 text-white shadow-sm font-semibold',
+    'bg-emerald-500': 'bg-emerald-500 text-white border border-emerald-300/60 shadow-sm font-bold',
+    'bg-emerald-600': 'bg-emerald-600 text-white shadow-sm font-semibold',
+    'bg-teal-500': 'bg-teal-500 text-zinc-950 font-bold border border-teal-200/80 shadow-sm',
+    'bg-teal-600': 'bg-teal-600 text-white shadow-sm font-semibold',
+    'bg-teal-700': 'bg-teal-600 text-white shadow-sm font-semibold',
+    'bg-teal-900': 'bg-teal-500 text-zinc-950 font-bold border border-teal-200/80 shadow-sm',
+    'bg-sky-500': 'bg-sky-500 text-white shadow-sm font-semibold',
+    'bg-sky-600': 'bg-sky-600 text-white shadow-sm font-semibold',
+    'bg-sky-700': 'bg-sky-700 text-white border border-sky-400/60 shadow-sm font-semibold',
+    'bg-red-600': 'bg-red-600 text-white shadow-sm font-semibold',
+    'bg-red-900': 'bg-red-900 text-white border border-red-700/60 shadow-sm font-bold',
+    'bg-orange-400': 'bg-orange-400 text-zinc-950 font-bold shadow-sm',
+    'bg-orange-700': 'bg-orange-700 text-white shadow-sm font-semibold',
+    'bg-amber-600': 'bg-amber-600 text-white shadow-sm font-bold',
+    'bg-purple-600': 'bg-purple-600 text-white shadow-sm font-semibold',
+    'bg-zinc-700': 'bg-zinc-700 text-white shadow-sm font-semibold',
+    'bg-zinc-800': 'bg-zinc-800 text-white shadow-sm font-semibold',
+    'bg-blue-600': 'bg-blue-600 text-white shadow-sm font-semibold'
+  };
 
-  if (isPolice) {
-    if (role.includes("부청장")) return "bg-red-600 text-white";
-    if (role.includes("청장")) return "bg-red-900 text-white border border-red-700/60";
-    if (role.includes("서장") || role.includes("경정") || role.includes("경감")) return "bg-red-600 text-white";
-    if (role.includes("경위")) return "bg-white text-zinc-950 font-bold border border-zinc-300 shadow-sm";
-    if (role.includes("경사")) return "bg-orange-400 text-zinc-950 font-bold";
-    if (role.includes("경장")) return "bg-pink-500 text-white";
-    if (role.includes("팀장")) return "bg-emerald-600 text-white";
-    if (role.includes("순경")) return "bg-blue-600 text-white";
-    if (role.includes("교육생")) return "bg-yellow-400 text-zinc-950 font-bold";
-    if (role.includes("서버장")) return "bg-emerald-500 text-white border border-emerald-300/60 shadow-sm";
-    if (role.includes("가이드")) return "bg-emerald-600 text-white";
+  // 1순위: info.badgeColor에 명시적으로 지정된 색상이 매핑 테이블에 있으면 우선 적용
+  if (info.badgeColor && badgeColorMap[info.badgeColor]) {
+    return badgeColorMap[info.badgeColor];
   }
 
-  const isEMS = categoryHint === 'ems' ||
-    (state && state.currentCategory === 'ems') ||
-    member.category === 'ems' ||
-    ["병원장", "간호실장", "간호부장", "간호사"].some(r => role.includes(r));
+  const curCat = categoryHint || (info.aff && info.aff.category) || (state && state.currentCategory) || member.category;
+  const curSub = (subgroupId !== undefined && subgroupId !== null) ? subgroupId : ((info.aff && info.aff.subgroup) || (state && state.currentGroup ? state.currentGroup.id : member.subgroup));
 
+  const isPolice = curCat === 'police';
+  if (isPolice) {
+    if (role.includes("부청장")) return "bg-red-600 text-white shadow-sm font-semibold";
+    if (role.includes("청장")) return "bg-red-900 text-white border border-red-700/60 shadow-sm font-bold";
+    if (role.includes("서장") || role.includes("경정") || role.includes("경감")) return "bg-red-600 text-white shadow-sm font-semibold";
+    if (role.includes("경위")) return "bg-white text-zinc-950 font-bold border border-zinc-300 shadow-sm";
+    if (role.includes("경사")) return "bg-orange-400 text-zinc-950 font-bold shadow-sm";
+    if (role.includes("경장")) return "bg-pink-500 text-white shadow-sm";
+    if (role.includes("팀장")) return "bg-emerald-600 text-white shadow-sm font-semibold";
+    if (role.includes("순경")) return "bg-blue-600 text-white shadow-sm font-semibold";
+    if (role.includes("교육생")) return "bg-yellow-400 text-zinc-950 font-bold shadow-sm";
+    if (role.includes("서버장")) return "bg-emerald-500 text-white border border-emerald-300/60 shadow-sm font-bold";
+    if (role.includes("가이드")) return "bg-emerald-600 text-white shadow-sm font-semibold";
+  }
+
+  const isEMS = curCat === 'ems';
   if (isEMS) {
     if (role.includes("병원장")) return "bg-teal-500 text-zinc-950 font-bold border border-teal-200/80 shadow-sm";
-    if (role.includes("간호부장")) return "bg-teal-600 text-white";
-    if (role.includes("간호실장")) return "bg-cyan-600 text-white";
-    if (role.includes("간호사")) return "bg-emerald-500 text-zinc-950 font-bold";
+    if (role.includes("간호부장")) return "bg-teal-600 text-white shadow-sm font-semibold";
+    if (role.includes("간호실장")) return "bg-cyan-600 text-white shadow-sm font-semibold";
+    if (role.includes("간호사")) return "bg-emerald-500 text-zinc-950 font-bold shadow-sm";
   }
 
-  const isPress = categoryHint === 'press' ||
-    (state && state.currentCategory === 'press') ||
-    member.category === 'press' ||
-    ["국장", "기자"].some(r => role.includes(r));
-
+  const isPress = curCat === 'press';
   if (isPress) {
-    if (role.includes("국장")) return "bg-sky-700 text-white border border-sky-400/60 shadow-sm";
-    if (role.includes("기자")) return "bg-sky-500 text-white";
+    if (role.includes("국장")) return "bg-sky-700 text-white border border-sky-400/60 shadow-sm font-semibold";
+    if (role.includes("기자")) return "bg-sky-500 text-white shadow-sm font-semibold";
   }
 
-  const isGang = categoryHint === 'gang' ||
-    (state && state.currentCategory === 'gang') ||
-    member.category === 'gang' ||
-    ["보스", "부두목", "간부", "조직원"].some(r => role.includes(r));
-
+  const isGang = curCat === 'gang';
   if (isGang) {
-    if (role.includes("보스")) return "bg-red-600 text-white";
-    if (role.includes("부두목")) return "bg-purple-600 text-white";
-    if (role.includes("간부")) return "bg-orange-700 text-white";
-    if (role.includes("조직원")) return "bg-zinc-700 text-white";
+    if (role.includes("보스")) return "bg-red-600 text-white shadow-sm font-semibold";
+    if (role.includes("부두목")) return "bg-purple-600 text-white shadow-sm font-semibold";
+    if (role.includes("간부")) return "bg-orange-700 text-white shadow-sm font-semibold";
+    if (role.includes("조직원")) return "bg-zinc-700 text-white shadow-sm font-semibold";
   }
 
-  // 럭스 클럽 전용 직책 뱃지 색상
-  const isLux = (categoryHint === 'business' && (member.subgroup === 'biz-lux' || (state && state.currentGroup && state.currentGroup.id === 'biz-lux'))) ||
-    member.subgroup === 'biz-lux' ||
-    (categoryHint !== 'business' && ["대표", "이사"].some(r => role.includes(r)));
-
+  const isLux = curCat === 'business' && curSub === 'biz-lux';
   if (isLux) {
-    if (role.includes("대표")) return "bg-amber-600 text-white";
-    if (role.includes("이사")) return "bg-purple-600 text-white";
+    if (role.includes("대표")) return "bg-amber-600 text-white shadow-sm font-bold";
+    if (role.includes("이사")) return "bg-purple-600 text-white shadow-sm font-semibold";
   }
 
-  // 정비소 (야스테이션) 전용 직책 뱃지 색상 (사장/메카닉 1기/메카닉 2기/홍보)
-  const isYastation = (categoryHint === 'business' && (member.subgroup === 'biz-yastation' || (state && state.currentGroup && state.currentGroup.id === 'biz-yastation'))) ||
-    member.subgroup === 'biz-yastation' ||
-    ["사장", "메카닉", "홍보"].some(r => role.includes(r));
-
+  const isYastation = curCat === 'business' && curSub === 'biz-yastation';
   if (isYastation) {
     if (role.includes("사장")) return "bg-amber-500 text-zinc-950 font-black border border-amber-300 shadow-sm";
     if (role.includes("메카닉 1기")) return "bg-indigo-600 text-white border border-indigo-400/40 shadow-sm font-semibold";
@@ -191,11 +211,7 @@ function getMemberRoleBadgeClass(member, categoryHint = null) {
     if (role.includes("홍보")) return "bg-rose-500 text-white border border-rose-300/40 shadow-sm font-semibold";
   }
 
-  // 영써티원 전용 직책 뱃지 색상 (대표/매니저/직원/알바생)
-  const isYoung31 = (categoryHint === 'business' && (member.subgroup === 'biz-young31' || (state && state.currentGroup && state.currentGroup.id === 'biz-young31'))) ||
-    member.subgroup === 'biz-young31' ||
-    ["대표", "매니저", "직원", "알바생"].some(r => role.includes(r));
-
+  const isYoung31 = curCat === 'business' && curSub === 'biz-young31';
   if (isYoung31) {
     if (role.includes("대표")) return "bg-rose-600 text-white border border-rose-400/50 shadow-sm font-bold";
     if (role.includes("매니저")) return "bg-orange-500 text-white border border-orange-300/40 shadow-sm font-semibold";
@@ -203,85 +219,17 @@ function getMemberRoleBadgeClass(member, categoryHint = null) {
     if (role.includes("알바생")) return "bg-lime-500 text-zinc-950 font-bold border border-lime-300/50 shadow-sm";
   }
 
-  // 코이 레스토랑 전용 직책 뱃지 색상 (메이드장/메이드/집사)
-  const isKoi = (categoryHint === 'business' && (member.subgroup === 'biz-koi' || (state && state.currentGroup && state.currentGroup.id === 'biz-koi'))) ||
-    member.subgroup === 'biz-koi' ||
-    ["메이드장", "메이드", "집사"].some(r => role.includes(r));
-
+  const isKoi = curCat === 'business' && curSub === 'biz-koi';
   if (isKoi) {
     if (role.includes("메이드장")) return "bg-violet-600 text-white border border-violet-400/50 shadow-sm font-bold";
     if (role.includes("메이드")) return "bg-fuchsia-500 text-white border border-fuchsia-300/40 shadow-sm font-semibold";
     if (role.includes("집사")) return "bg-slate-700 text-white border border-slate-500/50 shadow-sm font-semibold";
   }
 
-  if (role.includes("서버장")) return "bg-emerald-500 text-white border border-emerald-300/60 shadow-sm";
-  if (role.includes("가이드")) return "bg-emerald-600 text-white";
+  if (role.includes("서버장")) return "bg-emerald-500 text-white border border-emerald-300/60 shadow-sm font-bold";
+  if (role.includes("가이드")) return "bg-emerald-600 text-white shadow-sm font-semibold";
 
-  if (info.badgeColor === 'bg-white') {
-    return "bg-white text-zinc-950 font-bold border border-zinc-300 shadow-sm";
-  }
-  if (info.badgeColor === 'bg-amber-500') {
-    return "bg-amber-500 text-zinc-950 font-black border border-amber-300 shadow-sm";
-  }
-  if (info.badgeColor === 'bg-indigo-600') {
-    return "bg-indigo-600 text-white border border-indigo-400/40 shadow-sm font-semibold";
-  }
-  if (info.badgeColor === 'bg-cyan-700') {
-    return "bg-cyan-700 text-white border border-cyan-400/40 shadow-sm font-semibold";
-  }
-  if (info.badgeColor === 'bg-rose-500') {
-    return "bg-rose-500 text-white border border-rose-300/40 shadow-sm font-semibold";
-  }
-  if (info.badgeColor === 'bg-rose-600') {
-    return "bg-rose-600 text-white border border-rose-400/50 shadow-sm font-bold";
-  }
-  if (info.badgeColor === 'bg-orange-500') {
-    return "bg-orange-500 text-white border border-orange-300/40 shadow-sm font-semibold";
-  }
-  if (info.badgeColor === 'bg-green-600') {
-    return "bg-green-600 text-white border border-green-400/40 shadow-sm font-semibold";
-  }
-  if (info.badgeColor === 'bg-lime-500') {
-    return "bg-lime-500 text-zinc-950 font-bold border border-lime-300/50 shadow-sm";
-  }
-  if (info.badgeColor === 'bg-violet-600') {
-    return "bg-violet-600 text-white border border-violet-400/50 shadow-sm font-bold";
-  }
-  if (info.badgeColor === 'bg-fuchsia-500') {
-    return "bg-fuchsia-500 text-white border border-fuchsia-300/40 shadow-sm font-semibold";
-  }
-  if (info.badgeColor === 'bg-slate-700') {
-    return "bg-slate-700 text-white border border-slate-500/50 shadow-sm font-semibold";
-  }
-  if (info.badgeColor === 'bg-yellow-400') {
-    return "bg-yellow-400 text-zinc-950 font-bold";
-  }
-  if (info.badgeColor === 'bg-pink-600') {
-    return "bg-pink-600 text-white";
-  }
-  if (info.badgeColor === 'bg-emerald-500') {
-    return "bg-emerald-500 text-zinc-950 font-bold";
-  }
-  if (info.badgeColor === 'bg-teal-500') {
-    return "bg-teal-500 text-zinc-950 font-bold border border-teal-200/80 shadow-sm";
-  }
-  if (info.badgeColor === 'bg-teal-600') {
-    return "bg-teal-600 text-white";
-  }
-  if (info.badgeColor === 'bg-teal-900') {
-    return "bg-teal-500 text-zinc-950 font-bold border border-teal-200/80 shadow-sm";
-  }
-  if (info.badgeColor === 'bg-teal-700') {
-    return "bg-teal-600 text-white";
-  }
-  if (info.badgeColor === 'bg-sky-700') {
-    return "bg-sky-700 text-white border border-sky-400/60 shadow-sm";
-  }
-  if (info.badgeColor === 'bg-sky-500') {
-    return "bg-sky-500 text-white";
-  }
-
-  return `${info.badgeColor || member.badgeColor || 'bg-zinc-800'} text-white`;
+  return `${info.badgeColor || member.badgeColor || 'bg-zinc-800'} text-white shadow-sm font-semibold`;
 }
 
 // 특공대 및 추가 직책 대각선 뱃지 렌더링 (프로필 왼쪽 위 대각선)
@@ -644,7 +592,7 @@ function renderEmptyState(emoji, title) {
   `;
 }
 
-function renderMemberCard(member, dragType, clickFn) {
+function renderMemberCard(member, dragType, clickFn, categoryId = null, subgroupId = null) {
   let ytCount = 0;
   let chzzkCount = 0;
   const rawVideos = member.videos;
@@ -693,7 +641,9 @@ function renderMemberCard(member, dragType, clickFn) {
       ondrop="handleCardDrop(event, '${dragType}', '${member.id}')"
       ondragend="handleCardDragEnd(event)"
   ` : `draggable="false"`;
-  const info = getMemberAffiliationInfo(member);
+  const curCat = categoryId || (state && state.currentCategory) || member.category;
+  const curGrp = (subgroupId !== undefined && subgroupId !== null) ? subgroupId : (state && state.currentGroup ? state.currentGroup.id : member.subgroup);
+  const info = getMemberAffiliationInfo(member, curCat, curGrp);
   const effectiveRole = info.role;
   const effectiveSwatRole = info.swatRole;
   const resigned = info.isResigned;
@@ -741,7 +691,7 @@ function renderMemberCard(member, dragType, clickFn) {
                 <span>사직</span>
               </span>
             ` : ''))}
-            ${effectiveRole ? `<span class="absolute -bottom-1 -right-1 text-[10px] font-bold px-1.5 py-0.5 rounded ${getMemberRoleBadgeClass(member, state.currentCategory)} shadow">${effectiveRole}</span>` : ''}
+            ${effectiveRole ? `<span class="absolute -bottom-1 -right-1 text-[10px] font-bold px-1.5 py-0.5 rounded ${getMemberRoleBadgeClass(member, curCat, curGrp)} shadow">${effectiveRole}</span>` : ''}
           </div>
           
           <div class="flex-1 min-w-0">
@@ -911,7 +861,7 @@ function renderGroupSubscriberBadgesHtml(members, titleContext = "") {
 function renderDirectCategoryMembers(container, cat) {
   const members = cat.members || [];
   const membersHtml = members.length > 0
-    ? members.map(m => renderMemberCard(m, 'direct-member', 'selectDirectMember')).join("")
+    ? members.map(m => renderMemberCard(m, 'direct-member', 'selectDirectMember', cat.id, null)).join("")
     : renderEmptyState(cat.emoji || '👥', "등록된 인원이 없습니다.");
 
   const subscriberBadgesHtml = renderGroupSubscriberBadgesHtml(members, cat.name);
@@ -1060,7 +1010,7 @@ function renderGroupMembers(container) {
   const members = group.members || [];
   const bgImage = typeof getGroupBgImage === "function" ? getGroupBgImage(group) : (group.bgImage || (group.id === "gang-bigdick" || group.name === "빅딕" ? "assets/빅딕.webp" : null));
   const membersHtml = members.length > 0
-    ? members.map(m => renderMemberCard(m, 'group-member', 'selectGroupMember')).join("")
+    ? members.map(m => renderMemberCard(m, 'group-member', 'selectGroupMember', cat.id, group.id)).join("")
     : renderEmptyState(group.emoji || '👥', "등록된 인원이 없습니다.");
 
   const subscriberBadgesHtml = renderGroupSubscriberBadgesHtml(members, group.name);
@@ -1356,7 +1306,7 @@ function renderMemberVideos(container) {
             <img src="${getMemberAvatar(member)}" alt="${member.name}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='assets/default-avatar.svg'" class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl sm:rounded-3xl object-cover border-4 border-zinc-800 shadow-2xl transition-all duration-300 ${inactive ? 'grayscale contrast-125 opacity-80 hover:grayscale-0 hover:contrast-100 hover:opacity-100 cursor-pointer' : ''}" />
             ${effectiveSwatRole ? getSwatBadgeHtml(effectiveSwatRole, 'lg') : ''}
             ${effectiveRole ? `
-              <span class="absolute -bottom-2 -right-2 z-20 text-xs font-bold px-2.5 py-1 rounded-xl ${getMemberRoleBadgeClass(member, cat.id)} shadow-xl border border-white/20">
+              <span class="absolute -bottom-2 -right-2 z-20 text-xs font-bold px-2.5 py-1 rounded-xl ${getMemberRoleBadgeClass(member, cat.id, group?.id)} shadow-xl border border-white/20">
                 ${effectiveRole}
               </span>
             ` : ''}
@@ -1376,7 +1326,7 @@ function renderMemberVideos(container) {
           </div>
           <div class="min-w-0 flex-1">
             <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-              ${effectiveRole ? `<span class="text-xs font-bold px-2.5 py-1 rounded-md ${getMemberRoleBadgeClass(member, cat.id)}">${effectiveRole}</span>` : ''}
+              ${effectiveRole ? `<span class="text-xs font-bold px-2.5 py-1 rounded-md ${getMemberRoleBadgeClass(member, cat.id, group?.id)}">${effectiveRole}</span>` : ''}
               <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-300">소속: ${affiliationsText}</span>
             </div>
             <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
