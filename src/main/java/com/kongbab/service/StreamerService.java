@@ -258,10 +258,19 @@ public class StreamerService {
             if (Files.exists(backupPath)) {
                 try {
                     String backupContent = Files.readString(backupPath, StandardCharsets.UTF_8);
-                    if (backupContent != null && backupContent.contains("\"categories\"")) {
+                    if (backupContent != null && backupContent.contains("\"categories\"") && (backupContent.contains("gang-goldmoon") || backupContent.length() > 500000)) {
                         json = backupContent;
                     }
                 } catch (Exception ignored) {}
+            }
+
+            if (json == null) {
+                Path staticPath = Paths.get("src", "main", "resources", "static", "streamers.json");
+                if (Files.exists(staticPath)) {
+                    try {
+                        json = Files.readString(staticPath, StandardCharsets.UTF_8);
+                    } catch (Exception ignored) {}
+                }
             }
 
             if (json == null) {
@@ -287,6 +296,139 @@ public class StreamerService {
         } catch (Exception e) {
             log.error("streamers.json 저장 실패", e);
         }
+    }
+
+    @org.springframework.context.event.EventListener(org.springframework.boot.context.event.ApplicationReadyEvent.class)
+    @Transactional
+    public void initStreamersIfMissing() {
+        try {
+            long count = streamerRepository.count();
+            log.info("현재 DB 등록 스트리머 수: {}명", count);
+            Path staticPath = Paths.get("src", "main", "resources", "static", "streamers.json");
+            if (!Files.exists(staticPath)) {
+                staticPath = Paths.get("docs", "streamers.json");
+            }
+            String content = null;
+            if (Files.exists(staticPath)) {
+                content = Files.readString(staticPath, StandardCharsets.UTF_8);
+            } else {
+                Path backupPath = Paths.get("D:", "\uBC31\uC5C5 \uD30C\uC77C", "KONGBAB_BACKUPS_JSON", "backup.json");
+                if (Files.exists(backupPath)) {
+                    content = Files.readString(backupPath, StandardCharsets.UTF_8);
+                }
+            }
+            if (content != null) {
+                if (content.startsWith("\uFEFF")) {
+                    content = content.substring(1);
+                }
+                com.fasterxml.jackson.databind.JsonNode root = objectMapper.readTree(content);
+                com.fasterxml.jackson.databind.JsonNode categories = root.has("categories") ? root.get("categories") : root;
+                if (categories != null && categories.isArray()) {
+                    Map<String, StreamerDto> dtoMap = new LinkedHashMap<>();
+                    for (com.fasterxml.jackson.databind.JsonNode cat : categories) {
+                        String catId = cat.has("id") ? cat.get("id").asText() : "";
+                        boolean hasSubgroups = cat.has("hasSubgroups") && cat.get("hasSubgroups").asBoolean();
+                        if (hasSubgroups && cat.has("groups") && cat.get("groups").isArray()) {
+                            for (com.fasterxml.jackson.databind.JsonNode g : cat.get("groups")) {
+                                String gId = g.has("id") ? g.get("id").asText() : "";
+                                if (g.has("members") && g.get("members").isArray()) {
+                                    for (com.fasterxml.jackson.databind.JsonNode m : g.get("members")) {
+                                        StreamerDto dto = parseMemberJsonToDto(m, catId, gId);
+                                        if (dto != null && dto.getId() != null && !dtoMap.containsKey(dto.getId())) {
+                                            dtoMap.put(dto.getId(), dto);
+                                        }
+                                    }
+                                }
+                            }
+                        } else if (cat.has("members") && cat.get("members").isArray()) {
+                            for (com.fasterxml.jackson.databind.JsonNode m : cat.get("members")) {
+                                StreamerDto dto = parseMemberJsonToDto(m, catId, null);
+                                if (dto != null && dto.getId() != null && !dtoMap.containsKey(dto.getId())) {
+                                    dtoMap.put(dto.getId(), dto);
+                                }
+                            }
+                        }
+                    }
+                    if (!dtoMap.isEmpty()) {
+                        long currentCount = streamerRepository.count();
+                        if (currentCount != dtoMap.size() || currentCount < 228) {
+                            log.info("DB 스트리머 수({}명)와 streamers.json 기준({}명) 불일치 감지. 최신 동기화를 진행합니다.", currentCount, dtoMap.size());
+                            syncStreamers(new ArrayList<>(dtoMap.values()));
+                            Set<String> validIds = dtoMap.keySet();
+                            List<Streamer> allEntities = streamerRepository.findAll();
+                            for (Streamer s : allEntities) {
+                                if (s.getCustomId() != null && !validIds.contains(s.getCustomId())) {
+                                    log.info("DB 구버전 삭제: {} ({})", s.getCustomId(), s.getName());
+                                    streamerRepository.delete(s);
+                                }
+                            }
+                            log.info("DB 스트리머 최신 동기화 완료: 총 {}명", streamerRepository.count());
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error("DB 스트리머 초기 동기화 실패: {}", e.getMessage(), e);
+        }
+    }
+
+    private StreamerDto parseMemberJsonToDto(com.fasterxml.jackson.databind.JsonNode m, String catId, String subgroupId) {
+        if (m == null) return null;
+        String id = m.has("id") ? m.get("id").asText() : null;
+        String name = m.has("name") ? m.get("name").asText() : "";
+        String streamer = m.has("streamer") ? m.get("streamer").asText() : "";
+        String role = m.has("role") ? m.get("role").asText() : "";
+        String swatRole = m.has("swatRole") ? m.get("swatRole").asText() : "";
+        String badgeColor = m.has("badgeColor") ? m.get("badgeColor").asText() : "";
+        String status = m.has("status") ? m.get("status").asText() : "active";
+        String avatar = m.has("avatar") ? m.get("avatar").asText() : "assets/default-avatar.svg";
+        int displayOrder = m.has("displayOrder") ? m.get("displayOrder").asInt() : 0;
+        String subscriberCount = m.has("subscriberCount") ? m.get("subscriberCount").asText() : "";
+        String youtubeUrl = m.has("youtubeUrl") ? m.get("youtubeUrl").asText() : "";
+        String category = m.has("category") ? m.get("category").asText() : catId;
+        String subgroup = m.has("subgroup") && !m.get("subgroup").isNull() ? m.get("subgroup").asText() : subgroupId;
+        String affiliations = null;
+        if (m.has("affiliations") && !m.get("affiliations").isNull()) {
+            try {
+                affiliations = objectMapper.writeValueAsString(m.get("affiliations"));
+            } catch (Exception ignored) {}
+        }
+
+        List<VideoDto> videos = new ArrayList<>();
+        if (m.has("videos") && m.get("videos").isArray()) {
+            for (com.fasterxml.jackson.databind.JsonNode v : m.get("videos")) {
+                VideoDto vDto = VideoDto.builder()
+                        .id(v.has("id") ? v.get("id").asText() : null)
+                        .title(v.has("title") ? v.get("title").asText() : "")
+                        .url(v.has("url") ? v.get("url").asText() : "")
+                        .videoType(v.has("videoType") ? v.get("videoType").asText() : "clip")
+                        .date(v.has("date") ? v.get("date").asText() : "")
+                        .duration(v.has("duration") ? v.get("duration").asText() : "")
+                        .description(v.has("description") ? v.get("description").asText() : "")
+                        .thumbnailUrl(v.has("thumbnailUrl") ? v.get("thumbnailUrl").asText() : "")
+                        .displayOrder(v.has("displayOrder") ? v.get("displayOrder").asInt() : 0)
+                        .build();
+                videos.add(vDto);
+            }
+        }
+
+        return StreamerDto.builder()
+                .id(id)
+                .name(name)
+                .streamer(streamer)
+                .category(category)
+                .subgroup(subgroup)
+                .role(role)
+                .swatRole(swatRole)
+                .badgeColor(badgeColor)
+                .status(status)
+                .avatar(avatar)
+                .displayOrder(displayOrder)
+                .subscriberCount(subscriberCount)
+                .youtubeUrl(youtubeUrl)
+                .affiliations(affiliations)
+                .videos(videos)
+                .build();
     }
 
     public long countStreamers() {

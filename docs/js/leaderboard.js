@@ -679,7 +679,7 @@ function renderLeaderboardDynamicContent() {
               <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top2) : (top2.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" loading="lazy" decoding="async" class="podium-avatar-img w-full h-full object-cover" />
             </div>
             ${(typeof getSwatBadgeHtml === 'function' && top2.swatRole) ? getSwatBadgeHtml(top2.swatRole, 'sm') : ''}
-            ${safeTop2SingleRole ? `
+            ${(typeof isRoleBadgeHidden === 'function' ? !isRoleBadgeHidden(safeTop2SingleRole) : (safeTop2SingleRole !== '조직원' && safeTop2SingleRole !== '조합원')) && safeTop2SingleRole ? `
               <span class="absolute -bottom-1 -right-1 z-20 text-[9.5px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(top2, top2.catId) : 'bg-zinc-800 text-white'} shadow-md">
                 ${safeTop2SingleRole}
               </span>
@@ -711,7 +711,7 @@ function renderLeaderboardDynamicContent() {
               <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top1) : (top1.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" loading="lazy" decoding="async" class="podium-avatar-img w-full h-full object-cover" />
             </div>
             ${(typeof getSwatBadgeHtml === 'function' && top1.swatRole) ? getSwatBadgeHtml(top1.swatRole, 'sm') : ''}
-            ${safeTop1SingleRole ? `
+            ${(typeof isRoleBadgeHidden === 'function' ? !isRoleBadgeHidden(safeTop1SingleRole) : (safeTop1SingleRole !== '조직원' && safeTop1SingleRole !== '조합원')) && safeTop1SingleRole ? `
               <span class="absolute -bottom-1 -right-1 z-20 text-[9.5px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(top1, top1.catId) : 'bg-zinc-800 text-white'} shadow-md">
                 ${safeTop1SingleRole}
               </span>
@@ -743,7 +743,7 @@ function renderLeaderboardDynamicContent() {
               <img src="${typeof getMemberAvatar === 'function' ? getMemberAvatar(top3) : (top3.avatar || 'assets/default-avatar.svg')}" onerror="this.src='assets/default-avatar.svg'" loading="lazy" decoding="async" class="podium-avatar-img w-full h-full object-cover" />
             </div>
             ${(typeof getSwatBadgeHtml === 'function' && top3.swatRole) ? getSwatBadgeHtml(top3.swatRole, 'sm') : ''}
-            ${safeTop3SingleRole ? `
+            ${(typeof isRoleBadgeHidden === 'function' ? !isRoleBadgeHidden(safeTop3SingleRole) : (safeTop3SingleRole !== '조직원' && safeTop3SingleRole !== '조합원')) && safeTop3SingleRole ? `
               <span class="absolute -bottom-1 -right-1 z-20 text-[9.5px] font-bold px-1.5 py-0.5 rounded-md ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(top3, top3.catId) : 'bg-zinc-800 text-white'} shadow-md">
                 ${safeTop3SingleRole}
               </span>
@@ -832,7 +832,7 @@ function renderLeaderboardDynamicContent() {
                     class="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border border-zinc-700 bg-zinc-800 flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
                   />
                   ${(typeof getSwatBadgeHtml === 'function' && m.swatRole) ? getSwatBadgeHtml(m.swatRole, 'sm') : ''}
-                  ${safeSingleRole ? `
+                  ${(typeof isRoleBadgeHidden === 'function' ? !isRoleBadgeHidden(safeSingleRole) : (safeSingleRole !== '조직원' && safeSingleRole !== '조합원')) && safeSingleRole ? `
                     <span class="absolute -bottom-1 -right-1 z-20 text-[8px] sm:text-[8.5px] font-bold px-1 py-0.2 rounded ${typeof getMemberRoleBadgeClass === 'function' ? getMemberRoleBadgeClass(m, m.catId) : 'bg-zinc-800 text-white'} shadow">
                       ${safeSingleRole}
                     </span>

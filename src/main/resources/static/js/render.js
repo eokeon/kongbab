@@ -105,6 +105,14 @@ function isMemberInactive(member, categoryId = null, subgroupId = null) {
   return getMemberAffiliationInfo(member, categoryId, subgroupId).isInactive;
 }
 
+// 조직원 및 조합원 직책 뱃지는 프로필 아바타에 표시하지 않고 인원 정보 텍스트에서만 표시
+function isRoleBadgeHidden(role) {
+  if (!role) return true;
+  const r = String(role).trim();
+  return r === "조직원" || r === "조합원";
+}
+window.isRoleBadgeHidden = isRoleBadgeHidden;
+
 // 경찰 계급별 전용 색상 및 공통 직책 뱃지 색상 판별 (탭별 소속 격리 반영)
 function getMemberRoleBadgeClass(member, categoryHint = null, subgroupId = null) {
   if (!member) return "";
@@ -191,10 +199,15 @@ function getMemberRoleBadgeClass(member, categoryHint = null, subgroupId = null)
 
   const isGang = curCat === 'gang';
   if (isGang) {
-    if (role.includes("보스")) return "bg-red-600 text-white shadow-sm font-semibold";
+    if (role.includes("보스") || role.includes("두목")) return "bg-red-600 text-white shadow-sm font-semibold";
     if (role.includes("부두목")) return "bg-purple-600 text-white shadow-sm font-semibold";
+    if (role.includes("조합장") || role.includes("위원장")) return "bg-amber-600 text-white shadow-sm font-bold";
+    if (role.includes("청년회장")) return "bg-indigo-600 text-white shadow-sm font-semibold";
+    if (role.includes("용병")) return "bg-emerald-600 text-white shadow-sm font-semibold";
+    if (role.includes("인턴")) return "bg-teal-600 text-white shadow-sm font-semibold";
     if (role.includes("간부")) return "bg-orange-700 text-white shadow-sm font-semibold";
-    if (role.includes("조직원")) return "bg-zinc-700 text-white shadow-sm font-semibold";
+    if (role.includes("탈퇴")) return "bg-zinc-800 text-white shadow-sm font-semibold";
+    if (role.includes("조직원") || role.includes("조합원")) return "bg-zinc-700 text-white shadow-sm font-semibold";
   }
 
   const isLux = curCat === 'business' && curSub === 'biz-lux';
@@ -698,7 +711,7 @@ function renderMemberCard(member, dragType, clickFn, categoryId = null, subgroup
                 <span>사직</span>
               </span>
             ` : ''))}
-            ${safeRole ? `<span class="absolute -bottom-1 -right-1 text-[10px] font-bold px-1.5 py-0.5 rounded ${getMemberRoleBadgeClass(member, curCat, curGrp)} shadow">${safeRole}</span>` : ''}
+            ${(!isRoleBadgeHidden(safeRole) && safeRole) ? `<span class="absolute -bottom-1 -right-1 text-[10px] font-bold px-1.5 py-0.5 rounded ${getMemberRoleBadgeClass(member, curCat, curGrp)} shadow">${safeRole}</span>` : ''}
           </div>
           
           <div class="flex-1 min-w-0">
@@ -1373,7 +1386,7 @@ function renderMemberVideos(container) {
           <div class="relative flex-shrink-0">
             <img src="${getMemberAvatar(member)}" alt="${mDetailName}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='assets/default-avatar.svg'" class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl sm:rounded-3xl object-cover border-4 border-zinc-800 shadow-2xl transition-all duration-300 ${inactive ? 'grayscale contrast-125 opacity-80 hover:grayscale-0 hover:contrast-100 hover:opacity-100 cursor-pointer' : ''}" />
             ${effectiveSwatRole ? getSwatBadgeHtml(effectiveSwatRole, 'lg') : ''}
-            ${safeDetailRole ? `
+            ${(!isRoleBadgeHidden(safeDetailRole) && safeDetailRole) ? `
               <span class="absolute -bottom-2 -right-2 z-20 text-xs font-bold px-2.5 py-1 rounded-xl ${getMemberRoleBadgeClass(member, cat.id, group?.id)} shadow-xl border border-white/20">
                 ${safeDetailRole}
               </span>

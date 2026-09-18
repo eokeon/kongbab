@@ -96,7 +96,9 @@ async function fetchCategoryStructure() {
         if (typeof applyCategoryStructure === "function") {
           applyCategoryStructure(data.categories);
         }
-        persistData();
+        if (typeof countTotalMembersInCategories === "function" && countTotalMembersInCategories(KONGBAB_DATA?.categories) > 0) {
+          persistData();
+        }
         return data.categories;
       }
     }
@@ -106,14 +108,16 @@ async function fetchCategoryStructure() {
 
   // GitHub Pages 정적 배포 fallback (streamers.json 에서 카테고리/조직 구조 동기화)
   try {
-    const staticRes = await fetch(`./streamers.json?t=${Date.now()}`);
+    const staticRes = await fetch(`./streamers.json?v=20260919_gang_mariadb_sync_v6&t=${Date.now()}`);
     if (staticRes.ok) {
       const staticData = await staticRes.json();
       if (staticData && Array.isArray(staticData.categories) && staticData.categories.length > 0) {
         if (typeof applyCategoryStructure === "function") {
           applyCategoryStructure(staticData.categories);
         }
-        persistData();
+        if (typeof countTotalMembersInCategories === "function" && countTotalMembersInCategories(KONGBAB_DATA?.categories) > 0) {
+          persistData();
+        }
         return staticData.categories;
       }
     }
@@ -215,60 +219,85 @@ function mergeStaticStreamersWithLocalVideos(staticStreamers) {
 }
 
 async function fetchStreamersFromDb() {
+  let dbList = null;
   try {
     const res = await fetch(`${API_BASE}/api/streamers`, { cache: "no-store" });
     if (res.ok) {
       const list = await res.json();
       if (Array.isArray(list) && list.length > 0) {
-        return list;
+        dbList = list;
       }
     }
   } catch (e) {
     console.warn("백엔드 API 미연결 (정적 배포 모드 탐색):", e);
   }
 
-  // GitHub Pages 정적 배포 fallback (streamers.json 로드)
+  // 정적 streamers.json 로드 (캐시 버스팅 쿼리 포함하여 항상 최신 228명 겸직 연동 데이터 확보)
+  let staticData = null;
   try {
-    const staticRes = await fetch(`./streamers.json?t=${Date.now()}`);
+    const staticRes = await fetch(`./streamers.json?v=20260919_gang_mariadb_sync_v6&t=${Date.now()}`);
     if (staticRes.ok) {
-      const staticData = await staticRes.json();
-      if (staticData) {
-        if (Array.isArray(staticData.categories) && staticData.categories.length > 0) {
-          const localVideosCount = countTotalVideosInCategories(KONGBAB_DATA?.categories);
-          const staticVideosCount = countTotalVideosInCategories(staticData.categories);
-          const localMembersCount = countTotalMembersInCategories(KONGBAB_DATA?.categories);
-          const staticMembersCount = countTotalMembersInCategories(staticData.categories);
-
-          // 새 인원이 추가되었거나 멤버 수가 증가했으면 즉시 스마트 병합 로드
-          const hasNewMembers = staticMembersCount > localMembersCount;
-          const needsStaticReload = !localVideosCount || staticVideosCount > localVideosCount || hasNewMembers;
-
-          if (!needsStaticReload && localVideosCount > 0) {
-            console.log(`[데이터 보호] 로컬 캐시 데이터(영상 ${localVideosCount}개, 인원 ${localMembersCount}명)가 최신 상태입니다.`);
-            return "STATIC_CATEGORIES_LOADED";
-          }
-
-          if (typeof applyCategoryStructure === "function") {
-            applyCategoryStructure(staticData.categories);
-          }
-          const rawStaticList = extractAllStreamersFromStatic(staticData);
-          const mergedList = mergeStaticStreamersWithLocalVideos(rawStaticList);
-          applyStreamersToKongbabData(mergedList);
-          persistData(true);
-          console.log(`[데이터 동기화] 최신 인원(${staticMembersCount}명) 및 데이터 갱신 완료.`);
-
-          if (typeof renderCategoryTabs === "function") renderCategoryTabs();
-          if (typeof renderContent === "function") renderContent();
-          if (typeof updateStats === "function") updateStats();
-
-          return "STATIC_CATEGORIES_LOADED";
-        } else if (Array.isArray(staticData)) {
-          return staticData;
-        }
-      }
+      staticData = await staticRes.json();
     }
   } catch (err) {
     console.warn("정적 streamers.json 로드 실패:", err);
+  }
+
+  // 1. 만약 DB에서 가져온 데이터가 있는 경우:
+  if (Array.isArray(dbList) && dbList.length > 0) {
+    if (staticData && Array.isArray(staticData.categories) && staticData.categories.length > 0) {
+      const rawStaticList = extractAllStreamersFromStatic(staticData);
+      const dbIdSet = new Set(dbList.map(s => s.id));
+      const staticIdSet = new Set(rawStaticList.map(s => s.id));
+      const missingFromDb = rawStaticList.filter(s => !dbIdSet.has(s.id));
+      const obsoleteInDb = dbList.filter(s => !staticIdSet.has(s.id));
+
+      // 겸직 소속 불일치 여부 검사 (예: DB의 씨랙이나 금휘에 갱단 소속이 누락된 경우)
+      const hasAffiliationMismatch = rawStaticList.some(s => {
+        const dbMember = dbList.find(d => d.id === s.id);
+        if (!dbMember) return true;
+        const sAffCount = Array.isArray(s.affiliations) ? s.affiliations.length : 0;
+        let dAffCount = 0;
+        if (Array.isArray(dbMember.affiliations)) {
+          dAffCount = dbMember.affiliations.length;
+        } else if (typeof dbMember.affiliations === "string" && dbMember.affiliations.trim().startsWith("[")) {
+          try { dAffCount = JSON.parse(dbMember.affiliations).length; } catch (e) {}
+        }
+        return sAffCount !== dAffCount;
+      });
+
+      if (missingFromDb.length > 0 || obsoleteInDb.length > 0 || hasAffiliationMismatch || dbList.length !== staticIdSet.size) {
+        console.log(`[DB 최신화 동기화] DB 상태(인원: ${dbList.length}명, 누락: ${missingFromDb.length}, 구버전초과: ${obsoleteInDb.length})를 정적 최신 기준(${staticIdSet.size}명)과 즉시 동기화합니다.`);
+        const mergedList = mergeStaticStreamersWithLocalVideos(rawStaticList);
+        applyStreamersToKongbabData(mergedList);
+        persistData(true);
+        syncAllStreamersToDb(mergedList);
+        return "STATIC_CATEGORIES_LOADED";
+      }
+    }
+    return dbList;
+  }
+
+  // 2. DB 연결이 없거나 정적 배포(GitHub Pages)인 경우:
+  if (staticData && Array.isArray(staticData.categories) && staticData.categories.length > 0) {
+    const staticMembersCount = countTotalMembersInCategories(staticData.categories);
+
+    if (typeof applyCategoryStructure === "function") {
+      applyCategoryStructure(staticData.categories);
+    }
+    const rawStaticList = extractAllStreamersFromStatic(staticData);
+    const mergedList = mergeStaticStreamersWithLocalVideos(rawStaticList);
+    applyStreamersToKongbabData(mergedList);
+    persistData(true);
+    console.log(`[정적 데이터 로드] 최신 겸직 연동 260슬롯/228명 인원 및 데이터 동기화 완료 (총 ${staticMembersCount}명).`);
+
+    if (typeof renderCategoryTabs === "function") renderCategoryTabs();
+    if (typeof renderContent === "function") renderContent();
+    if (typeof updateStats === "function") updateStats();
+
+    return "STATIC_CATEGORIES_LOADED";
+  } else if (Array.isArray(staticData)) {
+    return staticData;
   }
 
   return null;
@@ -375,8 +404,8 @@ async function deleteVideoFromDb(videoId) {
 }
 
 async function syncAllStreamersToDb(streamersList) {
-  if (!Array.isArray(streamersList) || streamersList.length < 140) {
-    console.warn(`[DB 동기화 차단] 전달된 인원 수가 비정상적으로 적습니다 (${streamersList ? streamersList.length : 0}명 < 146명). 데이터 유실 방지를 위해 DB 동기화를 차단합니다.`);
+  if (!Array.isArray(streamersList) || streamersList.length < 200) {
+    console.warn(`[DB 동기화 차단] 전달된 인원 수가 비정상적으로 적습니다 (${streamersList ? streamersList.length : 0}명 < 200명). 데이터 유실 방지를 위해 DB 동기화를 차단합니다.`);
     return null;
   }
   try {

@@ -256,7 +256,7 @@ function renderSearchResults(container) {
               />
               ${cleanSwat ? (typeof getSwatBadgeHtml === 'function' ? getSwatBadgeHtml(cleanSwat, 'md') : '') : ''}
               ${statusOverlayHtml}
-              ${safeRole ? `<span class="absolute -bottom-1 -right-1 text-[10px] font-bold px-1.5 py-0.5 rounded ${roleBadgeClass} shadow">${safeRole}</span>` : ''}
+              ${(typeof isRoleBadgeHidden === 'function' ? !isRoleBadgeHidden(safeRole) : (safeRole !== '조직원' && safeRole !== '조합원')) && safeRole ? `<span class="absolute -bottom-1 -right-1 text-[10px] font-bold px-1.5 py-0.5 rounded ${roleBadgeClass} shadow">${safeRole}</span>` : ''}
             </div>
 
             <div class="flex-1 min-w-0">

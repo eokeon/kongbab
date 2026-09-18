@@ -10,12 +10,12 @@ const DEFAULT_CATEGORIES = [
       { id: "gang-goldmoon", name: "골드문", emoji: "🌙", bgImage: "assets/골드문.webp", members: [] },
       { id: "gang-nonghyup", name: "농협", emoji: "🌾", bgImage: "assets/농협.webp", members: [] },
       { id: "gang-girlbang", name: "GIRL BANG", emoji: "🐷", bgImage: "assets/걸뱅.webp", members: [] },
-      { id: "gang-blackrose", name: "흑장미", emoji: "🌹", members: [] },
       { id: "gang-doremifa", name: "도레미파", emoji: "🎹", bgImage: "assets/도레미파.webp", members: [] },
       { id: "gang-metalunion", name: "금속노조", emoji: "⛏️", bgImage: "assets/금속노조.webp", members: [] },
       { id: "gang-adventure", name: "어드벤처", emoji: "🐯", bgImage: "assets/어드벤처.webp", members: [] },
       { id: "gang-kgaeng", name: "깨갱", emoji: "🐶", bgImage: "assets/깨갱.webp", members: [] },
-      { id: "gang-streetcat", name: "길고양이 연합", emoji: "😺", bgImage: "assets/길고양이.webp", members: [] }
+      { id: "gang-streetcat", name: "길고양이 연합", emoji: "😺", bgImage: "assets/길고양이.webp", members: [] },
+      { id: "gang-blackrose", name: "흑장미", emoji: "🌹", members: [] }
     ]
   },
   {
@@ -165,21 +165,34 @@ function applyCategoryStructure(structureCategories) {
   KONGBAB_DATA.categories = reorderedCats;
 }
 
+const CURRENT_DATA_VERSION = "20260919_gang_mariadb_sync_v6";
+window.CURRENT_DATA_VERSION = CURRENT_DATA_VERSION;
+
 function loadStoredData() {
   try {
+    const storedVersion = localStorage.getItem("kongbab_data_version");
+    if (storedVersion !== CURRENT_DATA_VERSION) {
+      console.log(`[버전 갱신] 새 데이터 버전(${CURRENT_DATA_VERSION}) 감지. 기존 로컬 캐시를 무효화하고 최신 겸직 연동 데이터를 새로고침합니다.`);
+      localStorage.removeItem("kongbab_custom_data");
+      localStorage.setItem("kongbab_data_version", CURRENT_DATA_VERSION);
+      return;
+    }
+
     const saved = localStorage.getItem("kongbab_custom_data");
     if (saved) {
       const parsed = JSON.parse(saved);
       if (parsed && Array.isArray(parsed.categories)) {
-        // 캐시 무결성 검사: 만약 저장된 고유 멤버 수가 146명 미만이거나 정비소(biz-yastation) 인원이 없으면 구버전 캐시로 판별하여 무효화
+        // 캐시 무결성 검사: 만약 저장된 고유 멤버 수가 220명 미만이거나 정비소/갱단 인원이 부족하면 구버전 캐시로 판별하여 무효화
         const cachedMemberSet = new Set();
         let yastationMemberCount = 0;
+        let gangMemberCount = 0;
         parsed.categories.forEach(cat => {
           if (cat.hasSubgroups && Array.isArray(cat.groups)) {
             cat.groups.forEach(g => {
               if (Array.isArray(g.members)) {
                 g.members.forEach(m => { if (m && m.id) cachedMemberSet.add(m.id); });
                 if (g.id === "biz-yastation") yastationMemberCount = g.members.length;
+                if (cat.id === "gang") gangMemberCount += g.members.length;
               }
             });
           } else if (Array.isArray(cat.members)) {
@@ -187,9 +200,20 @@ function loadStoredData() {
           }
         });
 
-        if (cachedMemberSet.size < 146 || yastationMemberCount === 0) {
-          console.log(`[캐시 갱신] 최신 인원(146명) 반영을 위해 구버전 로컬 캐시(인원: ${cachedMemberSet.size}명, 정비소: ${yastationMemberCount}명)를 무효화합니다.`);
+        // 갱단 멤버 중 겸직 연동된 인원(씨랙, 금휘 등)이 갱단 목록에 제대로 포함되어 있는지 검사
+        const hasLinkedGangMembers = parsed.categories.some(cat => {
+          if (cat.id !== "gang" || !Array.isArray(cat.groups)) return false;
+          const nonghyup = cat.groups.find(g => g.id === "gang-nonghyup");
+          const blackrose = cat.groups.find(g => g.id === "gang-blackrose");
+          const hasRack = nonghyup && Array.isArray(nonghyup.members) && nonghyup.members.some(m => m.id === "pol-14");
+          const hasHwi = blackrose && Array.isArray(blackrose.members) && blackrose.members.some(m => m.id === "ems-8");
+          return hasRack && hasHwi;
+        });
+
+        if (cachedMemberSet.size < 220 || yastationMemberCount === 0 || gangMemberCount < 100 || !hasLinkedGangMembers) {
+          console.log(`[캐시 갱신] 최신 겸직 연동 인원 반영을 위해 구버전 로컬 캐시(고유 인원: ${cachedMemberSet.size}명, 갱단: ${gangMemberCount}명)를 무효화합니다.`);
           localStorage.removeItem("kongbab_custom_data");
+          localStorage.setItem("kongbab_data_version", CURRENT_DATA_VERSION);
           return;
         }
 
@@ -224,6 +248,7 @@ function persistData(immediate = false) {
 
   const saveToStorage = () => {
     try {
+      localStorage.setItem("kongbab_data_version", CURRENT_DATA_VERSION);
       localStorage.setItem("kongbab_custom_data", JSON.stringify(KONGBAB_DATA));
     } catch (e) {
       console.error("로컬 캐시 저장 실패", e);

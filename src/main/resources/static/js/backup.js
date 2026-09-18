@@ -193,10 +193,10 @@ function createBackupSnapshot(actionReason = "데이터 변경", showFeedback = 
 
   const totalMembers = uniqueMembers.size;
 
-  // 안전장치: 정상적인 전체 인원 수(146명)보다 비정상적으로 적은 경우(구버전 캐시),
+  // 안전장치: 정상적인 전체 인원 수(240명)보다 비정상적으로 적은 경우(구버전 캐시),
   // 최신 DB 및 backup.json 파일을 구버전으로 덮어쓰지 않도록 백업 스냅샷 저장을 안전하게 차단
-  if (totalMembers < 140) {
-    console.warn(`[백업 스냅샷 차단] 인원 누락 감지 (현재 메모리: ${totalMembers}명 < 정상 기준 146명). 데이터 유실 방지를 위해 서버 덮어쓰기를 차단합니다.`);
+  if (totalMembers < 200) {
+    console.warn(`[백업 스냅샷 차단] 인원 누락 감지 (현재 메모리: ${totalMembers}명 < 정상 기준 240명). 데이터 유실 방지를 위해 서버 덮어쓰기를 차단합니다.`);
     return;
   }
 
