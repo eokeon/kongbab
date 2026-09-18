@@ -133,13 +133,8 @@ function loadAffDataIntoForm(key) {
   const swatContainer = document.getElementById("member-form-swat-container");
   const roleRow = document.getElementById("member-form-role-row");
   if (swatContainer && roleRow) {
-    if (data.category === 'police' || data.category === 'guide' || data.swatRole) {
-      swatContainer.classList.remove("hidden");
-      roleRow.className = "grid grid-cols-1 sm:grid-cols-2 gap-3";
-    } else {
-      swatContainer.classList.add("hidden");
-      roleRow.className = "grid grid-cols-1 gap-3";
-    }
+    swatContainer.classList.remove("hidden");
+    roleRow.className = "grid grid-cols-1 sm:grid-cols-2 gap-3";
   }
 
   // 소속별 설정 힌트 라벨 갱신
@@ -399,19 +394,12 @@ function handleAffiliationCheckboxChange(options = {}) {
     // 탭 바 즉시 렌더링 (겸직 탭 즉시 노출/숨김)
     renderModalAffTabs();
 
-    // 현재 활성 탭의 소속에 맞춰 특공대 및 직위 행 UI 갱신
-    const curAff = _modalAffData[_activeModalAffKey];
-    const isCurPoliceOrGuide = curAff ? (curAff.category === 'police' || curAff.category === 'guide') : (affs[0]?.category === 'police' || affs[0]?.category === 'guide');
+    // 모든 소속에 맞춰 추가 직책 및 직위 행 UI 갱신 (사업체 및 전 소속 지원)
     const swatContainer = document.getElementById("member-form-swat-container");
     const roleRow = document.getElementById("member-form-role-row");
     if (swatContainer && roleRow) {
-      if (isCurPoliceOrGuide) {
-        swatContainer.classList.remove("hidden");
-        roleRow.className = "grid grid-cols-1 sm:grid-cols-2 gap-3";
-      } else {
-        swatContainer.classList.add("hidden");
-        roleRow.className = "grid grid-cols-1 gap-3";
-      }
+      swatContainer.classList.remove("hidden");
+      roleRow.className = "grid grid-cols-1 sm:grid-cols-2 gap-3";
     }
   }
 
@@ -780,9 +768,6 @@ function openMemberModal(mode = 'add', memberId = null, prefillCatId = null, pre
       } else if (rawSwat.includes("사직")) {
         statusVal = "resigned";
         rawSwat = rawSwat.replace(/사직/g, "").replace(/\s*·\s*/g, "").trim();
-      }
-      if (aff.category !== 'police' && aff.category !== 'guide') {
-        rawSwat = "";
       }
 
       // 원래 직업의 직위 상속 금지: aff에 저장된 role만 사용 (미입력 시 공백 유지)

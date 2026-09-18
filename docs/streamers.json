@@ -1,8 +1,8 @@
 {
   "appName": "kongbab-gta-rp",
   "version": "1.0",
-  "createdAt": "2026.09.18 23:08:13",
-  "reason": "구독자/팔로워 수 일괄 갱신 (140명)",
+  "createdAt": "2026.09.18 23:33:01",
+  "reason": "인원 수정: 멍카롱 (멍카롱) - 소속 2개",
   "stats": {
     "totalCategories": 7,
     "totalMembers": 146,
@@ -6781,7 +6781,7 @@
               "swatRole": "",
               "status": "resigned",
               "badgeColor": "bg-zinc-700",
-              "displayOrder": 14
+              "displayOrder": 15
             }
           ],
           "category": "police",
@@ -7952,7 +7952,7 @@
           "status": "active",
           "badgeColor": "bg-cyan-700",
           "avatar": "https://yt3.googleusercontent.com/JK0pnF78dis0aTOFH0IqJxCrR62nF4LNhy5SXCFavwpVWu5sMv48Op6pYNeTU-Hz4SkB4oI1=s120-c-k-c0x00ffffff-no-rj",
-          "displayOrder": 8,
+          "displayOrder": 9,
           "subscriberCount": "15.4만 명",
           "youtubeUrl": "https://www.youtube.com/@앵보",
           "videos": [
@@ -7996,7 +7996,7 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-cyan-700",
-              "displayOrder": 8
+              "displayOrder": 9
             }
           ],
           "category": "business",
@@ -8577,7 +8577,7 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-cyan-700",
-              "displayOrder": 10
+              "displayOrder": 11
             }
           ],
           "category": "police",
@@ -13750,7 +13750,7 @@
                   "swatRole": "",
                   "status": "resigned",
                   "badgeColor": "bg-cyan-700",
-                  "displayOrder": 16
+                  "displayOrder": 17
                 }
               ],
               "category": "gang",
@@ -19896,6 +19896,42 @@
               "subgroup": "biz-yastation"
             },
             {
+              "id": "guide-3",
+              "name": "멍카롱",
+              "streamer": "멍카롱",
+              "role": "",
+              "swatRole": "가이드",
+              "status": "active",
+              "badgeColor": "bg-emerald-600",
+              "avatar": "assets/default-avatar.svg",
+              "displayOrder": 3,
+              "subscriberCount": "",
+              "youtubeUrl": "",
+              "videos": [],
+              "affiliations": [
+                {
+                  "category": "business",
+                  "subgroup": "biz-yastation",
+                  "role": "",
+                  "swatRole": "가이드",
+                  "status": "active",
+                  "badgeColor": "bg-indigo-600",
+                  "displayOrder": 1
+                },
+                {
+                  "category": "guide",
+                  "subgroup": null,
+                  "role": "",
+                  "swatRole": "가이드",
+                  "status": "active",
+                  "badgeColor": "bg-emerald-600",
+                  "displayOrder": 3
+                }
+              ],
+              "category": "guide",
+              "subgroup": null
+            },
+            {
               "id": "biz-yastation-2",
               "name": "강티백",
               "streamer": "김니디",
@@ -19904,7 +19940,7 @@
               "status": "active",
               "badgeColor": "bg-indigo-600",
               "avatar": "https://yt3.googleusercontent.com/CPRp97PvnQftO7rH4AT2Zrej99jRLP35cpaxD1myJenLxjO9_hq3zsg7wwAPE6FcdczteRdx=s160-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 1,
+              "displayOrder": 2,
               "subscriberCount": "1.6만 명",
               "youtubeUrl": "https://www.youtube.com/@Kimnidi",
               "videos": [
@@ -20214,7 +20250,7 @@
                   "swatRole": "",
                   "status": "active",
                   "badgeColor": "bg-indigo-600",
-                  "displayOrder": 1
+                  "displayOrder": 2
                 }
               ],
               "category": "business",
@@ -20229,7 +20265,7 @@
               "status": "active",
               "badgeColor": "bg-indigo-600",
               "avatar": "https://yt3.googleusercontent.com/5nT4pxIS7BFkcXjMrdTK8OUOihvrBtHfYA8llFuumaavyTRNwj7wzq25bpUUo-h8SH5dWlyZ=s160-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 2,
+              "displayOrder": 3,
               "subscriberCount": "3.8만 명",
               "youtubeUrl": "https://www.youtube.com/@ShuHyang_",
               "videos": [
@@ -20440,7 +20476,7 @@
                   "swatRole": "",
                   "status": "active",
                   "badgeColor": "bg-indigo-600",
-                  "displayOrder": 2
+                  "displayOrder": 3
                 }
               ],
               "category": "business",
@@ -20455,7 +20491,7 @@
               "status": "active",
               "badgeColor": "bg-indigo-600",
               "avatar": "https://yt3.googleusercontent.com/FPhTgI6dbbxVCMhAcO6WGL-cjIrpP1kJlfWuJ1LqF2ZgZl4lE3zbYWrJoIKS61f3wWF_H3H4=s160-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 3,
+              "displayOrder": 4,
               "subscriberCount": "31.1만 명",
               "youtubeUrl": "https://www.youtube.com/@YT애플",
               "videos": [
@@ -20787,7 +20823,7 @@
                   "swatRole": "",
                   "status": "active",
                   "badgeColor": "bg-indigo-600",
-                  "displayOrder": 3
+                  "displayOrder": 4
                 }
               ],
               "category": "business",
@@ -20802,7 +20838,7 @@
               "status": "active",
               "badgeColor": "bg-indigo-600",
               "avatar": "https://yt3.googleusercontent.com/vfuBowJPswGuecd7khAkplIJ4oq6k4mg1f_CBhHbzmkXGax_DmDsOjKZuQUd9zn8c7ulQdpkKw=s160-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 4,
+              "displayOrder": 5,
               "subscriberCount": "2,010명",
               "youtubeUrl": "https://www.youtube.com/@wajokenchic2",
               "videos": [
@@ -20980,7 +21016,7 @@
                   "swatRole": "",
                   "status": "active",
                   "badgeColor": "bg-indigo-600",
-                  "displayOrder": 4
+                  "displayOrder": 5
                 }
               ],
               "category": "business",
@@ -20995,7 +21031,7 @@
               "status": "active",
               "badgeColor": "bg-indigo-600",
               "avatar": "https://yt3.googleusercontent.com/-47KDGU-HqW74FhSdgsXFHgchrrn3aYyPcHAylgpOdOTUwo2MENWZsilAi5ATfB2VLrTpQ2e=s160-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 5,
+              "displayOrder": 6,
               "subscriberCount": "4,830명",
               "youtubeUrl": "https://www.youtube.com/@hayoon7",
               "videos": [
@@ -21250,7 +21286,7 @@
                   "swatRole": "",
                   "status": "active",
                   "badgeColor": "bg-indigo-600",
-                  "displayOrder": 5
+                  "displayOrder": 6
                 }
               ],
               "category": "business",
@@ -21265,7 +21301,7 @@
               "status": "active",
               "badgeColor": "bg-indigo-600",
               "avatar": "https://yt3.googleusercontent.com/v_pD4AeggvWglptgIOBzUv8q3RcHOd8gC7rvRlhycC4gTUzEq6WF5atl7rQi0YjWNjSzgwYxDA=s160-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 6,
+              "displayOrder": 7,
               "subscriberCount": "4,660명",
               "youtubeUrl": "https://www.youtube.com/@Shin_0405",
               "videos": [
@@ -21597,7 +21633,7 @@
                   "swatRole": "",
                   "status": "active",
                   "badgeColor": "bg-indigo-600",
-                  "displayOrder": 6
+                  "displayOrder": 7
                 }
               ],
               "category": "business",
@@ -21612,7 +21648,7 @@
               "status": "active",
               "badgeColor": "bg-indigo-600",
               "avatar": "https://yt3.googleusercontent.com/g5B4nAGj-CNQVQEB0ez3O8S-GvTSnZTwTothMj-VrkR4dtx48ma-nkTkqbHgax4T19RZjtWLSw=s160-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 7,
+              "displayOrder": 8,
               "subscriberCount": "2,040명",
               "youtubeUrl": "https://www.youtube.com/@jcw970",
               "videos": [],
@@ -21624,7 +21660,7 @@
                   "swatRole": "",
                   "status": "active",
                   "badgeColor": "bg-indigo-600",
-                  "displayOrder": 7
+                  "displayOrder": 8
                 }
               ],
               "category": "business",
@@ -21639,7 +21675,7 @@
               "status": "active",
               "badgeColor": "bg-cyan-700",
               "avatar": "https://yt3.googleusercontent.com/JK0pnF78dis0aTOFH0IqJxCrR62nF4LNhy5SXCFavwpVWu5sMv48Op6pYNeTU-Hz4SkB4oI1=s120-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 8,
+              "displayOrder": 9,
               "subscriberCount": "15.4만 명",
               "youtubeUrl": "https://www.youtube.com/@앵보",
               "videos": [
@@ -21683,7 +21719,7 @@
                   "swatRole": "",
                   "status": "active",
                   "badgeColor": "bg-cyan-700",
-                  "displayOrder": 8
+                  "displayOrder": 9
                 }
               ],
               "category": "business",
@@ -21698,7 +21734,7 @@
               "status": "active",
               "badgeColor": "bg-cyan-700",
               "avatar": "https://yt3.googleusercontent.com/NMz2AtSaLUGf9UtyRlicmFvVKv26IU3pgcn-oJIvD9bPBgTslKVGRLuANKuIHNDeYEGYWDTxIA=s160-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 9,
+              "displayOrder": 10,
               "subscriberCount": "3,550명",
               "youtubeUrl": "https://www.youtube.com/@otw_Ate",
               "videos": [
@@ -21821,7 +21857,7 @@
                   "swatRole": "",
                   "status": "active",
                   "badgeColor": "bg-cyan-700",
-                  "displayOrder": 9
+                  "displayOrder": 10
                 }
               ],
               "category": "business",
@@ -21979,7 +22015,7 @@
                   "swatRole": "",
                   "status": "active",
                   "badgeColor": "bg-cyan-700",
-                  "displayOrder": 10
+                  "displayOrder": 11
                 }
               ],
               "category": "police",
@@ -21994,7 +22030,7 @@
               "status": "active",
               "badgeColor": "bg-cyan-700",
               "avatar": "https://yt3.googleusercontent.com/d_HbmQfQZmmvliAGOicf7ysMOOiD7IOpA5fs8_KS0EfBNsyXxpcd7QUVo9cyeeDKt-3i_fC9qQ=s160-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 11,
+              "displayOrder": 12,
               "subscriberCount": "3,500명",
               "youtubeUrl": "https://www.youtube.com/@ichikahibi",
               "videos": [
@@ -22095,7 +22131,7 @@
                   "swatRole": "",
                   "status": "active",
                   "badgeColor": "bg-cyan-700",
-                  "displayOrder": 11
+                  "displayOrder": 12
                 }
               ],
               "category": "business",
@@ -22110,7 +22146,7 @@
               "status": "active",
               "badgeColor": "bg-cyan-700",
               "avatar": "https://yt3.googleusercontent.com/BBDY6IS9ghp6nMoAvTReZsA_XgFYM87-gyCThOiw8TAJdXiAhgAtkpdDLkUdZ9AYgOB3Nr5VmWk=s160-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 12,
+              "displayOrder": 13,
               "subscriberCount": "3.7만 명",
               "youtubeUrl": "https://www.youtube.com/@amutal",
               "videos": [],
@@ -22122,7 +22158,7 @@
                   "swatRole": "",
                   "status": "active",
                   "badgeColor": "bg-cyan-700",
-                  "displayOrder": 12
+                  "displayOrder": 13
                 }
               ],
               "category": "business",
@@ -22137,7 +22173,7 @@
               "status": "active",
               "badgeColor": "bg-rose-500",
               "avatar": "https://yt3.googleusercontent.com/t60mDZ_NlRzHVHKXvR_TZyRoAEHGlywbW-o09_a_Py_Q-LhPKzCW1j76b9hFEPznGM4gpnIChA=s160-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 13,
+              "displayOrder": 14,
               "subscriberCount": "1.6만 명",
               "youtubeUrl": "https://www.youtube.com/@timoong",
               "videos": [
@@ -22271,7 +22307,7 @@
                   "swatRole": "",
                   "status": "active",
                   "badgeColor": "bg-rose-500",
-                  "displayOrder": 13
+                  "displayOrder": 14
                 }
               ],
               "category": "business",
@@ -22682,7 +22718,7 @@
                   "swatRole": "",
                   "status": "resigned",
                   "badgeColor": "bg-zinc-700",
-                  "displayOrder": 14
+                  "displayOrder": 15
                 }
               ],
               "category": "police",
@@ -22697,7 +22733,7 @@
               "status": "resigned",
               "badgeColor": "bg-zinc-700",
               "avatar": "https://yt3.googleusercontent.com/fll74-616BY8JBpc7IJqD96sDYA3PzP4bfY58AMBKQRzs5DF83bX2aVR5KOlkvXGzB6jEJjI7Q=s160-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 15,
+              "displayOrder": 16,
               "subscriberCount": "8.2만 명",
               "youtubeUrl": "https://www.youtube.com/@우기잉",
               "videos": [],
@@ -22709,7 +22745,7 @@
                   "swatRole": "",
                   "status": "resigned",
                   "badgeColor": "bg-zinc-700",
-                  "displayOrder": 15
+                  "displayOrder": 16
                 }
               ],
               "category": "business",
@@ -22985,7 +23021,7 @@
                   "swatRole": "",
                   "status": "resigned",
                   "badgeColor": "bg-cyan-700",
-                  "displayOrder": 16
+                  "displayOrder": 17
                 }
               ],
               "category": "gang",
@@ -23612,8 +23648,8 @@
                   "date": "2025.05.31",
                   "duration": "22:17",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/G9QSz_DjYqQ/hqdefault.jpg",
-                  "displayOrder": 0
+                  "displayOrder": 0,
+                  "thumbnailUrl": "https://img.youtube.com/vi/G9QSz_DjYqQ/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708964gve16-1",
@@ -23623,8 +23659,8 @@
                   "date": "2025.06.06",
                   "duration": "17:11",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/Xg1_k3shojs/hqdefault.jpg",
-                  "displayOrder": 1
+                  "displayOrder": 1,
+                  "thumbnailUrl": "https://img.youtube.com/vi/Xg1_k3shojs/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708964zn01u-2",
@@ -23634,8 +23670,8 @@
                   "date": "2025.06.14",
                   "duration": "14:39",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/55eF_L0Hei8/hqdefault.jpg",
-                  "displayOrder": 2
+                  "displayOrder": 2,
+                  "thumbnailUrl": "https://img.youtube.com/vi/55eF_L0Hei8/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708964qfteb-3",
@@ -23645,8 +23681,8 @@
                   "date": "2025.06.22",
                   "duration": "15:02",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/fUBYy9pabOA/hqdefault.jpg",
-                  "displayOrder": 3
+                  "displayOrder": 3,
+                  "thumbnailUrl": "https://img.youtube.com/vi/fUBYy9pabOA/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708964xo7oa-4",
@@ -23656,8 +23692,8 @@
                   "date": "2025.07.02",
                   "duration": "20:50",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/Ld4eqlhAS_Y/hqdefault.jpg",
-                  "displayOrder": 4
+                  "displayOrder": 4,
+                  "thumbnailUrl": "https://img.youtube.com/vi/Ld4eqlhAS_Y/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708964wkhgt-5",
@@ -23667,8 +23703,8 @@
                   "date": "2025.07.11",
                   "duration": "18:27",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/gu0l7q7n9hI/hqdefault.jpg",
-                  "displayOrder": 5
+                  "displayOrder": 5,
+                  "thumbnailUrl": "https://img.youtube.com/vi/gu0l7q7n9hI/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu7089641hrmn-6",
@@ -23678,8 +23714,8 @@
                   "date": "2025.07.31",
                   "duration": "17:45",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/483npb2HOZk/hqdefault.jpg",
-                  "displayOrder": 6
+                  "displayOrder": 6,
+                  "thumbnailUrl": "https://img.youtube.com/vi/483npb2HOZk/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708964xm7df-7",
@@ -23689,8 +23725,8 @@
                   "date": "2025.08.11",
                   "duration": "15:32",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/YcREt0QM_FI/hqdefault.jpg",
-                  "displayOrder": 7
+                  "displayOrder": 7,
+                  "thumbnailUrl": "https://img.youtube.com/vi/YcREt0QM_FI/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oiprvlny-0",
@@ -23700,8 +23736,8 @@
                   "date": "2025.05.29",
                   "duration": "6:18:56",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/epYBcoxAfag/hqdefault.jpg",
-                  "displayOrder": 8
+                  "displayOrder": 8,
+                  "thumbnailUrl": "https://img.youtube.com/vi/epYBcoxAfag/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oip2h65q-1",
@@ -23711,8 +23747,8 @@
                   "date": "2025.05.29",
                   "duration": "13:40:18",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/9dBo-5r_lwc/hqdefault.jpg",
-                  "displayOrder": 9
+                  "displayOrder": 9,
+                  "thumbnailUrl": "https://img.youtube.com/vi/9dBo-5r_lwc/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oipef5lt-2",
@@ -23722,8 +23758,8 @@
                   "date": "2025.05.29",
                   "duration": "1:06:47",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/1x__6duhgZY/hqdefault.jpg",
-                  "displayOrder": 10
+                  "displayOrder": 10,
+                  "thumbnailUrl": "https://img.youtube.com/vi/1x__6duhgZY/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oipc0llf-3",
@@ -23733,8 +23769,8 @@
                   "date": "2025.05.29",
                   "duration": "2:59:36",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/5KTRESZ9Sfc/hqdefault.jpg",
-                  "displayOrder": 11
+                  "displayOrder": 11,
+                  "thumbnailUrl": "https://img.youtube.com/vi/5KTRESZ9Sfc/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oip9ma8l-4",
@@ -23744,8 +23780,8 @@
                   "date": "2025.05.31",
                   "duration": "13:04:12",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/m_J_D2T_T1E/hqdefault.jpg",
-                  "displayOrder": 12
+                  "displayOrder": 12,
+                  "thumbnailUrl": "https://img.youtube.com/vi/m_J_D2T_T1E/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oip3mbl1-5",
@@ -23755,8 +23791,8 @@
                   "date": "2025.05.31",
                   "duration": "10:38:49",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/tGzcyb0U9kg/hqdefault.jpg",
-                  "displayOrder": 13
+                  "displayOrder": 13,
+                  "thumbnailUrl": "https://img.youtube.com/vi/tGzcyb0U9kg/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oipo1jb1-6",
@@ -23766,8 +23802,8 @@
                   "date": "2025.06.05",
                   "duration": "7:46:05",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/4pIZV-RSx4o/hqdefault.jpg",
-                  "displayOrder": 14
+                  "displayOrder": 14,
+                  "thumbnailUrl": "https://img.youtube.com/vi/4pIZV-RSx4o/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oipawcvv-7",
@@ -23777,8 +23813,8 @@
                   "date": "2025.06.05",
                   "duration": "11:15:10",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/y9mIJgw4VtE/hqdefault.jpg",
-                  "displayOrder": 15
+                  "displayOrder": 15,
+                  "thumbnailUrl": "https://img.youtube.com/vi/y9mIJgw4VtE/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oipe9jx6-8",
@@ -23788,8 +23824,8 @@
                   "date": "2025.06.05",
                   "duration": "10:47:29",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/zHPzVvDDtDA/hqdefault.jpg",
-                  "displayOrder": 16
+                  "displayOrder": 16,
+                  "thumbnailUrl": "https://img.youtube.com/vi/zHPzVvDDtDA/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oipcgfmn-9",
@@ -23799,8 +23835,8 @@
                   "date": "2025.06.05",
                   "duration": "10:48:41",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/0vr-KwGFFJI/hqdefault.jpg",
-                  "displayOrder": 17
+                  "displayOrder": 17,
+                  "thumbnailUrl": "https://img.youtube.com/vi/0vr-KwGFFJI/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oipgaupx-10",
@@ -23810,8 +23846,8 @@
                   "date": "2025.06.07",
                   "duration": "6:58:58",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/4AuAn2yg3u8/hqdefault.jpg",
-                  "displayOrder": 18
+                  "displayOrder": 18,
+                  "thumbnailUrl": "https://img.youtube.com/vi/4AuAn2yg3u8/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oipzc4u5-11",
@@ -23821,8 +23857,8 @@
                   "date": "2025.06.07",
                   "duration": "11:58:27",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/b4bNgHewXFQ/hqdefault.jpg",
-                  "displayOrder": 19
+                  "displayOrder": 19,
+                  "thumbnailUrl": "https://img.youtube.com/vi/b4bNgHewXFQ/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oip3xzvx-12",
@@ -23832,8 +23868,8 @@
                   "date": "2025.06.11",
                   "duration": "3:16:56",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/DlceNPUSCE8/hqdefault.jpg",
-                  "displayOrder": 20
+                  "displayOrder": 20,
+                  "thumbnailUrl": "https://img.youtube.com/vi/DlceNPUSCE8/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oip3m32s-13",
@@ -23843,8 +23879,8 @@
                   "date": "2025.06.11",
                   "duration": "2:16:21",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/8Cqnx8_fYik/hqdefault.jpg",
-                  "displayOrder": 21
+                  "displayOrder": 21,
+                  "thumbnailUrl": "https://img.youtube.com/vi/8Cqnx8_fYik/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oip49yis-14",
@@ -23854,8 +23890,8 @@
                   "date": "2025.06.11",
                   "duration": "3:15:17",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/RxJXd2NJ1ag/hqdefault.jpg",
-                  "displayOrder": 22
+                  "displayOrder": 22,
+                  "thumbnailUrl": "https://img.youtube.com/vi/RxJXd2NJ1ag/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oipt0vng-15",
@@ -23865,8 +23901,8 @@
                   "date": "2025.06.11",
                   "duration": "3:56:24",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/6BdAKVyFfas/hqdefault.jpg",
-                  "displayOrder": 23
+                  "displayOrder": 23,
+                  "thumbnailUrl": "https://img.youtube.com/vi/6BdAKVyFfas/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu708oipcqp2k-16",
@@ -23876,8 +23912,8 @@
                   "date": "2025.06.11",
                   "duration": "5:16:05",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/hfZlKA7xd_I/hqdefault.jpg",
-                  "displayOrder": 24
+                  "displayOrder": 24,
+                  "thumbnailUrl": "https://img.youtube.com/vi/hfZlKA7xd_I/hqdefault.jpg"
                 }
               ],
               "affiliations": [
@@ -23941,9 +23977,9 @@
                   "videoType": "full",
                   "date": "2025.06.17",
                   "duration": "9:25:20",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/MnLLJtG30vE/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 0
+                  "displayOrder": 0,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/MnLLJtG30vE/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70czszwkurf-1",
@@ -23952,9 +23988,9 @@
                   "videoType": "full",
                   "date": "2025.06.27",
                   "duration": "6:52:35",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/z79Q4OLHvgI/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 1
+                  "displayOrder": 1,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/z79Q4OLHvgI/mqdefault.jpg"
                 }
               ],
               "affiliations": [
@@ -23991,9 +24027,9 @@
                   "videoType": "clip",
                   "date": "2025.06.06",
                   "duration": "4:24",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/x3hTDHX9yV0/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 0
+                  "displayOrder": 0,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/x3hTDHX9yV0/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70ikznfn0f7-1",
@@ -24002,9 +24038,9 @@
                   "videoType": "clip",
                   "date": "2025.06.10",
                   "duration": "16:31",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/5PfEsjmDQrE/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 1
+                  "displayOrder": 1,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/5PfEsjmDQrE/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70ikznwqayl-2",
@@ -24013,9 +24049,9 @@
                   "videoType": "clip",
                   "date": "2025.06.15",
                   "duration": "18:30",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/PKk36jZwOTI/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 2
+                  "displayOrder": 2,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/PKk36jZwOTI/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70ikznq67zg-3",
@@ -24024,9 +24060,9 @@
                   "videoType": "clip",
                   "date": "2025.06.19",
                   "duration": "11:31",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/pAuiImWM3TM/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 3
+                  "displayOrder": 3,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/pAuiImWM3TM/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70ikzn75xk3-4",
@@ -24035,9 +24071,9 @@
                   "videoType": "clip",
                   "date": "2025.06.22",
                   "duration": "11:17",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/accYQ3xBlgE/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 4
+                  "displayOrder": 4,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/accYQ3xBlgE/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70ikznlxyfr-5",
@@ -24046,9 +24082,9 @@
                   "videoType": "clip",
                   "date": "2025.06.29",
                   "duration": "7:07",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/3Jx1RCGFQXk/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 5
+                  "displayOrder": 5,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/3Jx1RCGFQXk/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70ikznqp1pc-6",
@@ -24057,9 +24093,9 @@
                   "videoType": "clip",
                   "date": "2025.06.14",
                   "duration": "4:35",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/gGVNJgb15B0/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 6
+                  "displayOrder": 6,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/gGVNJgb15B0/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70ikzndo6yy-7",
@@ -24068,9 +24104,9 @@
                   "videoType": "clip",
                   "date": "2025.06.21",
                   "duration": "4:13",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/ihxT2mdsLvo/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 7
+                  "displayOrder": 7,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/ihxT2mdsLvo/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70jl90ivnok-0",
@@ -24079,9 +24115,9 @@
                   "videoType": "full",
                   "date": "2025.05.30",
                   "duration": "9:32:22",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/Js1vcWtOF_g/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 8
+                  "displayOrder": 8,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/Js1vcWtOF_g/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70jl90t296o-1",
@@ -24090,9 +24126,9 @@
                   "videoType": "full",
                   "date": "2025.05.31",
                   "duration": "7:44:49",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/_WSiCwe0fIY/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 9
+                  "displayOrder": 9,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/_WSiCwe0fIY/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70jl906v7df-2",
@@ -24101,9 +24137,9 @@
                   "videoType": "full",
                   "date": "2025.06.03",
                   "duration": "7:50:39",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/2L2oFXbZVaE/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 10
+                  "displayOrder": 10,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/2L2oFXbZVaE/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70jl90lryna-3",
@@ -24112,9 +24148,9 @@
                   "videoType": "full",
                   "date": "2025.06.03",
                   "duration": "7:06:25",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/2_pi8pzvAHg/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 11
+                  "displayOrder": 11,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/2_pi8pzvAHg/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70jl90y3785-4",
@@ -24123,9 +24159,9 @@
                   "videoType": "full",
                   "date": "2025.06.03",
                   "duration": "11:23:47",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/GIxcEqjcfaM/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 12
+                  "displayOrder": 12,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/GIxcEqjcfaM/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70jl90nid2r-5",
@@ -24134,9 +24170,9 @@
                   "videoType": "full",
                   "date": "2025.06.05",
                   "duration": "10:55:31",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/DglFWrIZClw/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 13
+                  "displayOrder": 13,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/DglFWrIZClw/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70jl908adgy-6",
@@ -24145,9 +24181,9 @@
                   "videoType": "full",
                   "date": "2025.06.05",
                   "duration": "3:47:08",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/pwX_AJkIRPM/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 14
+                  "displayOrder": 14,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/pwX_AJkIRPM/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70jl90msr13-7",
@@ -24156,9 +24192,9 @@
                   "videoType": "full",
                   "date": "2025.06.09",
                   "duration": "6:09:58",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/ouGqbXBwa7c/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 15
+                  "displayOrder": 15,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/ouGqbXBwa7c/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70jl90fd4xj-8",
@@ -24167,9 +24203,9 @@
                   "videoType": "full",
                   "date": "2025.06.09",
                   "duration": "10:06:13",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/T3FGUVnodUA/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 16
+                  "displayOrder": 16,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/T3FGUVnodUA/mqdefault.jpg"
                 }
               ],
               "affiliations": [
@@ -24207,8 +24243,8 @@
                   "date": "2025.06.03",
                   "duration": "12:36",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/tIvfAKZmqRs/hqdefault.jpg",
-                  "displayOrder": 0
+                  "displayOrder": 0,
+                  "thumbnailUrl": "https://img.youtube.com/vi/tIvfAKZmqRs/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70kr6ei4kwz-1",
@@ -24218,8 +24254,8 @@
                   "date": "2025.06.07",
                   "duration": "12:28",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/aVj2zwCsN-I/hqdefault.jpg",
-                  "displayOrder": 1
+                  "displayOrder": 1,
+                  "thumbnailUrl": "https://img.youtube.com/vi/aVj2zwCsN-I/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70kr6eyrnah-2",
@@ -24229,8 +24265,8 @@
                   "date": "2025.06.17",
                   "duration": "21:49",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/HlRzBHx6Z-g/hqdefault.jpg",
-                  "displayOrder": 2
+                  "displayOrder": 2,
+                  "thumbnailUrl": "https://img.youtube.com/vi/HlRzBHx6Z-g/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70kr6eyuutl-3",
@@ -24240,8 +24276,8 @@
                   "date": "2025.06.25",
                   "duration": "14:49",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/dFFoFx_2IJI/hqdefault.jpg",
-                  "displayOrder": 3
+                  "displayOrder": 3,
+                  "thumbnailUrl": "https://img.youtube.com/vi/dFFoFx_2IJI/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70kr6ebplle-4",
@@ -24251,8 +24287,8 @@
                   "date": "2025.06.29",
                   "duration": "15:14",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/a8BtZ-x8mzg/hqdefault.jpg",
-                  "displayOrder": 4
+                  "displayOrder": 4,
+                  "thumbnailUrl": "https://img.youtube.com/vi/a8BtZ-x8mzg/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70kr6ew0i0w-5",
@@ -24262,8 +24298,8 @@
                   "date": "2025.07.25",
                   "duration": "3:26",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/1pXl8WCNrLM/hqdefault.jpg",
-                  "displayOrder": 5
+                  "displayOrder": 5,
+                  "thumbnailUrl": "https://img.youtube.com/vi/1pXl8WCNrLM/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70mlgd6rnyc-0",
@@ -24272,9 +24308,9 @@
                   "videoType": "full",
                   "date": "2025.05.25",
                   "duration": "7:47:04",
-                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA1MjZfNyAg/MDAxNzQ4MTg2NzQyMDgw.ndudpKyxZfiOxt7DGu6lesbEblAFxj3fecmZUBig_6Qg.Fig-OxgnaNgomSuWZAVZH1qFs-T40zDExUQ7ALiLZV8g.JPEG/sdsada.jpg?type=o500x280_blur",
                   "description": "",
-                  "displayOrder": 6
+                  "displayOrder": 6,
+                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA1MjZfNyAg/MDAxNzQ4MTg2NzQyMDgw.ndudpKyxZfiOxt7DGu6lesbEblAFxj3fecmZUBig_6Qg.Fig-OxgnaNgomSuWZAVZH1qFs-T40zDExUQ7ALiLZV8g.JPEG/sdsada.jpg?type=o500x280_blur"
                 },
                 {
                   "id": "v-mu70mlgdlzqk0-1",
@@ -24283,9 +24319,9 @@
                   "videoType": "full",
                   "date": "2025.06.01",
                   "duration": "11:32:13",
-                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA2MDJfMTE5/MDAxNzQ4ODMwODk5NTUx.Yk3hbmMwFCyI88kz1yKJ1vioWfzEpIsQUnLjPjS6mTcg.p9EdgGzRWj9esCeWRHhP_mtJkKcTNTMwTs20RAUpPgUg.JPEG/111111.jpg?type=o500x280_blur",
                   "description": "",
-                  "displayOrder": 7
+                  "displayOrder": 7,
+                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA2MDJfMTE5/MDAxNzQ4ODMwODk5NTUx.Yk3hbmMwFCyI88kz1yKJ1vioWfzEpIsQUnLjPjS6mTcg.p9EdgGzRWj9esCeWRHhP_mtJkKcTNTMwTs20RAUpPgUg.JPEG/111111.jpg?type=o500x280_blur"
                 },
                 {
                   "id": "v-mu70mlgdran33-2",
@@ -24294,9 +24330,9 @@
                   "videoType": "full",
                   "date": "2025.06.01",
                   "duration": "5:03:49",
-                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA2MDJfMjQ1/MDAxNzQ4ODMxMTg0NzY3.25-N6UC9A2M-9Yg53_FLUZwJXwD9HoqgRmZ30TRJx2gg.ev1W7AyhoJOKiQ65SsWc6NgI2cQYUnDzdYI4CyQhsGQg.JPEG/sddaa.jpg?type=o500x280_blur",
                   "description": "",
-                  "displayOrder": 8
+                  "displayOrder": 8,
+                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA2MDJfMjQ1/MDAxNzQ4ODMxMTg0NzY3.25-N6UC9A2M-9Yg53_FLUZwJXwD9HoqgRmZ30TRJx2gg.ev1W7AyhoJOKiQ65SsWc6NgI2cQYUnDzdYI4CyQhsGQg.JPEG/sddaa.jpg?type=o500x280_blur"
                 },
                 {
                   "id": "v-mu70mlgdmtb5c-3",
@@ -24305,9 +24341,9 @@
                   "videoType": "full",
                   "date": "2025.06.03",
                   "duration": "4:20:14",
-                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA2MDVfMTYy/MDAxNzQ5MTE2ODEzMzIz.5nqRVHwoS757HMr3vZCdPWV5QFI24KxlzJYax7uKOyYg.YRieLFNsA0OnC5GEPKZbQvvassmpPS9KTGGS-RNYwG8g.JPEG/dsada.jpg?type=o500x280_blur",
                   "description": "",
-                  "displayOrder": 9
+                  "displayOrder": 9,
+                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA2MDVfMTYy/MDAxNzQ5MTE2ODEzMzIz.5nqRVHwoS757HMr3vZCdPWV5QFI24KxlzJYax7uKOyYg.YRieLFNsA0OnC5GEPKZbQvvassmpPS9KTGGS-RNYwG8g.JPEG/dsada.jpg?type=o500x280_blur"
                 },
                 {
                   "id": "v-mu70mlgdm2ymt-4",
@@ -24316,9 +24352,9 @@
                   "videoType": "full",
                   "date": "2025.06.04",
                   "duration": "11:23:31",
-                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA2MDVfMTM1/MDAxNzQ5MTE3MjcyNTE3.PzKvQBRPHFjcuLUFc1kKqTv1KjdIioD-tfJWouZyH6Eg.edrta8NbCuYMgq4Ecznka70NTMPUEy6P1nH1hozX6-gg.JPEG/fssdaf111111.jpg?type=o500x280_blur",
                   "description": "",
-                  "displayOrder": 10
+                  "displayOrder": 10,
+                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA2MDVfMTM1/MDAxNzQ5MTE3MjcyNTE3.PzKvQBRPHFjcuLUFc1kKqTv1KjdIioD-tfJWouZyH6Eg.edrta8NbCuYMgq4Ecznka70NTMPUEy6P1nH1hozX6-gg.JPEG/fssdaf111111.jpg?type=o500x280_blur"
                 },
                 {
                   "id": "v-mu70mlgdy3hc8-5",
@@ -24327,9 +24363,9 @@
                   "videoType": "full",
                   "date": "2025.06.05",
                   "duration": "11:59:02",
-                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA2MDVfNTQg/MDAxNzQ5MTE3MjA4ODI0.EpfU7UYiMSIONUwbbEBuNp2tw6ed3vasrawhkq72nSkg.Gt5li1LSy3pPj9ATRTzk6_i1mEpWWRCMjmxqDbRhStEg.JPEG/fdsfssf.jpg?type=o500x280_blur",
                   "description": "",
-                  "displayOrder": 11
+                  "displayOrder": 11,
+                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA2MDVfNTQg/MDAxNzQ5MTE3MjA4ODI0.EpfU7UYiMSIONUwbbEBuNp2tw6ed3vasrawhkq72nSkg.Gt5li1LSy3pPj9ATRTzk6_i1mEpWWRCMjmxqDbRhStEg.JPEG/fdsfssf.jpg?type=o500x280_blur"
                 },
                 {
                   "id": "v-mu70mlgdbtrwv-6",
@@ -24338,9 +24374,9 @@
                   "videoType": "full",
                   "date": "2025.06.07",
                   "duration": "13:36:58",
-                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA2MDhfMTcz/MDAxNzQ5MzIyMjMxOTE0.xRYAaYkO9Qb5YxJ9mUAN17lugH7T0q1NCn0PA4VajNMg.l7lV0w-7wxa3N3MxArKPalzDpMkA49gOjufRV_Prwuwg.JPEG/dsadaa.jpg?type=o500x280_blur",
                   "description": "",
-                  "displayOrder": 12
+                  "displayOrder": 12,
+                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA2MDhfMTcz/MDAxNzQ5MzIyMjMxOTE0.xRYAaYkO9Qb5YxJ9mUAN17lugH7T0q1NCn0PA4VajNMg.l7lV0w-7wxa3N3MxArKPalzDpMkA49gOjufRV_Prwuwg.JPEG/dsadaa.jpg?type=o500x280_blur"
                 },
                 {
                   "id": "v-mu70mlgd2bnfg-7",
@@ -24349,9 +24385,9 @@
                   "videoType": "full",
                   "date": "2025.06.08",
                   "duration": "5:56:30",
-                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA2MDhfMTY2/MDAxNzQ5MzIyOTEyMjA2.XwdLX4Q2yJhJ5TsOCIRyHrIosLTS_Q1ZoVxOUIKVXaUg.hJuvVUJOcqFPyfcEa3mJNjhfkDAiliuIKCcMbtSq5ecg.JPEG/fdfad.jpg?type=o500x280_blur",
                   "description": "",
-                  "displayOrder": 13
+                  "displayOrder": 13,
+                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA2MDhfMTY2/MDAxNzQ5MzIyOTEyMjA2.XwdLX4Q2yJhJ5TsOCIRyHrIosLTS_Q1ZoVxOUIKVXaUg.hJuvVUJOcqFPyfcEa3mJNjhfkDAiliuIKCcMbtSq5ecg.JPEG/fdfad.jpg?type=o500x280_blur"
                 },
                 {
                   "id": "v-mu70mlgdbhrh9-8",
@@ -24360,9 +24396,9 @@
                   "videoType": "full",
                   "date": "2025.06.09",
                   "duration": "9:10:33",
-                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA2MDlfMjMz/MDAxNzQ5NDcyMjcyNzU4.sxi64bvmYvLGAgDFWFV-pG375LIOnECIeuH6aLMkOKAg.uV3XKQYN7fBBKYHxssfl_a9tNnjmoSHqTvNpDEfCoJ4g.JPEG/11112222222.jpg?type=o500x280_blur",
                   "description": "",
-                  "displayOrder": 14
+                  "displayOrder": 14,
+                  "thumbnailUrl": "https://nng-phinf.pstatic.net/MjAyNTA2MDlfMjMz/MDAxNzQ5NDcyMjcyNzU4.sxi64bvmYvLGAgDFWFV-pG375LIOnECIeuH6aLMkOKAg.uV3XKQYN7fBBKYHxssfl_a9tNnjmoSHqTvNpDEfCoJ4g.JPEG/11112222222.jpg?type=o500x280_blur"
                 }
               ],
               "affiliations": [
@@ -24952,8 +24988,8 @@
                   "date": "2025.06.03",
                   "duration": "4:14",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/_51rkwlNB8A/hqdefault.jpg",
-                  "displayOrder": 0
+                  "displayOrder": 0,
+                  "thumbnailUrl": "https://img.youtube.com/vi/_51rkwlNB8A/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70sdgvke47e-1",
@@ -24963,8 +24999,8 @@
                   "date": "2025.06.12",
                   "duration": "14:13",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/n_S5NLyh-As/hqdefault.jpg",
-                  "displayOrder": 1
+                  "displayOrder": 1,
+                  "thumbnailUrl": "https://img.youtube.com/vi/n_S5NLyh-As/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70sdgvm6aem-2",
@@ -24974,8 +25010,8 @@
                   "date": "2025.06.17",
                   "duration": "10:05",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/hlF09LVWB4U/hqdefault.jpg",
-                  "displayOrder": 2
+                  "displayOrder": 2,
+                  "thumbnailUrl": "https://img.youtube.com/vi/hlF09LVWB4U/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70sdgvpz3y7-3",
@@ -24985,8 +25021,8 @@
                   "date": "2025.06.21",
                   "duration": "13:56",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/cM7JXtNbQW4/hqdefault.jpg",
-                  "displayOrder": 3
+                  "displayOrder": 3,
+                  "thumbnailUrl": "https://img.youtube.com/vi/cM7JXtNbQW4/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70sdgv99zd3-4",
@@ -24996,8 +25032,8 @@
                   "date": "2025.07.15",
                   "duration": "14:17",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/_h_H90MEzXo/hqdefault.jpg",
-                  "displayOrder": 4
+                  "displayOrder": 4,
+                  "thumbnailUrl": "https://img.youtube.com/vi/_h_H90MEzXo/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70sdgvda8zp-5",
@@ -25007,8 +25043,8 @@
                   "date": "2025.07.18",
                   "duration": "13:34",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/i3uBZi-7HHU/hqdefault.jpg",
-                  "displayOrder": 5
+                  "displayOrder": 5,
+                  "thumbnailUrl": "https://img.youtube.com/vi/i3uBZi-7HHU/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70sdgvlsbk3-6",
@@ -25018,8 +25054,8 @@
                   "date": "2025.07.23",
                   "duration": "14:00",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/vgRbJdA-uBo/hqdefault.jpg",
-                  "displayOrder": 6
+                  "displayOrder": 6,
+                  "thumbnailUrl": "https://img.youtube.com/vi/vgRbJdA-uBo/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70sdgv9ccg9-7",
@@ -25029,8 +25065,8 @@
                   "date": "2025.07.25",
                   "duration": "21:56",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/qB6RkKAVYRU/hqdefault.jpg",
-                  "displayOrder": 7
+                  "displayOrder": 7,
+                  "thumbnailUrl": "https://img.youtube.com/vi/qB6RkKAVYRU/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70sdgvdqqmr-8",
@@ -25040,8 +25076,8 @@
                   "date": "2025.10.06",
                   "duration": "15:09",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/SZF1j9ydSm4/hqdefault.jpg",
-                  "displayOrder": 8
+                  "displayOrder": 8,
+                  "thumbnailUrl": "https://img.youtube.com/vi/SZF1j9ydSm4/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70sdgvqcw4y-9",
@@ -25051,8 +25087,8 @@
                   "date": "2025.11.02",
                   "duration": "19:21",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/goVUrmhvI7k/hqdefault.jpg",
-                  "displayOrder": 9
+                  "displayOrder": 9,
+                  "thumbnailUrl": "https://img.youtube.com/vi/goVUrmhvI7k/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70sdgv9c9kr-10",
@@ -25062,8 +25098,8 @@
                   "date": "2025.12.19",
                   "duration": "18:46",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/5ed9WT1Dygs/hqdefault.jpg",
-                  "displayOrder": 10
+                  "displayOrder": 10,
+                  "thumbnailUrl": "https://img.youtube.com/vi/5ed9WT1Dygs/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70sdgvx2kio-11",
@@ -25073,8 +25109,8 @@
                   "date": "2026.01.19",
                   "duration": "17:16",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/EI7ff7xmyjc/hqdefault.jpg",
-                  "displayOrder": 11
+                  "displayOrder": 11,
+                  "thumbnailUrl": "https://img.youtube.com/vi/EI7ff7xmyjc/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70tst97lt3i-0",
@@ -25083,9 +25119,9 @@
                   "videoType": "full",
                   "date": "2025.10.02",
                   "duration": "10:59:09",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/6qkdVIHt3Iw/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 12
+                  "displayOrder": 12,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/6qkdVIHt3Iw/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70tst94tgyf-1",
@@ -25094,9 +25130,9 @@
                   "videoType": "full",
                   "date": "2025.10.02",
                   "duration": "4:10:07",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/O-I86d_F8AQ/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 13
+                  "displayOrder": 13,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/O-I86d_F8AQ/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70tst9jjwp0-2",
@@ -25105,9 +25141,9 @@
                   "videoType": "full",
                   "date": "2025.10.02",
                   "duration": "2:29:36",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/kx7mhVkdhVw/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 14
+                  "displayOrder": 14,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/kx7mhVkdhVw/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70tst95r8bb-3",
@@ -25116,9 +25152,9 @@
                   "videoType": "full",
                   "date": "2025.10.02",
                   "duration": "3:31:07",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/oHUftI7UHhI/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 15
+                  "displayOrder": 15,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/oHUftI7UHhI/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70tst9fhk4k-4",
@@ -25127,9 +25163,9 @@
                   "videoType": "full",
                   "date": "2025.10.02",
                   "duration": "3:56:42",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/foaQUCnJhN8/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 16
+                  "displayOrder": 16,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/foaQUCnJhN8/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70tst9730ft-5",
@@ -25138,9 +25174,9 @@
                   "videoType": "full",
                   "date": "2025.10.02",
                   "duration": "8:18:12",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/s6RL3g3M5GM/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 17
+                  "displayOrder": 17,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/s6RL3g3M5GM/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70tst9kz4ms-6",
@@ -25149,9 +25185,9 @@
                   "videoType": "full",
                   "date": "2025.10.02",
                   "duration": "4:47:38",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/I-DhasBBmG8/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 18
+                  "displayOrder": 18,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/I-DhasBBmG8/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70tst9lzd0g-7",
@@ -25160,9 +25196,9 @@
                   "videoType": "full",
                   "date": "2025.10.02",
                   "duration": "9:27:14",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/bopVugx5VUY/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 19
+                  "displayOrder": 19,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/bopVugx5VUY/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70tst9yvko0-8",
@@ -25171,9 +25207,9 @@
                   "videoType": "full",
                   "date": "2025.10.02",
                   "duration": "4:12:13",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/XRY5ui60mPY/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 20
+                  "displayOrder": 20,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/XRY5ui60mPY/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70tst9t0ehg-9",
@@ -25182,9 +25218,9 @@
                   "videoType": "full",
                   "date": "2025.10.02",
                   "duration": "10:28:18",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/2ioCDH0_UFo/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 21
+                  "displayOrder": 21,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/2ioCDH0_UFo/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70tst9e9qh0-10",
@@ -25193,9 +25229,9 @@
                   "videoType": "full",
                   "date": "2025.10.02",
                   "duration": "10:01:23",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/v0ePNaEKefc/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 22
+                  "displayOrder": 22,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/v0ePNaEKefc/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70tst9i51m2-11",
@@ -25204,9 +25240,9 @@
                   "videoType": "full",
                   "date": "2025.10.03",
                   "duration": "9:51:45",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/wqX1bdqgYgA/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 23
+                  "displayOrder": 23,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/wqX1bdqgYgA/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu70tst9ps417-12",
@@ -25215,9 +25251,9 @@
                   "videoType": "full",
                   "date": "2025.10.03",
                   "duration": "11:02:39",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/VHoUSY5gq9o/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 24
+                  "displayOrder": 24,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/VHoUSY5gq9o/mqdefault.jpg"
                 }
               ],
               "affiliations": [
@@ -25608,8 +25644,8 @@
                   "date": "2025.07.05",
                   "duration": "12:45",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/v-cF5UeYWt0/hqdefault.jpg",
-                  "displayOrder": 0
+                  "displayOrder": 0,
+                  "thumbnailUrl": "https://img.youtube.com/vi/v-cF5UeYWt0/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70xbidx33z1-1",
@@ -25619,8 +25655,8 @@
                   "date": "2025.07.12",
                   "duration": "12:27",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/n6MtvJmgqNo/hqdefault.jpg",
-                  "displayOrder": 1
+                  "displayOrder": 1,
+                  "thumbnailUrl": "https://img.youtube.com/vi/n6MtvJmgqNo/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70xbidbzce1-2",
@@ -25630,8 +25666,8 @@
                   "date": "2025.07.19",
                   "duration": "8:35",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/CZwK3-BDvDE/hqdefault.jpg",
-                  "displayOrder": 2
+                  "displayOrder": 2,
+                  "thumbnailUrl": "https://img.youtube.com/vi/CZwK3-BDvDE/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70xbid81v0e-3",
@@ -25641,8 +25677,8 @@
                   "date": "2025.08.02",
                   "duration": "12:15",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/SIoM8HHBE_A/hqdefault.jpg",
-                  "displayOrder": 3
+                  "displayOrder": 3,
+                  "thumbnailUrl": "https://img.youtube.com/vi/SIoM8HHBE_A/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70xbid2qvc9-4",
@@ -25652,8 +25688,8 @@
                   "date": "2025.08.09",
                   "duration": "14:37",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/DDKsA44Sr1U/hqdefault.jpg",
-                  "displayOrder": 4
+                  "displayOrder": 4,
+                  "thumbnailUrl": "https://img.youtube.com/vi/DDKsA44Sr1U/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70xbid9xqip-5",
@@ -25663,8 +25699,8 @@
                   "date": "2025.08.23",
                   "duration": "15:11",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/GUg0jsIEH34/hqdefault.jpg",
-                  "displayOrder": 5
+                  "displayOrder": 5,
+                  "thumbnailUrl": "https://img.youtube.com/vi/GUg0jsIEH34/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70xbid0ljkd-6",
@@ -25674,8 +25710,8 @@
                   "date": "2025.09.06",
                   "duration": "17:58",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/B1uAS1jw_nM/hqdefault.jpg",
-                  "displayOrder": 6
+                  "displayOrder": 6,
+                  "thumbnailUrl": "https://img.youtube.com/vi/B1uAS1jw_nM/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70xbiduaii8-7",
@@ -25685,8 +25721,8 @@
                   "date": "2025.09.13",
                   "duration": "21:49",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/I1WrnM9PacU/hqdefault.jpg",
-                  "displayOrder": 7
+                  "displayOrder": 7,
+                  "thumbnailUrl": "https://img.youtube.com/vi/I1WrnM9PacU/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70xbidp3t32-8",
@@ -25696,8 +25732,8 @@
                   "date": "2025.09.27",
                   "duration": "16:04",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/sR44qto1y2Y/hqdefault.jpg",
-                  "displayOrder": 8
+                  "displayOrder": 8,
+                  "thumbnailUrl": "https://img.youtube.com/vi/sR44qto1y2Y/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70xbidv3t6j-9",
@@ -25707,8 +25743,8 @@
                   "date": "2025.10.05",
                   "duration": "14:54",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/3SdTm_IEFKY/hqdefault.jpg",
-                  "displayOrder": 9
+                  "displayOrder": 9,
+                  "thumbnailUrl": "https://img.youtube.com/vi/3SdTm_IEFKY/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70xbidvyw86-10",
@@ -25718,8 +25754,8 @@
                   "date": "2025.10.11",
                   "duration": "15:21",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/KNjLNBZaHjo/hqdefault.jpg",
-                  "displayOrder": 10
+                  "displayOrder": 10,
+                  "thumbnailUrl": "https://img.youtube.com/vi/KNjLNBZaHjo/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70xbidk6df8-11",
@@ -25729,8 +25765,8 @@
                   "date": "2025.11.01",
                   "duration": "18:04",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/QLioadrx-uQ/hqdefault.jpg",
-                  "displayOrder": 11
+                  "displayOrder": 11,
+                  "thumbnailUrl": "https://img.youtube.com/vi/QLioadrx-uQ/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70xbid5hp3z-12",
@@ -25740,8 +25776,8 @@
                   "date": "2025.11.22",
                   "duration": "16:10",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/wg6oyhgyn4g/hqdefault.jpg",
-                  "displayOrder": 12
+                  "displayOrder": 12,
+                  "thumbnailUrl": "https://img.youtube.com/vi/wg6oyhgyn4g/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70xbid5i0yb-13",
@@ -25751,8 +25787,8 @@
                   "date": "2025.11.29",
                   "duration": "14:08",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/bYIWo2nOACE/hqdefault.jpg",
-                  "displayOrder": 13
+                  "displayOrder": 13,
+                  "thumbnailUrl": "https://img.youtube.com/vi/bYIWo2nOACE/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70xbid0i1t1-14",
@@ -25762,8 +25798,8 @@
                   "date": "2025.12.06",
                   "duration": "17:26",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/RKesHMMOStY/hqdefault.jpg",
-                  "displayOrder": 14
+                  "displayOrder": 14,
+                  "thumbnailUrl": "https://img.youtube.com/vi/RKesHMMOStY/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70yi9hkkh59-0",
@@ -25773,8 +25809,8 @@
                   "date": "2025.06.01",
                   "duration": "6:01:39",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/yyXJBDCJIJg/hqdefault.jpg",
-                  "displayOrder": 15
+                  "displayOrder": 15,
+                  "thumbnailUrl": "https://img.youtube.com/vi/yyXJBDCJIJg/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70yi9hlvl7e-1",
@@ -25784,8 +25820,8 @@
                   "date": "2025.06.07",
                   "duration": "7:41:39",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/vyrYhcKXCig/hqdefault.jpg",
-                  "displayOrder": 16
+                  "displayOrder": 16,
+                  "thumbnailUrl": "https://img.youtube.com/vi/vyrYhcKXCig/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70yi9hg53xh-2",
@@ -25795,8 +25831,8 @@
                   "date": "2025.06.09",
                   "duration": "2:21:49",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/UZ-TnSRhis0/hqdefault.jpg",
-                  "displayOrder": 17
+                  "displayOrder": 17,
+                  "thumbnailUrl": "https://img.youtube.com/vi/UZ-TnSRhis0/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70yi9hxsp5f-3",
@@ -25806,8 +25842,8 @@
                   "date": "2025.06.13",
                   "duration": "5:22:08",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/-BGs5W6lE7Q/hqdefault.jpg",
-                  "displayOrder": 18
+                  "displayOrder": 18,
+                  "thumbnailUrl": "https://img.youtube.com/vi/-BGs5W6lE7Q/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70yi9h5vxzc-4",
@@ -25817,8 +25853,8 @@
                   "date": "2025.06.13",
                   "duration": "5:53:26",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/3VAhQmAEDb8/hqdefault.jpg",
-                  "displayOrder": 19
+                  "displayOrder": 19,
+                  "thumbnailUrl": "https://img.youtube.com/vi/3VAhQmAEDb8/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70yi9hawiaz-5",
@@ -25828,8 +25864,8 @@
                   "date": "2025.06.19",
                   "duration": "9:00:02",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/y5LUB_J6tps/hqdefault.jpg",
-                  "displayOrder": 20
+                  "displayOrder": 20,
+                  "thumbnailUrl": "https://img.youtube.com/vi/y5LUB_J6tps/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70yi9hv7ic6-6",
@@ -25839,8 +25875,8 @@
                   "date": "2025.06.24",
                   "duration": "9:36:04",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/lu4B-YtfJRA/hqdefault.jpg",
-                  "displayOrder": 21
+                  "displayOrder": 21,
+                  "thumbnailUrl": "https://img.youtube.com/vi/lu4B-YtfJRA/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70yi9hd9j0r-7",
@@ -25850,8 +25886,8 @@
                   "date": "2025.06.25",
                   "duration": "9:59:18",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/1lHdq71IC_s/hqdefault.jpg",
-                  "displayOrder": 22
+                  "displayOrder": 22,
+                  "thumbnailUrl": "https://img.youtube.com/vi/1lHdq71IC_s/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70yi9hxp7su-8",
@@ -25861,8 +25897,8 @@
                   "date": "2025.06.28",
                   "duration": "9:04:39",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/qgUjpmvb9h4/hqdefault.jpg",
-                  "displayOrder": 23
+                  "displayOrder": 23,
+                  "thumbnailUrl": "https://img.youtube.com/vi/qgUjpmvb9h4/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70yi9ht6ty7-9",
@@ -25872,8 +25908,8 @@
                   "date": "2025.06.28",
                   "duration": "9:21:29",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/IthUcznJJWc/hqdefault.jpg",
-                  "displayOrder": 24
+                  "displayOrder": 24,
+                  "thumbnailUrl": "https://img.youtube.com/vi/IthUcznJJWc/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70yi9hamshl-10",
@@ -25883,8 +25919,8 @@
                   "date": "2025.07.01",
                   "duration": "9:56:45",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/WM0JRwjqGgA/hqdefault.jpg",
-                  "displayOrder": 25
+                  "displayOrder": 25,
+                  "thumbnailUrl": "https://img.youtube.com/vi/WM0JRwjqGgA/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70yi9hiod2a-11",
@@ -25894,8 +25930,8 @@
                   "date": "2025.07.01",
                   "duration": "9:28:23",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/KhioCMWJOiU/hqdefault.jpg",
-                  "displayOrder": 26
+                  "displayOrder": 26,
+                  "thumbnailUrl": "https://img.youtube.com/vi/KhioCMWJOiU/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70yi9h02qwf-12",
@@ -25905,8 +25941,8 @@
                   "date": "2025.07.07",
                   "duration": "6:30:32",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/sSRRxYDRUaw/hqdefault.jpg",
-                  "displayOrder": 27
+                  "displayOrder": 27,
+                  "thumbnailUrl": "https://img.youtube.com/vi/sSRRxYDRUaw/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70yi9h4gufd-13",
@@ -25916,8 +25952,8 @@
                   "date": "2025.07.09",
                   "duration": "6:13:24",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/_1tkyKziKYk/hqdefault.jpg",
-                  "displayOrder": 28
+                  "displayOrder": 28,
+                  "thumbnailUrl": "https://img.youtube.com/vi/_1tkyKziKYk/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70yi9h2r0vv-14",
@@ -25927,8 +25963,8 @@
                   "date": "2025.07.11",
                   "duration": "11:16:32",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/wJMRtGTMRd0/hqdefault.jpg",
-                  "displayOrder": 29
+                  "displayOrder": 29,
+                  "thumbnailUrl": "https://img.youtube.com/vi/wJMRtGTMRd0/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70yi9h9dfym-15",
@@ -25938,8 +25974,8 @@
                   "date": "2025.07.28",
                   "duration": "7:28:17",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/JEs50bsURWM/hqdefault.jpg",
-                  "displayOrder": 30
+                  "displayOrder": 30,
+                  "thumbnailUrl": "https://img.youtube.com/vi/JEs50bsURWM/hqdefault.jpg"
                 }
               ],
               "affiliations": [
@@ -25977,8 +26013,8 @@
                   "date": "2025.11.08",
                   "duration": "9:13",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/7upVLgBBOKM/hqdefault.jpg",
-                  "displayOrder": 0
+                  "displayOrder": 0,
+                  "thumbnailUrl": "https://img.youtube.com/vi/7upVLgBBOKM/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70zmjqdmhxv-1",
@@ -25988,8 +26024,8 @@
                   "date": "2025.11.22",
                   "duration": "12:18",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/jS0jAX7o0B8/hqdefault.jpg",
-                  "displayOrder": 1
+                  "displayOrder": 1,
+                  "thumbnailUrl": "https://img.youtube.com/vi/jS0jAX7o0B8/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu70zmjqlnxcu-2",
@@ -25999,8 +26035,8 @@
                   "date": "2025.12.07",
                   "duration": "10:51",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/wbqwvr8C1Wg/hqdefault.jpg",
-                  "displayOrder": 2
+                  "displayOrder": 2,
+                  "thumbnailUrl": "https://img.youtube.com/vi/wbqwvr8C1Wg/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu714ys6fhme3-0",
@@ -26009,9 +26045,9 @@
                   "videoType": "full",
                   "date": "2025.06.26",
                   "duration": "6:58:31",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/q-UDYGtpE5I/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 3
+                  "displayOrder": 3,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/q-UDYGtpE5I/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu714ys6eb6id-1",
@@ -26020,9 +26056,9 @@
                   "videoType": "full",
                   "date": "2025.06.26",
                   "duration": "3:36:37",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/LYB3wGnrRAc/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 4
+                  "displayOrder": 4,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/LYB3wGnrRAc/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu714ys65486j-2",
@@ -26031,9 +26067,9 @@
                   "videoType": "full",
                   "date": "2025.06.26",
                   "duration": "3:35:59",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/Oc3LuZQ7dAM/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 5
+                  "displayOrder": 5,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/Oc3LuZQ7dAM/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu714ys6fxmk6-3",
@@ -26042,9 +26078,9 @@
                   "videoType": "full",
                   "date": "2025.06.26",
                   "duration": "9:34:47",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/_Xt5HVTUgPE/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 6
+                  "displayOrder": 6,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/_Xt5HVTUgPE/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu714ys6k2izx-4",
@@ -26053,9 +26089,9 @@
                   "videoType": "full",
                   "date": "2025.06.26",
                   "duration": "11:54:54",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/UegvxEbXImc/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 7
+                  "displayOrder": 7,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/UegvxEbXImc/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu714ys6sg3t6-5",
@@ -26064,9 +26100,9 @@
                   "videoType": "full",
                   "date": "2025.06.26",
                   "duration": "34:26",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/GJRb6-ZOYFY/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 8
+                  "displayOrder": 8,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/GJRb6-ZOYFY/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu714ys67griu-6",
@@ -26075,9 +26111,9 @@
                   "videoType": "full",
                   "date": "2025.06.26",
                   "duration": "10:48:53",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/fHtjETVBGWU/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 9
+                  "displayOrder": 9,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/fHtjETVBGWU/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu714ys6aflly-7",
@@ -26086,9 +26122,9 @@
                   "videoType": "full",
                   "date": "2025.06.26",
                   "duration": "1:36:24",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/JnJxXkgSQuk/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 10
+                  "displayOrder": 10,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/JnJxXkgSQuk/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu714ys6h92mh-8",
@@ -26097,9 +26133,9 @@
                   "videoType": "full",
                   "date": "2025.06.26",
                   "duration": "7:39:03",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/blr8jRilgRs/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 11
+                  "displayOrder": 11,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/blr8jRilgRs/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu714ys6jn5u3-9",
@@ -26108,9 +26144,9 @@
                   "videoType": "full",
                   "date": "2025.06.26",
                   "duration": "9:15:22",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/Px5teCWA0EI/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 12
+                  "displayOrder": 12,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/Px5teCWA0EI/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu714ys6txgbi-10",
@@ -26119,9 +26155,9 @@
                   "videoType": "full",
                   "date": "2025.06.26",
                   "duration": "11:14:17",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/MyhohSDOnJk/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 13
+                  "displayOrder": 13,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/MyhohSDOnJk/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu714ys6nd8lp-11",
@@ -26130,9 +26166,9 @@
                   "videoType": "full",
                   "date": "2025.06.26",
                   "duration": "9:55:46",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/uRAG2JQdnqw/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 14
+                  "displayOrder": 14,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/uRAG2JQdnqw/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu714ys6r4fq4-12",
@@ -26141,9 +26177,9 @@
                   "videoType": "full",
                   "date": "2025.06.26",
                   "duration": "6:03:01",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/VpYladaqjKA/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 15
+                  "displayOrder": 15,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/VpYladaqjKA/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu714ys6cojt4-13",
@@ -26152,9 +26188,9 @@
                   "videoType": "full",
                   "date": "2025.06.26",
                   "duration": "8:29:22",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/2h5eBjF1GZs/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 16
+                  "displayOrder": 16,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/2h5eBjF1GZs/mqdefault.jpg"
                 },
                 {
                   "id": "v-mu714ys6ocnh1-14",
@@ -26163,9 +26199,9 @@
                   "videoType": "full",
                   "date": "2025.06.26",
                   "duration": "8:30:41",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/xzPImVhDEX8/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 17
+                  "displayOrder": 17,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/xzPImVhDEX8/mqdefault.jpg"
                 }
               ],
               "affiliations": [
@@ -26230,8 +26266,8 @@
                   "date": "2025.07.24",
                   "duration": "13:13",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/kN_KqsSxS2Q/hqdefault.jpg",
-                  "displayOrder": 0
+                  "displayOrder": 0,
+                  "thumbnailUrl": "https://img.youtube.com/vi/kN_KqsSxS2Q/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu718fo75gzwe-1",
@@ -26241,8 +26277,8 @@
                   "date": "2025.08.12",
                   "duration": "18:27",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/sIKWSsYVM88/hqdefault.jpg",
-                  "displayOrder": 1
+                  "displayOrder": 1,
+                  "thumbnailUrl": "https://img.youtube.com/vi/sIKWSsYVM88/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu718fo7oxkhv-2",
@@ -26252,8 +26288,8 @@
                   "date": "2025.09.21",
                   "duration": "17:52",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/OyPsvUPGwRQ/hqdefault.jpg",
-                  "displayOrder": 2
+                  "displayOrder": 2,
+                  "thumbnailUrl": "https://img.youtube.com/vi/OyPsvUPGwRQ/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu718fo7avz0y-3",
@@ -26263,8 +26299,8 @@
                   "date": "2025.10.14",
                   "duration": "16:11",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/fNhQzH26p80/hqdefault.jpg",
-                  "displayOrder": 3
+                  "displayOrder": 3,
+                  "thumbnailUrl": "https://img.youtube.com/vi/fNhQzH26p80/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu718fo7xodwu-4",
@@ -26274,8 +26310,8 @@
                   "date": "2025.10.30",
                   "duration": "21:25",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/FaJo591UIwo/hqdefault.jpg",
-                  "displayOrder": 4
+                  "displayOrder": 4,
+                  "thumbnailUrl": "https://img.youtube.com/vi/FaJo591UIwo/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu718fo71fan1-5",
@@ -26285,8 +26321,8 @@
                   "date": "2025.11.26",
                   "duration": "24:08",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/9bpKc3LJCDw/hqdefault.jpg",
-                  "displayOrder": 5
+                  "displayOrder": 5,
+                  "thumbnailUrl": "https://img.youtube.com/vi/9bpKc3LJCDw/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu718fo7tw3uc-6",
@@ -26296,8 +26332,8 @@
                   "date": "2025.12.30",
                   "duration": "18:25",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/bQWM_lSNFq0/hqdefault.jpg",
-                  "displayOrder": 6
+                  "displayOrder": 6,
+                  "thumbnailUrl": "https://img.youtube.com/vi/bQWM_lSNFq0/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu718fo78fcgf-7",
@@ -26307,8 +26343,8 @@
                   "date": "2026.02.06",
                   "duration": "16:20",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/DdMVcsAJnVI/hqdefault.jpg",
-                  "displayOrder": 7
+                  "displayOrder": 7,
+                  "thumbnailUrl": "https://img.youtube.com/vi/DdMVcsAJnVI/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu718fo7hkaot-8",
@@ -26318,8 +26354,8 @@
                   "date": "2026.05.20",
                   "duration": "1:17:10",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/r64RRK8MoKI/hqdefault.jpg",
-                  "displayOrder": 8
+                  "displayOrder": 8,
+                  "thumbnailUrl": "https://img.youtube.com/vi/r64RRK8MoKI/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu7192x54zmt4-0",
@@ -26329,8 +26365,8 @@
                   "date": "2025.06.18",
                   "duration": "6:52:55",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/193YDh1t4uQ/hqdefault.jpg",
-                  "displayOrder": 9
+                  "displayOrder": 9,
+                  "thumbnailUrl": "https://img.youtube.com/vi/193YDh1t4uQ/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu7192x5k2mxm-1",
@@ -26340,8 +26376,8 @@
                   "date": "2025.06.22",
                   "duration": "9:04:14",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/GHz6Wvvk3z0/hqdefault.jpg",
-                  "displayOrder": 10
+                  "displayOrder": 10,
+                  "thumbnailUrl": "https://img.youtube.com/vi/GHz6Wvvk3z0/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu7192x5mrifb-2",
@@ -26351,8 +26387,8 @@
                   "date": "2025.07.15",
                   "duration": "10:09:38",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/WEp1msli0dM/hqdefault.jpg",
-                  "displayOrder": 11
+                  "displayOrder": 11,
+                  "thumbnailUrl": "https://img.youtube.com/vi/WEp1msli0dM/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu7192x5qdgaq-3",
@@ -26362,8 +26398,8 @@
                   "date": "2025.09.09",
                   "duration": "9:41:27",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/bXKM9gYoB-c/hqdefault.jpg",
-                  "displayOrder": 12
+                  "displayOrder": 12,
+                  "thumbnailUrl": "https://img.youtube.com/vi/bXKM9gYoB-c/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu7192x51eg0e-4",
@@ -26373,8 +26409,8 @@
                   "date": "2025.10.30",
                   "duration": "9:44:33",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/78MDHgwkfsg/hqdefault.jpg",
-                  "displayOrder": 13
+                  "displayOrder": 13,
+                  "thumbnailUrl": "https://img.youtube.com/vi/78MDHgwkfsg/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu7192x5qptqs-5",
@@ -26384,8 +26420,8 @@
                   "date": "2025.11.28",
                   "duration": "10:31:08",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/3R7ZJFjVFeY/hqdefault.jpg",
-                  "displayOrder": 14
+                  "displayOrder": 14,
+                  "thumbnailUrl": "https://img.youtube.com/vi/3R7ZJFjVFeY/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu7192x5b5y2o-6",
@@ -26395,8 +26431,8 @@
                   "date": "2025.06.18",
                   "duration": "10:32:38",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/IPsdxxE_MSo/hqdefault.jpg",
-                  "displayOrder": 15
+                  "displayOrder": 15,
+                  "thumbnailUrl": "https://img.youtube.com/vi/IPsdxxE_MSo/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu7192x53htbe-7",
@@ -26406,8 +26442,8 @@
                   "date": "2025.06.18",
                   "duration": "11:43:56",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/F3ZZPHa65ME/hqdefault.jpg",
-                  "displayOrder": 16
+                  "displayOrder": 16,
+                  "thumbnailUrl": "https://img.youtube.com/vi/F3ZZPHa65ME/hqdefault.jpg"
                 },
                 {
                   "id": "v-mu7192x54jh7l-8",
@@ -26417,8 +26453,8 @@
                   "date": "2026.05.14",
                   "duration": "9:30:39",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/3s6G51YU7Zk/hqdefault.jpg",
-                  "displayOrder": 17
+                  "displayOrder": 17,
+                  "thumbnailUrl": "https://img.youtube.com/vi/3s6G51YU7Zk/hqdefault.jpg"
                 }
               ],
               "affiliations": [
@@ -27874,9 +27910,9 @@
           "subgroup": null
         },
         {
-          "id": "guide-2",
-          "name": "낙화",
-          "streamer": "낙화",
+          "id": "guide-3",
+          "name": "멍카롱",
+          "streamer": "멍카롱",
           "role": "",
           "swatRole": "가이드",
           "status": "active",
@@ -27887,6 +27923,15 @@
           "youtubeUrl": "",
           "videos": [],
           "affiliations": [
+            {
+              "category": "business",
+              "subgroup": "biz-yastation",
+              "role": "",
+              "swatRole": "가이드",
+              "status": "active",
+              "badgeColor": "bg-indigo-600",
+              "displayOrder": 1
+            },
             {
               "category": "guide",
               "subgroup": null,
@@ -27901,9 +27946,9 @@
           "subgroup": null
         },
         {
-          "id": "guide-3",
-          "name": "멍카롱",
-          "streamer": "멍카롱",
+          "id": "guide-2",
+          "name": "낙화",
+          "streamer": "낙화",
           "role": "",
           "swatRole": "가이드",
           "status": "active",

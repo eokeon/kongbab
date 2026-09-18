@@ -686,7 +686,7 @@
           <div id="member-form-aff-tab-buttons" class="flex items-center gap-1.5 flex-wrap pt-0.5"></div>
         </div>
 
-        <div id="member-form-role-row" class="grid grid-cols-1 gap-3">
+        <div id="member-form-role-row" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div id="member-form-role-container">
             <label class="block text-xs font-semibold text-zinc-300 mb-1 flex items-center justify-between">
               <span>직위 / 직책 <span class="text-zinc-500 font-normal">(계급 · 직위)</span></span>
@@ -695,12 +695,12 @@
             <input 
               type="text" 
               id="member-form-role" 
-              placeholder="예: 순경, 경장, 보스, 병원장, 간호부장, 간호실장, 간호사" 
+              placeholder="예: 순경, 경장, 보스, 대표, 영이사, 부장, 매니저" 
               oninput="handleRoleInputForPoliceColor(this.value)"
               class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-blue-500 transition-colors"
             />
           </div>
-          <div id="member-form-swat-container" class="hidden">
+          <div id="member-form-swat-container">
             <label class="block text-xs font-semibold text-zinc-300 mb-1 flex items-center justify-between">
               <span class="text-zinc-200">추가 직책</span>
               <span class="text-zinc-500 font-normal text-[11px]">(선택)</span>
