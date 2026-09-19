@@ -22,3 +22,17 @@ src/main/resources/application-*.properties
 src/main/resources/application*.yml
 src/main/resources/application*.yaml
 
+# 구글 서비스 계정 및 API 인증키 파일 제외
+*visit*.json
+*credentials*.json
+*-key.json
+
+# 추가 보안 및 민감 인증서/키/환경변수/로그 파일 제외
+*.env*
+*.p12
+*.pem
+*.key
+*.jks
+*.log
+hs_err_pid*.log
+docs/analytics.html

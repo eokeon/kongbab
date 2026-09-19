@@ -27,6 +27,10 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
         String method = request.getMethod();
         String uri = request.getRequestURI();
 
+        // 보안 응답 헤더 기본 적용 (Clickjacking 및 MIME 스니핑 방어)
+        response.setHeader("X-Content-Type-Options", "nosniff");
+        response.setHeader("X-Frame-Options", "SAMEORIGIN");
+
         // 1. CORS Preflight(OPTIONS) 요청 허용
         if ("OPTIONS".equalsIgnoreCase(method)) {
             return true;

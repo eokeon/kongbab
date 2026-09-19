@@ -133,9 +133,9 @@ class SecurityServiceTest {
     }
 
     @Test
-    @DisplayName("BotDetectionFilter: 크롤러 봇 차단 및 브라우저 요청 통과")
+    @DisplayName("BotDetectionFilter: 크롤러 봇 차단 및 관리자/브라우저 요청 통과")
     void testBotDetectionFilter() throws Exception {
-        com.kongbab.config.BotDetectionFilter filter = new com.kongbab.config.BotDetectionFilter();
+        com.kongbab.config.BotDetectionFilter filter = new com.kongbab.config.BotDetectionFilter(adminTokenService);
         ReflectionTestUtils.setField(filter, "enabled", true);
 
         // 1. 파이썬 requests 봇 차단
@@ -159,12 +159,23 @@ class SecurityServiceTest {
         boolean[] passed = {false};
         filter.doFilter(browserReq, browserRes, (req, res) -> passed[0] = true);
         assertThat(passed[0]).isTrue();
+
+        // 4. 관리자 토큰 보유 시 봇 UA(예: curl)여도 통과
+        String token = adminTokenService.generateToken("admin");
+        MockHttpServletRequest adminReq = new MockHttpServletRequest("GET", "/api/streamers");
+        adminReq.addHeader("User-Agent", "curl/7.88.1");
+        adminReq.addHeader("Authorization", "Bearer " + token);
+        MockHttpServletResponse adminRes = new MockHttpServletResponse();
+        boolean[] adminPassed = {false};
+        filter.doFilter(adminReq, adminRes, (req, res) -> adminPassed[0] = true);
+        assertThat(adminPassed[0]).isTrue();
+        assertThat(adminRes.getStatus()).isNotEqualTo(403);
     }
 
     @Test
-    @DisplayName("RateLimitingFilter: 분당 한도 초과 시 429 응답 차단")
+    @DisplayName("RateLimitingFilter: 분당 한도 초과 시 429 응답 차단 및 관리자 예외")
     void testRateLimitingFilter() throws Exception {
-        com.kongbab.config.RateLimitingFilter filter = new com.kongbab.config.RateLimitingFilter();
+        com.kongbab.config.RateLimitingFilter filter = new com.kongbab.config.RateLimitingFilter(adminTokenService);
         ReflectionTestUtils.setField(filter, "enabled", true);
         ReflectionTestUtils.setField(filter, "maxRequestsPerMinute", 5);
 
@@ -177,11 +188,22 @@ class SecurityServiceTest {
             assertThat(res.getStatus()).isNotEqualTo(429);
         }
 
-        // 6회째 요청: 429 차단
+        // 6회째 일반 요청: 429 차단
         MockHttpServletRequest overReq = new MockHttpServletRequest("GET", "/api/streamers");
         overReq.setRemoteAddr(ip);
         MockHttpServletResponse overRes = new MockHttpServletResponse();
         filter.doFilter(overReq, overRes, (q, s) -> {});
         assertThat(overRes.getStatus()).isEqualTo(429);
+
+        // 관리자 토큰 보유 요청: 429 차단 없이 무제한 통과
+        String token = adminTokenService.generateToken("admin");
+        MockHttpServletRequest adminReq = new MockHttpServletRequest("GET", "/api/streamers");
+        adminReq.setRemoteAddr(ip);
+        adminReq.addHeader("Authorization", "Bearer " + token);
+        MockHttpServletResponse adminRes = new MockHttpServletResponse();
+        boolean[] adminPassed = {false};
+        filter.doFilter(adminReq, adminRes, (q, s) -> adminPassed[0] = true);
+        assertThat(adminPassed[0]).isTrue();
+        assertThat(adminRes.getStatus()).isNotEqualTo(429);
     }
 }

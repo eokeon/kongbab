@@ -385,6 +385,10 @@ function renderHeaderAuth() {
   if (isAdmin()) {
     container.innerHTML = `
       <div class="flex items-center gap-1.5 sm:gap-2">
+        <button onclick="openAnalyticsDashboard()" class="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/60 text-indigo-300 text-[11px] sm:text-xs font-bold shadow-sm transition-all cursor-pointer group whitespace-nowrap" title="방문자 종합 분석 대시보드 (새 창 열기)">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>📊 <span class="hidden sm:inline">방문자 </span>통계</span>
+        </button>
         <button onclick="openAdminSettingsModal()" class="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-950/80 hover:bg-amber-900 border border-amber-600/60 text-amber-300 text-[11px] sm:text-xs font-bold shadow-sm transition-all cursor-pointer group whitespace-nowrap" title="어드민 설정 (유튜브 구독자 갱신 등)">
           <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
           <span>🛡️ 어드민</span>

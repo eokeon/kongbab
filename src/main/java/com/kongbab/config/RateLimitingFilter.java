@@ -6,6 +6,8 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import com.kongbab.service.AdminTokenService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
@@ -23,8 +25,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 @Order(Ordered.HIGHEST_PRECEDENCE + 20)
 public class RateLimitingFilter implements Filter {
+
+    private final AdminTokenService adminTokenService;
 
     @Value("${kongbab.security.rate-limit.enabled:true}")
     private boolean enabled;
@@ -62,9 +67,8 @@ public class RateLimitingFilter implements Filter {
             return;
         }
 
-        // 로그인한 관리자는 속도 제한 제외
-        HttpSession session = httpRequest.getSession(false);
-        if (session != null && "admin".equals(session.getAttribute(AuthController.SESSION_USER_KEY))) {
+        // 로그인한 관리자는 속도 제한 제외 (세션 및 영구 토큰 동시 지원)
+        if (isAdminRequest(httpRequest)) {
             chain.doFilter(request, response);
             return;
         }
@@ -111,6 +115,18 @@ public class RateLimitingFilter implements Filter {
             return ip;
         }
         return request.getRemoteAddr();
+    }
+
+    private boolean isAdminRequest(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Object user = session.getAttribute(AuthController.SESSION_USER_KEY);
+            if (user != null && (adminTokenService.getAdminUsername().equals(user) || "admin".equals(user))) {
+                return true;
+            }
+        }
+        String token = adminTokenService.extractToken(request);
+        return token != null && adminTokenService.validateToken(token, adminTokenService.getAdminUsername());
     }
 
     private void cleanUpExpiredEntries(long now) {

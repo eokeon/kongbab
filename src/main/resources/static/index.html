@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="ko" class="dark">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QQDWGKVB97"></script>
+  <!-- Google tag (gtag.js) - 로컬(localhost/127.0.0.1) 집계 제외, 깃허브 배포 방문자만 집계 -->
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+    if (window.location.hostname !== "localhost" && 
+        window.location.hostname !== "127.0.0.1" && 
+        window.location.protocol !== "file:") {
+      const gaScript = document.createElement("script");
+      gaScript.async = true;
+      gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-QQDWGKVB97";
+      document.head.appendChild(gaScript);
 
-    gtag('config', 'G-QQDWGKVB97');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-QQDWGKVB97');
+    }
   </script>
 
   <meta charset="UTF-8">
@@ -1184,6 +1191,7 @@
   <script src="./js/admin-video.js?v=20260919_gang_mariadb_sync_v6"></script>
   <script src="./js/admin-member.js?v=20260919_gang_mariadb_sync_v6"></script>
   <script src="./js/admin-playlist.js?v=20260919_gang_mariadb_sync_v6"></script>
+  <script src="./js/admin-analytics.js?v=20260919_gang_mariadb_sync_v6"></script>
   <script src="./js/admin.js?v=20260919_gang_mariadb_sync_v6"></script>
   <script src="./js/render.js?v=20260919_gang_mariadb_sync_v6"></script>
   <script src="./js/navigation.js?v=20260919_gang_mariadb_sync_v6"></script>

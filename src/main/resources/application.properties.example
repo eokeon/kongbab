@@ -30,6 +30,12 @@ kongbab.security.cookie.secure=false
 # CORS 허용 도메인 (쉼표로 구분)
 kongbab.cors.allowed-origins=http://localhost:8080,http://localhost:63342,http://127.0.0.1:8080,http://127.0.0.1:63342
 
+# 시스템 내부 에러 및 스택트레이스 노출 방지
+server.error.include-stacktrace=never
+server.error.include-message=never
+server.error.include-binding-errors=never
+server.error.whitelabel.enabled=false
+
 # 세션 유효시간 1시간 설정 (브라우저를 닫았다 열어도 1시간 유지)
 server.servlet.session.timeout=1h
 server.servlet.session.cookie.max-age=3600

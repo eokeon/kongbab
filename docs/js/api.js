@@ -919,3 +919,26 @@ function extractAllStreamersFromKongbabData() {
 // ./js/subscriber-sync.js 모듈로 분리되었습니다.
 // ==========================================
 
+// ==========================================
+// 구글 애널리틱스 방문자 통계 API
+// ==========================================
+async function apiGetAnalyticsSummary(forceRefresh = false) {
+  try {
+    const query = forceRefresh ? "?refresh=true" : "";
+    const res = await fetch(`${API_BASE}/api/admin/analytics/summary${query}`, {
+      headers: getAuthHeaders(),
+      credentials: "include"
+    });
+    const data = await res.json().catch(() => null);
+    if (!res.ok) {
+      return { success: false, message: data?.message || `조회 실패 (HTTP ${res.status})` };
+    }
+    return data || { success: false, message: "응답 데이터가 비어 있습니다." };
+  } catch (e) {
+    console.error("방문자 통계 조회 실패:", e);
+    return { success: false, message: "백엔드 서버와 통신할 수 없습니다." };
+  }
+}
+
+
+
