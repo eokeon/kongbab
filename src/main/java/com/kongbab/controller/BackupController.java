@@ -229,6 +229,13 @@ public class BackupController {
         }
     }
 
+    @GetMapping("/health")
+    public ResponseEntity<Map<String, Object>> getHealth() {
+        Map<String, Object> res = new HashMap<>();
+        res.put("status", "ok");
+        return ResponseEntity.ok(res);
+    }
+
     @GetMapping("/status")
     public ResponseEntity<Map<String, Object>> getStatus() {
         File dir = getTargetDir();

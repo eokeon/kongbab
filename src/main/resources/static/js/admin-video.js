@@ -456,6 +456,7 @@ async function handleFetchMultiVideos() {
       title: isChzzk ? "치지직 영상" : (ytId ? `유튜브 영상 (${ytId})` : url),
       date: getTodayDateString(),
       duration: "",
+      viewCount: null,
       thumbnailUrl: isChzzk ? "assets/default-thumbnail.svg" : (ytId ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg` : "assets/default-thumbnail.svg"),
       selected: true
     };
@@ -475,7 +476,7 @@ async function handleFetchMultiVideos() {
     for (let i = 0; i < ytVideoIds.length; i += 50) {
       const chunk = ytVideoIds.slice(i, i + 50);
       try {
-        const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${chunk.join(",")}&key=${apiKey.trim()}`);
+        const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${chunk.join(",")}&key=${apiKey.trim()}`);
         if (vRes.ok) {
           const vData = await vRes.json();
           (vData.items || []).forEach(vItem => {
@@ -485,12 +486,14 @@ async function handleFetchMultiVideos() {
             const publishedDate = typeof formatIsoDateToKst === "function" ? formatIsoDateToKst(vItem.snippet?.publishedAt) : (vItem.snippet?.publishedAt ? vItem.snippet.publishedAt.substring(0, 10).replace(/-/g, ".") : "");
             const duration = typeof formatIsoDuration === "function" ? formatIsoDuration(vItem.contentDetails?.duration) : "";
             const thumb = vItem.snippet?.thumbnails?.medium?.url || `https://img.youtube.com/vi/${vId}/mqdefault.jpg`;
+            const viewCount = vItem.statistics?.viewCount != null ? Number(vItem.statistics.viewCount) : null;
 
             indices.forEach(idx => {
               if (title) items[idx].title = title;
               if (publishedDate) items[idx].date = publishedDate;
               if (duration) items[idx].duration = duration;
               if (thumb) items[idx].thumbnailUrl = thumb;
+              if (viewCount != null) items[idx].viewCount = viewCount;
             });
           });
         } else {
@@ -504,7 +507,7 @@ async function handleFetchMultiVideos() {
 
   // 1-1) 배치 조회 실패 시 또는 정보가 누락된 YouTube 영상에 대해 개별 조회 보정 (백엔드 API 또는 oEmbed fallback)
   for (const it of items) {
-    if (!it.isChzzk && it.videoId && (!it.duration || !it.title || it.title.startsWith("유튜브 영상"))) {
+    if (!it.isChzzk && it.videoId && (!it.duration || !it.title || it.title.startsWith("유튜브 영상") || it.viewCount == null)) {
       try {
         const info = typeof apiGetYouTubeInfo === "function" ? await apiGetYouTubeInfo(it.url) : null;
         if (info && info.success) {
@@ -512,6 +515,7 @@ async function handleFetchMultiVideos() {
           if (info.publishedDate) it.date = info.publishedDate;
           if (info.duration) it.duration = info.duration;
           if (info.thumbnailUrl) it.thumbnailUrl = info.thumbnailUrl;
+          if (info.viewCount != null) it.viewCount = info.viewCount;
         }
       } catch (e) {
         console.warn("[Multi Video] 개별 보완 조회 실패:", e);
@@ -529,6 +533,7 @@ async function handleFetchMultiVideos() {
         if (info.publishedDate) cItem.date = info.publishedDate;
         if (info.duration) cItem.duration = info.duration;
         if (info.thumbnailUrl) cItem.thumbnailUrl = info.thumbnailUrl;
+        if (info.viewCount != null) cItem.viewCount = info.viewCount;
       }
     } catch (err) {
       console.warn("[Multi Video] Chzzk API error:", err);
@@ -599,6 +604,7 @@ function renderMultiVideoPreviewList() {
             <div class="flex items-center gap-2 text-[11px] text-zinc-400 mt-0.5">
               <span>📅 ${v.date || '날짜 미확인'}</span>
               ${v.duration ? `<span class="text-zinc-500">·</span><span class="text-zinc-300 font-mono">⏱️ ${v.duration}</span>` : ''}
+              ${v.viewCount != null ? `<span class="text-zinc-500">·</span><span class="text-zinc-300 font-mono" title="${Number(v.viewCount).toLocaleString()}회">👁️ ${typeof formatViewCount === 'function' ? formatViewCount(v.viewCount) : v.viewCount}</span>` : ''}
               ${v.isChzzk ? `<span class="px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-extrabold">치지직</span>` : ''}
             </div>
           </div>
@@ -680,6 +686,7 @@ async function submitMultiVideos() {
       videoType: videoType,
       date: item.date || getTodayDateString(),
       duration: item.duration || "",
+      viewCount: item.viewCount !== undefined ? item.viewCount : null,
       thumbnailUrl: item.thumbnailUrl || "",
       description: ""
     };
@@ -754,9 +761,13 @@ async function handleSaveVideo(e) {
 
   if (!state.currentMember.videos) state.currentMember.videos = [];
 
-  const thumbnailUrl = (lastFetchedVideoInfo && lastFetchedVideoInfo.url === url && lastFetchedVideoInfo.thumbnailUrl)
+  const thumbnailUrl = (lastFetchedVideoInfo && (lastFetchedVideoInfo.url === url || (lastFetchedVideoInfo.videoId && url.includes(lastFetchedVideoInfo.videoId))) && lastFetchedVideoInfo.thumbnailUrl)
     ? lastFetchedVideoInfo.thumbnailUrl
     : (editingVideoId ? (state.currentMember.videos.find(v => String(v.id) === String(editingVideoId))?.thumbnailUrl || '') : '');
+
+  const viewCount = (lastFetchedVideoInfo && (lastFetchedVideoInfo.url === url || (lastFetchedVideoInfo.videoId && url.includes(lastFetchedVideoInfo.videoId))) && lastFetchedVideoInfo.viewCount !== undefined)
+    ? lastFetchedVideoInfo.viewCount
+    : (editingVideoId ? (state.currentMember.videos.find(v => String(v.id) === String(editingVideoId))?.viewCount ?? null) : null);
 
   let savedVideo = null;
   if (editingVideoId) {
@@ -770,6 +781,7 @@ async function handleSaveVideo(e) {
         date,
         duration,
         description: desc,
+        ...(viewCount !== undefined && viewCount !== null ? { viewCount } : {}),
         ...(thumbnailUrl ? { thumbnailUrl } : {})
       };
       savedVideo = state.currentMember.videos[idx];
@@ -784,6 +796,7 @@ async function handleSaveVideo(e) {
       videoType,
       date,
       duration,
+      viewCount: viewCount ?? null,
       description: desc,
       displayOrder: state.currentMember.videos.length,
       ...(thumbnailUrl ? { thumbnailUrl } : {})

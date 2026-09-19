@@ -625,24 +625,28 @@ window.getEffectiveYouTubeApiKey = getEffectiveYouTubeApiKey;
   const localKey = getEffectiveYouTubeApiKey();
   if (localKey) {
     try {
-      const apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoId}&key=${localKey.trim()}`;
+      const apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${videoId}&key=${localKey.trim()}`;
       const res = await fetch(apiUrl);
       if (res.ok) {
         const data = await res.json();
         if (data.items && data.items.length > 0) {
-          const snip = data.items[0].snippet;
-          const cd = data.items[0].contentDetails;
+          const item = data.items[0];
+          const snip = item.snippet;
+          const cd = item.contentDetails;
+          const stats = item.statistics;
           let pubDate = "";
           if (snip.publishedAt) {
             pubDate = typeof formatIsoDateToKst === "function" ? formatIsoDateToKst(snip.publishedAt) : snip.publishedAt.substring(0, 10).replace(/-/g, ".");
           }
           const duration = cd ? formatIsoDuration(cd.duration) : "";
+          const viewCount = stats && stats.viewCount != null ? Number(stats.viewCount) : null;
           return {
             success: true,
             videoId: videoId,
             title: snip.title || "",
             publishedDate: pubDate,
             duration: duration,
+            viewCount: viewCount,
             channelTitle: snip.channelTitle || "",
             thumbnailUrl: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
             source: "api_client"

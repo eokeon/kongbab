@@ -129,6 +129,7 @@ public class StreamerService {
         if (dto.getDisplayOrder() != null) {
             video.setDisplayOrder(dto.getDisplayOrder());
         }
+        video.setViewCount(dto.getViewCount());
 
         Video saved = videoRepository.save(video);
         VideoDto result = VideoDto.fromEntity(saved);
@@ -253,6 +254,7 @@ public class StreamerService {
                     v.setDescription(vDto.getDescription());
                     v.setThumbnailUrl(vDto.getThumbnailUrl());
                     v.setDisplayOrder(vDto.getDisplayOrder() != null ? vDto.getDisplayOrder() : vOrder++);
+                    v.setViewCount(vDto.getViewCount());
                     v.setStreamer(streamer);
                     keptVideos.add(v);
                 }
@@ -425,6 +427,7 @@ public class StreamerService {
                         .description(v.has("description") ? v.get("description").asText() : "")
                         .thumbnailUrl(v.has("thumbnailUrl") ? v.get("thumbnailUrl").asText() : "")
                         .displayOrder(v.has("displayOrder") ? v.get("displayOrder").asInt() : 0)
+                        .viewCount(v.has("viewCount") && !v.get("viewCount").isNull() ? v.get("viewCount").asLong() : null)
                         .build();
                 videos.add(vDto);
             }

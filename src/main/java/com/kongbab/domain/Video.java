@@ -40,6 +40,8 @@ public class Video {
 
     private Integer displayOrder;
 
+    private Long viewCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "streamer_id", nullable = false)
     @JsonBackReference

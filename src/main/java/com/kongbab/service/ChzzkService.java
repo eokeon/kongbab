@@ -129,6 +129,7 @@ public class ChzzkService {
             String videoType = content.path("videoType").asText("clip");
             long durationSec = content.path("duration").asLong(0);
             String formattedDuration = formatDuration(durationSec);
+            long viewCount = content.path("readCount").asLong(0);
 
             String dateFromTitle = YouTubeService.extractDateFromTitle(videoTitle);
             String publishedDate = (dateFromTitle != null && !dateFromTitle.isBlank())
@@ -162,6 +163,7 @@ public class ChzzkService {
                     .channelId(channelId)
                     .thumbnailUrl(thumbnail)
                     .videoType(videoType)
+                    .viewCount(viewCount)
                     .source("chzzk_api")
                     .message("치지직 정보를 성공적으로 가져왔습니다.")
                     .build();

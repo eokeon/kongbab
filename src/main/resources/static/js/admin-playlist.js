@@ -110,7 +110,7 @@ async function apiGetPlaylistInfo(urlOrId) {
       for (let i = 0; i < videoIds.length; i += 50) {
         const chunk = videoIds.slice(i, i + 50);
         try {
-          const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${chunk.join(",")}&key=${apiKey}`);
+          const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${chunk.join(",")}&key=${apiKey}`);
           if (vRes.ok) {
             const vData = await vRes.json();
             (vData.items || []).forEach(item => {
@@ -121,7 +121,8 @@ async function apiGetPlaylistInfo(urlOrId) {
                 publishedDate: typeof formatIsoDateToKst === "function" ? formatIsoDateToKst(item.snippet?.publishedAt) : (item.snippet?.publishedAt ? item.snippet.publishedAt.substring(0, 10).replace(/-/g, ".") : ""),
                 channelTitle: item.snippet?.channelTitle || "",
                 thumbnailUrl: item.snippet?.thumbnails?.medium?.url || `https://img.youtube.com/vi/${item.id}/hqdefault.jpg`,
-                duration: typeof formatIsoDuration === "function" ? formatIsoDuration(item.contentDetails?.duration) : ""
+                duration: typeof formatIsoDuration === "function" ? formatIsoDuration(item.contentDetails?.duration) : "",
+                viewCount: item.statistics?.viewCount != null ? Number(item.statistics.viewCount) : null
               });
             });
           }
@@ -229,14 +230,15 @@ async function apiGetPlaylistInfo(urlOrId) {
     for (let i = 0; i < vIds.length; i += 50) {
       const chunk = vIds.slice(i, i + 50);
       if (chunk.length === 0) continue;
-      const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${chunk.join(",")}&key=${apiKey}`);
+      const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${chunk.join(",")}&key=${apiKey}`);
       if (vRes.ok) {
         const vData = await vRes.json();
         const infoMap = {};
         (vData.items || []).forEach(item => {
           infoMap[item.id] = {
             duration: formatIsoDuration(item.contentDetails?.duration),
-            publishedDate: formatIsoDateToKst(item.snippet?.publishedAt)
+            publishedDate: formatIsoDateToKst(item.snippet?.publishedAt),
+            viewCount: item.statistics?.viewCount != null ? Number(item.statistics.viewCount) : null
           };
         });
         videos.forEach(v => {
@@ -245,6 +247,7 @@ async function apiGetPlaylistInfo(urlOrId) {
             if (infoMap[id].duration) v.duration = infoMap[id].duration;
             // 실제 영상의 게시일(KST)로 정확히 갱신
             if (infoMap[id].publishedDate) v.publishedDate = infoMap[id].publishedDate;
+            if (infoMap[id].viewCount != null) v.viewCount = infoMap[id].viewCount;
           }
           if (playlistId && v.url && !v.url.includes("list=")) {
             v.url = `https://www.youtube.com/watch?v=${id}&list=${playlistId}`;
@@ -336,6 +339,7 @@ function renderPlaylistPreviewList() {
             <div class="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] text-zinc-400 mt-1 flex-wrap">
               <span class="text-zinc-400 font-mono text-[10px] sm:text-[11px] bg-zinc-950 border border-zinc-800 rounded-lg px-1.5 sm:px-2 py-0.5">📅 ${v.publishedDate || '-'}</span>
               ${v.duration ? `<span class="text-zinc-300 font-mono font-semibold bg-zinc-950 border border-zinc-800 rounded-lg px-1 sm:px-1.5 py-0.5">⏱️ ${v.duration}</span>` : ''}
+              ${v.viewCount != null ? `<span class="text-zinc-300 font-mono font-semibold bg-zinc-950 border border-zinc-800 rounded-lg px-1 sm:px-1.5 py-0.5" title="${Number(v.viewCount).toLocaleString()}회">👁️ ${typeof formatViewCount === 'function' ? formatViewCount(v.viewCount) : v.viewCount}</span>` : ''}
               <a href="${vUrl || '#'}" target="_blank" rel="noopener noreferrer" class="text-[10px] sm:text-[11px] text-zinc-400 hover:text-amber-400 flex items-center gap-0.5 cursor-pointer ml-0.5">열기 ↗</a>
             </div>
           </div>
@@ -570,6 +574,7 @@ async function handleBatchImportPlaylist(e) {
       videoType: videoType,
       date: item.publishedDate || getTodayDateString(),
       duration: item.duration || "",
+      viewCount: item.viewCount !== undefined ? item.viewCount : null,
       description: item.description || "",
       thumbnailUrl: item.thumbnailUrl || (videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : "")
     };

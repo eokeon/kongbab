@@ -9,7 +9,18 @@ function getBackupDirectoryPath() {
 
 async function checkBackupServerHealth(notifyToast = false) {
   try {
-    const res = await fetch(`${BACKUP_SERVER_URL}/api/status`, { cache: "no-store" });
+    const authHeaders = typeof getAuthHeaders === "function" ? getAuthHeaders() : {};
+    let healthOk = false;
+    try {
+      const hRes = await fetch(`${BACKUP_SERVER_URL}/api/health`, { cache: "no-store" });
+      if (hRes.ok) healthOk = true;
+    } catch (e) {}
+
+    const res = await fetch(`${BACKUP_SERVER_URL}/api/status`, { 
+      cache: "no-store",
+      credentials: "include",
+      headers: authHeaders
+    });
     if (res.ok) {
       const data = await res.json();
       if (data?.status === "ok") {
@@ -25,6 +36,17 @@ async function checkBackupServerHealth(notifyToast = false) {
         }
         return true;
       }
+    } else if (healthOk) {
+      isServerConnected = true;
+      updateServerStatusBadge();
+      const offlineModal = document.getElementById("backend-offline-modal");
+      if (offlineModal && !offlineModal.classList.contains("hidden")) {
+        offlineModal.classList.add("hidden");
+      }
+      if (notifyToast) {
+        showToast("🟢 백엔드 서버(8080)와 정상 연결되었습니다.");
+      }
+      return true;
     }
   } catch (e) {}
   isServerConnected = false;
@@ -119,6 +141,9 @@ function showBackendOfflineModal(actionName = "저장 및 변경") {
 }
 
 async function requireServerConnection(actionName = "저장 및 변경") {
+  if (typeof isLocalEnvironment === "function" && !isLocalEnvironment()) {
+    return true; // GitHub Pages 등 정적 배포 환경에서는 백엔드가 없으므로 브라우저 로컬 동작 허용
+  }
   if (isServerConnected) {
     return true;
   }
@@ -230,7 +255,7 @@ function createBackupSnapshot(actionReason = "데이터 변경", showFeedback = 
     lovelines: lovelinesList
   };
 
-  syncToBackupServer(payload, showFeedback);
+  return syncToBackupServer(payload, showFeedback);
 }
 
 function isLocalEnvironment() {

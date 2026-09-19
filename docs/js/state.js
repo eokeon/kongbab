@@ -679,6 +679,7 @@ function updateStats() {
   const uniqueMembers = new Map();
   const seenVideoUrls = new Set();
   let totalVideos = 0;
+  let totalViews = 0;
 
   if (KONGBAB_DATA && KONGBAB_DATA.categories) {
     KONGBAB_DATA.categories.forEach(cat => {
@@ -695,11 +696,14 @@ function updateStats() {
         const validVideos = (m.videos || []).filter(v => v && v.url && v.url !== "undefined" && v.url.trim() !== "");
         validVideos.forEach(v => {
           const vKey = (v.url || v.id || '').trim().toLowerCase();
+          const vc = (v.viewCount != null && !isNaN(v.viewCount)) ? Number(v.viewCount) : 0;
           if (vKey && !seenVideoUrls.has(vKey)) {
             seenVideoUrls.add(vKey);
             totalVideos++;
+            totalViews += vc;
           } else if (!vKey) {
             totalVideos++;
+            totalViews += vc;
           }
         });
       });
@@ -707,6 +711,7 @@ function updateStats() {
   }
 
   const totalMembers = uniqueMembers.size;
+  const formattedHeaderViews = typeof formatViewCount === "function" ? (formatViewCount(totalViews) || "0회") : `${totalViews.toLocaleString()}회`;
 
   const statEl = document.getElementById("header-stats");
   if (statEl) {
@@ -841,4 +846,19 @@ function formatSecondsToHangul(totalSec) {
   }
 }
 
-
+// 영상 조회수를 한글 친화적 표기(예: 15.1만회, 1,234회, 1.5억회)로 변환
+function formatViewCount(count) {
+  if (count === undefined || count === null || count === "") return null;
+  const num = Number(count);
+  if (isNaN(num) || num < 0) return null;
+  if (num >= 100000000) {
+    const val = (num / 100000000).toFixed(1).replace(/\.0$/, '');
+    return `${val}억회`;
+  }
+  if (num >= 10000) {
+    const val = (num / 10000).toFixed(1).replace(/\.0$/, '');
+    return `${val}만회`;
+  }
+  return `${num.toLocaleString()}회`;
+}
+window.formatViewCount = formatViewCount;

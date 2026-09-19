@@ -86,6 +86,10 @@ function computeMemberLeaderboardStats(m, cat, group) {
   let clipSec = 0;
   let fullSec = 0;
   let bingeSec = 0;
+  let clipViews = 0;
+  let fullViews = 0;
+  let bingeViews = 0;
+  let totalViews = 0;
 
   for (let i = 0; i < rawVideos.length; i++) {
     const v = rawVideos[i];
@@ -97,15 +101,22 @@ function computeMemberLeaderboardStats(m, cat, group) {
     totalCount++;
     const type = typeof getVideoType === "function" ? getVideoType(v) : 'clip';
     const sec = typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0;
+    const rawViews = Number(v.viewCount);
+    const vViews = (!isNaN(rawViews) && rawViews > 0) ? rawViews : 0;
+    totalViews += vViews;
+
     if (type === 'binge') {
       bingeCount++;
       bingeSec += sec;
+      bingeViews += vViews;
     } else if (type === 'full') {
       fullCount++;
       fullSec += sec;
+      fullViews += vViews;
     } else {
       clipCount++;
       clipSec += sec;
+      clipViews += vViews;
     }
   }
 
@@ -172,6 +183,14 @@ function computeMemberLeaderboardStats(m, cat, group) {
     clipDurStr: typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(clipSec) : "0분",
     fullDurStr: typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(fullSec) : "0분",
     bingeDurStr: typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(bingeSec) : "0분",
+    clipViews,
+    fullViews,
+    bingeViews,
+    totalViews,
+    clipViewsStr: typeof formatViewCount === "function" ? (formatViewCount(clipViews) || "0회") : `${clipViews.toLocaleString()}회`,
+    fullViewsStr: typeof formatViewCount === "function" ? (formatViewCount(fullViews) || "0회") : `${fullViews.toLocaleString()}회`,
+    bingeViewsStr: typeof formatViewCount === "function" ? (formatViewCount(bingeViews) || "0회") : `${bingeViews.toLocaleString()}회`,
+    totalViewsStr: typeof formatViewCount === "function" ? (formatViewCount(totalViews) || "0회") : `${totalViews.toLocaleString()}회`,
   };
 }
 
@@ -201,6 +220,10 @@ function computeGlobalMetrics(members) {
   let totalFullSec = 0;
   let totalBingeCount = 0;
   let totalBingeSec = 0;
+  let totalViews = 0;
+  let totalClipViews = 0;
+  let totalFullViews = 0;
+  let totalBingeViews = 0;
 
   for (let i = 0; i < uniqueMembers.length; i++) {
     const m = uniqueMembers[i];
@@ -212,6 +235,10 @@ function computeGlobalMetrics(members) {
     totalFullSec += (m.fullSec || 0);
     totalBingeCount += (m.bingeCount || 0);
     totalBingeSec += (m.bingeSec || 0);
+    totalViews += (m.totalViews || 0);
+    totalClipViews += (m.clipViews || 0);
+    totalFullViews += (m.fullViews || 0);
+    totalBingeViews += (m.bingeViews || 0);
   }
 
   // 전체 소속 인원 총합 구독자수 및 치지직 팔로워수 계산 (플랫폼별 구분 & 중복 스트리머 중복 집계 방지)
@@ -277,6 +304,14 @@ function computeGlobalMetrics(members) {
     ytSubStr,
     chzzkFollowerCount,
     chzzkFollowerStr,
+    totalViews,
+    totalClipViews,
+    totalFullViews,
+    totalBingeViews,
+    totalViewsStr: typeof formatViewCount === "function" ? (formatViewCount(totalViews) || "0회") : `${totalViews.toLocaleString()}회`,
+    totalClipViewsStr: typeof formatViewCount === "function" ? (formatViewCount(totalClipViews) || "0회") : `${totalClipViews.toLocaleString()}회`,
+    totalFullViewsStr: typeof formatViewCount === "function" ? (formatViewCount(totalFullViews) || "0회") : `${totalFullViews.toLocaleString()}회`,
+    totalBingeViewsStr: typeof formatViewCount === "function" ? (formatViewCount(totalBingeViews) || "0회") : `${totalBingeViews.toLocaleString()}회`,
   };
   return cachedGlobalStats;
 }
@@ -379,7 +414,7 @@ function renderLeaderboardTabButtons() {
     { key: 'clip', label: '편집 영상', emoji: '✂️' },
     { key: 'full', label: '풀 영상', emoji: '🎥' },
     { key: 'binge', label: '몰아보기', emoji: '🍿' },
-    { key: 'count', label: '영상 개수순', emoji: '🎬' },
+    { key: 'views', label: '총 조회수순', emoji: '👁️' },
   ];
 
   container.innerHTML = tabDefs.map(t => {
@@ -433,20 +468,6 @@ function renderGlobalStatsCards(globalStats) {
       </div>
     </div>
 
-    <!-- 총 영상 개수 -->
-    <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-2.5 sm:p-3 flex flex-col justify-between shadow-sm">
-      <div class="flex items-center justify-between text-zinc-400 text-xs mb-1 sm:mb-1.5">
-        <span class="font-medium text-[11px] sm:text-xs">등록된 총 영상</span>
-        <span class="text-zinc-500">🎬</span>
-      </div>
-      <div>
-        <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-base sm:text-xl font-bold text-amber-400 tracking-tight leading-tight">${globalStats.totalVideos}개</div>
-        <div class="mt-1 flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
-          <div class="h-4 flex items-center text-zinc-300 truncate">누적 아카이브</div>
-        </div>
-      </div>
-    </div>
-
     <!-- 총 누적 시간 -->
     <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-2.5 sm:p-3 flex flex-col justify-between shadow-sm">
       <div class="flex items-center justify-between text-zinc-400 text-xs mb-1 sm:mb-1.5">
@@ -454,9 +475,12 @@ function renderGlobalStatsCards(globalStats) {
         <span class="text-amber-400">⏱️</span>
       </div>
       <div>
-        <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-amber-400 tracking-tight leading-tight">${globalStats.totalDurStr}</div>
-        <div class="mt-1 flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
-          <div class="h-4 flex items-center text-zinc-300 truncate">전체 플레이타임</div>
+        <div class="text-[11px] sm:text-xs font-semibold text-zinc-300 font-mono leading-tight">${globalStats.totalVideos}개</div>
+        <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-amber-400 tracking-tight leading-tight my-0.5">${globalStats.totalDurStr}</div>
+        <div class="flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
+          <div class="h-4 flex items-center text-zinc-400 font-medium truncate" title="전체 등록 영상 총 누적 조회수: ${globalStats.totalViews.toLocaleString()}회">
+            👁️ ${globalStats.totalViewsStr}
+          </div>
         </div>
       </div>
     </div>
@@ -468,12 +492,15 @@ function renderGlobalStatsCards(globalStats) {
           <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
           <span>편집 영상</span>
         </span>
-        <span class="text-zinc-400 font-semibold text-[10px]">${globalStats.totalClipCount}개</span>
+        <span class="text-zinc-500">🎬</span>
       </div>
       <div>
-        <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-red-400 tracking-tight leading-tight">${globalStats.totalClipDurStr}</div>
-        <div class="mt-1 flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
-          <div class="h-4 flex items-center text-zinc-300 font-medium truncate">총 ${globalStats.totalClipCount}개 등록됨</div>
+        <div class="text-[11px] sm:text-xs font-semibold text-zinc-300 font-mono leading-tight">${globalStats.totalClipCount}개</div>
+        <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-red-400 tracking-tight leading-tight my-0.5">${globalStats.totalClipDurStr}</div>
+        <div class="flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
+          <div class="h-4 flex items-center text-zinc-400 font-medium truncate" title="편집 영상 총 조회수: ${globalStats.totalClipViews.toLocaleString()}회">
+            👁️ ${globalStats.totalClipViewsStr}
+          </div>
         </div>
       </div>
     </div>
@@ -485,12 +512,15 @@ function renderGlobalStatsCards(globalStats) {
           <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
           <span>풀 영상</span>
         </span>
-        <span class="text-zinc-400 font-semibold text-[10px]">${globalStats.totalFullCount}개</span>
+        <span class="text-zinc-500">🎥</span>
       </div>
       <div>
-        <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-indigo-400 tracking-tight leading-tight">${globalStats.totalFullDurStr}</div>
-        <div class="mt-1 flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
-          <div class="h-4 flex items-center text-zinc-300 font-medium truncate">총 ${globalStats.totalFullCount}개 등록됨</div>
+        <div class="text-[11px] sm:text-xs font-semibold text-zinc-300 font-mono leading-tight">${globalStats.totalFullCount}개</div>
+        <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-indigo-400 tracking-tight leading-tight my-0.5">${globalStats.totalFullDurStr}</div>
+        <div class="flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
+          <div class="h-4 flex items-center text-zinc-400 font-medium truncate" title="풀 영상 총 조회수: ${globalStats.totalFullViews.toLocaleString()}회">
+            👁️ ${globalStats.totalFullViewsStr}
+          </div>
         </div>
       </div>
     </div>
@@ -502,12 +532,15 @@ function renderGlobalStatsCards(globalStats) {
           <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
           <span>몰아보기</span>
         </span>
-        <span class="text-zinc-400 font-semibold text-[10px]">${globalStats.totalBingeCount}개</span>
+        <span class="text-zinc-500">🍿</span>
       </div>
       <div>
-        <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-amber-300 tracking-tight leading-tight">${globalStats.totalBingeDurStr}</div>
-        <div class="mt-1 flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
-          <div class="h-4 flex items-center text-zinc-300 font-medium truncate">총 ${globalStats.totalBingeCount}개 등록됨</div>
+        <div class="text-[11px] sm:text-xs font-semibold text-zinc-300 font-mono leading-tight">${globalStats.totalBingeCount}개</div>
+        <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-amber-300 tracking-tight leading-tight my-0.5">${globalStats.totalBingeDurStr}</div>
+        <div class="flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
+          <div class="h-4 flex items-center text-zinc-400 font-medium truncate" title="몰아보기 총 조회수: ${globalStats.totalBingeViews.toLocaleString()}회">
+            👁️ ${globalStats.totalBingeViewsStr}
+          </div>
         </div>
       </div>
     </div>
@@ -526,7 +559,7 @@ function initOrUpdateLeaderboardModal() {
   if (!statsEl || !document.getElementById("leaderboard-dynamic-content")) {
     container.innerHTML = `
       <!-- 1. 상단 글로벌 통계 요약 카드들 -->
-      <div id="leaderboard-global-stats" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3 mb-6 flex-shrink-0">
+      <div id="leaderboard-global-stats" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3 mb-6 flex-shrink-0">
         ${renderGlobalStatsCards(globalStats)}
       </div>
 
@@ -580,15 +613,17 @@ function renderLeaderboardDynamicContent() {
   // 탭 정렬 로직
   let sortedMembers = [...allMembers];
   if (currentLeaderboardTab === 'total') {
-    sortedMembers.sort((a, b) => b.totalSec - a.totalSec || b.totalCount - a.totalCount);
+    sortedMembers.sort((a, b) => b.totalSec - a.totalSec || b.totalViews - a.totalViews || b.totalCount - a.totalCount);
+  } else if (currentLeaderboardTab === 'views') {
+    sortedMembers.sort((a, b) => b.totalViews - a.totalViews || b.totalSec - a.totalSec || b.totalCount - a.totalCount);
   } else if (currentLeaderboardTab === 'clip') {
-    sortedMembers.sort((a, b) => b.clipSec - a.clipSec || b.clipCount - a.clipCount);
+    sortedMembers.sort((a, b) => b.clipSec - a.clipSec || b.clipViews - a.clipViews || b.clipCount - a.clipCount);
   } else if (currentLeaderboardTab === 'full') {
-    sortedMembers.sort((a, b) => b.fullSec - a.fullSec || b.fullCount - a.fullCount);
+    sortedMembers.sort((a, b) => b.fullSec - a.fullSec || b.fullViews - a.fullViews || b.fullCount - a.fullCount);
   } else if (currentLeaderboardTab === 'binge') {
-    sortedMembers.sort((a, b) => b.bingeSec - a.bingeSec || b.bingeCount - a.bingeCount);
+    sortedMembers.sort((a, b) => b.bingeSec - a.bingeSec || b.bingeViews - a.bingeViews || b.bingeCount - a.bingeCount);
   } else if (currentLeaderboardTab === 'count') {
-    sortedMembers.sort((a, b) => b.totalCount - a.totalCount || b.totalSec - a.totalSec);
+    sortedMembers.sort((a, b) => b.totalCount - a.totalCount || b.totalViews - a.totalViews || b.totalSec - a.totalSec);
   }
 
   // 검색 필터링
@@ -609,6 +644,7 @@ function renderLeaderboardDynamicContent() {
   let maxVal = 1;
   if (sortedMembers.length > 0) {
     if (currentLeaderboardTab === 'total') maxVal = Math.max(1, sortedMembers[0].totalSec);
+    else if (currentLeaderboardTab === 'views') maxVal = Math.max(1, sortedMembers[0].totalViews);
     else if (currentLeaderboardTab === 'clip') maxVal = Math.max(1, sortedMembers[0].clipSec);
     else if (currentLeaderboardTab === 'full') maxVal = Math.max(1, sortedMembers[0].fullSec);
     else if (currentLeaderboardTab === 'binge') maxVal = Math.max(1, sortedMembers[0].bingeSec);
@@ -624,15 +660,17 @@ function renderLeaderboardDynamicContent() {
   // 값 포맷 헬퍼
   const getTabMetric = (m) => {
     if (currentLeaderboardTab === 'total') {
-      return { valStr: m.totalDurStr, subStr: `${m.totalCount}개 영상`, sec: m.totalSec };
+      return { valStr: m.totalDurStr, subStr: `${m.totalCount}개 영상 · 👁️ ${m.totalViewsStr}`, sec: m.totalSec };
+    } else if (currentLeaderboardTab === 'views') {
+      return { valStr: m.totalViewsStr, subStr: `${m.totalCount}개 영상 · ${m.totalDurStr}`, sec: m.totalViews };
     } else if (currentLeaderboardTab === 'clip') {
-      return { valStr: m.clipDurStr, subStr: `${m.clipCount}개 영상`, sec: m.clipSec };
+      return { valStr: m.clipDurStr, subStr: `${m.clipCount}개 · 👁️ ${m.clipViewsStr}`, sec: m.clipSec };
     } else if (currentLeaderboardTab === 'full') {
-      return { valStr: m.fullDurStr, subStr: `${m.fullCount}개 영상`, sec: m.fullSec };
+      return { valStr: m.fullDurStr, subStr: `${m.fullCount}개 · 👁️ ${m.fullViewsStr}`, sec: m.fullSec };
     } else if (currentLeaderboardTab === 'binge') {
-      return { valStr: m.bingeDurStr, subStr: `${m.bingeCount}개 영상`, sec: m.bingeSec };
+      return { valStr: m.bingeDurStr, subStr: `${m.bingeCount}개 · 👁️ ${m.bingeViewsStr}`, sec: m.bingeSec };
     } else {
-      return { valStr: `${m.totalCount}개`, subStr: m.totalDurStr, sec: m.totalCount };
+      return { valStr: `${m.totalCount}개`, subStr: `${m.totalDurStr} · 👁️ ${m.totalViewsStr}`, sec: m.totalCount };
     }
   };
 
@@ -774,7 +812,7 @@ function renderLeaderboardDynamicContent() {
         <div class="w-8 sm:w-12 text-center flex-shrink-0">순위</div>
         <div class="flex-1 px-2 sm:px-3">스트리머 / 인원</div>
         <div class="hidden sm:block w-36 px-2 text-left">소속</div>
-        <div class="w-28 sm:w-56 px-1.5 sm:px-2 text-right">플레이타임 / 개수</div>
+        <div class="w-28 sm:w-56 px-1.5 sm:px-2 text-right">기록 / 세부 통계</div>
         <div class="hidden sm:block w-8"></div>
       </div>
 

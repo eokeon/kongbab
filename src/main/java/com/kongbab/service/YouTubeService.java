@@ -137,7 +137,7 @@ public class YouTubeService {
         // 1. YouTube Data API v3 시도 (API 키가 등록되어 있는 경우)
         if (apiKey != null && !apiKey.isBlank() && !apiKey.equalsIgnoreCase("YOUR_API_KEY")) {
             try {
-                String apiUrl = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=" + videoId + "&key=" + apiKey.trim();
+                String apiUrl = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=" + videoId + "&key=" + apiKey.trim();
                 String responseBody = restClient.get()
                         .uri(apiUrl)
                         .retrieve()
@@ -149,12 +149,14 @@ public class YouTubeService {
                     JsonNode item = items.get(0);
                     JsonNode snippet = item.path("snippet");
                     JsonNode contentDetails = item.path("contentDetails");
+                    JsonNode statistics = item.path("statistics");
 
                     String title = snippet.path("title").asText("");
                     String channelTitle = snippet.path("channelTitle").asText("");
                     String publishedAtRaw = snippet.path("publishedAt").asText("");
                     String durationRaw = contentDetails.path("duration").asText("");
                     String duration = formatDuration(durationRaw);
+                    Long viewCount = statistics.has("viewCount") ? statistics.path("viewCount").asLong(0) : null;
 
                     String publishedDate = formatToKstDate(publishedAtRaw);
 
@@ -166,6 +168,7 @@ public class YouTubeService {
                             .publishedDate(publishedDate)
                             .channelTitle(channelTitle)
                             .thumbnailUrl(defaultThumb)
+                            .viewCount(viewCount)
                             .source("api")
                             .message("YouTube Data API로 정보를 성공적으로 가져왔습니다.")
                             .build();
@@ -323,15 +326,16 @@ public class YouTubeService {
                         pageDtos.add(dto);
                     }
 
-                    // videoIds로 영상 길이 및 실제 snippet.publishedAt 조회 (50개 단위)
+                    // videoIds로 영상 길이, 실제 snippet.publishedAt 및 조회수(statistics.viewCount) 조회 (50개 단위)
                     if (!videoIds.isEmpty()) {
                         try {
-                            String vApiUrl = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id="
+                            String vApiUrl = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id="
                                     + String.join(",", videoIds) + "&key=" + apiKey.trim();
                             String vResponseBody = restClient.get().uri(vApiUrl).retrieve().body(String.class);
                             JsonNode vRoot = objectMapper.readTree(vResponseBody);
                             Map<String, String> durationMap = new HashMap<>();
                             Map<String, String> realPubDateMap = new HashMap<>();
+                            Map<String, Long> viewCountMap = new HashMap<>();
 
                             for (JsonNode vItem : vRoot.path("items")) {
                                 String id = vItem.path("id").asText();
@@ -342,6 +346,11 @@ public class YouTubeService {
                                 if (!vPubRaw.isBlank()) {
                                     realPubDateMap.put(id, formatToKstDate(vPubRaw));
                                 }
+
+                                JsonNode stats = vItem.path("statistics");
+                                if (stats.has("viewCount")) {
+                                    viewCountMap.put(id, stats.path("viewCount").asLong(0));
+                                }
                             }
                             for (YouTubeInfoDto dto : pageDtos) {
                                 if (durationMap.containsKey(dto.getVideoId())) {
@@ -351,9 +360,13 @@ public class YouTubeService {
                                 if (realPubDateMap.containsKey(dto.getVideoId())) {
                                     dto.setPublishedDate(realPubDateMap.get(dto.getVideoId()));
                                 }
+                                // 영상 조회수 업데이트
+                                if (viewCountMap.containsKey(dto.getVideoId())) {
+                                    dto.setViewCount(viewCountMap.get(dto.getVideoId()));
+                                }
                             }
                         } catch (Exception e) {
-                            log.warn("영상 상세 정보(길이, 발행일) 일괄 조회 실패: {}", e.getMessage());
+                            log.warn("영상 상세 정보(길이, 발행일, 조회수) 일괄 조회 실패: {}", e.getMessage());
                         }
                     }
 

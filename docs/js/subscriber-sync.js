@@ -632,7 +632,7 @@ async function executeSubscriberSync(onProgress) {
     syncPromises.push(syncAllStreamersToDb(extractAllStreamersFromKongbabData()));
   }
   if (typeof createBackupSnapshot === "function") {
-    createBackupSnapshot(`구독자/팔로워 수 일괄 갱신 (${updatedCount}명)`, true);
+    syncPromises.push(createBackupSnapshot(`구독자/팔로워 수 일괄 갱신 (${updatedCount}명)`, false));
   }
 
   try {

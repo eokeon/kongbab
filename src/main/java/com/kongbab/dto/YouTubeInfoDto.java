@@ -18,6 +18,7 @@ public class YouTubeInfoDto {
     private String duration;
     private String channelTitle;
     private String thumbnailUrl;
+    private Long viewCount;
     private String source;
     private String message;
 }

@@ -87,10 +87,40 @@ async function logoutUser() {
 // ==========================================
 
 // ==========================================
-// 어드민 설정 모달 및 유튜브 구독자 일괄 갱신
+// 어드민 설정 모달 및 유튜브 구독자 / 영상 조회수 일괄 갱신
 // ==========================================
 
 let isSyncingSubscribers = false;
+let isSyncingViewCounts = false;
+let currentAdminSettingsTab = 'subscribers';
+
+function switchAdminSettingsTab(tab) {
+  currentAdminSettingsTab = tab;
+  const subTabBtn = document.getElementById("admin-tab-btn-subscribers");
+  const viewTabBtn = document.getElementById("admin-tab-btn-views");
+  const subPanel = document.getElementById("admin-panel-subscribers");
+  const viewPanel = document.getElementById("admin-panel-views");
+
+  if (tab === 'subscribers') {
+    if (subTabBtn) {
+      subTabBtn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all bg-amber-500 text-black shadow-md shadow-amber-500/20";
+    }
+    if (viewTabBtn) {
+      viewTabBtn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-semibold transition-all text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/80";
+    }
+    if (subPanel) subPanel.classList.remove("hidden");
+    if (viewPanel) viewPanel.classList.add("hidden");
+  } else {
+    if (subTabBtn) {
+      subTabBtn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-semibold transition-all text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/80";
+    }
+    if (viewTabBtn) {
+      viewTabBtn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all bg-emerald-500 text-black shadow-md shadow-emerald-500/20";
+    }
+    if (subPanel) subPanel.classList.add("hidden");
+    if (viewPanel) viewPanel.classList.remove("hidden");
+  }
+}
 
 function openAdminSettingsModal() {
   if (!isAdmin()) {
@@ -105,7 +135,10 @@ function openAdminSettingsModal() {
   modal.classList.add("flex");
   document.body.style.overflow = "hidden";
 
-  // 등록된 유튜브 링크(youtubeUrl)가 있는 대상 인원수 계산
+  // 기본 탭 설정
+  switchAdminSettingsTab(currentAdminSettingsTab || 'subscribers');
+
+  // 1. 등록된 유튜브 링크(youtubeUrl)가 있는 대상 인원수 계산
   const allMembers = typeof extractAllStreamersFromKongbabData === "function" 
     ? extractAllStreamersFromKongbabData() 
     : [];
@@ -135,11 +168,53 @@ function openAdminSettingsModal() {
       `;
     }
   }
+
+  // 2. 등록된 전체 영상 개수 (유튜브 / 치지직) 계산
+  const allVideos = typeof extractAllVideosFromKongbabData === "function"
+    ? extractAllVideosFromKongbabData()
+    : [];
+  let ytVideoCount = 0;
+  let chzzkVideoCount = 0;
+  allVideos.forEach(it => {
+    const url = it.video?.url || "";
+    if (typeof isChzzkUrl === "function" && isChzzkUrl(url)) {
+      chzzkVideoCount++;
+    } else {
+      ytVideoCount++;
+    }
+  });
+
+  const viewTargetCountEl = document.getElementById("admin-view-target-count");
+  const viewYtCountEl = document.getElementById("admin-view-yt-count");
+  const viewChzzkCountEl = document.getElementById("admin-view-chzzk-count");
+  if (viewTargetCountEl) viewTargetCountEl.textContent = `${allVideos.length}개`;
+  if (viewYtCountEl) viewYtCountEl.textContent = `${ytVideoCount}`;
+  if (viewChzzkCountEl) viewChzzkCountEl.textContent = `${chzzkVideoCount}`;
+
+  if (!isSyncingViewCounts) {
+    const progressBar = document.getElementById("admin-view-progress-bar");
+    const progressText = document.getElementById("admin-view-progress-text");
+    const logBox = document.getElementById("admin-view-log-box");
+    const btn = document.getElementById("admin-view-sync-btn");
+
+    if (progressBar) progressBar.style.width = "0%";
+    if (progressText) progressText.textContent = `대기 중 (대상: ${allVideos.length}개)`;
+    if (logBox) {
+      logBox.innerHTML = `<div class="text-zinc-500 text-xs italic">갱신 준비 완료. 아래 [전체 영상 조회수 일괄 갱신 시작] 버튼을 눌러주세요.</div>`;
+    }
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `
+        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+        <span>전체 영상 조회수 일괄 갱신 시작</span>
+      `;
+    }
+  }
 }
 
 function closeAdminSettingsModal() {
-  if (isSyncingSubscribers) {
-    if (!confirm("현재 구독자/팔로워 갱신이 진행 중입니다. 정말 닫으시겠습니까?")) {
+  if (isSyncingSubscribers || isSyncingViewCounts) {
+    if (!confirm("현재 일괄 갱신 작업이 진행 중입니다. 정말 닫으시겠습니까?")) {
       return;
     }
   }
@@ -198,12 +273,12 @@ async function startSubscriberSync() {
     if (logBox) {
       const finishLine = document.createElement("div");
       finishLine.className = "text-xs py-2 font-bold text-emerald-400 border-t border-zinc-800 mt-2";
-      finishLine.textContent = `🎉 일괄 갱신 완료! 총 ${updatedCount}명의 구독자/팔로워 수가 백업 및 DB에 저장되었습니다.`;
+      finishLine.textContent = `🎉 일괄 갱신 완료! 총 ${updatedCount}명의 구독자/팔로워 수가 DB 및 백업에 최신화되었습니다.`;
       logBox.appendChild(finishLine);
       logBox.scrollTop = logBox.scrollHeight;
     }
 
-    showToast(`🎉 구독자·팔로워 수 일괄 갱신 완료 (${updatedCount}명)`);
+    showToast(`🎉 구독자·팔로워 수 일괄 갱신 완료 (${updatedCount}명)<br><span class="text-[11px] text-amber-300">💾 최신 데이터 자동 백업 완료</span>`);
     if (typeof renderContent === "function") renderContent();
   } catch (err) {
     console.error("구독자 갱신 오류:", err);
@@ -225,3 +300,92 @@ async function startSubscriberSync() {
     }
   }
 }
+
+async function startViewCountSync() {
+  if (isSyncingViewCounts) return;
+
+  const btn = document.getElementById("admin-view-sync-btn");
+  const progressBar = document.getElementById("admin-view-progress-bar");
+  const progressText = document.getElementById("admin-view-progress-text");
+  const logBox = document.getElementById("admin-view-log-box");
+
+  isSyncingViewCounts = true;
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `
+      <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <span>전체 영상 조회수 일괄 갱신 중...</span>
+    `;
+  }
+  if (logBox) logBox.innerHTML = "";
+
+  try {
+    const res = await executeViewCountSync((current, total, detailText, status) => {
+      const pct = total > 0 ? Math.round((current / total) * 100) : 0;
+      if (progressBar) progressBar.style.width = `${pct}%`;
+      if (progressText) progressText.textContent = `${pct}% (${current}/${total})`;
+
+      if (logBox) {
+        const line = document.createElement("div");
+        line.className = "text-xs py-0.5 font-mono flex items-center justify-between gap-2";
+        const isSuccess = status.includes("성공");
+        line.innerHTML = `
+          <div class="truncate">
+            <span class="text-zinc-500">[${current}/${total}]</span>
+            <span class="text-zinc-200 font-medium ml-1">${detailText}</span>
+          </div>
+          <span class="flex-shrink-0 ${isSuccess ? 'text-emerald-400 font-bold' : 'text-zinc-400'}">${status}</span>
+        `;
+        logBox.appendChild(line);
+        logBox.scrollTop = logBox.scrollHeight;
+      }
+    });
+
+    if (res && res.success) {
+      if (logBox) {
+        const finishLine = document.createElement("div");
+        finishLine.className = "text-xs py-2 font-bold text-emerald-400 border-t border-zinc-800 mt-2";
+        const serverStatusMsg = res.hasServer 
+          ? (res.backupSynced ? "MariaDB 및 백업 스냅샷에 최신화되었습니다." : "화면에 반영 및 DB 동기화가 완료되었습니다.")
+          : "브라우저 화면 및 로컬 캐시에 즉시 반영되었습니다. (서버 미연결)";
+        finishLine.textContent = `🎉 일괄 갱신 완료! 총 ${res.updatedCount}개 영상의 조회수가 ${serverStatusMsg}`;
+        logBox.appendChild(finishLine);
+        logBox.scrollTop = logBox.scrollHeight;
+      }
+      const backupToastMsg = res.backupSynced 
+        ? `<br><span class="text-[11px] text-amber-300">💾 최신 데이터 자동 백업 완료</span>` 
+        : "";
+      showToast(`🎉 전체 영상 조회수 일괄 갱신 완료 (${res.updatedCount}개)${backupToastMsg}`);
+    } else {
+      showToast(`⚠️ 조회수 갱신 중 문제가 발생했습니다: ${res?.message || '실패'}`);
+    }
+  } catch (err) {
+    console.error("조회수 갱신 오류:", err);
+    if (logBox) {
+      const errLine = document.createElement("div");
+      errLine.className = "text-xs py-2 font-bold text-red-400 border-t border-zinc-800 mt-2";
+      errLine.textContent = `❌ 오류 발생: ${err.message || err}`;
+      logBox.appendChild(errLine);
+    }
+    showToast("⚠️ 조회수 갱신 중 오류가 발생했습니다.");
+  } finally {
+    isSyncingViewCounts = false;
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `
+        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+        <span>전체 영상 조회수 재갱신</span>
+      `;
+    }
+  }
+}
+
+window.openAdminSettingsModal = openAdminSettingsModal;
+window.closeAdminSettingsModal = closeAdminSettingsModal;
+window.switchAdminSettingsTab = switchAdminSettingsTab;
+window.startSubscriberSync = startSubscriberSync;
+window.startViewCountSync = startViewCountSync;
+

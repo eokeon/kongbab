@@ -878,6 +878,10 @@ function renderGroupVideoStats(members) {
   let clipSec = 0;
   let fullSec = 0;
   let bingeSec = 0;
+  let clipViews = 0;
+  let fullViews = 0;
+  let bingeViews = 0;
+  let totalViews = 0;
   const seenVideoUrls = new Set();
 
   for (let i = 0; i < memberList.length; i++) {
@@ -893,15 +897,21 @@ function renderGroupVideoStats(members) {
       totalVideoCount++;
       const type = getVideoType(v);
       const sec = typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0;
+      const views = (v.viewCount != null && !isNaN(v.viewCount)) ? Number(v.viewCount) : 0;
+      totalViews += views;
+
       if (type === 'binge') {
         bingeCount++;
         bingeSec += sec;
+        bingeViews += views;
       } else if (type === 'full') {
         fullCount++;
         fullSec += sec;
+        fullViews += views;
       } else {
         clipCount++;
         clipSec += sec;
+        clipViews += views;
       }
     }
   }
@@ -911,6 +921,10 @@ function renderGroupVideoStats(members) {
   const fullDur = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(fullSec) : "0분";
   const bingeDur = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(bingeSec) : "0분";
   const totalDur = typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(totalSec) : "0분";
+  const formattedTotalViews = typeof formatViewCount === "function" ? (formatViewCount(totalViews) || "0회") : `${totalViews.toLocaleString()}회`;
+  const formattedClipViews = typeof formatViewCount === "function" ? (formatViewCount(clipViews) || "0회") : `${clipViews.toLocaleString()}회`;
+  const formattedFullViews = typeof formatViewCount === "function" ? (formatViewCount(fullViews) || "0회") : `${fullViews.toLocaleString()}회`;
+  const formattedBingeViews = typeof formatViewCount === "function" ? (formatViewCount(bingeViews) || "0회") : `${bingeViews.toLocaleString()}회`;
 
   const resultHtml = `
     <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-1.5 sm:p-2.5 flex items-center gap-1 sm:gap-2 flex-nowrap max-w-full overflow-x-auto no-scrollbar flex-shrink-0 shadow-xl select-none">
@@ -951,13 +965,26 @@ function renderGroupVideoStats(members) {
 
       <div class="w-px h-7 sm:h-8 bg-zinc-800 self-center"></div>
 
+      <!-- 총 조회수 -->
+      <div class="flex flex-col items-center justify-center text-center min-w-[66px] sm:min-w-[84px] px-1.5 sm:px-2.5 py-1" title="해당 탭 내 누적 총 조회수: ${totalViews.toLocaleString()}회">
+        <p class="text-[10px] sm:text-[11px] text-zinc-400 flex items-center justify-center gap-1 sm:gap-1.5 font-medium mb-0.5 sm:mb-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
+          <span>총 조회수</span>
+        </p>
+        <p class="text-xs sm:text-[15px] font-bold text-emerald-400 tracking-tight leading-snug my-0.5">${formattedTotalViews}</p>
+        <p class="text-[11px] sm:text-xs text-zinc-400 font-medium whitespace-nowrap mt-0.5 leading-none">누적 시청</p>
+      </div>
+
+      <div class="w-px h-7 sm:h-8 bg-zinc-800 self-center"></div>
+
       <!-- 소속 인원 -->
       <div class="flex flex-col items-center justify-center text-center min-w-[66px] sm:min-w-[84px] px-1.5 sm:px-2.5 py-1">
-        <p class="text-[10px] sm:text-[11px] text-zinc-400 flex items-center justify-center gap-1 font-medium mb-0.5 sm:mb-1">
-          <svg class="w-3 h-3 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+        <p class="text-[10px] sm:text-[11px] text-zinc-400 flex items-center justify-center gap-1 sm:gap-1.5 font-medium mb-0.5 sm:mb-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-zinc-400 shadow-sm shadow-zinc-400/50"></span>
           <span>소속 인원</span>
         </p>
         <p class="text-xs sm:text-[15px] font-bold text-white tracking-tight leading-snug my-0.5">${memberList.length}명</p>
+        <p class="text-[11px] sm:text-xs text-zinc-400 font-medium whitespace-nowrap mt-0.5 leading-none">전체 멤버</p>
       </div>
     </div>
   `;
@@ -1048,7 +1075,19 @@ function renderSubgroupList(container, cat) {
   const subscriberBadgesHtml = renderGroupSubscriberBadgesHtml(allMembers, cat.name);
 
   const cardsHtml = cat.groups.map(group => {
-    const totalVideos = group.members.reduce((sum, m) => sum + (m.videos || []).length, 0);
+    let totalVideos = 0;
+    let groupViews = 0;
+    (group.members || []).forEach(m => {
+      (m.videos || []).forEach(v => {
+        if (v && v.url && v.url !== "undefined" && v.url.trim()) {
+          totalVideos++;
+          if (v.viewCount != null && !isNaN(v.viewCount)) {
+            groupViews += Number(v.viewCount);
+          }
+        }
+      });
+    });
+    const formattedGroupViews = typeof formatViewCount === "function" ? formatViewCount(groupViews) : null;
     const safeGroupId = typeof sanitizeAttr === 'function' ? sanitizeAttr(group.id) : group.id;
     const safeGroupName = typeof escapeHtml === 'function' ? escapeHtml(group.name) : group.name;
     const dragAttrs = admin ? `
@@ -1090,11 +1129,11 @@ function renderSubgroupList(container, cat) {
             </div>
           </div>
 
-          <div class="relative z-10 pt-3 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
+          <div class="relative z-10 pt-3 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400 gap-2 flex-wrap">
             <span class="font-medium text-zinc-300">
               소속 인원 <strong class="text-white font-bold">${group.members.length}</strong>명
             </span>
-            <span class="flex items-center gap-1.5 text-red-400 font-semibold bg-black/60 px-2 py-0.5 rounded-lg border border-white/5 shadow-inner">
+            <span class="flex items-center gap-1.5 text-red-400 font-semibold bg-black/60 px-2 py-0.5 rounded-lg border border-white/5 shadow-inner flex-wrap">
               ${SVG_ICONS.youtube}
               <span>영상 ${totalVideos}개</span>
             </span>
@@ -1119,11 +1158,11 @@ function renderSubgroupList(container, cat) {
           </div>
         </div>
 
-        <div class="pt-3 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
+        <div class="pt-3 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400 gap-2 flex-wrap">
           <span class="font-medium text-zinc-300">
             소속 인원 <strong class="text-white font-bold">${group.members.length}</strong>명
           </span>
-          <span class="flex items-center gap-1.5 text-red-400 font-semibold">
+          <span class="flex items-center gap-1.5 text-red-400 font-semibold flex-wrap">
             ${SVG_ICONS.youtube}
             <span>영상 ${totalVideos}개</span>
           </span>
@@ -1203,7 +1242,8 @@ function getMemberVideoSummary(member) {
     return {
       clipVideos: [], fullVideos: [], bingeVideos: [],
       clipCount: 0, fullCount: 0, bingeCount: 0,
-      clipTotalDuration: "0분", fullTotalDuration: "0분", bingeTotalDuration: "0분"
+      clipTotalDuration: "0분", fullTotalDuration: "0분", bingeTotalDuration: "0분",
+      clipTotalViews: 0, fullTotalViews: 0, bingeTotalViews: 0, totalViews: 0
     };
   }
 
@@ -1218,21 +1258,29 @@ function getMemberVideoSummary(member) {
   let clipTotalSeconds = 0;
   let fullTotalSeconds = 0;
   let bingeTotalSeconds = 0;
+  let clipTotalViews = 0;
+  let fullTotalViews = 0;
+  let bingeTotalViews = 0;
 
   for (let i = 0; i < rawVideos.length; i++) {
     const v = rawVideos[i];
     if (!v || !v.url || v.url === "undefined" || !v.url.trim()) continue;
     const type = getVideoType(v);
     const sec = typeof parseDurationToSeconds === "function" ? parseDurationToSeconds(v.duration) : 0;
+    const views = (v.viewCount != null && !isNaN(v.viewCount)) ? Number(v.viewCount) : 0;
+
     if (type === 'binge') {
       bingeVideos.push(v);
       bingeTotalSeconds += sec;
+      bingeTotalViews += views;
     } else if (type === 'full') {
       fullVideos.push(v);
       fullTotalSeconds += sec;
+      fullTotalViews += views;
     } else {
       clipVideos.push(v);
       clipTotalSeconds += sec;
+      clipTotalViews += views;
     }
   }
 
@@ -1246,6 +1294,10 @@ function getMemberVideoSummary(member) {
     clipTotalDuration: typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(clipTotalSeconds) : "0분",
     fullTotalDuration: typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(fullTotalSeconds) : "0분",
     bingeTotalDuration: typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(bingeTotalSeconds) : "0분",
+    clipTotalViews,
+    fullTotalViews,
+    bingeTotalViews,
+    totalViews: clipTotalViews + fullTotalViews + bingeTotalViews,
   };
 
   member._videoSummary = summary;
@@ -1256,23 +1308,41 @@ function getMemberVideoSummary(member) {
 
 // 상단 요약 통계 탭 버튼 HTML 생성
 function renderMemberVideoTabsTopHtml(summary, currentTab) {
-  const { clipCount, fullCount, bingeCount, clipTotalDuration, fullTotalDuration, bingeTotalDuration } = summary;
+  const { 
+    clipCount, fullCount, bingeCount, 
+    clipTotalDuration, fullTotalDuration, bingeTotalDuration,
+    clipTotalViews, fullTotalViews, bingeTotalViews 
+  } = summary;
+
+  const clipViewsFormatted = typeof formatViewCount === "function" ? (formatViewCount(clipTotalViews) || "0회") : `${clipTotalViews.toLocaleString()}회`;
+  const fullViewsFormatted = typeof formatViewCount === "function" ? (formatViewCount(fullTotalViews) || "0회") : `${fullTotalViews.toLocaleString()}회`;
+  const bingeViewsFormatted = typeof formatViewCount === "function" ? (formatViewCount(bingeTotalViews) || "0회") : `${bingeTotalViews.toLocaleString()}회`;
+
   return `
     <button onclick="setVideoTab('clip')" title="편집 영상만 보기" class="bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'clip' ? 'border-red-500 ring-2 ring-red-500/30 bg-red-950/20' : 'border-zinc-800'} rounded-xl sm:rounded-2xl p-2.5 sm:px-5 sm:py-3 text-center sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
       <span class="text-xs sm:text-sm text-zinc-300 block font-bold group-hover:text-white transition-colors">🎬 편집 영상</span>
       <span class="text-xl sm:text-3xl font-black text-red-400 my-0.5 block tracking-tight">${clipCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
       <span class="text-[11px] sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${clipTotalDuration}</span>
+      <span class="text-[10px] sm:text-xs text-zinc-300 font-semibold font-mono block bg-black/40 px-2 py-0.5 rounded-lg border border-zinc-700/50 mt-1" title="편집 영상 총 조회수: ${clipTotalViews.toLocaleString()}회">
+        👁️ 조회수 ${clipViewsFormatted}
+      </span>
     </button>
     <button onclick="setVideoTab('full')" title="풀 영상만 보기" class="bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'full' ? 'border-indigo-500 ring-2 ring-indigo-500/30 bg-indigo-950/20' : 'border-zinc-800'} rounded-xl sm:rounded-2xl p-2.5 sm:px-5 sm:py-3 text-center sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
       <span class="text-xs sm:text-sm text-zinc-300 block font-bold group-hover:text-white transition-colors">📹 풀 영상</span>
       <span class="text-xl sm:text-3xl font-black text-indigo-400 my-0.5 block tracking-tight">${fullCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
       <span class="text-[11px] sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${fullTotalDuration}</span>
+      <span class="text-[10px] sm:text-xs text-zinc-300 font-semibold font-mono block bg-black/40 px-2 py-0.5 rounded-lg border border-zinc-700/50 mt-1" title="풀 영상 총 조회수: ${fullTotalViews.toLocaleString()}회">
+        👁️ 조회수 ${fullViewsFormatted}
+      </span>
     </button>
     ${bingeCount > 0 ? `
       <button onclick="setVideoTab('binge')" title="몰아보기 영상만 보기" class="col-span-2 sm:col-span-1 bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'binge' ? 'border-amber-500 ring-2 ring-amber-500/30 bg-amber-950/20' : 'border-zinc-800'} rounded-xl sm:rounded-2xl p-2.5 sm:px-5 sm:py-3 text-center sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
         <span class="text-xs sm:text-sm text-zinc-300 block font-bold group-hover:text-white transition-colors">🍿 몰아보기</span>
         <span class="text-xl sm:text-3xl font-black text-amber-400 my-0.5 block tracking-tight">${bingeCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
         <span class="text-[11px] sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${bingeTotalDuration}</span>
+        <span class="text-[10px] sm:text-xs text-zinc-300 font-semibold font-mono block bg-black/40 px-2 py-0.5 rounded-lg border border-zinc-700/50 mt-1" title="몰아보기 영상 총 조회수: ${bingeTotalViews.toLocaleString()}회">
+          👁️ 조회수 ${bingeViewsFormatted}
+        </span>
       </button>
     ` : ''}
   `;
@@ -1373,6 +1443,8 @@ function renderMemberVideoCardsHtml(displayedVideos, summary, currentTab) {
     const safeDesc = typeof escapeHtml === 'function' ? escapeHtml(video.description) : video.description;
     const safeDate = typeof escapeHtml === 'function' ? escapeHtml(video.date) : video.date;
     const safeDuration = typeof escapeHtml === 'function' ? escapeHtml(video.duration) : video.duration;
+    const formattedViews = typeof formatViewCount === 'function' ? formatViewCount(video.viewCount) : null;
+    const viewCountNum = (video.viewCount != null && !isNaN(video.viewCount)) ? Number(video.viewCount) : null;
 
     const vType = getVideoType(video);
     let typeBadgeClass = 'bg-red-950/90 text-red-300 border-red-700/60';
@@ -1441,21 +1513,31 @@ function renderMemberVideoCardsHtml(displayedVideos, summary, currentTab) {
               </span>
             </div>
 
-            ${video.date ? `
-              <div class="absolute bottom-2 left-2 bg-black/85 backdrop-blur-sm text-[11px] font-medium text-zinc-300 px-2 py-0.5 rounded-md z-10 flex items-center gap-1 select-none shadow-sm">
-                <svg class="w-3 h-3 text-zinc-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                <span>${safeDate}</span>
-              </div>
-            ` : `
-              <div class="absolute bottom-2 left-2 bg-black/85 backdrop-blur-sm text-[11px] font-medium text-zinc-400 px-2 py-0.5 rounded-md z-10 flex items-center gap-1 select-none shadow-sm">
-                <span>날짜 미지정</span>
-              </div>
-            `}
+            <!-- 좌측 하단 메타 정보 (상단: 업로드 날짜, 하단: 조회수) -->
+            <div class="absolute bottom-2 left-2 flex flex-col items-start gap-1 z-10 select-none">
+              ${video.date ? `
+                <div class="bg-black/85 backdrop-blur-sm text-[11px] font-medium text-zinc-300 px-2 py-0.5 rounded-md flex items-center gap-1 shadow-sm">
+                  <svg class="w-3 h-3 text-zinc-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                  <span>${safeDate}</span>
+                </div>
+              ` : (formattedViews ? '' : `
+                <div class="bg-black/85 backdrop-blur-sm text-[11px] font-medium text-zinc-400 px-2 py-0.5 rounded-md flex items-center gap-1 shadow-sm">
+                  <span>날짜 미지정</span>
+                </div>
+              `)}
+              ${formattedViews ? `
+                <div class="bg-black/85 backdrop-blur-sm text-[11px] font-medium text-zinc-300 px-2 py-0.5 rounded-md flex items-center gap-1 shadow-sm" title="${viewCountNum != null ? viewCountNum.toLocaleString() + '회 시청' : ''}">
+                  <svg class="w-3 h-3 text-zinc-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                  <span>조회수 ${formattedViews}</span>
+                </div>
+              ` : ''}
+            </div>
 
             <div class="absolute bottom-2 right-2 bg-black/90 backdrop-blur-sm text-[11px] font-bold font-mono text-zinc-100 px-2 py-0.5 rounded-md z-10 shadow-sm flex items-center gap-1 select-none">
               ${video.duration ? `<span>${safeDuration}</span>` : `<span>영상</span>`}
             </div>
           </a>
+
 
           <div class="px-4 sm:px-5 pt-4 sm:pt-5 pb-2.5 flex-1 flex flex-col justify-between">
             <div>

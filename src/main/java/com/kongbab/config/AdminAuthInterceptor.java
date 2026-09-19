@@ -92,6 +92,10 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
         if (uri.equals("/api/config/structure")) {
             return true;
         }
+        // 서버 헬스체크
+        if (uri.equals("/api/health")) {
+            return true;
+        }
         return false;
     }
 }

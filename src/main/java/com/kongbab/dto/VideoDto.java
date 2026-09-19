@@ -18,6 +18,7 @@ public class VideoDto {
     private String description;
     private Integer displayOrder;
     private String thumbnailUrl;
+    private Long viewCount;
 
     public static VideoDto fromEntity(Video entity) {
         if (entity == null) return null;
@@ -31,6 +32,7 @@ public class VideoDto {
                 .description(entity.getDescription())
                 .displayOrder(entity.getDisplayOrder())
                 .thumbnailUrl(entity.getThumbnailUrl())
+                .viewCount(entity.getViewCount())
                 .build();
     }
 }
