@@ -144,10 +144,28 @@ public class StreamerService {
             Streamer streamer = video.getStreamer();
             if (streamer != null && streamer.getVideos() != null) {
                 streamer.getVideos().remove(video);
+                for (int i = 0; i < streamer.getVideos().size(); i++) {
+                    streamer.getVideos().get(i).setDisplayOrder(i);
+                }
             }
             videoRepository.delete(video);
             exportStaticJson();
             return true;
+        }
+        return false;
+    }
+
+    @Transactional
+    public boolean deleteAllVideosByStreamer(String streamerIdOrCustomId) {
+        Optional<Streamer> opt = findStreamerEntity(streamerIdOrCustomId);
+        if (opt.isPresent()) {
+            Streamer streamer = opt.get();
+            if (streamer.getVideos() != null && !streamer.getVideos().isEmpty()) {
+                videoRepository.deleteAll(streamer.getVideos());
+                streamer.getVideos().clear();
+                exportStaticJson();
+                return true;
+            }
         }
         return false;
     }

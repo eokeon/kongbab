@@ -119,6 +119,9 @@ function showBackendOfflineModal(actionName = "저장 및 변경") {
 }
 
 async function requireServerConnection(actionName = "저장 및 변경") {
+  if (isServerConnected) {
+    return true;
+  }
   const connected = await checkBackupServerHealth();
   if (!connected) {
     showBackendOfflineModal(actionName);

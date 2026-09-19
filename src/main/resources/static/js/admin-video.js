@@ -703,6 +703,9 @@ async function submitMultiVideos() {
   if (typeof syncAllStreamersToDb === "function") {
     await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
   }
+  if (typeof invalidateMemberVideoCaches === "function") {
+    invalidateMemberVideoCaches(state.currentMember);
+  }
   persistData();
   updateStats();
   closeVideoModal();
@@ -802,6 +805,9 @@ async function handleSaveVideo(e) {
     await saveVideoToDb(state.currentMember.id, savedVideo);
   }
 
+  if (typeof invalidateMemberVideoCaches === "function") {
+    invalidateMemberVideoCaches(state.currentMember);
+  }
   persistData();
   updateStats();
   closeVideoModal();
@@ -828,15 +834,14 @@ async function deleteVideo(videoId) {
   if (!confirm(`${title}을(를) 삭제하시겠습니까?`)) return;
 
   const deletedTitle = target ? target.title : "";
+
+  // 1. [낙관적 UI 즉시 반영 (0ms 체감 속도)] 화면에서 즉시 제거하고 카운트/통계 갱신
   state.currentMember.videos = state.currentMember.videos.filter(v => String(v.id) !== String(videoId));
-  // 남은 영상들 displayOrder 재부여
   state.currentMember.videos.forEach((v, idx) => { v.displayOrder = idx; });
-  await deleteVideoFromDb(videoId);
 
-  if (typeof syncAllStreamersToDb === "function") {
-    await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
+  if (typeof invalidateMemberVideoCaches === "function") {
+    invalidateMemberVideoCaches(state.currentMember);
   }
-
   persistData();
   updateStats();
   createBackupSnapshot(`영상 삭제: ${state.currentMember.name} - ${deletedTitle}`);
@@ -844,6 +849,13 @@ async function deleteVideo(videoId) {
 
   const container = document.getElementById("main-content");
   if (container) renderMemberVideos(container);
+
+  // 2. [비차단 백그라운드 DB 삭제] UI 대기 없이 백그라운드에서 안전하게 영구 삭제 수행
+  if (typeof deleteVideoFromDb === "function") {
+    deleteVideoFromDb(videoId).catch(err => {
+      console.error("DB 영상 삭제 중 오류 발생:", err);
+    });
+  }
 }
 
 async function sortMemberVideosByDate() {
@@ -863,6 +875,9 @@ async function sortMemberVideosByDate() {
   }
 
   sortVideosByDateAsc(state.currentMember.videos);
+  if (typeof invalidateMemberVideoCaches === "function") {
+    invalidateMemberVideoCaches(state.currentMember);
+  }
   persistData();
 
   if (typeof syncAllStreamersToDb === "function") {
@@ -910,25 +925,29 @@ async function deleteAllMemberVideos() {
 
   const memberName = `${state.currentMember.streamer} (${state.currentMember.name})`;
   const videoCount = state.currentMember.videos.length;
+  const streamerId = state.currentMember.id;
 
-  const videosToDelete = [...state.currentMember.videos];
-  for (const v of videosToDelete) {
-    if (v.id) {
-      await deleteVideoFromDb(v.id);
-    }
-  }
-
+  // 1. [낙관적 UI 즉시 반영 (0ms)] 화면에서 즉시 전체 제거
   state.currentMember.videos = [];
+  if (typeof invalidateMemberVideoCaches === "function") {
+    invalidateMemberVideoCaches(state.currentMember);
+  }
   persistData();
   updateStats();
-
-  if (typeof syncAllStreamersToDb === "function") {
-    await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
-  }
-
   createBackupSnapshot(`영상 전체 삭제: ${memberName} (${videoCount}개 삭제)`);
   showToast(`🗑️ ${memberName}의 모든 영상이 삭제되었습니다.`);
 
   const container = document.getElementById("main-content");
   if (container) renderMemberVideos(container);
+
+  // 2. [비차단 백그라운드 일괄 DB 삭제] 단일 전용 API로 초고속 처리
+  if (typeof deleteAllVideosFromDb === "function") {
+    deleteAllVideosFromDb(streamerId).catch(err => {
+      console.error("전체 영상 삭제 실패:", err);
+    });
+  } else if (typeof syncAllStreamersToDb === "function") {
+    syncAllStreamersToDb(extractAllStreamersFromKongbabData()).catch(err => {
+      console.error(err);
+    });
+  }
 }

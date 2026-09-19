@@ -127,28 +127,9 @@ function renderSearchResults(container) {
   `;
 
   matchedMembers.forEach(({ member: m, group, category: cat }, mIdx) => {
-    let ytCount = m._ytCount;
-    let chzzkCount = m._chzzkCount;
-    if (ytCount === undefined || chzzkCount === undefined) {
-      ytCount = 0;
-      chzzkCount = 0;
-      const vList = m.videos;
-      if (Array.isArray(vList)) {
-        for (let i = 0; i < vList.length; i++) {
-          const v = vList[i];
-          if (!v) continue;
-          const u = (v.url && v.url !== "undefined") ? v.url : "";
-          if (!u && !v.videoId) continue;
-          if (typeof isChzzkUrl === "function" && isChzzkUrl(u)) {
-            chzzkCount++;
-          } else {
-            ytCount++;
-          }
-        }
-      }
-      m._ytCount = ytCount;
-      m._chzzkCount = chzzkCount;
-    }
+    const { ytCount, chzzkCount } = (typeof getMemberPlatformVideoCounts === "function")
+      ? getMemberPlatformVideoCounts(m)
+      : { ytCount: 0, chzzkCount: 0 };
 
     let videoStatHtml = '';
     if (chzzkCount > 0 && ytCount > 0) {

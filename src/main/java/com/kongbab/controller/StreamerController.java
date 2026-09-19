@@ -90,6 +90,15 @@ public class StreamerController {
         }
     }
 
+    @DeleteMapping("/streamers/{id}/videos")
+    public ResponseEntity<Map<String, Object>> deleteAllVideos(@PathVariable String id) {
+        boolean deleted = streamerService.deleteAllVideosByStreamer(id);
+        Map<String, Object> res = new HashMap<>();
+        res.put("success", deleted);
+        res.put("message", deleted ? "모든 영상이 삭제되었습니다." : "삭제할 영상이 없습니다.");
+        return ResponseEntity.ok(res);
+    }
+
     @PostMapping("/streamers/sync")
     public ResponseEntity<Map<String, Object>> syncStreamers(@RequestBody List<StreamerDto> streamers) {
         List<StreamerDto> synced = streamerService.syncStreamers(streamers);

@@ -670,29 +670,10 @@ function renderEmptyState(emoji, title) {
 }
 
 function renderMemberCard(member, dragType, clickFn, categoryId = null, subgroupId = null, cardIndex = 0) {
-  let ytCount = member._ytCount;
-  let chzzkCount = member._chzzkCount;
-  if (ytCount === undefined || chzzkCount === undefined) {
-    ytCount = 0;
-    chzzkCount = 0;
-    const rawVideos = member.videos;
-    if (Array.isArray(rawVideos)) {
-      for (let i = 0; i < rawVideos.length; i++) {
-        const v = rawVideos[i];
-        if (!v) continue;
-        const u = (v.url && v.url !== "undefined") ? v.url : "";
-        if (!u && !v.videoId) continue;
-        if (typeof isChzzkUrl === "function" && isChzzkUrl(u)) {
-          chzzkCount++;
-        } else {
-          ytCount++;
-        }
-      }
-    }
-    member._ytCount = ytCount;
-    member._chzzkCount = chzzkCount;
-  }
-  const videoCount = ytCount + chzzkCount;
+  const { ytCount, chzzkCount, totalCount } = (typeof getMemberPlatformVideoCounts === "function")
+    ? getMemberPlatformVideoCounts(member)
+    : { ytCount: 0, chzzkCount: 0, totalCount: 0 };
+  const videoCount = totalCount;
   const isDualRole = Array.isArray(member.affiliations) && member.affiliations.length > 1;
   const admin = isAdmin();
   const cachedSub = typeof getCachedSubscriber === "function" ? getCachedSubscriber(member.id) : null;

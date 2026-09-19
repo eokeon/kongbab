@@ -424,6 +424,24 @@ async function deleteVideoFromDb(videoId) {
   return null;
 }
 
+async function deleteAllVideosFromDb(streamerId) {
+  try {
+    const res = await fetch(`${API_BASE}/api/streamers/${encodeURIComponent(streamerId)}/videos`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: getAuthHeaders()
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (e) {
+    console.error("DB 전체 영상 삭제 실패:", e);
+  }
+  return null;
+}
+window.deleteVideoFromDb = deleteVideoFromDb;
+window.deleteAllVideosFromDb = deleteAllVideosFromDb;
+
 async function syncAllStreamersToDb(streamersList) {
   if (!Array.isArray(streamersList) || streamersList.length < 200) {
     console.warn(`[DB 동기화 차단] 전달된 인원 수가 비정상적으로 적습니다 (${streamersList ? streamersList.length : 0}명 < 200명). 데이터 유실 방지를 위해 DB 동기화를 차단합니다.`);

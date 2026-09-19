@@ -599,6 +599,9 @@ async function handleBatchImportPlaylist(e) {
   if (typeof syncAllStreamersToDb === "function") {
     await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
   }
+  if (typeof invalidateMemberVideoCaches === "function") {
+    invalidateMemberVideoCaches(state.currentMember);
+  }
   persistData();
   updateStats();
   closePlaylistModal();

@@ -260,6 +260,60 @@ function loadStoredData() {
   }
 }
 
+// 인원별 캐시 무효화 (영상 추가/수정/삭제 시 즉시 반영)
+function invalidateMemberVideoCaches(member) {
+  if (!member) return;
+  delete member._ytCount;
+  delete member._chzzkCount;
+  delete member._ytChzzkVideoLen;
+  delete member._ytChzzkVideoRef;
+  delete member._videoSummary;
+  delete member._videoSummaryRef;
+  delete member._videoSummaryLen;
+}
+window.invalidateMemberVideoCaches = invalidateMemberVideoCaches;
+
+// 인원별 플랫폼별 영상 개수 (단일 패스 계산 및 길이/참조 기반 자동 감지)
+function getMemberPlatformVideoCounts(member) {
+  if (!member) return { ytCount: 0, chzzkCount: 0, totalCount: 0 };
+  const rawVideos = member.videos;
+  const rawVideosLen = Array.isArray(rawVideos) ? rawVideos.length : 0;
+
+  if (
+    member._ytCount === undefined ||
+    member._chzzkCount === undefined ||
+    member._ytChzzkVideoLen !== rawVideosLen ||
+    member._ytChzzkVideoRef !== rawVideos
+  ) {
+    let ytCount = 0;
+    let chzzkCount = 0;
+    if (Array.isArray(rawVideos)) {
+      for (let i = 0; i < rawVideos.length; i++) {
+        const v = rawVideos[i];
+        if (!v) continue;
+        const u = (v.url && v.url !== "undefined") ? v.url : "";
+        if (!u && !v.videoId) continue;
+        const isChzzk = (typeof isChzzkUrl === "function" ? isChzzkUrl(u) : /chzzk\.naver\.com/i.test(String(u)));
+        if (isChzzk) {
+          chzzkCount++;
+        } else {
+          ytCount++;
+        }
+      }
+    }
+    member._ytCount = ytCount;
+    member._chzzkCount = chzzkCount;
+    member._ytChzzkVideoLen = rawVideosLen;
+    member._ytChzzkVideoRef = rawVideos;
+  }
+  return {
+    ytCount: member._ytCount,
+    chzzkCount: member._chzzkCount,
+    totalCount: member._ytCount + member._chzzkCount
+  };
+}
+window.getMemberPlatformVideoCounts = getMemberPlatformVideoCounts;
+
 let persistTimer = null;
 function invalidateRuntimeCaches() {
   if (KONGBAB_DATA && Array.isArray(KONGBAB_DATA.categories)) {
@@ -267,13 +321,26 @@ function invalidateRuntimeCaches() {
       c._cachedMembers = null;
       c._cachedVideoStats = null;
       c._cachedSubBadges = null;
+      if (Array.isArray(c.members)) {
+        c.members.forEach(m => {
+          if (m) invalidateMemberVideoCaches(m);
+        });
+      }
       if (c.hasSubgroups && Array.isArray(c.groups)) {
         c.groups.forEach(g => {
           g._cachedVideoStats = null;
           g._cachedSubBadges = null;
+          if (Array.isArray(g.members)) {
+            g.members.forEach(m => {
+              if (m) invalidateMemberVideoCaches(m);
+            });
+          }
         });
       }
     });
+  }
+  if (state && state.currentMember) {
+    invalidateMemberVideoCaches(state.currentMember);
   }
   if (typeof clearAffiliationCache === "function") clearAffiliationCache();
   if (typeof clearRenderStatsCache === "function") clearRenderStatsCache();
