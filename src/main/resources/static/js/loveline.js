@@ -273,17 +273,10 @@ function renderLovelineContent(container) {
   const lovelines = getLovelineList();
   const totalCount = lovelines.length;
 
-  // 필터링 및 검색
+  // 필터링
   const filtered = lovelines.filter(item => {
     if (lovelineCurrentFilter !== "all" && item.statusType !== lovelineCurrentFilter) {
       return false;
-    }
-    if (lovelineSearchQuery) {
-      const q = lovelineSearchQuery.toLowerCase();
-      const p1 = `${item.person1?.name || ''} ${item.person1?.streamer || ''} ${item.person1?.role || ''}`.toLowerCase();
-      const p2 = `${item.person2?.name || ''} ${item.person2?.streamer || ''} ${item.person2?.role || ''}`.toLowerCase();
-      const statusStr = `${item.status || ''}`.toLowerCase();
-      return p1.includes(q) || p2.includes(q) || statusStr.includes(q);
     }
     return true;
   });
@@ -310,21 +303,20 @@ function renderLovelineContent(container) {
 
         <!-- 우측 요약 카운터 (결혼, 연애, 썸 순서) & 어드민 등록 버튼 -->
         <div class="flex flex-wrap items-center gap-2 self-stretch md:self-auto justify-start md:justify-end">
-          <div class="flex items-center gap-2 bg-zinc-950/70 border border-pink-500/30 px-3.5 py-2 rounded-2xl text-xs">
-            <span class="text-zinc-400">총 등록</span>
-            <span class="font-extrabold text-pink-400 text-sm">${totalCount}커플</span>
+          <div class="flex items-center gap-2 bg-zinc-950/70 border border-pink-500/30 px-3.5 py-2 rounded-2xl text-xs flex-wrap sm:flex-nowrap">
+            <span class="font-extrabold text-pink-400 text-sm whitespace-nowrap">${totalCount}커플</span>
             <span class="text-zinc-700">|</span>
-            <span class="text-purple-400 font-bold">💍 결혼 ${marriedCount}</span>
+            <span class="text-purple-400 font-bold whitespace-nowrap">💍 결혼 ${marriedCount}</span>
             <span class="text-zinc-700">|</span>
-            <span class="text-rose-400 font-bold">💖 연애 ${datingCount}</span>
+            <span class="text-rose-400 font-bold whitespace-nowrap">💖 연애 ${datingCount}</span>
             <span class="text-zinc-700">|</span>
-            <span class="text-amber-400 font-bold">💌 썸 ${someCount}</span>
+            <span class="text-amber-400 font-bold whitespace-nowrap">💌 썸 ${someCount}</span>
           </div>
 
           ${adminMode ? `
             <button 
               onclick="openLovelineModal()" 
-              class="px-3.5 py-2 rounded-2xl bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-pink-600/30 cursor-pointer transition-all active:scale-95"
+              class="px-3.5 py-2 rounded-2xl bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-pink-600/30 cursor-pointer transition-all active:scale-95 whitespace-nowrap"
             >
               <span>+</span>
               <span>새 러브라인 등록</span>
@@ -334,34 +326,9 @@ function renderLovelineContent(container) {
       </div>
     </div>
 
-    <!-- 2. 필터 버튼 & 검색 바 -->
-    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-zinc-800/80">
-      <!-- 상태 필터 탭 (전체 -> 결혼 -> 연애 -> 썸 순서) -->
-      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 flex-nowrap">
-        ${renderLovelineFilterButtons(totalCount, marriedCount, datingCount, someCount)}
-      </div>
-
-      <!-- 검색창 -->
-      <div class="relative min-w-[200px] sm:w-64">
-        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500 text-xs">🔍</span>
-        <input 
-          type="text" 
-          id="loveline-search-input"
-          value="${escapeHtml(lovelineSearchQuery)}"
-          oninput="handleLovelineSearch(this.value)"
-          placeholder="이름 / 스트리머 / 직업 검색..." 
-          class="w-full pl-9 pr-8 py-2 bg-zinc-900/90 border border-zinc-800 rounded-xl text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-pink-500/60 focus:ring-1 focus:ring-pink-500/30 transition-all shadow-inner"
-        />
-        ${lovelineSearchQuery ? `
-          <button 
-            onclick="clearLovelineSearch()" 
-            class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-zinc-500 hover:text-white cursor-pointer"
-            title="초기화"
-          >
-            ✕
-          </button>
-        ` : ''}
-      </div>
+    <!-- 2. 필터 버튼 -->
+    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 flex-nowrap mb-6 pb-4 border-b border-zinc-800/80">
+      ${renderLovelineFilterButtons(totalCount, marriedCount, datingCount, someCount)}
     </div>
 
     <!-- 3. 커플 카드 그리드 리스트 (1행당 2개씩 배치) -->
@@ -375,22 +342,22 @@ function renderLovelineContent(container) {
           ${totalCount === 0 ? '💕' : '💔'}
         </div>
         <h3 class="text-base font-bold text-zinc-300 mb-1">
-          ${totalCount === 0 ? '등록된 러브라인이 없습니다' : '검색 또는 필터 결과가 없습니다'}
+          ${totalCount === 0 ? '등록된 러브라인이 없습니다' : '해당 필터에 등록된 러브라인이 없습니다'}
         </h3>
         <p class="text-xs text-zinc-500 mb-4">
-          ${totalCount === 0 ? (adminMode ? '새 러브라인 등록 버튼을 눌러 러브라인을 추가해 보세요.' : '현재 등록된 러브라인 정보가 없습니다.') : '조건을 변경하거나 새로운 러브라인을 등록해 보세요.'}
+          ${totalCount === 0 ? (adminMode ? '새 러브라인 등록 버튼을 눌러 러브라인을 추가해 보세요.' : '현재 등록된 러브라인 정보가 없습니다.') : '다른 필터를 선택하거나 새로운 러브라인을 등록해 보세요.'}
         </p>
         ${totalCount === 0 && adminMode ? `
           <button 
             onclick="openLovelineModal()" 
-            class="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 cursor-pointer transition-all active:scale-95"
+            class="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 cursor-pointer transition-all active:scale-95 whitespace-nowrap"
           >
             + 새 러브라인 등록하기
           </button>
-        ` : (lovelineSearchQuery || lovelineCurrentFilter !== "all" ? `
+        ` : (lovelineCurrentFilter !== "all" ? `
           <button 
-            onclick="setLovelineFilter('all'); clearLovelineSearch();" 
-            class="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-300 transition-colors cursor-pointer"
+            onclick="setLovelineFilter('all')" 
+            class="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-300 transition-colors cursor-pointer whitespace-nowrap"
           >
             전체 목록 보기
           </button>
