@@ -334,12 +334,13 @@ function getCurrentNavSnapshot() {
     group: state.currentGroup ? state.currentGroup.id : null,
     member: state.currentMember ? state.currentMember.id : null,
     videoTab: state.currentVideoTab || "clip",
-    searchQuery: state.searchQuery || ""
+    searchQuery: state.searchQuery || "",
+    source: state.navigationSource || null
   };
 }
 
 function updatePageTitle() {
-  const baseTitle = "콩밥특별시 GTA RP";
+  const baseTitle = "콩밥특별시 아카이브";
   if (state.searchQuery) {
     document.title = `"${state.searchQuery}" 검색 결과 | ${baseTitle}`;
     return;
@@ -358,7 +359,7 @@ function updatePageTitle() {
     document.title = `${cat.name} | ${baseTitle}`;
     return;
   }
-  document.title = `${baseTitle} 스트리머 영상`;
+  document.title = baseTitle;
 }
 
 function pushNavHistory() {
@@ -412,6 +413,8 @@ function replaceNavHistory() {
 
 function applyNavState(navState, options = {}) {
   if (!navState) return;
+
+  state.navigationSource = navState.source || null;
 
   const targetCatId = navState.category || "police";
   const cat = (KONGBAB_DATA.categories || []).find(c => c.id === targetCatId) || (KONGBAB_DATA.categories || [])[0];
@@ -521,6 +524,11 @@ function saveNavigationState() {
     } else {
       sessionStorage.removeItem("kongbab_nav_member");
     }
+    if (state.navigationSource) {
+      sessionStorage.setItem("kongbab_nav_source", state.navigationSource);
+    } else {
+      sessionStorage.removeItem("kongbab_nav_source");
+    }
   } catch (e) {}
 }
 
@@ -535,6 +543,7 @@ function restoreNavigationState() {
     let targetMember = null;
     let targetTab = "clip";
     let targetSearch = "";
+    let targetSource = null;
 
     // 1. 브라우저 새로고침(F5) 시 기존 history.state가 보존되어 있다면 최우선 복원
     if (hState && hState.isKongbabApp) {
@@ -543,6 +552,7 @@ function restoreNavigationState() {
       targetMember = hState.member;
       targetTab = hState.videoTab || "clip";
       targetSearch = hState.searchQuery || "";
+      targetSource = hState.source || null;
       appHistoryDepth = typeof hState.depth === "number" ? hState.depth : 0;
     } else if (hasUrlParams) {
       targetCat = urlState.category;
@@ -550,14 +560,19 @@ function restoreNavigationState() {
       targetMember = urlState.member;
       targetTab = urlState.videoTab || "clip";
       targetSearch = urlState.searchQuery || "";
+      targetSource = sessionStorage.getItem("kongbab_nav_source") || null;
       appHistoryDepth = 0;
     } else {
       targetCat = sessionStorage.getItem("kongbab_nav_category");
       targetGroup = sessionStorage.getItem("kongbab_nav_group");
       targetMember = null;
+      targetSource = null;
       try { sessionStorage.removeItem("kongbab_nav_member"); } catch(e) {}
+      try { sessionStorage.removeItem("kongbab_nav_source"); } catch(e) {}
       appHistoryDepth = 0;
     }
+
+    state.navigationSource = targetSource;
 
     if (targetCat && KONGBAB_DATA.categories.some(c => c.id === targetCat)) {
       state.currentCategory = targetCat;
@@ -712,7 +727,16 @@ function goBackFromMember(type, targetId) {
     sessionStorage.removeItem("kongbab_nav_member");
   } catch (e) {}
 
-  if (type === 'category') {
+  const wasFromLoveline = type === 'loveline' || state.navigationSource === 'loveline';
+  state.navigationSource = null;
+  try {
+    sessionStorage.removeItem("kongbab_nav_source");
+  } catch (e) {}
+
+  if (wasFromLoveline) {
+    state.currentCategory = 'loveline';
+    state.currentGroup = null;
+  } else if (type === 'category') {
     state.currentCategory = targetId || state.currentCategory || 'police';
     state.currentGroup = null;
   } else if (type === 'group') {
@@ -730,6 +754,11 @@ function goBackFromMember(type, targetId) {
     setTimeout(() => {
       if (isReturningToList) {
         isReturningToList = false;
+        if (wasFromLoveline) {
+          state.currentCategory = 'loveline';
+          state.currentGroup = null;
+          state.currentMember = null;
+        }
         replaceNavHistory();
         renderContent();
         restoreMemberScrollPosition();
@@ -751,6 +780,10 @@ function selectCategory(catId) {
   state.currentCategory = catId;
   state.currentGroup = null;
   state.currentMember = null;
+  state.navigationSource = null;
+  try {
+    sessionStorage.removeItem("kongbab_nav_source");
+  } catch (e) {}
   state.searchQuery = "";
   isSearchHistoryPushed = false;
   lastMemberScrollY = null;
@@ -772,6 +805,10 @@ function resetToCategory(catId) {
   state.currentCategory = catId || state.currentCategory || 'police';
   state.currentGroup = null;
   state.currentMember = null;
+  state.navigationSource = null;
+  try {
+    sessionStorage.removeItem("kongbab_nav_source");
+  } catch (e) {}
   state.searchQuery = "";
   isSearchHistoryPushed = false;
   clearSearchInput();
@@ -813,7 +850,8 @@ function resetToCategory(catId) {
 }
 
 function selectGroup(groupId) {
-  if (typeof isAdmin === "function" && isAdmin() && typeof hasActuallyDragged !== "undefined" && hasActuallyDragged) return;
+  const isDragged = typeof window.hasActuallyDragged === "function" ? window.hasActuallyDragged() : !!window.hasActuallyDragged;
+  if (typeof isAdmin === "function" && isAdmin() && isDragged) return;
   const cat = getCurrentCategory();
   if (!cat.hasSubgroups) return;
   const group = (cat.groups || []).find(g => String(g.id) === String(groupId));
@@ -839,8 +877,13 @@ function selectGroup(groupId) {
 }
 
 function selectDirectMember(memberId) {
-  if (typeof isAdmin === "function" && isAdmin() && typeof hasActuallyDragged !== "undefined" && hasActuallyDragged) return;
+  const isDragged = typeof window.hasActuallyDragged === "function" ? window.hasActuallyDragged() : !!window.hasActuallyDragged;
+  if (typeof isAdmin === "function" && isAdmin() && isDragged) return;
   recordMemberClickPosition(memberId);
+  state.navigationSource = null;
+  try {
+    sessionStorage.removeItem("kongbab_nav_source");
+  } catch (e) {}
   const cat = getCurrentCategory();
   let member = (cat?.members || []).find(m => String(m.id) === String(memberId));
   if (!member) {
@@ -886,8 +929,13 @@ function selectDirectMember(memberId) {
 }
 
 function selectGroupMember(memberId) {
-  if (typeof isAdmin === "function" && isAdmin() && typeof hasActuallyDragged !== "undefined" && hasActuallyDragged) return;
+  const isDragged = typeof window.hasActuallyDragged === "function" ? window.hasActuallyDragged() : !!window.hasActuallyDragged;
+  if (typeof isAdmin === "function" && isAdmin() && isDragged) return;
   recordMemberClickPosition(memberId);
+  state.navigationSource = null;
+  try {
+    sessionStorage.removeItem("kongbab_nav_source");
+  } catch (e) {}
   let member = null;
   if (state.currentGroup) {
     member = (state.currentGroup.members || []).find(m => String(m.id) === String(memberId));
@@ -947,9 +995,19 @@ function selectGroupFromSearch(catId, groupId) {
   }
 }
 
-function selectMemberFromSearch(catId, groupId, memberId) {
+function selectMemberFromSearch(catId, groupId, memberId, source = null) {
   recordMemberClickPosition(memberId);
   state.currentCategory = catId;
+  state.navigationSource = source || null;
+  if (source) {
+    try {
+      sessionStorage.setItem("kongbab_nav_source", source);
+    } catch (e) {}
+  } else {
+    try {
+      sessionStorage.removeItem("kongbab_nav_source");
+    } catch (e) {}
+  }
   const cat = KONGBAB_DATA.categories.find(c => c.id === catId);
 
   let member = null;

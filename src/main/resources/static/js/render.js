@@ -442,7 +442,14 @@ function renderCategoryTabs() {
   const tabContainer = document.getElementById("category-tabs");
   if (!tabContainer) return;
 
-  const html = KONGBAB_DATA.categories.map(cat => {
+  const secondaryContainer = document.getElementById("secondary-tabs");
+
+  // 직업 카테고리 (경찰, EMS, 갱단, 사업체, 기자, 시민 등)
+  const jobCategories = KONGBAB_DATA.categories.filter(cat => cat.id !== "guide" && cat.id !== "loveline");
+  // 하단 2행 탭 (가이드, 러브라인)
+  const subCategories = KONGBAB_DATA.categories.filter(cat => cat.id === "guide" || cat.id === "loveline");
+
+  function renderCategoryBtn(cat) {
     const isActive = state.currentCategory === cat.id && !state.searchQuery;
     const theme = COLOR_THEMES[cat.color] || COLOR_THEMES.blue;
     const activeClass = isActive 
@@ -450,7 +457,13 @@ function renderCategoryTabs() {
       : "bg-zinc-900/80 text-zinc-400 hover:text-white hover:bg-zinc-800/80 border border-zinc-800";
 
     const memberCount = getCategoryMembers(cat).length;
-    const countLabel = `${memberCount}명`;
+    let countLabel = `${memberCount}명`;
+    if (cat.id === "loveline") {
+      const couples = typeof getLovelineList === "function" ? getLovelineList() : [];
+      countLabel = `${couples.length}커플`;
+    } else if (cat.id === "guide") {
+      countLabel = `${memberCount}개`;
+    }
 
     return `
       <button onclick="selectCategory('${cat.id}')" class="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 md:px-3.5 py-1.5 sm:py-2 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 cursor-pointer whitespace-nowrap flex-shrink-0 ${activeClass}">
@@ -461,13 +474,18 @@ function renderCategoryTabs() {
         </span>
       </button>
     `;
-  }).join("");
+  }
 
-  tabContainer.innerHTML = html;
+  if (secondaryContainer) {
+    tabContainer.innerHTML = jobCategories.map(renderCategoryBtn).join("");
+    secondaryContainer.innerHTML = subCategories.map(renderCategoryBtn).join("");
+  } else {
+    tabContainer.innerHTML = KONGBAB_DATA.categories.map(renderCategoryBtn).join("");
+  }
 
   const floatingContainer = document.getElementById("floating-category-tabs");
   if (floatingContainer) {
-    const catsHtml = KONGBAB_DATA.categories.map(cat => {
+    function renderFloatingCatBtn(cat) {
       const isActive = state.currentCategory === cat.id && !state.searchQuery;
       const theme = COLOR_THEMES[cat.color] || COLOR_THEMES.blue;
       const activeClass = isActive 
@@ -475,7 +493,13 @@ function renderCategoryTabs() {
         : "bg-zinc-900/90 text-zinc-400 hover:text-white hover:bg-zinc-800/90 border border-zinc-800/80 hover:border-zinc-700";
 
       const memberCount = getCategoryMembers(cat).length;
-      const countLabel = `${memberCount}명`;
+      let countLabel = `${memberCount}명`;
+      if (cat.id === "loveline") {
+        const couples = typeof getLovelineList === "function" ? getLovelineList() : [];
+        countLabel = `${couples.length}커플`;
+      } else if (cat.id === "guide") {
+        countLabel = `${memberCount}개`;
+      }
 
       return `
         <button 
@@ -493,9 +517,16 @@ function renderCategoryTabs() {
           </span>
         </button>
       `;
-    }).join("");
+    }
+
+    const jobHtml = jobCategories.map(renderFloatingCatBtn).join("");
+    const subHtml = subCategories.length > 0 ? `
+      <div class="pt-1 my-0.5 border-t border-zinc-800/80"></div>
+      ${subCategories.map(renderFloatingCatBtn).join("")}
+    ` : "";
 
     const statsBtnHtml = `
+      <div class="pt-1 my-0.5 border-t border-zinc-800/80"></div>
       <button 
         onclick="openLeaderboardModal()" 
         title="명예의 전당 & 종합 통계 보기"
@@ -510,10 +541,9 @@ function renderCategoryTabs() {
           <span class="floating-nav-short sm:hidden">★</span>
         </span>
       </button>
-      <div class="pb-1 my-0.5 border-b border-zinc-800/80"></div>
     `;
 
-    floatingContainer.innerHTML = statsBtnHtml + catsHtml;
+    floatingContainer.innerHTML = jobHtml + subHtml + statsBtnHtml;
   }
 
   updateFloatingCategoryNavVisibility();
@@ -531,7 +561,7 @@ function updateFloatingCategoryNavVisibility() {
     return;
   }
 
-  const target = document.getElementById("category-tabs");
+  const target = document.getElementById("secondary-tabs") || document.getElementById("category-tabs");
   let shouldShow = false;
 
   if (target) {
@@ -604,6 +634,14 @@ function renderContent() {
   }
 
   const cat = getCurrentCategory();
+  if (cat && cat.id === "loveline") {
+    if (typeof renderLovelineContent === "function") {
+      renderLovelineContent(mainContent);
+    }
+    if (typeof updatePageTitle === "function") updatePageTitle();
+    return;
+  }
+
   if (!cat.hasSubgroups) {
     renderDirectCategoryMembers(mainContent, cat);
     if (typeof updatePageTitle === "function") updatePageTitle();
@@ -1321,12 +1359,30 @@ function renderMemberVideoCardsHtml(displayedVideos, summary, currentTab) {
   const admin = isAdmin();
   return displayedVideos.map((video, vIndex) => {
     const videoNum = vIndex + 1;
-    const rawVUrl = (video.url && video.url !== "undefined") ? video.url : (video.videoId ? `https://www.youtube.com/watch?v=${video.videoId}` : "");
+    const rawVUrl = (video.url && video.url !== "undefined" && video.url !== "null") ? video.url : (video.videoId ? `https://www.youtube.com/watch?v=${video.videoId}` : "");
     const vUrl = typeof sanitizeUrl === 'function' ? sanitizeUrl(rawVUrl) : rawVUrl;
     const isChzzk = typeof isChzzkUrl === "function" && isChzzkUrl(vUrl);
     const platformLabel = isChzzk ? '치지직' : '유튜브';
-    const rawThumbUrl = video.thumbnailUrl || getYoutubeThumbnail(vUrl);
-    const thumbUrl = typeof sanitizeUrl === 'function' ? sanitizeUrl(rawThumbUrl) : rawThumbUrl;
+
+    let rawThumbUrl = "";
+    if (video.thumbnailUrl && 
+        typeof video.thumbnailUrl === "string" && 
+        video.thumbnailUrl !== "null" && 
+        video.thumbnailUrl !== "undefined" && 
+        video.thumbnailUrl !== "#" && 
+        video.thumbnailUrl.trim() !== "" &&
+        !video.thumbnailUrl.includes("assets/default-thumbnail.svg")) {
+      rawThumbUrl = video.thumbnailUrl;
+    } else {
+      rawThumbUrl = typeof getYoutubeThumbnail === "function" ? getYoutubeThumbnail(vUrl || rawVUrl || video) : "assets/default-thumbnail.svg";
+    }
+    let thumbUrl = typeof sanitizeUrl === 'function' ? sanitizeUrl(rawThumbUrl) : rawThumbUrl;
+    if (!thumbUrl || thumbUrl === "#") {
+      thumbUrl = typeof getYoutubeThumbnail === "function" ? getYoutubeThumbnail(vUrl || rawVUrl || video) : "assets/default-thumbnail.svg";
+    }
+    if (!thumbUrl || thumbUrl === "#") {
+      thumbUrl = "assets/default-thumbnail.svg";
+    }
     const safeVidId = typeof sanitizeAttr === 'function' ? sanitizeAttr(video.id) : video.id;
     const safeTitle = typeof escapeHtml === 'function' ? escapeHtml(video.title) : video.title;
     const safeDesc = typeof escapeHtml === 'function' ? escapeHtml(video.description) : video.description;
@@ -1498,7 +1554,13 @@ function renderMemberVideos(container) {
   const groupEmoji = group ? (group.emoji || '') : (cat ? (cat.emoji || '') : '');
   const catName = cat ? cat.name : '인원';
   const catId = cat ? cat.id : 'police';
-  const backButtonHtml = (!cat || !cat.hasSubgroups || !group) ? `
+  const isFromLoveline = state.navigationSource === "loveline";
+  const backButtonHtml = isFromLoveline ? `
+    <button onclick="goBackFromMember('loveline')" class="inline-flex items-center gap-1.5 text-xs text-pink-300 hover:text-white bg-zinc-800 hover:bg-zinc-700 border border-pink-500/40 hover:border-pink-500/70 px-3 py-1.5 rounded-lg transition-colors mb-4 cursor-pointer shadow-sm">
+      ${SVG_ICONS.back}
+      <span>러브라인으로 돌아가기</span>
+    </button>
+  ` : (!cat || !cat.hasSubgroups || !group) ? `
     <button onclick="goBackFromMember('category', '${catId}')" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors mb-4 cursor-pointer">
       ${SVG_ICONS.back}
       <span>${catName} 인원 목록으로 돌아가기</span>

@@ -288,6 +288,31 @@ async function handleCardDrop(e, type, targetId) {
     list = member?.videos;
     reasonPrefix = `영상 순서 변경: [${member?.name}]`;
     getName = v => `"${v.title}"`;
+  } else if (type === "loveline") {
+    if (typeof getLovelineList === "function" && typeof saveLovelineList === "function") {
+      let list = getLovelineList();
+      const fromIdx = list.findIndex(item => item.id === sourceId);
+      const toIdx = list.findIndex(item => item.id === targetId);
+      if (fromIdx === -1 || toIdx === -1 || fromIdx === toIdx) return;
+      const [moved] = list.splice(fromIdx, 1);
+      list.splice(toIdx, 0, moved);
+      saveLovelineList(list);
+      const mainContent = document.getElementById("main-content");
+      if (mainContent && typeof renderLovelineContent === "function") {
+        renderLovelineContent(mainContent);
+      }
+      if (typeof showToast === "function") {
+        showToast("러브라인 순서가 변경되었습니다.");
+      }
+      setTimeout(() => {
+        isDraggingCard = false;
+        hasActuallyDragged = false;
+        cardDragSource = null;
+        dragStartX = null;
+        dragStartY = null;
+      }, 100);
+      return;
+    }
   }
 
   if (!list) return;
@@ -380,4 +405,12 @@ async function handleCardDrop(e, type, targetId) {
 }
 
 window.isDraggingCard = () => isDraggingCard;
-window.hasActuallyDragged = () => hasActuallyDragged;
+try {
+  Object.defineProperty(window, 'hasActuallyDragged', {
+    get() { return hasActuallyDragged; },
+    set(v) { hasActuallyDragged = !!v; },
+    configurable: true
+  });
+} catch (e) {
+  window.hasActuallyDragged = () => hasActuallyDragged;
+}

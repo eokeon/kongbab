@@ -29,11 +29,12 @@ const DEFAULT_CATEGORIES = [
   },
   { id: "press", name: "기자", emoji: "📰", badge: "KBTBS", icon: "camera", color: "sky", hasSubgroups: false, members: [] },
   { id: "citizen", name: "시민", emoji: "👥", badge: "CITIZEN", icon: "users", color: "purple", hasSubgroups: false, members: [] },
-  { id: "guide", name: "가이드", emoji: "🧭", badge: "GUIDE", icon: "compass", color: "emerald", hasSubgroups: false, members: [] }
+  { id: "guide", name: "가이드", emoji: "🧭", badge: "GUIDE", icon: "compass", color: "emerald", hasSubgroups: false, members: [] },
+  { id: "loveline", name: "러브라인", emoji: "💕", badge: "LOVE", icon: "heart", color: "pink", hasSubgroups: false, members: [] }
 ];
 
 const KONGBAB_DATA = {
-  serverName: "콩밥특별시 GTA RP",
+  serverName: "콩밥특별시 아카이브",
   categories: JSON.parse(JSON.stringify(DEFAULT_CATEGORIES))
 };
 
@@ -43,6 +44,7 @@ const state = {
   currentMember: null,
   currentVideoTab: "clip",
   searchQuery: "",
+  navigationSource: null,
   currentUser: { role: "guest", username: "게스트" }
 };
 
@@ -161,6 +163,24 @@ function applyCategoryStructure(structureCategories) {
   catMap.forEach(remainingCat => {
     reorderedCats.push(remainingCat);
   });
+
+  // 러브라인 카테고리가 가이드 옆에 오도록 위치 보정
+  const lovelineIdx = reorderedCats.findIndex(c => c.id === "loveline");
+  const guideIdx = reorderedCats.findIndex(c => c.id === "guide");
+  if (lovelineIdx !== -1 && guideIdx !== -1 && lovelineIdx !== guideIdx + 1) {
+    const [lovelineCat] = reorderedCats.splice(lovelineIdx, 1);
+    const newGuideIdx = reorderedCats.findIndex(c => c.id === "guide");
+    reorderedCats.splice(newGuideIdx + 1, 0, lovelineCat);
+  } else if (lovelineIdx === -1) {
+    const defLove = DEFAULT_CATEGORIES.find(c => c.id === "loveline");
+    if (defLove) {
+      if (guideIdx !== -1) {
+        reorderedCats.splice(guideIdx + 1, 0, JSON.parse(JSON.stringify(defLove)));
+      } else {
+        reorderedCats.push(JSON.parse(JSON.stringify(defLove)));
+      }
+    }
+  }
 
   KONGBAB_DATA.categories = reorderedCats;
 }
@@ -330,6 +350,11 @@ const COLOR_THEMES = {
     badge: "bg-emerald-950/80 text-emerald-300 border-emerald-700/50",
     glow: "hover:shadow-[0_0_20px_rgba(16,185,129,0.25)]",
     activeTab: "bg-emerald-600 text-white shadow-lg shadow-emerald-600/30"
+  },
+  pink: {
+    badge: "bg-pink-950/80 text-pink-300 border-pink-700/50",
+    glow: "hover:shadow-[0_0_20px_rgba(244,114,182,0.3)]",
+    activeTab: "bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg shadow-pink-600/30"
   }
 };
 
@@ -341,6 +366,7 @@ const SVG_ICONS = {
   camera: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>`,
   users: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm6 3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"></path></svg>`,
   compass: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm3.5 6.5-2.12 5.66a.5.5 0 0 1-.29.29L7.5 16.5l2.12-5.66a.5.5 0 0 1 .29-.29z"/></svg>`,
+  heart: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>`,
   youtube: `<svg class="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`,
   external: `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>`,
   chevronRight: `<svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>`,
@@ -459,10 +485,35 @@ function isMemberChzzk(member) {
   return false;
 }
 
-function getYoutubeThumbnail(url) {
+function getYoutubeThumbnail(urlOrVideo) {
+  if (!urlOrVideo) return "assets/default-thumbnail.svg";
+  let url = "";
+  if (typeof urlOrVideo === "object" && urlOrVideo !== null) {
+    const rawThumb = urlOrVideo.thumbnailUrl;
+    if (rawThumb && 
+        typeof rawThumb === "string" && 
+        rawThumb !== "null" && 
+        rawThumb !== "undefined" && 
+        rawThumb !== "#" && 
+        rawThumb.trim() !== "" &&
+        !rawThumb.includes("assets/default-thumbnail.svg")) {
+      const safe = typeof sanitizeUrl === "function" ? sanitizeUrl(rawThumb) : rawThumb;
+      if (safe && safe !== "#") return safe;
+    }
+    url = (urlOrVideo.url && urlOrVideo.url !== "null" && urlOrVideo.url !== "undefined")
+      ? urlOrVideo.url
+      : (urlOrVideo.videoId ? `https://www.youtube.com/watch?v=${urlOrVideo.videoId}` : "");
+  } else {
+    url = String(urlOrVideo).trim();
+  }
+
+  if (!url || url === "null" || url === "undefined" || url === "#") return "assets/default-thumbnail.svg";
+  if (typeof isChzzkUrl === "function" && isChzzkUrl(url)) return "assets/default-thumbnail.svg";
+
   const id = extractYoutubeId(url);
   return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "assets/default-thumbnail.svg";
 }
+window.getYoutubeThumbnail = getYoutubeThumbnail;
 
 function getTodayDateString() {
   const d = new Date();

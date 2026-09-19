@@ -106,9 +106,15 @@
   </div>
 
   <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
-    <div class="mb-5 sm:mb-6 flex flex-col xl:flex-row xl:items-center justify-between gap-3 sm:gap-4 border-b border-zinc-800/80 pb-4 sm:pb-5">
-      <div id="category-tabs" class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1 sm:py-0 flex-nowrap min-w-0 max-w-full"></div>
-      <div id="header-stats" onclick="openLeaderboardModal()" title="전체 종합 통계 보기 (클릭)" class="text-xs text-zinc-400 flex items-center justify-center sm:justify-start gap-2 sm:gap-2.5 bg-zinc-900/80 hover:bg-zinc-800/90 px-3 sm:px-4 py-2 rounded-xl border border-zinc-800 hover:border-amber-500/50 flex-shrink-0 cursor-pointer transition-all shadow-md group select-none self-center sm:self-start xl:self-auto w-full sm:w-auto"></div>
+    <div class="mb-5 sm:mb-6 flex flex-col gap-2.5 sm:gap-3 border-b border-zinc-800/80 pb-4 sm:pb-5">
+      <!-- 1행: 직업 탭 (좌측) & 우측 종합 통계 배너 -->
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4">
+        <div id="category-tabs" class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1 sm:py-0 flex-nowrap min-w-0 max-w-full"></div>
+        <div id="header-stats" onclick="openLeaderboardModal()" title="전체 종합 통계 보기 (클릭)" class="text-xs text-zinc-400 flex items-center justify-center sm:justify-start gap-2 sm:gap-2.5 bg-zinc-900/80 hover:bg-zinc-800/90 px-3 sm:px-4 py-2 rounded-xl border border-zinc-800 hover:border-amber-500/50 flex-shrink-0 cursor-pointer transition-all shadow-md group select-none self-center sm:self-start lg:self-auto w-full sm:w-auto"></div>
+      </div>
+
+      <!-- 2행 (아래): 가이드, 러브라인 탭 -->
+      <div id="secondary-tabs" class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5 flex-nowrap min-w-0 max-w-full"></div>
     </div>
 
     <section id="main-content" class="animate-fade-in"></section>
@@ -1172,6 +1178,7 @@
   <script src="./js/render.js?v=20260919_gang_mariadb_sync_v6"></script>
   <script src="./js/navigation.js?v=20260919_gang_mariadb_sync_v6"></script>
   <script src="./js/leaderboard.js?v=20260919_gang_mariadb_sync_v6"></script>
+  <script src="./js/loveline.js?v=20260919_gang_mariadb_sync_v6"></script>
   <script src="./js/app.js?v=20260919_gang_mariadb_sync_v6"></script>
   <script>
     // 데이터 및 저작권 보호 안내
