@@ -43,18 +43,91 @@ public class BackupController {
     @Value("${kongbab.backup.directory:}")
     private String backupDirectory;
 
-    @Value("${kongbab.backup.max-count:100}")
+    @Value("${kongbab.backup.max-count:300}")
     private int maxBackups;
 
     private static final DateTimeFormatter FILE_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
-    private static final Pattern SAFE_BACKUP_FILENAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_\\-\\.]+\\.json$");
+    private static final Pattern TIMESTAMP_PATTERN = Pattern.compile("(\\d{8}_\\d{6})");
 
     private boolean isValidBackupFileName(String fileName) {
         if (fileName == null || fileName.isBlank()) return false;
-        if (fileName.contains("..") || fileName.contains("/") || fileName.contains("\\") || fileName.contains(":")) {
+        String trimmed = fileName.trim();
+        if (trimmed.contains("..") || trimmed.contains("/") || trimmed.contains("\\") || trimmed.contains(":")) {
             return false;
         }
-        return SAFE_BACKUP_FILENAME_PATTERN.matcher(fileName.trim()).matches();
+        if (trimmed.contains("*") || trimmed.contains("?") || trimmed.contains("\"") 
+                || trimmed.contains("<") || trimmed.contains(">") || trimmed.contains("|")) {
+            return false;
+        }
+        return trimmed.endsWith(".json");
+    }
+
+    private boolean isBackupFileNameMatch(String name) {
+        if (name == null || !name.endsWith(".json")) return false;
+        if ("backup.json".equalsIgnoreCase(name) || "streamers.json".equalsIgnoreCase(name)) return false;
+        return name.contains("kongbab_backup");
+    }
+
+    private Comparator<File> backupFileDateComparator() {
+        return (f1, f2) -> {
+            String t1 = extractTimestampFromFileName(f1.getName());
+            String t2 = extractTimestampFromFileName(f2.getName());
+            if (t1 != null && t2 != null) {
+                int cmp = t2.compareTo(t1); // 최신순 (내림차순)
+                if (cmp != 0) return cmp;
+            }
+            return Long.compare(f2.lastModified(), f1.lastModified());
+        };
+    }
+
+    private String extractTimestampFromFileName(String fileName) {
+        if (fileName == null) return null;
+        var matcher = TIMESTAMP_PATTERN.matcher(fileName);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
+    private String extractReasonFromFileName(String fileName) {
+        if (fileName == null) return null;
+        if (fileName.startsWith("kongbab_backup_")) return null;
+        int idx = fileName.indexOf("_kongbab_backup.json");
+        if (idx != -1) {
+            String prefix = fileName.substring(0, idx);
+            var matcher = TIMESTAMP_PATTERN.matcher(prefix);
+            if (matcher.find()) {
+                String reason = prefix.substring(0, matcher.start());
+                if (reason.endsWith("_")) reason = reason.substring(0, reason.length() - 1);
+                if (!reason.isBlank()) return reason.trim();
+            }
+        }
+        return null;
+    }
+
+    private String extractDateFromFileName(String fileName) {
+        String ts = extractTimestampFromFileName(fileName);
+        if (ts != null && ts.length() == 15) {
+            try {
+                LocalDateTime ldt = LocalDateTime.parse(ts, FILE_DATE_FORMATTER);
+                return ldt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
+            } catch (Exception ignored) {}
+        }
+        return null;
+    }
+
+    private String sanitizeFileNamePart(String input) {
+        if (input == null || input.isBlank()) {
+            return "데이터 변경";
+        }
+        String sanitized = input.replace("\r", " ").replace("\n", " ");
+        sanitized = sanitized.replace(":", " -");
+        sanitized = sanitized.replaceAll("[\\\\/*?\"<>|]", "");
+        sanitized = sanitized.replaceAll("\\s+", " ").trim();
+        if (sanitized.length() > 50) {
+            sanitized = sanitized.substring(0, 50).trim();
+        }
+        return sanitized.isEmpty() ? "데이터 변경" : sanitized;
     }
 
     private boolean isSafeFilePath(File dir, File targetFile) {
@@ -159,10 +232,10 @@ public class BackupController {
     @GetMapping("/status")
     public ResponseEntity<Map<String, Object>> getStatus() {
         File dir = getTargetDir();
-        File[] files = dir.listFiles((d, name) -> name.startsWith("kongbab_backup_") && name.endsWith(".json"));
+        File[] files = dir.listFiles((d, name) -> isBackupFileNameMatch(name));
         List<String> fileNames = new ArrayList<>();
         if (files != null) {
-            Arrays.sort(files, Comparator.comparing(File::getName).reversed());
+            Arrays.sort(files, backupFileDateComparator());
             for (File f : files) {
                 fileNames.add(f.getName());
             }
@@ -178,41 +251,58 @@ public class BackupController {
     }
 
     @GetMapping("/backup/list")
-    public ResponseEntity<Map<String, Object>> getBackupList() {
+    public ResponseEntity<Map<String, Object>> getBackupList(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
         File dir = getTargetDir();
-        File[] files = dir.listFiles((d, name) -> name.startsWith("kongbab_backup_") && name.endsWith(".json"));
+        File[] allFiles = dir.listFiles((d, name) -> isBackupFileNameMatch(name));
         List<Map<String, Object>> backupItems = new ArrayList<>();
+        int totalCount = allFiles != null ? allFiles.length : 0;
 
-        if (files != null) {
-            Arrays.sort(files, Comparator.comparing(File::getName).reversed());
-            for (File f : files) {
-                Map<String, Object> item = new HashMap<>();
-                item.put("fileName", f.getName());
-                item.put("fileSizeBytes", f.length());
-                item.put("fileSizeFormatted", formatFileSize(f.length()));
-                item.put("lastModified", f.lastModified());
+        if (allFiles != null && allFiles.length > 0) {
+            Arrays.sort(allFiles, backupFileDateComparator());
 
-                try {
-                    String content = Files.readString(f.toPath(), StandardCharsets.UTF_8);
-                    JsonNode root = objectMapper.readTree(content);
-                    item.put("createdAt", root.has("createdAt") ? root.get("createdAt").asText() : formatDate(f.lastModified()));
-                    item.put("reason", root.has("reason") ? root.get("reason").asText() : "데이터 백업");
-                    if (root.has("stats")) {
-                        JsonNode stats = root.get("stats");
-                        item.put("totalMembers", stats.has("totalMembers") ? stats.get("totalMembers").asInt() : 0);
-                        item.put("totalVideos", stats.has("totalVideos") ? stats.get("totalVideos").asInt() : 0);
-                        item.put("totalCategories", stats.has("totalCategories") ? stats.get("totalCategories").asInt() : 0);
-                    } else {
+            int start = Math.max(0, page * size);
+            int end = size <= 0 ? allFiles.length : Math.min(start + size, allFiles.length);
+
+            if (start < allFiles.length) {
+                for (int i = start; i < end; i++) {
+                    File f = allFiles[i];
+                    Map<String, Object> item = new HashMap<>();
+                    item.put("fileName", f.getName());
+                    item.put("fileSizeBytes", f.length());
+                    item.put("fileSizeFormatted", formatFileSize(f.length()));
+                    item.put("lastModified", f.lastModified());
+
+                    String reasonFromFileName = extractReasonFromFileName(f.getName());
+                    String dateFromFileName = extractDateFromFileName(f.getName());
+
+                    try {
+                        String content = Files.readString(f.toPath(), StandardCharsets.UTF_8);
+                        JsonNode root = objectMapper.readTree(content);
+                        item.put("createdAt", root.has("createdAt") ? root.get("createdAt").asText() : (dateFromFileName != null ? dateFromFileName : formatDate(f.lastModified())));
+                        item.put("reason", root.has("reason") ? root.get("reason").asText() : (reasonFromFileName != null ? reasonFromFileName : "데이터 백업"));
+                        if (root.has("stats")) {
+                            JsonNode stats = root.get("stats");
+                            item.put("totalMembers", stats.has("totalMembers") ? stats.get("totalMembers").asInt() : 0);
+                            item.put("totalVideos", stats.has("totalVideos") ? stats.get("totalVideos").asInt() : 0);
+                            item.put("totalCategories", stats.has("totalCategories") ? stats.get("totalCategories").asInt() : 0);
+                            item.put("totalLovelines", stats.has("totalLovelines") ? stats.get("totalLovelines").asInt() : (root.has("lovelines") && root.get("lovelines").isArray() ? root.get("lovelines").size() : 0));
+                        } else {
+                            item.put("totalMembers", 0);
+                            item.put("totalVideos", 0);
+                            item.put("totalLovelines", root.has("lovelines") && root.get("lovelines").isArray() ? root.get("lovelines").size() : 0);
+                        }
+                    } catch (Exception e) {
+                        item.put("createdAt", dateFromFileName != null ? dateFromFileName : formatDate(f.lastModified()));
+                        item.put("reason", reasonFromFileName != null ? reasonFromFileName : "백업 파일");
                         item.put("totalMembers", 0);
                         item.put("totalVideos", 0);
+                        item.put("totalLovelines", 0);
                     }
-                } catch (Exception e) {
-                    item.put("createdAt", formatDate(f.lastModified()));
-                    item.put("reason", "백업 파일");
-                    item.put("totalMembers", 0);
-                    item.put("totalVideos", 0);
+                    backupItems.add(item);
                 }
-                backupItems.add(item);
             }
         }
 
@@ -220,7 +310,11 @@ public class BackupController {
         res.put("success", true);
         res.put("directory", dir.getAbsolutePath());
         res.put("maxBackups", maxBackups);
-        res.put("count", backupItems.size());
+        res.put("page", page);
+        res.put("size", size);
+        res.put("totalCount", totalCount);
+        res.put("count", totalCount);
+        res.put("hasMore", size > 0 && ((page + 1) * size < totalCount));
         res.put("backups", backupItems);
         return ResponseEntity.ok(res);
     }
@@ -291,6 +385,19 @@ public class BackupController {
 
             syncStreamersFiles(jsonContent);
 
+            JsonNode lovelinesNode = root.has("lovelines") ? root.get("lovelines") : null;
+            if (lovelinesNode == null && categoriesNode != null && categoriesNode.isArray()) {
+                for (JsonNode cat : categoriesNode) {
+                    if (cat.has("id") && "loveline".equalsIgnoreCase(cat.get("id").asText()) && cat.has("lovelines")) {
+                        lovelinesNode = cat.get("lovelines");
+                        break;
+                    }
+                }
+            }
+            if (lovelinesNode != null) {
+                res.put("lovelines", lovelinesNode);
+            }
+
             res.put("success", true);
             res.put("message", "백업 데이터가 성공적으로 복원되었습니다.");
             res.put("categories", categoriesNode);
@@ -336,7 +443,20 @@ public class BackupController {
         try {
             File dir = getTargetDir();
             String timestamp = LocalDateTime.now().format(FILE_DATE_FORMATTER);
-            String fileName = "kongbab_backup_" + timestamp + ".json";
+
+            String reason = "데이터 변경";
+            try {
+                JsonNode root = objectMapper.readTree(payload);
+                if (root.has("reason") && !root.get("reason").isNull()) {
+                    String r = root.get("reason").asText().trim();
+                    if (!r.isEmpty()) {
+                        reason = r;
+                    }
+                }
+            } catch (Exception ignored) {}
+
+            String safeReason = sanitizeFileNamePart(reason);
+            String fileName = safeReason + "_" + timestamp + "_kongbab_backup.json";
 
             Path backupPath = Paths.get(dir.getAbsolutePath(), fileName);
             Path latestPath = Paths.get(dir.getAbsolutePath(), "backup.json");
@@ -349,7 +469,7 @@ public class BackupController {
 
             cleanOldBackups(dir);
 
-            File[] currentFiles = dir.listFiles((d, name) -> name.startsWith("kongbab_backup_") && name.endsWith(".json"));
+            File[] currentFiles = dir.listFiles((d, name) -> isBackupFileNameMatch(name));
             int count = currentFiles != null ? currentFiles.length : 1;
 
             Map<String, Object> res = new HashMap<>();
@@ -527,12 +647,14 @@ public class BackupController {
     }
 
     private void cleanOldBackups(File dir) {
-        File[] files = dir.listFiles((d, name) -> name.startsWith("kongbab_backup_") && name.endsWith(".json"));
+        File[] files = dir.listFiles((d, name) -> isBackupFileNameMatch(name));
         if (files != null && files.length > maxBackups) {
-            Arrays.sort(files, Comparator.comparing(File::getName));
+            Arrays.sort(files, backupFileDateComparator().reversed()); // 오래된 순으로 정렬
             int excess = files.length - maxBackups;
             for (int i = 0; i < excess; i++) {
-                files[i].delete();
+                try {
+                    files[i].delete();
+                } catch (Exception ignored) {}
             }
         }
     }

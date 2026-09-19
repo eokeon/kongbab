@@ -14,7 +14,7 @@ spring.jpa.properties.hibernate.format_sql=false
 
 # 백업 파일 저장 설정
 kongbab.backup.directory=D:/백업 파일/KONGBAB_BACKUPS_JSON
-kongbab.backup.max-count=20
+kongbab.backup.max-count=300
 
 # 관리자 계정 설정 (BCrypt 해시 또는 평문 비밀번호 모두 지원)
 kongbab.admin.username=admin

@@ -29,7 +29,7 @@ function getLovelineList() {
     const saved = localStorage.getItem("kongbab_lovelines_data");
     if (saved) {
       const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed)) {
+      if (Array.isArray(parsed) && parsed.length > 0) {
         // 임의 추가된 목 데이터(love-1~5) 제거 및 데이터 정제
         const filtered = parsed.filter(item => item && item.id && !MOCK_LOVELINE_IDS.has(item.id));
         filtered.forEach(item => {
@@ -62,12 +62,26 @@ function getLovelineList() {
   } catch (e) {
     console.warn("러브라인 로컬 데이터 로드 실패:", e);
   }
+
+  // 로컬 스토리지에 데이터가 없을 때 KONGBAB_DATA 및 카테고리에서 fallback 로드
+  if (typeof KONGBAB_DATA !== "undefined" && KONGBAB_DATA) {
+    if (Array.isArray(KONGBAB_DATA.lovelines) && KONGBAB_DATA.lovelines.length > 0) {
+      return KONGBAB_DATA.lovelines;
+    }
+    if (Array.isArray(KONGBAB_DATA.categories)) {
+      const loveCat = KONGBAB_DATA.categories.find(c => c.id === "loveline");
+      if (loveCat && Array.isArray(loveCat.lovelines) && loveCat.lovelines.length > 0) {
+        return loveCat.lovelines;
+      }
+    }
+  }
+
   return [];
 }
 
-function saveLovelineList(list) {
+function saveLovelineList(list, actionReason = null) {
   try {
-    const cleaned = list.map(item => {
+    const cleaned = (list || []).map(item => {
       const copy = { ...item };
       delete copy.summary;
       delete copy.description;
@@ -90,8 +104,30 @@ function saveLovelineList(list) {
 
       return copy;
     });
+
     localStorage.setItem("kongbab_lovelines_data", JSON.stringify(cleaned));
-    if (typeof renderCategoryTabs === "function") renderCategoryTabs();
+
+    if (typeof KONGBAB_DATA !== "undefined" && KONGBAB_DATA) {
+      KONGBAB_DATA.lovelines = cleaned;
+      if (Array.isArray(KONGBAB_DATA.categories)) {
+        const loveCat = KONGBAB_DATA.categories.find(c => c.id === "loveline");
+        if (loveCat) {
+          loveCat.lovelines = cleaned;
+        }
+      }
+    }
+
+    if (typeof persistData === "function") {
+      persistData();
+    }
+    if (typeof renderCategoryTabs === "function") {
+      renderCategoryTabs();
+    }
+
+    // 러브라인 변경 시 백업 스냅샷 자동 생성
+    if (actionReason && typeof createBackupSnapshot === "function") {
+      createBackupSnapshot(actionReason, false);
+    }
   } catch (e) {
     console.error("러브라인 저장 실패:", e);
   }
@@ -1128,7 +1164,14 @@ function handleSaveLovelineFromModal() {
     list.unshift(coupleData);
   }
 
-  saveLovelineList(list);
+  const p1Name = coupleData.person1?.name || "인원1";
+  const p2Name = coupleData.person2?.name || "인원2";
+  const coupleTitle = coupleData.title || `${p1Name} 💕 ${p2Name}`;
+  const actionReason = lovelineModalEditingId
+    ? `러브라인 수정: ${coupleTitle}`
+    : `러브라인 추가: ${coupleTitle}`;
+
+  saveLovelineList(list, actionReason);
   closeLovelineModal();
 
   const mainContent = document.getElementById("main-content");
@@ -1151,7 +1194,11 @@ function swapLovelineCouplePersons(coupleId) {
   couple.person1 = couple.person2;
   couple.person2 = temp;
 
-  saveLovelineList(list);
+  const p1Name = couple.person1?.name || "";
+  const p2Name = couple.person2?.name || "";
+  const actionReason = `러브라인 좌우 위치 변경: ${p1Name} ⇆ ${p2Name}`;
+
+  saveLovelineList(list, actionReason);
   const mainContent = document.getElementById("main-content");
   if (mainContent && state.currentCategory === "loveline") {
     renderLovelineContent(mainContent);
@@ -1184,7 +1231,11 @@ function moveLovelineOrder(coupleId, direction) {
   if (fromIdx !== -1 && toIdx !== -1 && fromIdx !== toIdx) {
     const [moved] = list.splice(fromIdx, 1);
     list.splice(toIdx, 0, moved);
-    saveLovelineList(list);
+
+    const itemTitle = currentItem.title || `${currentItem.person1?.name || ''} 💕 ${currentItem.person2?.name || ''}`;
+    const actionReason = `러브라인 순서 이동: ${itemTitle} (${fromIdx + 1}번 → ${toIdx + 1}번)`;
+
+    saveLovelineList(list, actionReason);
     const mainContent = document.getElementById("main-content");
     if (mainContent && state.currentCategory === "loveline") {
       renderLovelineContent(mainContent);
@@ -1215,8 +1266,12 @@ function confirmDeleteLoveline(coupleId) {
   if (!confirm("정말 이 러브라인을 삭제하시겠습니까?")) return;
 
   let list = getLovelineList();
+  const couple = list.find(l => l.id === coupleId);
+  const deletedTitle = couple ? (couple.title || `${couple.person1?.name || ''} 💕 ${couple.person2?.name || ''}`) : "커플";
+  const actionReason = `러브라인 삭제: ${deletedTitle}`;
+
   list = list.filter(l => l.id !== coupleId);
-  saveLovelineList(list);
+  saveLovelineList(list, actionReason);
 
   const mainContent = document.getElementById("main-content");
   if (mainContent && state.currentCategory === "loveline") {

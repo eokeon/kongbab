@@ -296,13 +296,19 @@ async function handleCardDrop(e, type, targetId) {
       if (fromIdx === -1 || toIdx === -1 || fromIdx === toIdx) return;
       const [moved] = list.splice(fromIdx, 1);
       list.splice(toIdx, 0, moved);
+
+      const p1 = moved.person1?.name || "인원1";
+      const p2 = moved.person2?.name || "인원2";
+      const coupleTitle = moved.title || `${p1} 💕 ${p2}`;
+      const reason = `러브라인 순서 변경: ${coupleTitle} (${fromIdx + 1}번 → ${toIdx + 1}번)`;
+
       saveLovelineList(list);
       const mainContent = document.getElementById("main-content");
       if (mainContent && typeof renderLovelineContent === "function") {
         renderLovelineContent(mainContent);
       }
       if (typeof showToast === "function") {
-        showToast("러브라인 순서가 변경되었습니다.");
+        showToast(`✓ 순서가 변경되어 저장되었습니다.<br><span class="text-[11px] text-amber-300">${reason}</span>`);
       }
       setTimeout(() => {
         isDraggingCard = false;
@@ -310,7 +316,9 @@ async function handleCardDrop(e, type, targetId) {
         cardDragSource = null;
         dragStartX = null;
         dragStartY = null;
-      }, 100);
+      }, 50);
+
+      scheduleCardReorderSync("loveline", reason);
       return;
     }
   }
@@ -374,26 +382,7 @@ async function handleCardDrop(e, type, targetId) {
   persistData();
   renderContent();
 
-  const syncPromises = [];
-  if (type === "group" && typeof saveCategoryStructureToDb === "function") {
-    syncPromises.push(saveCategoryStructureToDb(KONGBAB_DATA.categories));
-  }
-  if (typeof syncAllStreamersToDb === "function") {
-    const allStreamers = extractAllStreamersFromKongbabData();
-    if (allStreamers && allStreamers.length >= 140) {
-      syncPromises.push(syncAllStreamersToDb(allStreamers));
-    } else {
-      console.warn(`[동기화 차단] 인원 누락 감지 (현재 ${allStreamers ? allStreamers.length : 0}명 < 146명). DB 데이터 보호를 위해 일괄 동기화를 건너뜁니다.`);
-    }
-  }
-  createBackupSnapshot(reason, false);
-
-  try {
-    await Promise.all(syncPromises);
-  } catch (err) {
-    console.error("순서 변경 동기화 오류:", err);
-  }
-
+  // 토스트 피드백 즉시 표시 (지연 0ms) 및 드래그 상태 즉각 해제
   showToast(`✓ 순서가 변경되어 저장되었습니다.<br><span class="text-[11px] text-amber-300">${reason}</span>`);
   setTimeout(() => {
     isDraggingCard = false;
@@ -401,7 +390,71 @@ async function handleCardDrop(e, type, targetId) {
     cardDragSource = null;
     dragStartX = null;
     dragStartY = null;
-  }, 100);
+  }, 50);
+
+  // 무거운 백엔드 DB 일괄 동기화 및 백업 스냅샷 저장은 백그라운드에서 비차단(Non-blocking)으로 안전하게 처리
+  scheduleCardReorderSync(type, reason);
+}
+
+let orderSyncTimer = null;
+let pendingOrderSyncList = [];
+
+function scheduleCardReorderSync(type, reason) {
+  pendingOrderSyncList.push({ type, reason });
+  if (orderSyncTimer) {
+    clearTimeout(orderSyncTimer);
+  }
+  // 디바운스 300ms: 연속 드래그 시 불필요한 중복 전체 동기화 및 백업 스냅샷 생성을 방지하고 최종 상태를 안전하게 반영
+  orderSyncTimer = setTimeout(async () => {
+    await flushPendingCardReorderSync();
+  }, 300);
+}
+
+async function flushPendingCardReorderSync() {
+  if (pendingOrderSyncList.length === 0) return;
+  const items = [...pendingOrderSyncList];
+  pendingOrderSyncList = [];
+  if (orderSyncTimer) {
+    clearTimeout(orderSyncTimer);
+    orderSyncTimer = null;
+  }
+
+  const hasGroup = items.some(i => i.type === "group");
+  const isLovelineOnly = items.every(i => i.type === "loveline");
+  const lastReason = items[items.length - 1].reason;
+  const summaryReason = items.length > 1 
+    ? `${lastReason} (외 ${items.length - 1}건)` 
+    : lastReason;
+
+  const syncPromises = [];
+  if (hasGroup && typeof saveCategoryStructureToDb === "function") {
+    syncPromises.push(saveCategoryStructureToDb(KONGBAB_DATA.categories));
+  }
+  if (!isLovelineOnly && typeof syncAllStreamersToDb === "function") {
+    const allStreamers = typeof extractAllStreamersFromKongbabData === "function" ? extractAllStreamersFromKongbabData() : null;
+    if (allStreamers && allStreamers.length >= 140) {
+      syncPromises.push(syncAllStreamersToDb(allStreamers));
+    } else {
+      console.warn(`[동기화 차단] 인원 누락 감지 (현재 ${allStreamers ? allStreamers.length : 0}명 < 146명). DB 데이터 보호를 위해 일괄 동기화를 건너뜁니다.`);
+    }
+  }
+  if (typeof createBackupSnapshot === "function") {
+    createBackupSnapshot(summaryReason, false);
+  }
+
+  try {
+    await Promise.all(syncPromises);
+  } catch (err) {
+    console.error("순서 변경 백그라운드 동기화 오류:", err);
+  }
+}
+
+if (typeof window !== "undefined") {
+  window.addEventListener("beforeunload", () => {
+    if (pendingOrderSyncList.length > 0) {
+      flushPendingCardReorderSync();
+    }
+  });
 }
 
 window.isDraggingCard = () => isDraggingCard;

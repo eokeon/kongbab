@@ -200,6 +200,18 @@ function createBackupSnapshot(actionReason = "데이터 변경", showFeedback = 
     return;
   }
 
+  const cleanCategories = JSON.parse(JSON.stringify(KONGBAB_DATA.categories, (key, value) => {
+    if (key.startsWith("_")) return undefined;
+    return value;
+  }));
+
+  // 러브라인 데이터 수집 및 백업 스냅샷 동기화
+  const lovelinesList = typeof getLovelineList === "function" ? getLovelineList() : (KONGBAB_DATA?.lovelines || []);
+  const loveCat = cleanCategories.find(c => c.id === "loveline");
+  if (loveCat) {
+    loveCat.lovelines = lovelinesList;
+  }
+
   const payload = {
     appName: "kongbab-gta-rp",
     version: "1.0",
@@ -208,9 +220,11 @@ function createBackupSnapshot(actionReason = "데이터 변경", showFeedback = 
     stats: {
       totalCategories: KONGBAB_DATA && KONGBAB_DATA.categories ? KONGBAB_DATA.categories.length : 0,
       totalMembers,
-      totalVideos
+      totalVideos,
+      totalLovelines: lovelinesList.length
     },
-    categories: JSON.parse(JSON.stringify(KONGBAB_DATA.categories))
+    categories: cleanCategories,
+    lovelines: lovelinesList
   };
 
   syncToBackupServer(payload, showFeedback);
@@ -315,117 +329,201 @@ function closeBackupModal() {
   isBackupModalOpen = false;
 }
 
+let backupCurrentPage = 0;
+const BACKUP_PAGE_SIZE = 10;
+let backupHasMore = true;
+let backupIsLoading = false;
+let backupTotalCount = 0;
+let currentBackupRenderCount = 0;
+let isBackupScrollAttached = false;
+
+function handleBackupContainerScroll(e) {
+  const el = e.currentTarget;
+  if (!el || backupIsLoading || !backupHasMore) return;
+  // 바닥에서 50px 이내로 스크롤 시 다음 10개 로드
+  if (el.scrollHeight - el.scrollTop - el.clientHeight < 50) {
+    loadNextBackupPage();
+  }
+}
+
+function renderBackupItemHtml(item, idx) {
+  const isLatest = idx === 0;
+  const badgeText = isLatest ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">최신</span>` : "";
+  const memberTag = item.totalMembers ? `<span class="text-[11px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300 font-medium">인원 ${item.totalMembers}명</span>` : "";
+  const videoTag = item.totalVideos ? `<span class="text-[11px] px-1.5 py-0.5 rounded bg-zinc-800 text-red-300 font-medium">영상 ${item.totalVideos}개</span>` : "";
+  const lovelineTag = item.totalLovelines ? `<span class="text-[11px] px-1.5 py-0.5 rounded bg-pink-950/60 text-pink-300 border border-pink-500/30 font-medium">러브라인 ${item.totalLovelines}쌍</span>` : "";
+  const sizeTag = item.fileSizeFormatted ? `<span class="text-[10px] text-zinc-500 font-mono">${item.fileSizeFormatted}</span>` : "";
+
+  const safeFileName = typeof escapeHtml === 'function' ? escapeHtml(item.fileName) : item.fileName;
+  const safeCreatedAt = typeof escapeHtml === 'function' ? escapeHtml(item.createdAt || item.fileName) : (item.createdAt || item.fileName);
+  const safeReason = typeof escapeHtml === 'function' ? escapeHtml(item.reason || '') : (item.reason || '');
+
+  return `
+    <div class="bg-zinc-950/80 hover:bg-zinc-950 border border-zinc-800/80 hover:border-zinc-700/80 rounded-xl p-3.5 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center gap-2 flex-wrap mb-1">
+          <span class="text-xs font-bold text-white tracking-tight">${safeCreatedAt}</span>
+          ${badgeText}
+          ${memberTag}
+          ${videoTag}
+          ${lovelineTag}
+          ${sizeTag}
+        </div>
+        <div class="flex items-center gap-2 flex-wrap text-xs">
+          <span class="text-zinc-300 truncate max-w-sm" title="${safeReason}">
+            ${safeReason ? `📝 ${safeReason}` : '데이터 변경 백업'}
+          </span>
+          <span class="text-[10px] text-zinc-500 font-mono hidden md:inline truncate max-w-xs" title="${safeFileName}">
+            (${safeFileName})
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1.5 flex-shrink-0 self-end sm:self-auto">
+        <button 
+          type="button"
+          onclick="handleDownloadBackup('${safeFileName}')"
+          class="px-2.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold border border-zinc-700/60 transition-colors cursor-pointer"
+          title="백업 JSON 파일 다운로드"
+        >
+          💾 저장
+        </button>
+        <button 
+          type="button"
+          onclick="handleRestoreBackup('${safeFileName}', '${safeCreatedAt}')"
+          class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold shadow-md shadow-amber-500/20 transition-all cursor-pointer flex items-center gap-1"
+          title="이 시점으로 전체 데이터 복원"
+        >
+          <span>📥 불러오기</span>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
 async function loadAndRenderBackupList(showSpinner = true) {
+  backupCurrentPage = 0;
+  backupHasMore = true;
+  backupIsLoading = false;
+  currentBackupRenderCount = 0;
+
   const container = document.getElementById("backup-modal-list-container");
-  const countLabel = document.getElementById("backup-modal-list-count");
-  const countBadge = document.getElementById("backup-modal-count-badge");
   if (!container) return;
 
-  if (showSpinner && (!container.children || container.children.length === 0)) {
+  if (showSpinner) {
     container.innerHTML = `
-      <div class="text-center py-6 text-zinc-500 text-xs flex items-center justify-center gap-2">
+      <div id="backup-initial-spinner" class="text-center py-6 text-zinc-500 text-xs flex items-center justify-center gap-2">
         <span class="w-4 h-4 border-2 border-amber-400 border-t-transparent rounded-full animate-spin"></span>
         <span>백업 기록을 조회하는 중...</span>
       </div>
     `;
   }
 
-  let backupList = [];
-  try {
-    const res = await fetch(`${BACKUP_SERVER_URL}/api/backup/list`, { 
-      cache: "no-store",
-      credentials: "include"
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data && data.success && Array.isArray(data.backups)) {
-        backupList = data.backups;
-      }
-    } else if (res.status === 404) {
-      // 구버전 백엔드 대비 fallback (/api/status 파일 목록)
-      const statusRes = await fetch(`${BACKUP_SERVER_URL}/api/status`, { cache: "no-store" });
-      if (statusRes.ok) {
-        const sData = await statusRes.json();
-        if (Array.isArray(sData.files)) {
-          backupList = sData.files.map(name => ({
-            fileName: name,
-            createdAt: formatFileNameToDate(name),
-            reason: "자동 백업 스냅샷",
-            totalMembers: 35,
-            totalVideos: 0,
-            fileSizeFormatted: "-"
-          }));
-        }
-      }
-    }
-  } catch (e) {
-    console.warn("백업 목록 조회 실패:", e);
+  if (!isBackupScrollAttached) {
+    container.addEventListener("scroll", handleBackupContainerScroll);
+    isBackupScrollAttached = true;
   }
 
-  if (countLabel) countLabel.textContent = `(총 ${backupList.length}개)`;
-  if (countBadge) countBadge.textContent = `${backupList.length}개 보관 중`;
+  await loadNextBackupPage();
+}
 
-  if (backupList.length === 0) {
-    container.innerHTML = `
-      <div class="text-center py-10 bg-zinc-950/40 rounded-2xl border border-zinc-800/60 p-4">
-        <div class="text-2xl mb-2">📂</div>
-        <p class="text-xs text-zinc-400 font-semibold mb-1">저장된 백업 파일이 없습니다.</p>
-        <p class="text-[11px] text-zinc-600">위의 [즉시 저장] 버튼을 누르면 첫 번째 백업 스냅샷이 생성됩니다.</p>
-      </div>
-    `;
+async function loadNextBackupPage() {
+  if (backupIsLoading || !backupHasMore) return;
+  backupIsLoading = true;
+
+  const container = document.getElementById("backup-modal-list-container");
+  const countLabel = document.getElementById("backup-modal-list-count");
+  const countBadge = document.getElementById("backup-modal-count-badge");
+  if (!container) {
+    backupIsLoading = false;
     return;
   }
 
-  const html = backupList.map((item, idx) => {
-    const isLatest = idx === 0;
-    const badgeText = isLatest ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">최신</span>` : "";
-    const memberTag = item.totalMembers ? `<span class="text-[11px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300 font-medium">인원 ${item.totalMembers}명</span>` : "";
-    const videoTag = item.totalVideos ? `<span class="text-[11px] px-1.5 py-0.5 rounded bg-zinc-800 text-red-300 font-medium">영상 ${item.totalVideos}개</span>` : "";
-    const sizeTag = item.fileSizeFormatted ? `<span class="text-[10px] text-zinc-500 font-mono">${item.fileSizeFormatted}</span>` : "";
+  // 2페이지 이상일 때 하단 로딩 표시기 부착
+  let bottomSpinner = null;
+  if (backupCurrentPage > 0) {
+    bottomSpinner = document.getElementById("backup-scroll-spinner");
+    if (!bottomSpinner) {
+      bottomSpinner = document.createElement("div");
+      bottomSpinner.id = "backup-scroll-spinner";
+      bottomSpinner.className = "text-center py-2.5 text-zinc-500 text-xs flex items-center justify-center gap-2 select-none";
+      bottomSpinner.innerHTML = `
+        <span class="w-3.5 h-3.5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin"></span>
+        <span>추가 백업 기록 불러오는 중...</span>
+      `;
+      container.appendChild(bottomSpinner);
+    }
+  }
 
-    return `
-      <div class="bg-zinc-950/80 hover:bg-zinc-950 border border-zinc-800/80 hover:border-zinc-700/80 rounded-xl p-3.5 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div class="min-w-0 flex-1">
-          <div class="flex items-center gap-2 flex-wrap mb-1">
-            <span class="text-xs font-bold text-white tracking-tight">${item.createdAt || item.fileName}</span>
-            ${badgeText}
-            ${memberTag}
-            ${videoTag}
-            ${sizeTag}
-          </div>
-          <div class="flex items-center gap-2 flex-wrap text-xs">
-            <span class="text-zinc-300 truncate max-w-sm" title="${item.reason || ''}">
-              ${item.reason ? `📝 ${item.reason}` : '데이터 변경 백업'}
-            </span>
-            <span class="text-[10px] text-zinc-500 font-mono hidden md:inline truncate max-w-xs" title="${item.fileName}">
-              (${item.fileName})
-            </span>
-          </div>
-        </div>
+  try {
+    const res = await fetch(`${BACKUP_SERVER_URL}/api/backup/list?page=${backupCurrentPage}&size=${BACKUP_PAGE_SIZE}`, {
+      cache: "no-store",
+      credentials: "include"
+    });
 
-        <div class="flex items-center gap-1.5 flex-shrink-0 self-end sm:self-auto">
-          <button 
-            type="button"
-            onclick="handleDownloadBackup('${item.fileName}')"
-            class="px-2.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold border border-zinc-700/60 transition-colors cursor-pointer"
-            title="백업 JSON 파일 다운로드"
-          >
-            💾 저장
-          </button>
-          <button 
-            type="button"
-            onclick="handleRestoreBackup('${item.fileName}', '${item.createdAt || item.fileName}')"
-            class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold shadow-md shadow-amber-500/20 transition-all cursor-pointer flex items-center gap-1"
-            title="이 시점으로 전체 데이터 복원"
-          >
-            <span>📥 불러오기</span>
-          </button>
-        </div>
-      </div>
-    `;
-  }).join("");
+    const initSpinner = document.getElementById("backup-initial-spinner");
+    if (initSpinner) initSpinner.remove();
+    if (bottomSpinner) bottomSpinner.remove();
 
-  container.innerHTML = html;
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.success && Array.isArray(data.backups)) {
+        backupTotalCount = typeof data.totalCount === "number" ? data.totalCount : (data.count ?? data.backups.length);
+        if (countLabel) countLabel.textContent = `(총 ${backupTotalCount}개)`;
+        if (countBadge) countBadge.textContent = `${backupTotalCount}개 보관 중`;
+
+        if (backupCurrentPage === 0 && data.backups.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-10 bg-zinc-950/40 rounded-2xl border border-zinc-800/60 p-4">
+              <div class="text-2xl mb-2">📂</div>
+              <p class="text-xs text-zinc-400 font-semibold mb-1">저장된 백업 파일이 없습니다.</p>
+              <p class="text-[11px] text-zinc-600">위의 [즉시 저장] 버튼을 누르면 첫 번째 백업 스냅샷이 생성됩니다.</p>
+            </div>
+          `;
+          backupHasMore = false;
+          return;
+        }
+
+        const itemsHtml = data.backups.map((item, idx) => {
+          return renderBackupItemHtml(item, currentBackupRenderCount + idx);
+        }).join("");
+
+        if (backupCurrentPage === 0) {
+          container.innerHTML = itemsHtml;
+        } else {
+          container.insertAdjacentHTML("beforeend", itemsHtml);
+        }
+
+        currentBackupRenderCount += data.backups.length;
+        backupCurrentPage++;
+
+        if (typeof data.hasMore === "boolean") {
+          backupHasMore = data.hasMore;
+        } else {
+          backupHasMore = currentBackupRenderCount < backupTotalCount && data.backups.length === BACKUP_PAGE_SIZE;
+        }
+
+        // 전체 로드 완료 메시지
+        if (!backupHasMore && currentBackupRenderCount > 10) {
+          const finishedEl = document.createElement("div");
+          finishedEl.className = "text-center py-2.5 text-zinc-600 text-[11px] border-t border-zinc-800/60 mt-2";
+          finishedEl.textContent = `✓ 총 ${backupTotalCount}개의 백업 기록을 모두 불러왔습니다.`;
+          container.appendChild(finishedEl);
+        }
+      }
+    } else {
+      console.warn("백업 목록 조회 실패:", res.status);
+      backupHasMore = false;
+    }
+  } catch (e) {
+    console.warn("백업 목록 조회 네트워크 오류:", e);
+    const initSpinner = document.getElementById("backup-initial-spinner");
+    if (initSpinner) initSpinner.remove();
+    if (bottomSpinner) bottomSpinner.remove();
+    backupHasMore = false;
+  } finally {
+    backupIsLoading = false;
+  }
 }
 
 function formatFileNameToDate(name) {
@@ -488,9 +586,20 @@ async function handleRestoreBackup(fileName, displayLabel) {
           }
         }
 
+        // 러브라인 데이터 복원
+        const restoredLovelines = data.lovelines || 
+          (Array.isArray(data.categories) ? data.categories.find(c => c.id === "loveline")?.lovelines : null);
+        if (Array.isArray(restoredLovelines) && typeof saveLovelineList === "function") {
+          saveLovelineList(restoredLovelines);
+        }
+
         persistData();
         renderCategoryTabs();
         renderContent();
+        if (state.currentCategory === "loveline" && typeof renderLovelineContent === "function") {
+          const mainContent = document.getElementById("main-content");
+          if (mainContent) renderLovelineContent(mainContent);
+        }
         updateStats();
 
         showToast(`🎉 [${displayLabel}] 백업본으로 완벽히 복원되었습니다!`);
@@ -549,9 +658,21 @@ async function handleBackupFileUpload(event) {
               applyStreamersToKongbabData(dbStreamers);
             }
           }
+
+          // 러브라인 데이터 복원
+          const restoredLovelines = data?.lovelines || 
+            (Array.isArray(data?.categories) ? data.categories.find(c => c.id === "loveline")?.lovelines : null);
+          if (Array.isArray(restoredLovelines) && typeof saveLovelineList === "function") {
+            saveLovelineList(restoredLovelines);
+          }
+
           persistData();
           renderCategoryTabs();
           renderContent();
+          if (state.currentCategory === "loveline" && typeof renderLovelineContent === "function") {
+            const mainContent = document.getElementById("main-content");
+            if (mainContent) renderLovelineContent(mainContent);
+          }
           updateStats();
           showToast(`🎉 '${file.name}' 파일로부터 성공적으로 복원되었습니다!`);
           closeBackupModal();

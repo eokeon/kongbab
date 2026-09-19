@@ -250,6 +250,16 @@ async function fetchStreamersFromDb() {
   let staticData = null;
   try {
     staticData = await getStaticStreamersData();
+    if (staticData) {
+      const staticLovelines = staticData.lovelines || 
+        (Array.isArray(staticData.categories) ? staticData.categories.find(c => c.id === "loveline")?.lovelines : null);
+      if (Array.isArray(staticLovelines) && staticLovelines.length > 0) {
+        const current = typeof getLovelineList === "function" ? getLovelineList() : [];
+        if (current.length === 0 && typeof saveLovelineList === "function") {
+          saveLovelineList(staticLovelines);
+        }
+      }
+    }
   } catch (err) {
     console.warn("정적 streamers.json 로드 실패:", err);
   }
