@@ -1,13 +1,13 @@
 {
   "appName": "kongbab-gta-rp",
   "version": "1.0",
-  "createdAt": "2026.09.20 05:02:20",
-  "reason": "구독자/팔로워 수 일괄 갱신 (156명)",
+  "createdAt": "2026.09.20 06:16:00",
+  "reason": "인원 수정: 악마녀 / 선마녀 (끠월마녀) - 소속 2개",
   "stats": {
     "totalCategories": 8,
     "totalMembers": 228,
-    "totalVideos": 2031,
-    "totalLovelines": 2
+    "totalVideos": 2206,
+    "totalLovelines": 3
   },
   "categories": [
     {
@@ -1607,7 +1607,8 @@
               "duration": "8:19:08",
               "description": "",
               "displayOrder": 2,
-              "thumbnailUrl": "https://i.ytimg.com/vi/FG2YHoi-1EE/mqdefault.jpg"
+              "thumbnailUrl": "https://i.ytimg.com/vi/FG2YHoi-1EE/mqdefault.jpg",
+              "viewCount": null
             },
             {
               "id": "v-mtxzpnh7ofcg1-1",
@@ -1618,7 +1619,8 @@
               "duration": "14:59:24",
               "description": "",
               "displayOrder": 3,
-              "thumbnailUrl": "https://i.ytimg.com/vi/b8pnhQCONN0/mqdefault.jpg"
+              "thumbnailUrl": "https://i.ytimg.com/vi/b8pnhQCONN0/mqdefault.jpg",
+              "viewCount": null
             },
             {
               "id": "v-mtxzpnh7vsl59-2",
@@ -1629,7 +1631,8 @@
               "duration": "12:05:13",
               "description": "",
               "displayOrder": 4,
-              "thumbnailUrl": "https://i.ytimg.com/vi/73vHBu89ETc/mqdefault.jpg"
+              "thumbnailUrl": "https://i.ytimg.com/vi/73vHBu89ETc/mqdefault.jpg",
+              "viewCount": null
             },
             {
               "id": "v-mtxzpnh7mx82c-3",
@@ -1640,7 +1643,8 @@
               "duration": "13:31:51",
               "description": "",
               "displayOrder": 5,
-              "thumbnailUrl": "https://i.ytimg.com/vi/H_BU1IijT2k/mqdefault.jpg"
+              "thumbnailUrl": "https://i.ytimg.com/vi/H_BU1IijT2k/mqdefault.jpg",
+              "viewCount": null
             },
             {
               "id": "v-mtxzpnh7n6pln-4",
@@ -1651,7 +1655,8 @@
               "duration": "9:30:13",
               "description": "",
               "displayOrder": 6,
-              "thumbnailUrl": "https://i.ytimg.com/vi/LJk9Mh3LSKk/mqdefault.jpg"
+              "thumbnailUrl": "https://i.ytimg.com/vi/LJk9Mh3LSKk/mqdefault.jpg",
+              "viewCount": null
             },
             {
               "id": "v-mtxzpnh7cko4r-5",
@@ -1662,7 +1667,8 @@
               "duration": "13:30:51",
               "description": "",
               "displayOrder": 7,
-              "thumbnailUrl": "https://i.ytimg.com/vi/jeZixaH8g-0/mqdefault.jpg"
+              "thumbnailUrl": "https://i.ytimg.com/vi/jeZixaH8g-0/mqdefault.jpg",
+              "viewCount": null
             },
             {
               "id": "v-mtxzpnh7w7tx1-6",
@@ -1673,7 +1679,8 @@
               "duration": "12:44:23",
               "description": "",
               "displayOrder": 8,
-              "thumbnailUrl": "https://i.ytimg.com/vi/2qTj28WpQIg/mqdefault.jpg"
+              "thumbnailUrl": "https://i.ytimg.com/vi/2qTj28WpQIg/mqdefault.jpg",
+              "viewCount": null
             },
             {
               "id": "v-mtxzpnh7xf3oz-7",
@@ -1684,7 +1691,8 @@
               "duration": "10:59:19",
               "description": "",
               "displayOrder": 9,
-              "thumbnailUrl": "https://i.ytimg.com/vi/Ks3awkFYqJQ/mqdefault.jpg"
+              "thumbnailUrl": "https://i.ytimg.com/vi/Ks3awkFYqJQ/mqdefault.jpg",
+              "viewCount": null
             }
           ],
           "affiliations": [
@@ -3760,7 +3768,7 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "displayOrder": 9
+              "displayOrder": 8
             }
           ],
           "category": "police",
@@ -7569,7 +7577,8 @@
               "duration": "11:31:30",
               "description": "",
               "displayOrder": 19,
-              "thumbnailUrl": "null"
+              "thumbnailUrl": "null",
+              "viewCount": null
             },
             {
               "id": "v-mtzohmnn7jf17-1",
@@ -7580,7 +7589,8 @@
               "duration": "6:00:01",
               "description": "",
               "displayOrder": 20,
-              "thumbnailUrl": "null"
+              "thumbnailUrl": "null",
+              "viewCount": null
             },
             {
               "id": "v-mtzohmnn89eaw-2",
@@ -7591,7 +7601,8 @@
               "duration": "7:08:27",
               "description": "",
               "displayOrder": 21,
-              "thumbnailUrl": "null"
+              "thumbnailUrl": "null",
+              "viewCount": null
             },
             {
               "id": "v-mtzohmnn4zt09-3",
@@ -7602,7 +7613,8 @@
               "duration": "11:53:05",
               "description": "",
               "displayOrder": 22,
-              "thumbnailUrl": "null"
+              "thumbnailUrl": "null",
+              "viewCount": null
             },
             {
               "id": "v-mtzohmnnw8eb9-4",
@@ -7613,7 +7625,8 @@
               "duration": "2:07:07",
               "description": "",
               "displayOrder": 23,
-              "thumbnailUrl": "null"
+              "thumbnailUrl": "null",
+              "viewCount": null
             },
             {
               "id": "v-mtzohmnnlwjnk-5",
@@ -7624,7 +7637,8 @@
               "duration": "5:07:24",
               "description": "",
               "displayOrder": 24,
-              "thumbnailUrl": "null"
+              "thumbnailUrl": "null",
+              "viewCount": null
             },
             {
               "id": "v-mtzohmnndh3my-6",
@@ -7635,7 +7649,8 @@
               "duration": "5:33:12",
               "description": "",
               "displayOrder": 25,
-              "thumbnailUrl": "null"
+              "thumbnailUrl": "null",
+              "viewCount": null
             },
             {
               "id": "v-mtzohmnnc31ne-7",
@@ -7646,7 +7661,8 @@
               "duration": "7:41:40",
               "description": "",
               "displayOrder": 26,
-              "thumbnailUrl": "null"
+              "thumbnailUrl": "null",
+              "viewCount": null
             },
             {
               "id": "v-mtzohmnnc514u-8",
@@ -7657,7 +7673,8 @@
               "duration": "6:30:59",
               "description": "",
               "displayOrder": 27,
-              "thumbnailUrl": "null"
+              "thumbnailUrl": "null",
+              "viewCount": null
             },
             {
               "id": "v-mtzohmnne5npr-9",
@@ -7668,7 +7685,8 @@
               "duration": "6:23:18",
               "description": "",
               "displayOrder": 28,
-              "thumbnailUrl": "null"
+              "thumbnailUrl": "null",
+              "viewCount": null
             },
             {
               "id": "v-mtzohmnn0bsqa-10",
@@ -7679,7 +7697,8 @@
               "duration": "6:38:17",
               "description": "",
               "displayOrder": 29,
-              "thumbnailUrl": "null"
+              "thumbnailUrl": "null",
+              "viewCount": null
             },
             {
               "id": "v-mtzohmnnruac8-11",
@@ -7690,7 +7709,8 @@
               "duration": "8:00:35",
               "description": "",
               "displayOrder": 30,
-              "thumbnailUrl": "null"
+              "thumbnailUrl": "null",
+              "viewCount": null
             }
           ],
           "affiliations": [
@@ -10436,12 +10456,12 @@
           "id": "gang-sangryeon-10",
           "name": "악마녀 / 선마녀",
           "streamer": "끠월마녀",
-          "role": "2대 간호부장",
+          "role": "",
           "swatRole": "",
-          "status": "active",
-          "badgeColor": "bg-teal-600",
+          "status": "resigned",
+          "badgeColor": "bg-zinc-800",
           "avatar": "https://yt3.googleusercontent.com/Fv-x7MPzdWtEedCZZCKI0aKwx7hOTjBs_LEq4_9OxnuR3KRBKrZqKmTKsV6CbLLjekaL9QvY=s120-c-k-c0x00ffffff-no-rj",
-          "displayOrder": 4,
+          "displayOrder": 10,
           "subscriberCount": "2,100명",
           "youtubeUrl": "https://www.youtube.com/@MaNyeo919",
           "videos": [],
@@ -10458,15 +10478,15 @@
             {
               "category": "gang",
               "subgroup": "gang-sangryeon",
-              "role": "탈퇴",
+              "role": "",
               "swatRole": "",
-              "status": "active",
-              "badgeColor": "bg-zinc-700",
+              "status": "resigned",
+              "badgeColor": "bg-zinc-800",
               "displayOrder": 10
             }
           ],
-          "category": "ems",
-          "subgroup": null
+          "category": "gang",
+          "subgroup": "gang-sangryeon"
         },
         {
           "id": "ems-4",
@@ -12701,7 +12721,7 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "displayOrder": 5
+              "displayOrder": 7
             }
           ],
           "category": "ems",
@@ -14401,7 +14421,8 @@
                   "duration": "8:09:19",
                   "description": "",
                   "displayOrder": 0,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtvd5fl3jq12",
@@ -14412,7 +14433,8 @@
                   "duration": "9:16:52",
                   "description": "",
                   "displayOrder": 1,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtvd5lf9hsk1",
@@ -14423,7 +14445,8 @@
                   "duration": "8:43:14",
                   "description": "",
                   "displayOrder": 2,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtvd5rbtl45l",
@@ -14434,7 +14457,8 @@
                   "duration": "8:35:03",
                   "description": "",
                   "displayOrder": 3,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtvd5uvmg19a",
@@ -14445,7 +14469,8 @@
                   "duration": "9:22:14",
                   "description": "",
                   "displayOrder": 4,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtvd5z05wfhs",
@@ -14456,7 +14481,8 @@
                   "duration": "4:15:59",
                   "description": "",
                   "displayOrder": 5,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtvd665mftry",
@@ -14467,7 +14493,8 @@
                   "duration": "10:16:54",
                   "description": "",
                   "displayOrder": 6,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtvd6d7xo8n8",
@@ -14478,7 +14505,8 @@
                   "duration": "9:22:16",
                   "description": "",
                   "displayOrder": 7,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtvd6gwtxzxi",
@@ -14489,7 +14517,8 @@
                   "duration": "7:46:02",
                   "description": "",
                   "displayOrder": 8,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtvd3a0mq81v",
@@ -14500,7 +14529,8 @@
                   "duration": "10:51",
                   "description": "",
                   "displayOrder": 9,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtvd3gd8tfzq",
@@ -14511,7 +14541,8 @@
                   "duration": "10:02",
                   "description": "",
                   "displayOrder": 10,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtvd3l6lz40b",
@@ -14522,7 +14553,8 @@
                   "duration": "18:15",
                   "description": "",
                   "displayOrder": 11,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 }
               ],
               "affiliations": [
@@ -15894,7 +15926,8 @@
                   "duration": "1:58:20",
                   "description": "",
                   "displayOrder": 0,
-                  "thumbnailUrl": "https://img.youtube.com/vi/yadfEmC_W9Y/hqdefault.jpg"
+                  "thumbnailUrl": "https://img.youtube.com/vi/yadfEmC_W9Y/hqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtwws4wwr2l0",
@@ -15905,7 +15938,8 @@
                   "duration": "5:44:29",
                   "description": "",
                   "displayOrder": 1,
-                  "thumbnailUrl": "https://img.youtube.com/vi/5JXqfwgYeFo/hqdefault.jpg"
+                  "thumbnailUrl": "https://img.youtube.com/vi/5JXqfwgYeFo/hqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtwwsfy1nt4m",
@@ -15916,7 +15950,8 @@
                   "duration": "7:07:56",
                   "description": "",
                   "displayOrder": 2,
-                  "thumbnailUrl": "https://img.youtube.com/vi/0HTI9is2zN4/hqdefault.jpg"
+                  "thumbnailUrl": "https://img.youtube.com/vi/0HTI9is2zN4/hqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtwwstdn67k3",
@@ -15927,7 +15962,8 @@
                   "duration": "8:04:06",
                   "description": "",
                   "displayOrder": 3,
-                  "thumbnailUrl": "https://img.youtube.com/vi/pidiXJAhYYI/hqdefault.jpg"
+                  "thumbnailUrl": "https://img.youtube.com/vi/pidiXJAhYYI/hqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtwwtohvsn0v",
@@ -15938,7 +15974,8 @@
                   "duration": "1:11:56",
                   "description": "",
                   "displayOrder": 4,
-                  "thumbnailUrl": "https://img.youtube.com/vi/GU6gwdlgp7w/hqdefault.jpg"
+                  "thumbnailUrl": "https://img.youtube.com/vi/GU6gwdlgp7w/hqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtwwp24dgw1b",
@@ -15973,7 +16010,8 @@
                   "duration": "9:24:25",
                   "description": "",
                   "displayOrder": 7,
-                  "thumbnailUrl": "https://img.youtube.com/vi/5kltreN9GWk/hqdefault.jpg"
+                  "thumbnailUrl": "https://img.youtube.com/vi/5kltreN9GWk/hqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtwwxodpin6d",
@@ -15984,7 +16022,8 @@
                   "duration": "11:47:31",
                   "description": "",
                   "displayOrder": 8,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtwwxu46qp0q",
@@ -15995,7 +16034,8 @@
                   "duration": "11:05:07",
                   "description": "",
                   "displayOrder": 9,
-                  "thumbnailUrl": "https://img.youtube.com/vi/2sjPMDcmYtI/hqdefault.jpg"
+                  "thumbnailUrl": "https://img.youtube.com/vi/2sjPMDcmYtI/hqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtwwxz8dtjq9",
@@ -16006,7 +16046,8 @@
                   "duration": "6:23:35",
                   "description": "",
                   "displayOrder": 10,
-                  "thumbnailUrl": "https://img.youtube.com/vi/P00HS-tSCwo/hqdefault.jpg"
+                  "thumbnailUrl": "https://img.youtube.com/vi/P00HS-tSCwo/hqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtwwy2wozpeo",
@@ -16017,7 +16058,8 @@
                   "duration": "9:03:58",
                   "description": "",
                   "displayOrder": 11,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtwwy78zrv8c",
@@ -16028,7 +16070,8 @@
                   "duration": "10:13:27",
                   "description": "",
                   "displayOrder": 12,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtwwybfvjwfb",
@@ -16039,7 +16082,8 @@
                   "duration": "6:30:10",
                   "description": "",
                   "displayOrder": 13,
-                  "thumbnailUrl": "https://img.youtube.com/vi/Qr4Ds8B1BGw/hqdefault.jpg"
+                  "thumbnailUrl": "https://img.youtube.com/vi/Qr4Ds8B1BGw/hqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtwwyj7ym10o",
@@ -16050,7 +16094,8 @@
                   "duration": "1:16:23",
                   "description": "",
                   "displayOrder": 14,
-                  "thumbnailUrl": "https://img.youtube.com/vi/ibXDOhCkaNA/hqdefault.jpg"
+                  "thumbnailUrl": "https://img.youtube.com/vi/ibXDOhCkaNA/hqdefault.jpg",
+                  "viewCount": null
                 }
               ],
               "affiliations": [
@@ -19653,12 +19698,12 @@
               "id": "gang-sangryeon-10",
               "name": "악마녀 / 선마녀",
               "streamer": "끠월마녀",
-              "role": "2대 간호부장",
+              "role": "",
               "swatRole": "",
-              "status": "active",
-              "badgeColor": "bg-teal-600",
+              "status": "resigned",
+              "badgeColor": "bg-zinc-800",
               "avatar": "https://yt3.googleusercontent.com/Fv-x7MPzdWtEedCZZCKI0aKwx7hOTjBs_LEq4_9OxnuR3KRBKrZqKmTKsV6CbLLjekaL9QvY=s120-c-k-c0x00ffffff-no-rj",
-              "displayOrder": 4,
+              "displayOrder": 10,
               "subscriberCount": "2,100명",
               "youtubeUrl": "https://www.youtube.com/@MaNyeo919",
               "videos": [],
@@ -19675,15 +19720,15 @@
                 {
                   "category": "gang",
                   "subgroup": "gang-sangryeon",
-                  "role": "탈퇴",
+                  "role": "",
                   "swatRole": "",
-                  "status": "active",
-                  "badgeColor": "bg-zinc-700",
+                  "status": "resigned",
+                  "badgeColor": "bg-zinc-800",
                   "displayOrder": 10
                 }
               ],
-              "category": "ems",
-              "subgroup": null
+              "category": "gang",
+              "subgroup": "gang-sangryeon"
             }
           ]
         },
@@ -21429,7 +21474,8 @@
                   "duration": "4:04:53",
                   "description": "",
                   "displayOrder": 0,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/g1kKYjYe4QI/mqdefault.jpg"
+                  "thumbnailUrl": "https://i.ytimg.com/vi/g1kKYjYe4QI/mqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mu8ibtwaaj3xk-1",
@@ -21440,7 +21486,8 @@
                   "duration": "2:27:22",
                   "description": "",
                   "displayOrder": 1,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/0x19OlQ5nfU/mqdefault.jpg"
+                  "thumbnailUrl": "https://i.ytimg.com/vi/0x19OlQ5nfU/mqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mu8ibtwa1k2es-2",
@@ -21451,7 +21498,8 @@
                   "duration": "4:57:32",
                   "description": "",
                   "displayOrder": 2,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/tDnujxO8Yuw/mqdefault.jpg"
+                  "thumbnailUrl": "https://i.ytimg.com/vi/tDnujxO8Yuw/mqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mu8ibtwan06s0-3",
@@ -21462,7 +21510,8 @@
                   "duration": "3:14:22",
                   "description": "",
                   "displayOrder": 3,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/pQUN0ZsseS0/mqdefault.jpg"
+                  "thumbnailUrl": "https://i.ytimg.com/vi/pQUN0ZsseS0/mqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mu8ibtwaeac1r-4",
@@ -21473,7 +21522,8 @@
                   "duration": "2:27:34",
                   "description": "",
                   "displayOrder": 4,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/0-pV2p1EMBo/mqdefault.jpg"
+                  "thumbnailUrl": "https://i.ytimg.com/vi/0-pV2p1EMBo/mqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mu8ibtwaxifum-5",
@@ -21484,7 +21534,8 @@
                   "duration": "10:00:01",
                   "description": "",
                   "displayOrder": 5,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/fH8BWFlV_gk/mqdefault.jpg"
+                  "thumbnailUrl": "https://i.ytimg.com/vi/fH8BWFlV_gk/mqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mu8ibtwa7my8x-6",
@@ -21495,7 +21546,8 @@
                   "duration": "8:43",
                   "description": "",
                   "displayOrder": 6,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/xxd_JkpoqfA/mqdefault.jpg"
+                  "thumbnailUrl": "https://i.ytimg.com/vi/xxd_JkpoqfA/mqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mu8ibtwazjd0r-7",
@@ -21506,7 +21558,8 @@
                   "duration": "40:53",
                   "description": "",
                   "displayOrder": 7,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/E9Jr9WRhgyM/mqdefault.jpg"
+                  "thumbnailUrl": "https://i.ytimg.com/vi/E9Jr9WRhgyM/mqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mu8ibtwawvpe0-8",
@@ -21517,7 +21570,8 @@
                   "duration": "2:07:42",
                   "description": "",
                   "displayOrder": 8,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/sAljsC-FcAM/mqdefault.jpg"
+                  "thumbnailUrl": "https://i.ytimg.com/vi/sAljsC-FcAM/mqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mu8ibtwairlpt-9",
@@ -21528,7 +21582,8 @@
                   "duration": "5:44:04",
                   "description": "",
                   "displayOrder": 9,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/wArC9bgTTF0/mqdefault.jpg"
+                  "thumbnailUrl": "https://i.ytimg.com/vi/wArC9bgTTF0/mqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mu8ibtwatd4os-10",
@@ -21539,7 +21594,8 @@
                   "duration": "10:00:02",
                   "description": "",
                   "displayOrder": 10,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/53E15oJj2Q0/mqdefault.jpg"
+                  "thumbnailUrl": "https://i.ytimg.com/vi/53E15oJj2Q0/mqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mu8ibtwaytkm2-11",
@@ -21550,7 +21606,8 @@
                   "duration": "1:34:19",
                   "description": "",
                   "displayOrder": 11,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/HHUZxqtn1p8/mqdefault.jpg"
+                  "thumbnailUrl": "https://i.ytimg.com/vi/HHUZxqtn1p8/mqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mu8ibtwa1cyx7-12",
@@ -21561,7 +21618,8 @@
                   "duration": "3:02:35",
                   "description": "",
                   "displayOrder": 12,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/4VoCQM3cTcw/mqdefault.jpg"
+                  "thumbnailUrl": "https://i.ytimg.com/vi/4VoCQM3cTcw/mqdefault.jpg",
+                  "viewCount": null
                 }
               ],
               "affiliations": [
@@ -21598,9 +21656,9 @@
                   "videoType": "full",
                   "date": "2025.05.24",
                   "duration": "2:43:35",
-                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250524_73/1748081861044omOSl_JPEG/1IvLDuWiLC_03.jpg?type=o500x280_blur",
                   "description": "",
                   "displayOrder": 0,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250524_73/1748081861044omOSl_JPEG/1IvLDuWiLC_03.jpg?type=o500x280_blur",
                   "viewCount": 1791
                 },
                 {
@@ -21610,9 +21668,9 @@
                   "videoType": "full",
                   "date": "2025.05.25",
                   "duration": "13:48:12",
-                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250526_225/1748198259766dkLNd_JPEG/DZskKpLeTu_03.jpg?type=o500x280_blur",
                   "description": "",
                   "displayOrder": 1,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250526_225/1748198259766dkLNd_JPEG/DZskKpLeTu_03.jpg?type=o500x280_blur",
                   "viewCount": 3054
                 },
                 {
@@ -21622,9 +21680,9 @@
                   "videoType": "full",
                   "date": "2025.05.26",
                   "duration": "11:04:49",
-                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250527_247/1748282941593FWLd7_JPEG/VEoudPr1wO_03.jpg?type=o500x280_blur",
                   "description": "",
                   "displayOrder": 2,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250527_247/1748282941593FWLd7_JPEG/VEoudPr1wO_03.jpg?type=o500x280_blur",
                   "viewCount": 3255
                 },
                 {
@@ -21634,9 +21692,9 @@
                   "videoType": "full",
                   "date": "2025.05.27",
                   "duration": "12:09:28",
-                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250528_169/1748372050717okwIX_JPEG/MGCe0lwAj7_03.jpg?type=o500x280_blur",
                   "description": "",
                   "displayOrder": 3,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250528_169/1748372050717okwIX_JPEG/MGCe0lwAj7_03.jpg?type=o500x280_blur",
                   "viewCount": 3374
                 },
                 {
@@ -21646,9 +21704,9 @@
                   "videoType": "full",
                   "date": "2025.05.28",
                   "duration": "11:08:01",
-                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250529_99/1748459584203iyrHt_JPEG/LwqClIIgmw_03.jpg?type=o500x280_blur",
                   "description": "",
                   "displayOrder": 4,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250529_99/1748459584203iyrHt_JPEG/LwqClIIgmw_03.jpg?type=o500x280_blur",
                   "viewCount": 3008
                 },
                 {
@@ -21658,9 +21716,9 @@
                   "videoType": "full",
                   "date": "2025.05.29",
                   "duration": "8:32:07",
-                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250530_292/1748533536520Cpgpg_JPEG/6EhTIBUf1w_03.jpg?type=o500x280_blur",
                   "description": "",
                   "displayOrder": 5,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250530_292/1748533536520Cpgpg_JPEG/6EhTIBUf1w_03.jpg?type=o500x280_blur",
                   "viewCount": 3329
                 },
                 {
@@ -21670,9 +21728,9 @@
                   "videoType": "full",
                   "date": "2025.05.30",
                   "duration": "10:32:12",
-                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250530_59/17486108311658W4VC_JPEG/J3j7uxKaO5_03.jpg?type=o500x280_blur",
                   "description": "",
                   "displayOrder": 6,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250530_59/17486108311658W4VC_JPEG/J3j7uxKaO5_03.jpg?type=o500x280_blur",
                   "viewCount": 1920
                 },
                 {
@@ -21682,9 +21740,9 @@
                   "videoType": "full",
                   "date": "2025.05.31",
                   "duration": "13:17:01",
-                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250601_52/1748709182304TnXqY_JPEG/uNPcxraCqN_03.jpg?type=o500x280_blur",
                   "description": "",
                   "displayOrder": 7,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250601_52/1748709182304TnXqY_JPEG/uNPcxraCqN_03.jpg?type=o500x280_blur",
                   "viewCount": 3840
                 },
                 {
@@ -21694,9 +21752,9 @@
                   "videoType": "full",
                   "date": "2025.06.01",
                   "duration": "10:17:13",
-                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250602_112/1748797814332bShOB_JPEG/diL347VCR1_03.jpg?type=o500x280_blur",
                   "description": "",
                   "displayOrder": 8,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250602_112/1748797814332bShOB_JPEG/diL347VCR1_03.jpg?type=o500x280_blur",
                   "viewCount": 3166
                 },
                 {
@@ -21706,9 +21764,9 @@
                   "videoType": "full",
                   "date": "2025.06.02",
                   "duration": "10:24:18",
-                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250603_19/1748882514561llFoA_JPEG/gh5Oef5lTT_03.jpg?type=o500x280_blur",
                   "description": "",
                   "displayOrder": 9,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250603_19/1748882514561llFoA_JPEG/gh5Oef5lTT_03.jpg?type=o500x280_blur",
                   "viewCount": 4519
                 },
                 {
@@ -21718,9 +21776,9 @@
                   "videoType": "full",
                   "date": "2025.06.03",
                   "duration": "8:36:29",
-                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250604_135/1748971537461b8dH7_JPEG/HGAfI0AQNu_03.jpg?type=o500x280_blur",
                   "description": "",
                   "displayOrder": 10,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250604_135/1748971537461b8dH7_JPEG/HGAfI0AQNu_03.jpg?type=o500x280_blur",
                   "viewCount": 2905
                 },
                 {
@@ -21730,9 +21788,9 @@
                   "videoType": "full",
                   "date": "2025.06.04",
                   "duration": "8:58:48",
-                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250605_198/1749057000209lF6yq_JPEG/u1bOxHf9hu_03.jpg?type=o500x280_blur",
                   "description": "",
                   "displayOrder": 11,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250605_198/1749057000209lF6yq_JPEG/u1bOxHf9hu_03.jpg?type=o500x280_blur",
                   "viewCount": 3900
                 },
                 {
@@ -21742,9 +21800,9 @@
                   "videoType": "full",
                   "date": "2025.06.06",
                   "duration": "11:10:21",
-                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250607_72/17492383154276uBA2_JPEG/PoQF6pogmm_03.jpg?type=o500x280_blur",
                   "description": "",
                   "displayOrder": 12,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250607_72/17492383154276uBA2_JPEG/PoQF6pogmm_03.jpg?type=o500x280_blur",
                   "viewCount": 4438
                 },
                 {
@@ -21754,9 +21812,9 @@
                   "videoType": "full",
                   "date": "2025.06.07",
                   "duration": "9:57:16",
-                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250608_109/1749325329949Kmby1_JPEG/cQlgzxUNpJ_03.jpg?type=o500x280_blur",
                   "description": "",
                   "displayOrder": 13,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250608_109/1749325329949Kmby1_JPEG/cQlgzxUNpJ_03.jpg?type=o500x280_blur",
                   "viewCount": 3801
                 },
                 {
@@ -21766,9 +21824,9 @@
                   "videoType": "full",
                   "date": "2025.06.08",
                   "duration": "8:32:23",
-                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250609_300/17494028787675bRMY_JPEG/N3UYr8EabC_03.jpg?type=o500x280_blur",
                   "description": "",
                   "displayOrder": 14,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250609_300/17494028787675bRMY_JPEG/N3UYr8EabC_03.jpg?type=o500x280_blur",
                   "viewCount": 4185
                 }
               ],
@@ -21807,8 +21865,8 @@
                   "date": "2025.06.03",
                   "duration": "19:56",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/GJ9S_gINSOc/hqdefault.jpg",
                   "displayOrder": 0,
+                  "thumbnailUrl": "https://img.youtube.com/vi/GJ9S_gINSOc/hqdefault.jpg",
                   "viewCount": 31101
                 },
                 {
@@ -21819,8 +21877,8 @@
                   "date": "2025.06.12",
                   "duration": "13:29",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/69JDynQel7w/hqdefault.jpg",
                   "displayOrder": 1,
+                  "thumbnailUrl": "https://img.youtube.com/vi/69JDynQel7w/hqdefault.jpg",
                   "viewCount": 24862
                 },
                 {
@@ -21831,8 +21889,8 @@
                   "date": "2025.06.17",
                   "duration": "17:28",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/J6LNie5oqXc/hqdefault.jpg",
                   "displayOrder": 2,
+                  "thumbnailUrl": "https://img.youtube.com/vi/J6LNie5oqXc/hqdefault.jpg",
                   "viewCount": 21877
                 },
                 {
@@ -21843,8 +21901,8 @@
                   "date": "2025.07.14",
                   "duration": "13:37",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/en_M5423zoA/hqdefault.jpg",
                   "displayOrder": 3,
+                  "thumbnailUrl": "https://img.youtube.com/vi/en_M5423zoA/hqdefault.jpg",
                   "viewCount": 12383
                 },
                 {
@@ -21855,8 +21913,8 @@
                   "date": "2025.07.21",
                   "duration": "18:41",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/NnBaHErUnoU/hqdefault.jpg",
                   "displayOrder": 4,
+                  "thumbnailUrl": "https://img.youtube.com/vi/NnBaHErUnoU/hqdefault.jpg",
                   "viewCount": 11385
                 },
                 {
@@ -21867,8 +21925,8 @@
                   "date": "2025.08.25",
                   "duration": "16:08",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/8Tw0FasUa3A/hqdefault.jpg",
                   "displayOrder": 5,
+                  "thumbnailUrl": "https://img.youtube.com/vi/8Tw0FasUa3A/hqdefault.jpg",
                   "viewCount": 8681
                 },
                 {
@@ -21879,8 +21937,8 @@
                   "date": "2025.09.01",
                   "duration": "18:04",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/Uo9_DTQopIk/hqdefault.jpg",
                   "displayOrder": 6,
+                  "thumbnailUrl": "https://img.youtube.com/vi/Uo9_DTQopIk/hqdefault.jpg",
                   "viewCount": 8551
                 },
                 {
@@ -21891,8 +21949,8 @@
                   "date": "2025.09.10",
                   "duration": "15:05",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/5uWi5XHkJK0/hqdefault.jpg",
                   "displayOrder": 7,
+                  "thumbnailUrl": "https://img.youtube.com/vi/5uWi5XHkJK0/hqdefault.jpg",
                   "viewCount": 5969
                 },
                 {
@@ -21903,8 +21961,8 @@
                   "date": "2025.09.29",
                   "duration": "20:56",
                   "description": "",
-                  "thumbnailUrl": "https://img.youtube.com/vi/unnieyklyaE/hqdefault.jpg",
                   "displayOrder": 8,
+                  "thumbnailUrl": "https://img.youtube.com/vi/unnieyklyaE/hqdefault.jpg",
                   "viewCount": 6417
                 },
                 {
@@ -21914,9 +21972,9 @@
                   "videoType": "full",
                   "date": "2025.12.05",
                   "duration": "2:54:19",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/g0eInauY_1E/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 9,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/g0eInauY_1E/mqdefault.jpg",
                   "viewCount": 148
                 },
                 {
@@ -21926,9 +21984,9 @@
                   "videoType": "full",
                   "date": "2025.12.05",
                   "duration": "6:12:34",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/rf1ZN_haYHU/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 10,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/rf1ZN_haYHU/mqdefault.jpg",
                   "viewCount": 190
                 },
                 {
@@ -21938,9 +21996,9 @@
                   "videoType": "full",
                   "date": "2025.12.05",
                   "duration": "7:36:08",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/oEj0UYSEiVs/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 11,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/oEj0UYSEiVs/mqdefault.jpg",
                   "viewCount": 155
                 },
                 {
@@ -21950,9 +22008,9 @@
                   "videoType": "full",
                   "date": "2025.12.05",
                   "duration": "56:32",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/uxuqi9Hke-M/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 12,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/uxuqi9Hke-M/mqdefault.jpg",
                   "viewCount": 87
                 },
                 {
@@ -21962,9 +22020,9 @@
                   "videoType": "full",
                   "date": "2025.12.05",
                   "duration": "7:16:41",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/butCJ_YdO3E/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 13,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/butCJ_YdO3E/mqdefault.jpg",
                   "viewCount": 149
                 },
                 {
@@ -21974,9 +22032,9 @@
                   "videoType": "full",
                   "date": "2025.12.05",
                   "duration": "7:30:19",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/0DieTLoeGGc/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 14,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/0DieTLoeGGc/mqdefault.jpg",
                   "viewCount": 114
                 },
                 {
@@ -21986,9 +22044,9 @@
                   "videoType": "full",
                   "date": "2025.12.05",
                   "duration": "1:03:47",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/7ZMcvrYRZ64/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 15,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/7ZMcvrYRZ64/mqdefault.jpg",
                   "viewCount": 87
                 },
                 {
@@ -21998,9 +22056,9 @@
                   "videoType": "full",
                   "date": "2025.12.05",
                   "duration": "5:34:59",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/FHyPVF8RU_g/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 16,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/FHyPVF8RU_g/mqdefault.jpg",
                   "viewCount": 151
                 },
                 {
@@ -22010,9 +22068,9 @@
                   "videoType": "full",
                   "date": "2026.01.02",
                   "duration": "7:12:28",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/BiB_jONS0d0/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 17,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/BiB_jONS0d0/mqdefault.jpg",
                   "viewCount": 100
                 },
                 {
@@ -22022,9 +22080,9 @@
                   "videoType": "full",
                   "date": "2026.01.02",
                   "duration": "3:49:38",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/9qNyDSEwVOM/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 18,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/9qNyDSEwVOM/mqdefault.jpg",
                   "viewCount": 58
                 },
                 {
@@ -22034,9 +22092,9 @@
                   "videoType": "full",
                   "date": "2026.01.02",
                   "duration": "9:40:41",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/tCxBjxLdlNw/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 19,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/tCxBjxLdlNw/mqdefault.jpg",
                   "viewCount": 49
                 },
                 {
@@ -22046,9 +22104,9 @@
                   "videoType": "full",
                   "date": "2026.01.02",
                   "duration": "8:32:08",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/Xkie6jsa2hQ/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 20,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/Xkie6jsa2hQ/mqdefault.jpg",
                   "viewCount": 87
                 },
                 {
@@ -22058,9 +22116,9 @@
                   "videoType": "full",
                   "date": "2026.01.02",
                   "duration": "9:01:15",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/fbIPOZZBAZ0/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 21,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/fbIPOZZBAZ0/mqdefault.jpg",
                   "viewCount": 124
                 },
                 {
@@ -22070,9 +22128,9 @@
                   "videoType": "full",
                   "date": "2026.01.03",
                   "duration": "8:35:38",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/elYaheMmFFc/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 22,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/elYaheMmFFc/mqdefault.jpg",
                   "viewCount": 128
                 }
               ],
@@ -22414,9 +22472,9 @@
                   "videoType": "full",
                   "date": "2025.06.09",
                   "duration": "10:01:06",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/9om4BKvuDVc/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 0,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/9om4BKvuDVc/mqdefault.jpg",
                   "viewCount": 193
                 },
                 {
@@ -22426,9 +22484,9 @@
                   "videoType": "full",
                   "date": "2025.06.09",
                   "duration": "11:35:37",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/nZBgOpAkIQA/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 1,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/nZBgOpAkIQA/mqdefault.jpg",
                   "viewCount": 204
                 },
                 {
@@ -22438,9 +22496,9 @@
                   "videoType": "full",
                   "date": "2025.06.09",
                   "duration": "11:47:24",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/oMHSa_pNoh4/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 2,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/oMHSa_pNoh4/mqdefault.jpg",
                   "viewCount": 128
                 },
                 {
@@ -22450,9 +22508,9 @@
                   "videoType": "full",
                   "date": "2025.06.09",
                   "duration": "5:01:31",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/_bYfK25oSVE/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 3,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/_bYfK25oSVE/mqdefault.jpg",
                   "viewCount": 63
                 },
                 {
@@ -22462,9 +22520,9 @@
                   "videoType": "full",
                   "date": "2025.06.09",
                   "duration": "13:38:56",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/2Li6rNz39Yg/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 4,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/2Li6rNz39Yg/mqdefault.jpg",
                   "viewCount": 94
                 },
                 {
@@ -22474,9 +22532,9 @@
                   "videoType": "full",
                   "date": "2025.06.09",
                   "duration": "14:11:46",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/yC_tXui5G1k/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 5,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/yC_tXui5G1k/mqdefault.jpg",
                   "viewCount": 93
                 },
                 {
@@ -22486,9 +22544,9 @@
                   "videoType": "full",
                   "date": "2025.06.09",
                   "duration": "8:05:03",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/5HLfc8OHkec/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 6,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/5HLfc8OHkec/mqdefault.jpg",
                   "viewCount": 88
                 },
                 {
@@ -22498,9 +22556,9 @@
                   "videoType": "full",
                   "date": "2025.06.09",
                   "duration": "12:33:50",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/WFmtpG32Dak/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 7,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/WFmtpG32Dak/mqdefault.jpg",
                   "viewCount": 125
                 },
                 {
@@ -22510,9 +22568,9 @@
                   "videoType": "full",
                   "date": "2025.06.09",
                   "duration": "10:08:22",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/XIvGlPMCfTo/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 8,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/XIvGlPMCfTo/mqdefault.jpg",
                   "viewCount": 77
                 },
                 {
@@ -22522,9 +22580,9 @@
                   "videoType": "full",
                   "date": "2025.06.09",
                   "duration": "5:37:40",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/hCY2-mixkKg/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 9,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/hCY2-mixkKg/mqdefault.jpg",
                   "viewCount": 143
                 },
                 {
@@ -22534,9 +22592,9 @@
                   "videoType": "full",
                   "date": "2025.06.09",
                   "duration": "10:13:19",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/hyVrS59W7hU/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 10,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/hyVrS59W7hU/mqdefault.jpg",
                   "viewCount": 155
                 },
                 {
@@ -22546,9 +22604,9 @@
                   "videoType": "full",
                   "date": "2025.06.09",
                   "duration": "10:36:07",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/Pehdb41wyCg/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 11,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/Pehdb41wyCg/mqdefault.jpg",
                   "viewCount": 136
                 },
                 {
@@ -22558,9 +22616,9 @@
                   "videoType": "full",
                   "date": "2025.06.09",
                   "duration": "7:13:26",
-                  "thumbnailUrl": "https://i.ytimg.com/vi/7Twg-5qoBDI/mqdefault.jpg",
                   "description": "",
                   "displayOrder": 12,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/7Twg-5qoBDI/mqdefault.jpg",
                   "viewCount": 263
                 }
               ],
@@ -22586,11 +22644,204 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/WSuknntRVjH-fuBXvJDHl9pWNIn85Po-h6ftqeBomS8qAn6nEKpEN5qBrtMEtU_KThPwl4JwBg=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 5,
-              "subscriberCount": "",
-              "youtubeUrl": "",
-              "videos": [],
+              "subscriberCount": "1.1만 명",
+              "youtubeUrl": "https://www.youtube.com/@Yellow_Bird_",
+              "videos": [
+                {
+                  "id": "v-mu8uewozt075n-0",
+                  "title": "콩밥특별시 1일차",
+                  "url": "https://www.youtube.com/watch?v=CBB8lyvott8",
+                  "videoType": "clip",
+                  "date": "2025.07.06",
+                  "duration": "8:45",
+                  "viewCount": 2437,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/CBB8lyvott8/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mu8ufiq52jsfm-0",
+                  "title": "[노랑새 풀영상] 25.05.25 콩밥특별시 1일차 - 도를 아십니까?",
+                  "url": "https://www.youtube.com/watch?v=AObuTwEHQk8&list=PLbzbeswz3Ixrq3Bbz3Ej95G77C0dm44TM",
+                  "videoType": "full",
+                  "date": "2025.06.01",
+                  "duration": "16:02:22",
+                  "viewCount": 662,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/AObuTwEHQk8/hqdefault.jpg",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mu8ufiq5xylf4-1",
+                  "title": "[노랑새 풀영상] 25.05.26 콩밥특별시 2일차 - 포교 포기| 자본이 권력이다 해서 일만 디립따함",
+                  "url": "https://www.youtube.com/watch?v=7fJGQcbSU8g&list=PLbzbeswz3Ixrq3Bbz3Ej95G77C0dm44TM",
+                  "videoType": "full",
+                  "date": "2025.06.01",
+                  "duration": "13:36:02",
+                  "viewCount": 192,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/7fJGQcbSU8g/hqdefault.jpg",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mu8ufiq5lyyzn-2",
+                  "title": "[노랑새 풀영상] 25.05.27 콩밥특별시 3일차 - 오늘은 여기가 핫하다구?",
+                  "url": "https://www.youtube.com/watch?v=7LhykFmgFZ8&list=PLbzbeswz3Ixrq3Bbz3Ej95G77C0dm44TM",
+                  "videoType": "full",
+                  "date": "2025.06.12",
+                  "duration": "11:42:31",
+                  "viewCount": 131,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/7LhykFmgFZ8/hqdefault.jpg",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mu8ufiq5r1j6n-3",
+                  "title": "[노랑새 풀영상] 25.05.28 콩밥특별시 4일차 - 과연 이 아이는 어떤 직업을 갖게 될까",
+                  "url": "https://www.youtube.com/watch?v=8THTT9MDDNE&list=PLbzbeswz3Ixrq3Bbz3Ej95G77C0dm44TM",
+                  "videoType": "full",
+                  "date": "2025.06.01",
+                  "duration": "12:00:22",
+                  "viewCount": 397,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/8THTT9MDDNE/hqdefault.jpg",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mu8ufiq5b5guu-4",
+                  "title": "[노랑새 풀영상] 25.05.29 콩밥특별시 5일차 - 드뎌 소속감이 생겨요!!!",
+                  "url": "https://www.youtube.com/watch?v=rZDglrJuYrU&list=PLbzbeswz3Ixrq3Bbz3Ej95G77C0dm44TM",
+                  "videoType": "full",
+                  "date": "2025.06.02",
+                  "duration": "11:50:19",
+                  "viewCount": 336,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/rZDglrJuYrU/hqdefault.jpg",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mu8ufiq5nuer5-5",
+                  "title": "[노랑새 풀영상] 25.05.31 콩밥특별시 6일차 - 눅눅 모드",
+                  "url": "https://www.youtube.com/watch?v=jDc4R1Kfz8Q&list=PLbzbeswz3Ixrq3Bbz3Ej95G77C0dm44TM",
+                  "videoType": "full",
+                  "date": "2025.06.17",
+                  "duration": "7:18:10",
+                  "viewCount": 148,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/jDc4R1Kfz8Q/hqdefault.jpg",
+                  "displayOrder": 6
+                },
+                {
+                  "id": "v-mu8ufiq5gdx04-6",
+                  "title": "[노랑새 풀영상] 25.06.03 콩밥특별시 9일차",
+                  "url": "https://www.youtube.com/watch?v=yytRASwCZE0&list=PLbzbeswz3Ixrq3Bbz3Ej95G77C0dm44TM",
+                  "videoType": "full",
+                  "date": "2025.06.23",
+                  "duration": "9:06:47",
+                  "viewCount": 109,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/yytRASwCZE0/hqdefault.jpg",
+                  "displayOrder": 7
+                },
+                {
+                  "id": "v-mu8ufiq5qpcea-7",
+                  "title": "[노랑새 풀영상] 25.06.01 콩밥특별시 7일차 (1) - 소신발언으로 시작해볼까",
+                  "url": "https://www.youtube.com/watch?v=ecwL6iME_xQ&list=PLbzbeswz3Ixrq3Bbz3Ej95G77C0dm44TM",
+                  "videoType": "full",
+                  "date": "2025.06.20",
+                  "duration": "5:57:03",
+                  "viewCount": 114,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/ecwL6iME_xQ/hqdefault.jpg",
+                  "displayOrder": 8
+                },
+                {
+                  "id": "v-mu8ufiq5llqev-8",
+                  "title": "[노랑새 풀영상] 25.06.01 콩밥특별시 7일차 (2) - 소신발언으로 시작해볼까",
+                  "url": "https://www.youtube.com/watch?v=yijlI2uopJI&list=PLbzbeswz3Ixrq3Bbz3Ej95G77C0dm44TM",
+                  "videoType": "full",
+                  "date": "2025.06.20",
+                  "duration": "7:26:31",
+                  "viewCount": 92,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/yijlI2uopJI/hqdefault.jpg",
+                  "displayOrder": 9
+                },
+                {
+                  "id": "v-mu8ufiq536wpe-9",
+                  "title": "[노랑새 풀영상] 25.06.02 콩밥특별시 8일차 (1)",
+                  "url": "https://www.youtube.com/watch?v=xOXTLvWns14&list=PLbzbeswz3Ixrq3Bbz3Ej95G77C0dm44TM",
+                  "videoType": "full",
+                  "date": "2025.06.23",
+                  "duration": "5:58:55",
+                  "viewCount": 107,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/xOXTLvWns14/hqdefault.jpg",
+                  "displayOrder": 10
+                },
+                {
+                  "id": "v-mu8ufiq5lkrzz-10",
+                  "title": "[노랑새 풀영상] 25.06.02 콩밥특별시 8일차 (2)",
+                  "url": "https://www.youtube.com/watch?v=owrQzx9Bztc&list=PLbzbeswz3Ixrq3Bbz3Ej95G77C0dm44TM",
+                  "videoType": "full",
+                  "date": "2025.06.23",
+                  "duration": "6:18:25",
+                  "viewCount": 154,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/owrQzx9Bztc/hqdefault.jpg",
+                  "displayOrder": 11
+                },
+                {
+                  "id": "v-mu8ufiq5rherp-11",
+                  "title": "[노랑새 풀영상] 25.06.04 콩밥특별시 10일차 - 연애세포 죽은 도랑새는 과연 연애를 해볼 수 있을까..?",
+                  "url": "https://www.youtube.com/watch?v=D4Mmaj7L7GA&list=PLbzbeswz3Ixrq3Bbz3Ej95G77C0dm44TM",
+                  "videoType": "full",
+                  "date": "2025.06.23",
+                  "duration": "9:07:31",
+                  "viewCount": 164,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/D4Mmaj7L7GA/hqdefault.jpg",
+                  "displayOrder": 12
+                },
+                {
+                  "id": "v-mu8ufiq5vypo6-12",
+                  "title": "[노랑새 풀영상] 25.06.06 콩밥특별시 12일차",
+                  "url": "https://www.youtube.com/watch?v=ci9BgAS0ebY&list=PLbzbeswz3Ixrq3Bbz3Ej95G77C0dm44TM",
+                  "videoType": "full",
+                  "date": "2025.06.24",
+                  "duration": "12:28:26",
+                  "viewCount": 267,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/ci9BgAS0ebY/hqdefault.jpg",
+                  "displayOrder": 13
+                },
+                {
+                  "id": "v-mu8ufiq5f229y-13",
+                  "title": "[노랑새 풀영상] 25.06.07 콩밥특별시 13일차",
+                  "url": "https://www.youtube.com/watch?v=XNWhZjEaho0&list=PLbzbeswz3Ixrq3Bbz3Ej95G77C0dm44TM",
+                  "videoType": "full",
+                  "date": "2025.06.27",
+                  "duration": "10:42:50",
+                  "viewCount": 131,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/XNWhZjEaho0/hqdefault.jpg",
+                  "displayOrder": 14
+                },
+                {
+                  "id": "v-mu8ufiq5bio7t-14",
+                  "title": "[노랑새 풀영상] 25.06.08 콩밥특별시 완",
+                  "url": "https://www.youtube.com/watch?v=x1kB3lC6P98&list=PLbzbeswz3Ixrq3Bbz3Ej95G77C0dm44TM",
+                  "videoType": "full",
+                  "date": "2025.06.27",
+                  "duration": "10:49:46",
+                  "viewCount": 340,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/x1kB3lC6P98/hqdefault.jpg",
+                  "displayOrder": 15
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",
@@ -22613,11 +22864,264 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/cPlmt8tP7OyTBFa3ze2ZwVFaFOjJ5pmMWXBhl2Uep1Z-h0LXtTDPQkJTDXgOFVvxeZfbrh352g=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 6,
-              "subscriberCount": "",
-              "youtubeUrl": "",
-              "videos": [],
+              "subscriberCount": "4.3만 명",
+              "youtubeUrl": "https://www.youtube.com/@모라라",
+              "videos": [
+                {
+                  "id": "v-mu8ugm8fz6q1v-0",
+                  "title": "농사하러 가면 울프가 있다 | 콩밥특별시",
+                  "url": "https://www.youtube.com/watch?v=pjtex_jtiY0&list=PLYUKAfWLN5QR0LOx9guhhdbwZVwsrxinR",
+                  "videoType": "clip",
+                  "date": "2025.06.11",
+                  "duration": "8:54",
+                  "viewCount": 17069,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/pjtex_jtiY0/hqdefault.jpg",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mu8ugm8fi4psy-1",
+                  "title": "어딜 흙도 안 만져본 도시 처자가 농장을 넘봐? | 콩밥특별시",
+                  "url": "https://www.youtube.com/watch?v=3ikkgIqZ64w&list=PLYUKAfWLN5QR0LOx9guhhdbwZVwsrxinR",
+                  "videoType": "clip",
+                  "date": "2025.06.18",
+                  "duration": "8:02",
+                  "viewCount": 19819,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/3ikkgIqZ64w/hqdefault.jpg",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mu8ugm8f7h457-2",
+                  "title": "더럽게 일을 못하는 농협 조합장 쌀할매 | 콩밥특별시",
+                  "url": "https://www.youtube.com/watch?v=M8m3sl9-bNo&list=PLYUKAfWLN5QR0LOx9guhhdbwZVwsrxinR",
+                  "videoType": "clip",
+                  "date": "2025.06.26",
+                  "duration": "9:16",
+                  "viewCount": 12602,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/M8m3sl9-bNo/hqdefault.jpg",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mu8ugm8fxnjqo-3",
+                  "title": "우당탕탕 농협 아지트 경매 대작전 | 콩밥특별시",
+                  "url": "https://www.youtube.com/watch?v=um8dQRcA-3E&list=PLYUKAfWLN5QR0LOx9guhhdbwZVwsrxinR",
+                  "videoType": "clip",
+                  "date": "2025.07.04",
+                  "duration": "8:01",
+                  "viewCount": 8905,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/um8dQRcA-3E/hqdefault.jpg",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mu8ugm8ft7exq-4",
+                  "title": "잊지 말자 농협도 갱이다 | 콩밥특별시",
+                  "url": "https://www.youtube.com/watch?v=UxN_ptVrXh0&list=PLYUKAfWLN5QR0LOx9guhhdbwZVwsrxinR",
+                  "videoType": "clip",
+                  "date": "2025.07.19",
+                  "duration": "9:07",
+                  "viewCount": 10096,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/UxN_ptVrXh0/hqdefault.jpg",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mu8ugm8fbqprz-5",
+                  "title": "경찰도 납치하는 최악의 갱단 농협 | 콩밥특별시",
+                  "url": "https://www.youtube.com/watch?v=GDvrFL6tGC8&list=PLYUKAfWLN5QR0LOx9guhhdbwZVwsrxinR",
+                  "videoType": "clip",
+                  "date": "2025.08.03",
+                  "duration": "8:17",
+                  "viewCount": 11766,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/GDvrFL6tGC8/hqdefault.jpg",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mu8ugm8ftku37-6",
+                  "title": "농협은 오늘도 에어컨을 쐬고 있습니다 | 콩밥특별시 완",
+                  "url": "https://www.youtube.com/watch?v=Wt7ti3nUN9Y&list=PLYUKAfWLN5QR0LOx9guhhdbwZVwsrxinR",
+                  "videoType": "clip",
+                  "date": "2025.08.15",
+                  "duration": "16:34",
+                  "viewCount": 11142,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/Wt7ti3nUN9Y/hqdefault.jpg",
+                  "displayOrder": 6
+                },
+                {
+                  "id": "v-mu8ui9klk7oke-0",
+                  "title": "[2025.05.24] 콩밥특별시 테스트, 새티스팩토리",
+                  "url": "https://www.youtube.com/watch?v=PL21C-0Eduk&list=PLOlwVMGaaa5CSuXcnwKzMTsB42PhD1Gmb",
+                  "videoType": "full",
+                  "date": "2025.05.25",
+                  "duration": "10:24:26",
+                  "viewCount": 203,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/PL21C-0Eduk/hqdefault.jpg",
+                  "displayOrder": 7
+                },
+                {
+                  "id": "v-mu8ui9klyjasp-2",
+                  "title": "[2025.05.25] 콩밥특별시 1일차",
+                  "url": "https://www.youtube.com/watch?v=2sDJ2l00eQA&list=PLOlwVMGaaa5CSuXcnwKzMTsB42PhD1Gmb",
+                  "videoType": "full",
+                  "date": "2025.05.27",
+                  "duration": "11:55:01",
+                  "viewCount": 251,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/2sDJ2l00eQA/hqdefault.jpg",
+                  "displayOrder": 8
+                },
+                {
+                  "id": "v-mu8ui9klt3thp-1",
+                  "title": "[2025.05.26] 콩밥특별시 2일차",
+                  "url": "https://www.youtube.com/watch?v=BNf7D-TXr8Q&list=PLOlwVMGaaa5CSuXcnwKzMTsB42PhD1Gmb",
+                  "videoType": "full",
+                  "date": "2025.05.27",
+                  "duration": "11:54:59",
+                  "viewCount": 249,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/BNf7D-TXr8Q/hqdefault.jpg",
+                  "displayOrder": 9
+                },
+                {
+                  "id": "v-mu8ui9klqvej7-3",
+                  "title": "[2025.05.27] 콩밥특별시 3일차",
+                  "url": "https://www.youtube.com/watch?v=JMkJ-cLbVl0&list=PLOlwVMGaaa5CSuXcnwKzMTsB42PhD1Gmb",
+                  "videoType": "full",
+                  "date": "2025.05.28",
+                  "duration": "5:45:26",
+                  "viewCount": 249,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/JMkJ-cLbVl0/hqdefault.jpg",
+                  "displayOrder": 10
+                },
+                {
+                  "id": "v-mu8ui9klhj8kn-4",
+                  "title": "[2025.05.28] 콩밥특별시 4일차",
+                  "url": "https://www.youtube.com/watch?v=oNpGx64xveY&list=PLOlwVMGaaa5CSuXcnwKzMTsB42PhD1Gmb",
+                  "videoType": "full",
+                  "date": "2025.05.29",
+                  "duration": "9:58:45",
+                  "viewCount": 145,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/oNpGx64xveY/hqdefault.jpg",
+                  "displayOrder": 11
+                },
+                {
+                  "id": "v-mu8ui9kl45cmp-5",
+                  "title": "[2025.05.29] 콩밥특별시 5일차",
+                  "url": "https://www.youtube.com/watch?v=rijHbQTKmSs&list=PLOlwVMGaaa5CSuXcnwKzMTsB42PhD1Gmb",
+                  "videoType": "full",
+                  "date": "2025.05.30",
+                  "duration": "9:22:56",
+                  "viewCount": 139,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/rijHbQTKmSs/hqdefault.jpg",
+                  "displayOrder": 12
+                },
+                {
+                  "id": "v-mu8ui9klevzhp-6",
+                  "title": "[2025.05.31] 콩밥특별시 6일차",
+                  "url": "https://www.youtube.com/watch?v=TvyqUX7uL-c&list=PLOlwVMGaaa5CSuXcnwKzMTsB42PhD1Gmb",
+                  "videoType": "full",
+                  "date": "2025.06.01",
+                  "duration": "11:32:36",
+                  "viewCount": 294,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/TvyqUX7uL-c/hqdefault.jpg",
+                  "displayOrder": 13
+                },
+                {
+                  "id": "v-mu8uiufrae6lw-0",
+                  "title": "[2025.06.02] 콩밥특별시 7일차",
+                  "url": "https://www.youtube.com/watch?v=05HQ4gjOun8&list=PLOlwVMGaaa5CU7KVKePmT4ns67OHJal9Z",
+                  "videoType": "full",
+                  "date": "2025.06.03",
+                  "duration": "9:54:26",
+                  "viewCount": 145,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/05HQ4gjOun8/hqdefault.jpg",
+                  "displayOrder": 14
+                },
+                {
+                  "id": "v-mu8uiufr3755i-1",
+                  "title": "[2025.06.03] 콩밥특별시 8일차",
+                  "url": "https://www.youtube.com/watch?v=q0zJqCk5h7U&list=PLOlwVMGaaa5CU7KVKePmT4ns67OHJal9Z",
+                  "videoType": "full",
+                  "date": "2025.06.04",
+                  "duration": "8:53:43",
+                  "viewCount": 114,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/q0zJqCk5h7U/hqdefault.jpg",
+                  "displayOrder": 15
+                },
+                {
+                  "id": "v-mu8uiufrzea80-3",
+                  "title": "[2025.06.04] 콩밥특별시 9일차",
+                  "url": "https://www.youtube.com/watch?v=23P6bKzT34M&list=PLOlwVMGaaa5CU7KVKePmT4ns67OHJal9Z",
+                  "videoType": "full",
+                  "date": "2025.06.06",
+                  "duration": "8:40:37",
+                  "viewCount": 147,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/23P6bKzT34M/hqdefault.jpg",
+                  "displayOrder": 16
+                },
+                {
+                  "id": "v-mu8uiufr1uasz-2",
+                  "title": "[2025.06.05] 콩밥특별시 10일차",
+                  "url": "https://www.youtube.com/watch?v=WCDoO525b3w&list=PLOlwVMGaaa5CU7KVKePmT4ns67OHJal9Z",
+                  "videoType": "full",
+                  "date": "2025.06.06",
+                  "duration": "8:18:58",
+                  "viewCount": 133,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/WCDoO525b3w/hqdefault.jpg",
+                  "displayOrder": 17
+                },
+                {
+                  "id": "v-mu8uiufrh07mm-4",
+                  "title": "[2025.06.06] 콩밥특별시 11일차",
+                  "url": "https://www.youtube.com/watch?v=F9X8y_XyCys&list=PLOlwVMGaaa5CU7KVKePmT4ns67OHJal9Z",
+                  "videoType": "full",
+                  "date": "2025.06.07",
+                  "duration": "10:24:15",
+                  "viewCount": 181,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/F9X8y_XyCys/hqdefault.jpg",
+                  "displayOrder": 18
+                },
+                {
+                  "id": "v-mu8uiufrjsixh-6",
+                  "title": "[2025.06.07] 콩밥특별시 12일차",
+                  "url": "https://www.youtube.com/watch?v=K5ahTB19fok&list=PLOlwVMGaaa5CU7KVKePmT4ns67OHJal9Z",
+                  "videoType": "full",
+                  "date": "2025.06.09",
+                  "duration": "9:50:45",
+                  "viewCount": 176,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/K5ahTB19fok/hqdefault.jpg",
+                  "displayOrder": 19
+                },
+                {
+                  "id": "v-mu8uiufrob4g3-5",
+                  "title": "[2025.06.08] 콩밥특별시 마지막 날",
+                  "url": "https://www.youtube.com/watch?v=04AHqA5_F4o&list=PLOlwVMGaaa5CU7KVKePmT4ns67OHJal9Z",
+                  "videoType": "full",
+                  "date": "2025.06.09",
+                  "duration": "11:35:45",
+                  "viewCount": 180,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/04AHqA5_F4o/hqdefault.jpg",
+                  "displayOrder": 20
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",
@@ -22640,11 +23144,324 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/ytc/AIdro_lZ2Z9qJfYD4ddwqp44HeI6FShJ7HIXCFBtY4lYIMQcKxw=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 7,
-              "subscriberCount": "",
-              "youtubeUrl": "",
-              "videos": [],
+              "subscriberCount": "34.1만 명",
+              "youtubeUrl": "https://www.youtube.com/@노돌리",
+              "videos": [
+                {
+                  "id": "v-mu8ukdcldgwaz-0",
+                  "title": "우리 농가를 살리기 위해",
+                  "url": "https://www.youtube.com/watch?v=PN63I1lMeZQ&list=PLDLObUs3F5c-LCHSgBOfPOlRTPpfxf_8_",
+                  "videoType": "clip",
+                  "date": "2025.06.06",
+                  "duration": "15:07",
+                  "viewCount": 50818,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/PN63I1lMeZQ/hqdefault.jpg",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mu8ukdclptujl-1",
+                  "title": "어....",
+                  "url": "https://www.youtube.com/watch?v=iJQq9oUKsXI&list=PLDLObUs3F5c-LCHSgBOfPOlRTPpfxf_8_",
+                  "videoType": "clip",
+                  "date": "2025.06.07",
+                  "duration": "15:48",
+                  "viewCount": 44773,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/iJQq9oUKsXI/hqdefault.jpg",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mu8ukdclcyzne-2",
+                  "title": "이야 이게 얼마야?",
+                  "url": "https://www.youtube.com/watch?v=1xOThYRfj1k&list=PLDLObUs3F5c-LCHSgBOfPOlRTPpfxf_8_",
+                  "videoType": "clip",
+                  "date": "2025.06.10",
+                  "duration": "10:01",
+                  "viewCount": 37489,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/1xOThYRfj1k/hqdefault.jpg",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mu8ukdcln8thn-3",
+                  "title": "우리 어디서 많이 봤제?",
+                  "url": "https://www.youtube.com/watch?v=CXFqPfv-XdY&list=PLDLObUs3F5c-LCHSgBOfPOlRTPpfxf_8_",
+                  "videoType": "clip",
+                  "date": "2025.06.15",
+                  "duration": "11:06",
+                  "viewCount": 44686,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/CXFqPfv-XdY/hqdefault.jpg",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mu8ukdcl26pbk-4",
+                  "title": "모든 사건의 원흉",
+                  "url": "https://www.youtube.com/watch?v=wrmz1lE1QXo&list=PLDLObUs3F5c-LCHSgBOfPOlRTPpfxf_8_",
+                  "videoType": "clip",
+                  "date": "2025.06.16",
+                  "duration": "18:44",
+                  "viewCount": 60780,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/wrmz1lE1QXo/hqdefault.jpg",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mu8ukdclonvil-5",
+                  "title": "\"야유\"회",
+                  "url": "https://www.youtube.com/watch?v=-_ko-xm1saY&list=PLDLObUs3F5c-LCHSgBOfPOlRTPpfxf_8_",
+                  "videoType": "clip",
+                  "date": "2025.06.17",
+                  "duration": "10:26",
+                  "viewCount": 38726,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/-_ko-xm1saY/hqdefault.jpg",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mu8uksxl1mp4k-0",
+                  "title": "[25.05.25] 트루킴의 이세계 농부 라이프 🎬 GTA5: 콩밥특별시 1일차ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=VEG796-j_Qs&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.05.27",
+                  "duration": "7:12:20",
+                  "viewCount": 2260,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/VEG796-j_Qs/hqdefault.jpg",
+                  "displayOrder": 6
+                },
+                {
+                  "id": "v-mu8uksxli3wna-1",
+                  "title": "[25.05.26] 농부는 죽었다... 킴트루 농협의 삶 🎬 GTA5: 콩밥특별시 2일차 (1편)ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=UzvksVxOTwY&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.05.28",
+                  "duration": "7:00:01",
+                  "viewCount": 1072,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/UzvksVxOTwY/hqdefault.jpg",
+                  "displayOrder": 7
+                },
+                {
+                  "id": "v-mu8uksxlkdz6e-2",
+                  "title": "[25.05.26] 농부는 죽었다... 킴트루 농협의 삶 🎬 GTA5: 콩밥특별시 2일차 (2편)ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=KCTOaPOvPHg&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.05.28",
+                  "duration": "6:28:15",
+                  "viewCount": 859,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/KCTOaPOvPHg/hqdefault.jpg",
+                  "displayOrder": 8
+                },
+                {
+                  "id": "v-mu8uksxl0anbf-3",
+                  "title": "[25.05.27] 결국 다시 돌아온 그 녀석들 🎬 GTA5: 콩밥특별시 3일차 (1편)ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=Ztk_QMEf5dA&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.05.29",
+                  "duration": "8:16:14",
+                  "viewCount": 1190,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/Ztk_QMEf5dA/hqdefault.jpg",
+                  "displayOrder": 9
+                },
+                {
+                  "id": "v-mu8uksxlv7j88-4",
+                  "title": "[25.05.27] 나 홀로 집에 - 콩밥시편 - 🎬 GTA5: 콩밥특별시 3일차 (2편)ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=aF3-g_EdIbI&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.05.29",
+                  "duration": "5:00:03",
+                  "viewCount": 904,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/aF3-g_EdIbI/hqdefault.jpg",
+                  "displayOrder": 10
+                },
+                {
+                  "id": "v-mu8uksxlkf1bm-5",
+                  "title": "[25.05.28] 콩밥 농협인의 삶 킴트루 이야기 🎬 GTA5: 콩밥특별시 4일차ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=rxFxLxQwTec&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.05.31",
+                  "duration": "9:49:37",
+                  "viewCount": 965,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/rxFxLxQwTec/hqdefault.jpg",
+                  "displayOrder": 11
+                },
+                {
+                  "id": "v-mu8uksxla8lk5-6",
+                  "title": "[25.05.29] 콩밥 농협인의 삶 킴트루 이야기 🎬 GTA5: 콩밥특별시 5일차 (1편)ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=OaHY9DesSrE&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.06.01",
+                  "duration": "7:00:03",
+                  "viewCount": 677,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/OaHY9DesSrE/hqdefault.jpg",
+                  "displayOrder": 12
+                },
+                {
+                  "id": "v-mu8uksxlpgxqd-7",
+                  "title": "[25.05.29] 콩밥 농협인의 삶 킴트루 이야기 🎬 GTA5: 콩밥특별시 5일차 (2편)ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=uN5Ov53XXOo&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.06.01",
+                  "duration": "5:05:42",
+                  "viewCount": 560,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/uN5Ov53XXOo/hqdefault.jpg",
+                  "displayOrder": 13
+                },
+                {
+                  "id": "v-mu8uksxl19lds-8",
+                  "title": "[25.05.31] 보석털이가 돈이 된다고? 🎬 GTA5: 콩밥특별시 6일차ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=pdk6QbGFebM&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.06.02",
+                  "duration": "8:16:20",
+                  "viewCount": 844,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/pdk6QbGFebM/hqdefault.jpg",
+                  "displayOrder": 14
+                },
+                {
+                  "id": "v-mu8uksxlxaq8w-9",
+                  "title": "[25.06.01] 피아식별은 빡빡이로 할까요 🎬 GTA5: 콩밥특별시 7일차 (1편)ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=7VsKisAHObA&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.06.04",
+                  "duration": "11:55:01",
+                  "viewCount": 723,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/7VsKisAHObA/hqdefault.jpg",
+                  "displayOrder": 15
+                },
+                {
+                  "id": "v-mu8uksxl69btj-10",
+                  "title": "[25.06.01] 피아식별은 빡빡이로 할까요 🎬 GTA5: 콩밥특별시 7일차 (2편)ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=M0HtjnjDSL4&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.06.04",
+                  "duration": "2:22:31",
+                  "viewCount": 599,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/M0HtjnjDSL4/hqdefault.jpg",
+                  "displayOrder": 16
+                },
+                {
+                  "id": "v-mu8uksxlq3n3m-11",
+                  "title": "[25.06.02] 내가 분탕이 될게 🎬 GTA5: 콩밥특별시 8일차 (1편)ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=7gIkWEWwwew&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.06.05",
+                  "duration": "7:00:04",
+                  "viewCount": 786,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/7gIkWEWwwew/hqdefault.jpg",
+                  "displayOrder": 17
+                },
+                {
+                  "id": "v-mu8uksxl58ok9-12",
+                  "title": "[25.06.02] 내가 분탕이 될게 🎬 GTA5: 콩밥특별시 8일차 (2편)ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=9AdIg6sXOgQ&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.06.05",
+                  "duration": "5:51:31",
+                  "viewCount": 821,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/9AdIg6sXOgQ/hqdefault.jpg",
+                  "displayOrder": 18
+                },
+                {
+                  "id": "v-mu8uksxlt01s9-13",
+                  "title": "[25.06.03] 헬기 더 퍼스트 🎬 GTA5: 콩밥특별시 9일차ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=fL8tg8WvzyY&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.06.06",
+                  "duration": "8:49:26",
+                  "viewCount": 792,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/fL8tg8WvzyY/hqdefault.jpg",
+                  "displayOrder": 19
+                },
+                {
+                  "id": "v-mu8uksxlgyw9z-14",
+                  "title": "[25.06.04] 칼팡맨에 기억을 잃어버린 킴트루 🎬 GTA5: 콩밥특별시 10일차ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=AdhwI7gDMkc&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.06.07",
+                  "duration": "7:09:10",
+                  "viewCount": 2220,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/AdhwI7gDMkc/hqdefault.jpg",
+                  "displayOrder": 20
+                },
+                {
+                  "id": "v-mu8uksxlwzcnx-15",
+                  "title": "[25.06.06] 농협의 해체... 경찰과 함께 합니다 🎬 GTA5: 콩밥특별시 11일차ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=WhTTr07kLBE&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.06.08",
+                  "duration": "9:21:03",
+                  "viewCount": 1600,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/WhTTr07kLBE/hqdefault.jpg",
+                  "displayOrder": 21
+                },
+                {
+                  "id": "v-mu8uksxlf1hno-16",
+                  "title": "[25.06.07] 범죄와의 전쟁 🎬 GTA5: 콩밥특별시 12일차 (1편)ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=_q8rq93fWfg&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.06.10",
+                  "duration": "6:27:37",
+                  "viewCount": 798,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/_q8rq93fWfg/hqdefault.jpg",
+                  "displayOrder": 22
+                },
+                {
+                  "id": "v-mu8uksxlaj321-17",
+                  "title": "[25.06.07] 범죄와의 전쟁 🎬 GTA5: 콩밥특별시 12일차 (2편)ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=RuEAHoU2Bvc&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.06.10",
+                  "duration": "1:54:51",
+                  "viewCount": 482,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/RuEAHoU2Bvc/hqdefault.jpg",
+                  "displayOrder": 23
+                },
+                {
+                  "id": "v-mu8uksxl2oxsh-18",
+                  "title": "[25.06.08] \"야유\"회 🎬 GTA5: 콩밥특별시 13일차 (1편)ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=7qgE_fSBNP0&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.06.11",
+                  "duration": "4:10:05",
+                  "viewCount": 387,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/7qgE_fSBNP0/hqdefault.jpg",
+                  "displayOrder": 24
+                },
+                {
+                  "id": "v-mu8uksxl768yh-19",
+                  "title": "[25.06.08] 콩밥시 마지막 날 콘서트와 후기 🎬 GTA5: 콩밥특별시 13일차 (2편)ㅣ노돌리 다시보기",
+                  "url": "https://www.youtube.com/watch?v=vM_arrFhET4&list=PLOHanSfOGO6ltsiiI8-3plu-82EuR4wyP",
+                  "videoType": "full",
+                  "date": "2025.06.11",
+                  "duration": "4:04:12",
+                  "viewCount": 3460,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/vM_arrFhET4/hqdefault.jpg",
+                  "displayOrder": 25
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",
@@ -22654,33 +23471,6 @@
                   "status": "active",
                   "badgeColor": "bg-zinc-700",
                   "displayOrder": 7
-                }
-              ],
-              "category": "gang",
-              "subgroup": "gang-nonghyup"
-            },
-            {
-              "id": "gang-nonghyup-9",
-              "name": "한겨울",
-              "streamer": "이리온",
-              "role": "조합원",
-              "swatRole": "",
-              "status": "active",
-              "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
-              "displayOrder": 8,
-              "subscriberCount": "",
-              "youtubeUrl": "",
-              "videos": [],
-              "affiliations": [
-                {
-                  "category": "gang",
-                  "subgroup": "gang-nonghyup",
-                  "role": "조합원",
-                  "swatRole": "",
-                  "status": "active",
-                  "badgeColor": "bg-zinc-700",
-                  "displayOrder": 8
                 }
               ],
               "category": "gang",
@@ -22897,11 +23687,38 @@
                   "swatRole": "",
                   "status": "active",
                   "badgeColor": "bg-zinc-700",
-                  "displayOrder": 9
+                  "displayOrder": 8
                 }
               ],
               "category": "police",
               "subgroup": null
+            },
+            {
+              "id": "gang-nonghyup-9",
+              "name": "한겨울",
+              "streamer": "이리온",
+              "role": "조합원",
+              "swatRole": "",
+              "status": "active",
+              "badgeColor": "bg-zinc-700",
+              "avatar": "https://yt3.googleusercontent.com/XyMyO4j29A82c9YbOXslyjfTIEG4qjJgCWlDZCJ7NGdGd8SWpjujCkm5TY2zvTu9IFqXqlQjAg=s160-c-k-c0x00ffffff-no-rj",
+              "displayOrder": 9,
+              "subscriberCount": "2,160명",
+              "youtubeUrl": "https://www.youtube.com/@2leon0809",
+              "videos": [],
+              "affiliations": [
+                {
+                  "category": "gang",
+                  "subgroup": "gang-nonghyup",
+                  "role": "조합원",
+                  "swatRole": "",
+                  "status": "active",
+                  "badgeColor": "bg-zinc-700",
+                  "displayOrder": 9
+                }
+              ],
+              "category": "gang",
+              "subgroup": "gang-nonghyup"
             }
           ]
         },
@@ -22919,10 +23736,10 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-red-600",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/EIswGAbcGIaVLYFOG29y66YsCz_t94uyXsSXfOvHsdocUHnT3fZvSjKGgvwZHp6Z_szWnWCepO4=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 0,
-              "subscriberCount": "",
-              "youtubeUrl": "",
+              "subscriberCount": "1.1만 명",
+              "youtubeUrl": "https://www.youtube.com/@chikoseawitch",
               "videos": [],
               "affiliations": [
                 {
@@ -22946,11 +23763,108 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/ytc/AIdro_mru21Q-HCWPnqBbKU7sDKbvIhufTJ1bbeUW5Ni37cp94w=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 1,
-              "subscriberCount": "",
-              "youtubeUrl": "",
-              "videos": [],
+              "subscriberCount": "60.6만 명",
+              "youtubeUrl": "https://www.youtube.com/@서넹",
+              "videos": [
+                {
+                  "id": "v-mu8usjzpdin9v-0",
+                  "title": "콩밥특별시 입주하자마자 생긴 일",
+                  "url": "https://www.youtube.com/watch?v=2vKVmIePMOo",
+                  "videoType": "clip",
+                  "date": "2025.06.12",
+                  "duration": "13:48",
+                  "viewCount": 33407,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/2vKVmIePMOo/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mu8ut7d1qui8o-0",
+                  "title": "• 2025/05/28 • (1) 콩밥 1일차 : 염선행 22살 직업을 찾아보아요",
+                  "url": "https://www.youtube.com/watch?v=m5JYGv9fVnM",
+                  "videoType": "full",
+                  "date": "2025.05.29",
+                  "duration": "44:17",
+                  "viewCount": null,
+                  "thumbnailUrl": "https://img.youtube.com/vi/m5JYGv9fVnM/hqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mu8ut7d1bxw0y-1",
+                  "title": "• 2025/05/28 • (2) 콩밥 1일차 : 염선행 22살 직업을 찾아보아요",
+                  "url": "https://www.youtube.com/watch?v=iMH2fzkw-GE",
+                  "videoType": "full",
+                  "date": "2025.05.29",
+                  "duration": "5:48:50",
+                  "viewCount": null,
+                  "thumbnailUrl": "https://img.youtube.com/vi/iMH2fzkw-GE/hqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mu8ut7d14rsbw-2",
+                  "title": "• 2025/06/02 • 콩밥 5일차 : 하 죽이고 싶다,,,",
+                  "url": "https://www.youtube.com/watch?v=1YX7IgFItrs",
+                  "videoType": "full",
+                  "date": "2025.06.03",
+                  "duration": "11:05:12",
+                  "viewCount": null,
+                  "thumbnailUrl": "https://img.youtube.com/vi/1YX7IgFItrs/hqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mu8ut7d1ngegn-3",
+                  "title": "• 2025/06/03 • 콩밥 6일차 : 돈만 주시면 다 해드립니다",
+                  "url": "https://www.youtube.com/watch?v=5sWIX2i-h44",
+                  "videoType": "full",
+                  "date": "2025.06.04",
+                  "duration": "8:34:19",
+                  "viewCount": null,
+                  "thumbnailUrl": "https://img.youtube.com/vi/5sWIX2i-h44/hqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mu8ut7d1jww8s-4",
+                  "title": "• 2025/06/04 • 콩밥 7일차 : 걸뱅이 염선행",
+                  "url": "https://www.youtube.com/watch?v=dMUqcNCJ2bo&pp=0gcJCSQMAYcqIYzv",
+                  "videoType": "full",
+                  "date": "2025.06.05",
+                  "duration": "4:33:32",
+                  "viewCount": null,
+                  "thumbnailUrl": "https://img.youtube.com/vi/dMUqcNCJ2bo/hqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mu8ut7d16skf1-5",
+                  "title": "• 2025/06/05 • 콩밥 8일차  : 걸뱅이 아지트 생김",
+                  "url": "https://www.youtube.com/watch?v=5ZTwCWBKk48&pp=0gcJCSQMAYcqIYzv",
+                  "videoType": "full",
+                  "date": "2025.06.06",
+                  "duration": "7:16:43",
+                  "viewCount": null,
+                  "thumbnailUrl": "https://img.youtube.com/vi/5ZTwCWBKk48/hqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 6
+                },
+                {
+                  "id": "v-mu8ut7d1z9pec-6",
+                  "title": "• 2025/06/09 • 걸뱅이팸 염선행 콩밥 후기",
+                  "url": "https://www.youtube.com/watch?v=nlNJLub1pIQ",
+                  "videoType": "full",
+                  "date": "2025.06.11",
+                  "duration": "1:27:35",
+                  "viewCount": null,
+                  "thumbnailUrl": "https://img.youtube.com/vi/nlNJLub1pIQ/hqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 7
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",
@@ -22973,11 +23887,372 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/IjWmZMb6C6xN1G8fkvN4lUl7wk2ElrTm_WTICqBCrw4VnYoQrc8o5vz9IDmOJYlcrw9YEN6CJQ=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 2,
-              "subscriberCount": "",
-              "youtubeUrl": "",
-              "videos": [],
+              "subscriberCount": "1.4만 명",
+              "youtubeUrl": "https://www.youtube.com/@정령왕",
+              "videos": [
+                {
+                  "id": "v-mu8uy0j6660dd-0",
+                  "title": "동정호의 삶 [콩밥특별시 1화]",
+                  "url": "https://www.youtube.com/watch?v=Q6UO48TAD7w&list=PLJ1tynuLW9RqRRrZbcU3YXPcu0abFej3X",
+                  "videoType": "clip",
+                  "date": "2025.05.30",
+                  "duration": "19:53",
+                  "viewCount": 30644,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/Q6UO48TAD7w/hqdefault.jpg",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mu8uy0j6ntc7q-1",
+                  "title": "소문난 호구 [콩밥특별시 2화]",
+                  "url": "https://www.youtube.com/watch?v=xstFt0It2aQ&list=PLJ1tynuLW9RqRRrZbcU3YXPcu0abFej3X",
+                  "videoType": "clip",
+                  "date": "2025.06.01",
+                  "duration": "22:08",
+                  "viewCount": 20801,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/xstFt0It2aQ/hqdefault.jpg",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mu8uy0j6tz6ik-2",
+                  "title": "이겨도 지옥, 지면 감옥 가겠습니다 [콩밥특별시 3화]",
+                  "url": "https://www.youtube.com/watch?v=zCONScTq5Xk&list=PLJ1tynuLW9RqRRrZbcU3YXPcu0abFej3X",
+                  "videoType": "clip",
+                  "date": "2025.06.05",
+                  "duration": "23:00",
+                  "viewCount": 16946,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/zCONScTq5Xk/hqdefault.jpg",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mu8uy0j6gjxlv-3",
+                  "title": "오케이 치킨은 엄마 주고 볶음짬뽕 시킬게요 [콩밥특별시 4화]",
+                  "url": "https://www.youtube.com/watch?v=4sqar1rO_vg&list=PLJ1tynuLW9RqRRrZbcU3YXPcu0abFej3X",
+                  "videoType": "clip",
+                  "date": "2025.06.08",
+                  "duration": "25:57",
+                  "viewCount": 31212,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/4sqar1rO_vg/hqdefault.jpg",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mu8uy0j653foa-4",
+                  "title": "10분 동안 돔베국수만 먹고 살아보기 [콩밥특별시 5화]",
+                  "url": "https://www.youtube.com/watch?v=Y6Ubwi0SaUY&list=PLJ1tynuLW9RqRRrZbcU3YXPcu0abFej3X",
+                  "videoType": "clip",
+                  "date": "2025.06.12",
+                  "duration": "34:18",
+                  "viewCount": 26436,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/Y6Ubwi0SaUY/hqdefault.jpg",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mu8uy0j6j8wsc-5",
+                  "title": "자기야, 왜 또 칭얼거려? 배고파?  [콩밥특별시 6화]",
+                  "url": "https://www.youtube.com/watch?v=UTtmBkq5P0Q&list=PLJ1tynuLW9RqRRrZbcU3YXPcu0abFej3X",
+                  "videoType": "clip",
+                  "date": "2025.06.16",
+                  "duration": "35:30",
+                  "viewCount": 19672,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/UTtmBkq5P0Q/hqdefault.jpg",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mu8uy0j6jvh34-6",
+                  "title": "이정호식 소식 다이어트 [콩밥특별시 7화]",
+                  "url": "https://www.youtube.com/watch?v=G4SOaahYNdY&list=PLJ1tynuLW9RqRRrZbcU3YXPcu0abFej3X",
+                  "videoType": "clip",
+                  "date": "2025.06.21",
+                  "duration": "40:27",
+                  "viewCount": 24455,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/G4SOaahYNdY/hqdefault.jpg",
+                  "displayOrder": 6
+                },
+                {
+                  "id": "v-mu8uy0j6d2t45-7",
+                  "title": "세상에 나쁜 짜장은 없다 [콩밥특별시 8화]",
+                  "url": "https://www.youtube.com/watch?v=V33fM1k_7Fc&list=PLJ1tynuLW9RqRRrZbcU3YXPcu0abFej3X",
+                  "videoType": "clip",
+                  "date": "2025.06.26",
+                  "duration": "51:46",
+                  "viewCount": 22713,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/V33fM1k_7Fc/hqdefault.jpg",
+                  "displayOrder": 7
+                },
+                {
+                  "id": "v-mu8uy0j6djnxi-8",
+                  "title": "온뇨쇼 정홈다 [콩밥특별시 9화]",
+                  "url": "https://www.youtube.com/watch?v=QWKoQ1TMYYw&list=PLJ1tynuLW9RqRRrZbcU3YXPcu0abFej3X",
+                  "videoType": "clip",
+                  "date": "2025.06.30",
+                  "duration": "36:23",
+                  "viewCount": 19504,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/QWKoQ1TMYYw/hqdefault.jpg",
+                  "displayOrder": 8
+                },
+                {
+                  "id": "v-mu8uy0j6r28f4-9",
+                  "title": "3시의 데이트 에겐남입니다 [콩밥특별시 10화]",
+                  "url": "https://www.youtube.com/watch?v=TXS2QnfY984&list=PLJ1tynuLW9RqRRrZbcU3YXPcu0abFej3X",
+                  "videoType": "clip",
+                  "date": "2025.07.05",
+                  "duration": "46:06",
+                  "viewCount": 18907,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/TXS2QnfY984/hqdefault.jpg",
+                  "displayOrder": 9
+                },
+                {
+                  "id": "v-mu8uy0j6jcyxh-10",
+                  "title": "간단요기 했단 말이야 [콩밥특별시 마지막 화]",
+                  "url": "https://www.youtube.com/watch?v=bb9Qq2PnQAw&list=PLJ1tynuLW9RqRRrZbcU3YXPcu0abFej3X",
+                  "videoType": "clip",
+                  "date": "2025.07.11",
+                  "duration": "52:31",
+                  "viewCount": 20606,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/bb9Qq2PnQAw/hqdefault.jpg",
+                  "displayOrder": 10
+                },
+                {
+                  "id": "v-mu8uynzu1aqt0-0",
+                  "title": "2025/05/25 막국수랑 감자전 / 콩밥특별시 신청하기",
+                  "url": "https://www.youtube.com/watch?v=5hk3T4p5KFY&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.06.09",
+                  "duration": "30:30",
+                  "viewCount": 761,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/5hk3T4p5KFY/hqdefault.jpg",
+                  "displayOrder": 11
+                },
+                {
+                  "id": "v-mu8uynzu1l1nd-1",
+                  "title": "2025/05/26 콩밥특별시 1일차 동정호의 삶",
+                  "url": "https://www.youtube.com/watch?v=H28TVNv348E&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.06.09",
+                  "duration": "3:38:07",
+                  "viewCount": 606,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/H28TVNv348E/hqdefault.jpg",
+                  "displayOrder": 12
+                },
+                {
+                  "id": "v-mu8uynzufz521-2",
+                  "title": "2025/05/27 평양냉면 + 녹두전 / 콩밥특별시 2일차 호구형의 삶",
+                  "url": "https://www.youtube.com/watch?v=LyrYwdEe_6I&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.06.12",
+                  "duration": "5:25:46",
+                  "viewCount": 440,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/LyrYwdEe_6I/hqdefault.jpg",
+                  "displayOrder": 13
+                },
+                {
+                  "id": "v-mu8uynzue8ozm-3",
+                  "title": "2025/05/28(29일 새벽) 콩밥특별시 3일차 리얼 갱스터의 삶",
+                  "url": "https://www.youtube.com/watch?v=-Z0EOG8_4sw&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.06.14",
+                  "duration": "2:05:24",
+                  "viewCount": 496,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/-Z0EOG8_4sw/hqdefault.jpg",
+                  "displayOrder": 14
+                },
+                {
+                  "id": "v-mu8uynzuh6m4a-4",
+                  "title": "2025/05/29 파파존스묵땨 / 콩밥특별시 4일차 슈퍼스타의 삶",
+                  "url": "https://www.youtube.com/watch?v=9lowmQjoQS8&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.06.14",
+                  "duration": "8:42:16",
+                  "viewCount": 1151,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/9lowmQjoQS8/hqdefault.jpg",
+                  "displayOrder": 15
+                },
+                {
+                  "id": "v-mu8uynzu1rkl3-5",
+                  "title": "2025/05/31/부 콩밥특별시 5일차_1 뺑소니 지옥",
+                  "url": "https://www.youtube.com/watch?v=SuJLDdEk5Ug&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.06.24",
+                  "duration": "4:37:40",
+                  "viewCount": 508,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/SuJLDdEk5Ug/hqdefault.jpg",
+                  "displayOrder": 16
+                },
+                {
+                  "id": "v-mu8uynzurhk4v-6",
+                  "title": "2025/05/31/2부 콩밥특별시 5일차_2 투명인간 rp",
+                  "url": "https://www.youtube.com/watch?v=FJi-WAGYHiw&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.06.24",
+                  "duration": "6:04:55",
+                  "viewCount": 481,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/FJi-WAGYHiw/hqdefault.jpg",
+                  "displayOrder": 17
+                },
+                {
+                  "id": "v-mu8uynzuc4tpt-7",
+                  "title": "2025/06/01/1부 콩밥특별시 6일차_1 동정학개론",
+                  "url": "https://www.youtube.com/watch?v=4SMjIRYsDhs&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.06.24",
+                  "duration": "9:11:15",
+                  "viewCount": 698,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/4SMjIRYsDhs/hqdefault.jpg",
+                  "displayOrder": 18
+                },
+                {
+                  "id": "v-mu8uynzudk5ky-8",
+                  "title": "2025/06/01/2부 콩밥특별시 6일차_2 똥때지",
+                  "url": "https://www.youtube.com/watch?v=luYVZXd7eX8&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.07.13",
+                  "duration": "2:06:41",
+                  "viewCount": 305,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/luYVZXd7eX8/hqdefault.jpg",
+                  "displayOrder": 19
+                },
+                {
+                  "id": "v-mu8uynzurmqih-9",
+                  "title": "2025/06/02/2부 콩밥특별시 7일차 무간도",
+                  "url": "https://www.youtube.com/watch?v=1AR_Vfkcswc&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.07.13",
+                  "duration": "11:33:25",
+                  "viewCount": 629,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/1AR_Vfkcswc/hqdefault.jpg",
+                  "displayOrder": 20
+                },
+                {
+                  "id": "v-mu8uynzubgpj8-10",
+                  "title": "2025/06/03/1부 콩밥특별시 8일차_1 창창창창창",
+                  "url": "https://www.youtube.com/watch?v=49ofJMjmMnk&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.07.13",
+                  "duration": "11:15:07",
+                  "viewCount": 815,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/49ofJMjmMnk/hqdefault.jpg",
+                  "displayOrder": 21
+                },
+                {
+                  "id": "v-mu8uynzushi2w-11",
+                  "title": "2025/06/03/2부 콩밥특별시 8일차_2 벽을 느끼다",
+                  "url": "https://www.youtube.com/watch?v=v5BHTKaFhaE&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.07.13",
+                  "duration": "1:05:50",
+                  "viewCount": 240,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/v5BHTKaFhaE/hqdefault.jpg",
+                  "displayOrder": 22
+                },
+                {
+                  "id": "v-mu8uynzua9jes-12",
+                  "title": "2025/06/04/1부 콩밥특별시 9일차_1 결혼까지 생각했어",
+                  "url": "https://www.youtube.com/watch?v=OxrfxKDJDVc&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.07.13",
+                  "duration": "8:37:40",
+                  "viewCount": 353,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/OxrfxKDJDVc/hqdefault.jpg",
+                  "displayOrder": 23
+                },
+                {
+                  "id": "v-mu8uynzuycfzr-13",
+                  "title": "2025/06/04/2부 콩밥특별시 9일차_2 밥 먹을래? 나랑 같이... 죽을래?",
+                  "url": "https://www.youtube.com/watch?v=EWXXYFxhGaY&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.07.13",
+                  "duration": "6:28:57",
+                  "viewCount": 342,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/EWXXYFxhGaY/hqdefault.jpg",
+                  "displayOrder": 24
+                },
+                {
+                  "id": "v-mu8uynzuiozkv-14",
+                  "title": "2025/06/05 콩밥특별시 10일차 지하아이돌 공~연",
+                  "url": "https://www.youtube.com/watch?v=tYl3lO-VM8Q&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.07.13",
+                  "duration": "6:25:32",
+                  "viewCount": 457,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/tYl3lO-VM8Q/hqdefault.jpg",
+                  "displayOrder": 25
+                },
+                {
+                  "id": "v-mu8uynzu7rxiy-15",
+                  "title": "2025/06/06/2부 콩밥특별시 11일차_1 납치 결혼",
+                  "url": "https://www.youtube.com/watch?v=yaJpssYGZqA&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.07.21",
+                  "duration": "3:26:51",
+                  "viewCount": 314,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/yaJpssYGZqA/hqdefault.jpg",
+                  "displayOrder": 26
+                },
+                {
+                  "id": "v-mu8uynzuitb3t-16",
+                  "title": "2025/06/06/3부 콩밥특별시 11일차_2 수비드",
+                  "url": "https://www.youtube.com/watch?v=AvsXYAZlKzs&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.07.21",
+                  "duration": "2:05:36",
+                  "viewCount": 137,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/AvsXYAZlKzs/hqdefault.jpg",
+                  "displayOrder": 27
+                },
+                {
+                  "id": "v-mu8uynzuezyuq-17",
+                  "title": "2025/06/07 콩밥특별시 12일차 실패한 사랑",
+                  "url": "https://www.youtube.com/watch?v=d2D_StMmgVc&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.07.21",
+                  "duration": "8:32:06",
+                  "viewCount": 219,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/d2D_StMmgVc/hqdefault.jpg",
+                  "displayOrder": 28
+                },
+                {
+                  "id": "v-mu8uynzuy2m0b-18",
+                  "title": "2025/06/08/1부 콩밥특별시 13일차 마지막",
+                  "url": "https://www.youtube.com/watch?v=HuqDkxaKePk&list=PL8hWfpsoJNFxYS_a5UO6LpkzKVZV2LhrX",
+                  "videoType": "full",
+                  "date": "2025.07.21",
+                  "duration": "9:29:00",
+                  "viewCount": 537,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/HuqDkxaKePk/hqdefault.jpg",
+                  "displayOrder": 29
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",
@@ -22993,18 +24268,283 @@
               "subgroup": "gang-girlbang"
             },
             {
-              "id": "gang-girlbang-4",
-              "name": "나예삐",
-              "streamer": "찡스",
+              "id": "gang-girlbang-7",
+              "name": "좋듀",
+              "streamer": "영듀",
               "role": "조직원",
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/n3cnzM0F2DVe1Wv9o8HzDQApD5827DqgwdRpHelTXKZXc5I7ssO4BZo3-O3y7VaXWBfeew_paw=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 3,
-              "subscriberCount": "",
-              "youtubeUrl": "",
-              "videos": [],
+              "subscriberCount": "5만 명",
+              "youtubeUrl": "https://www.youtube.com/@0due_youtube",
+              "videos": [
+                {
+                  "id": "v-mu8v7a889fl02-0",
+                  "title": "좋듀의 택시 듀라이브 l 콩밥특별시 1화",
+                  "url": "https://www.youtube.com/watch?v=K9eljvS0gRw&t=3s",
+                  "videoType": "clip",
+                  "date": "2025.05.29",
+                  "duration": "19:44",
+                  "viewCount": 119231,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/K9eljvS0gRw/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mu8v7a88qusun-1",
+                  "title": "기구한 장난감 RP l 콩밥특별시 2화",
+                  "url": "https://www.youtube.com/watch?v=bOfaSQmJElk",
+                  "videoType": "clip",
+                  "date": "2025.06.05",
+                  "duration": "13:54",
+                  "viewCount": 60823,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/bOfaSQmJElk/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mu8v7a880wehz-2",
+                  "title": "밥 안 주면 나 X 싼다! l 콩밥특별시 3화",
+                  "url": "https://www.youtube.com/watch?v=IlCwUdKfAgo&pp=0gcJCSQMAYcqIYzv",
+                  "videoType": "clip",
+                  "date": "2025.06.07",
+                  "duration": "29:08",
+                  "viewCount": 75014,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/IlCwUdKfAgo/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mu8v7a882ggl8-3",
+                  "title": "헤헤! 돈 벌었다^^ l 콩밥특별시 4화",
+                  "url": "https://www.youtube.com/watch?v=dEBFxlkQJk4",
+                  "videoType": "clip",
+                  "date": "2025.06.09",
+                  "duration": "20:00",
+                  "viewCount": 54044,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/dEBFxlkQJk4/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mu8v7a882nf9m-4",
+                  "title": "미친X 좋듀 등장이요~! ㅣ 콩밥특별시 5화",
+                  "url": "https://www.youtube.com/watch?v=Ru1tfIBi_l0",
+                  "videoType": "clip",
+                  "date": "2025.06.11",
+                  "duration": "18:48",
+                  "viewCount": 47586,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/Ru1tfIBi_l0/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mu8v7a88dsatv-5",
+                  "title": "놀러왔는데 노예가 된 건에 대하여 l 콩밥특별시 6화",
+                  "url": "https://www.youtube.com/watch?v=VcxPR4DLY6w&pp=0gcJCSQMAYcqIYzv",
+                  "videoType": "clip",
+                  "date": "2025.06.13",
+                  "duration": "17:48",
+                  "viewCount": 46008,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/VcxPR4DLY6w/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mu8v7a88581hr-6",
+                  "title": "우와 방구차다!! l 콩밥특별시 7화",
+                  "url": "https://www.youtube.com/watch?v=GJafi4g5bW0",
+                  "videoType": "clip",
+                  "date": "2025.06.18",
+                  "duration": "11:02",
+                  "viewCount": 32778,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/GJafi4g5bW0/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 6
+                },
+                {
+                  "id": "v-mu8v7a88xxffr-7",
+                  "title": "★지하아이돌 공~~연★ l 콩밥특별시 8화",
+                  "url": "https://www.youtube.com/watch?v=Ymw9miUKXow",
+                  "videoType": "clip",
+                  "date": "2025.06.21",
+                  "duration": "27:46",
+                  "viewCount": 45211,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/Ymw9miUKXow/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 7
+                },
+                {
+                  "id": "v-mu8v7a88d0rg0-8",
+                  "title": "두 테토남 중에 제 선택은요..~ l 콩밥특별시 마지막화",
+                  "url": "https://www.youtube.com/watch?v=4YAwh23BRw0",
+                  "videoType": "clip",
+                  "date": "2025.06.24",
+                  "duration": "10:18",
+                  "viewCount": 24854,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/4YAwh23BRw0/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 8
+                },
+                {
+                  "id": "v-mu8v7a88crqpj-9",
+                  "title": "진짜로 모인 걸뱅이들 l 콩밥특별시 외전",
+                  "url": "https://www.youtube.com/watch?v=GbiGQv_Hgog",
+                  "videoType": "clip",
+                  "date": "2025.06.25",
+                  "duration": "15:53",
+                  "viewCount": 197778,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/GbiGQv_Hgog/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 9
+                },
+                {
+                  "id": "v-mu8va1ulg8j0j-0",
+                  "title": "콩밥특별시 1일차 ^^",
+                  "url": "https://chzzk.naver.com/video/7437322",
+                  "videoType": "full",
+                  "date": "2025.05.26",
+                  "duration": "9:58:12",
+                  "viewCount": 5553,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250526_150/1748202017271j1Yfl_JPEG/qtQIKmL5Uk_03.jpg?type=o500x280_blur",
+                  "description": "",
+                  "displayOrder": 10
+                },
+                {
+                  "id": "v-mu8va1uleba9w-1",
+                  "title": "프로체서 ^^",
+                  "url": "https://chzzk.naver.com/video/7467333",
+                  "videoType": "full",
+                  "date": "2025.05.28",
+                  "duration": "9:44:54",
+                  "viewCount": 3744,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250528_105/1748373972960elNrk_JPEG/tmsXwO7DvY_03.jpg",
+                  "description": "",
+                  "displayOrder": 11
+                },
+                {
+                  "id": "v-mu8va1ulhejbm-2",
+                  "title": "콩밥특별시 ^^",
+                  "url": "https://chzzk.naver.com/video/7479210",
+                  "videoType": "full",
+                  "date": "2025.05.29",
+                  "duration": "6:10:28",
+                  "viewCount": 4633,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250529_250/1748447349761gvMGJ_JPEG/S3BjZOEQ9e_03.jpg",
+                  "description": "",
+                  "displayOrder": 12
+                },
+                {
+                  "id": "v-mu8va1ulhk27v-3",
+                  "title": "콩밥특별시 ^^",
+                  "url": "https://chzzk.naver.com/video/7481940",
+                  "videoType": "full",
+                  "date": "2025.05.29",
+                  "duration": "2:14:29",
+                  "viewCount": 3002,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250529_166/1748455216209U9Q3E_JPEG/8ZWhfzJKGw_03.jpg",
+                  "description": "",
+                  "displayOrder": 13
+                },
+                {
+                  "id": "v-mu8va1ul1yf10-4",
+                  "title": "콩밥특별시 ^^ 우수시민",
+                  "url": "https://chzzk.naver.com/video/7498822",
+                  "videoType": "full",
+                  "date": "2025.05.30",
+                  "duration": "9:04:43",
+                  "viewCount": 3990,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250530_286/1748549718011OGkPP_JPEG/RiC8PaGBI3_03.jpg",
+                  "description": "",
+                  "displayOrder": 14
+                },
+                {
+                  "id": "v-mu8va1ulg8fch-5",
+                  "title": "콩밥특별시 ^^",
+                  "url": "https://chzzk.naver.com/video/7531388",
+                  "videoType": "full",
+                  "date": "2025.06.01",
+                  "duration": "9:18:56",
+                  "viewCount": 2468,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250601_75/1748718058196T8aj8_JPEG/YOEDwrvNrg_03.jpg",
+                  "description": "",
+                  "displayOrder": 15
+                },
+                {
+                  "id": "v-mu8va1ul1dywp-6",
+                  "title": "콩밥특별시 ^^",
+                  "url": "https://chzzk.naver.com/video/7548660",
+                  "videoType": "full",
+                  "date": "2025.06.02",
+                  "duration": "11:14:10",
+                  "viewCount": 2789,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250602_48/1748806029746S5cOG_JPEG/NEt9WIRayn_03.jpg",
+                  "description": "",
+                  "displayOrder": 16
+                },
+                {
+                  "id": "v-mu8va1ulhtztr-7",
+                  "title": "콩밥특별시 ^^",
+                  "url": "https://chzzk.naver.com/video/7580820",
+                  "videoType": "full",
+                  "date": "2025.06.04",
+                  "duration": "10:11:27",
+                  "viewCount": 2140,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250604_126/1748978326691OiyDW_JPEG/L5eDiGuYqt_03.jpg",
+                  "description": "",
+                  "displayOrder": 17
+                },
+                {
+                  "id": "v-mu8va1ul4a57r-8",
+                  "title": "콩밥특별시 ^^",
+                  "url": "https://chzzk.naver.com/video/7596267",
+                  "videoType": "full",
+                  "date": "2025.06.05",
+                  "duration": "9:58:01",
+                  "viewCount": 2988,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250605_26/1749065998367Eycih_JPEG/t5nkuTa8G2_03.jpg",
+                  "description": "",
+                  "displayOrder": 18
+                },
+                {
+                  "id": "v-mu8va1ullvw7v-9",
+                  "title": "콩밥특별시 ^^",
+                  "url": "https://chzzk.naver.com/video/7629199",
+                  "videoType": "full",
+                  "date": "2025.06.07",
+                  "duration": "9:38:04",
+                  "viewCount": 3723,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250607_166/1749238202607IW5tY_JPEG/PRIftDtfux_03.jpg",
+                  "description": "",
+                  "displayOrder": 19
+                },
+                {
+                  "id": "v-mu8va1ulzr4qj-10",
+                  "title": "갱 vs 경찰 ^^",
+                  "url": "https://chzzk.naver.com/video/7646697",
+                  "videoType": "full",
+                  "date": "2025.06.08",
+                  "duration": "10:02:19",
+                  "viewCount": 2263,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250608_265/1749325454910Kqb3X_JPEG/xx7FD6h6Uj_03.jpg",
+                  "description": "",
+                  "displayOrder": 20
+                },
+                {
+                  "id": "v-mu8va1ulhxgq5-11",
+                  "title": "뒷풀이..^^",
+                  "url": "https://chzzk.naver.com/video/7663622",
+                  "videoType": "full",
+                  "date": "2025.06.09",
+                  "duration": "10:45:17",
+                  "viewCount": 5146,
+                  "thumbnailUrl": "https://video-phinf.pstatic.net/20250609_140/1749414442615NgLWm_JPEG/7BNk25Bjol_03.jpg",
+                  "description": "",
+                  "displayOrder": 21
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",
@@ -23020,18 +24560,115 @@
               "subgroup": "gang-girlbang"
             },
             {
-              "id": "gang-girlbang-5",
-              "name": "홍길동1",
-              "streamer": "박홍시",
+              "id": "gang-girlbang-9",
+              "name": "얌태식",
+              "streamer": "얌얌",
               "role": "조직원",
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/FLdZrJeF2rm2oq9ofFqvJudGNQ56oepyWk9Y6SzQgOdyDqubgTTlLG0Y8Rt2g_SoPXG2ldwuaaA=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 4,
-              "subscriberCount": "",
-              "youtubeUrl": "",
-              "videos": [],
+              "subscriberCount": "3,870명",
+              "youtubeUrl": "https://www.youtube.com/@Kim_YumYum",
+              "videos": [
+                {
+                  "id": "v-mu8vcbd8y2ibt-0",
+                  "title": "경찰 지망생 얌태식ㅣGTA5 [콩밥특별시 1화]",
+                  "url": "https://www.youtube.com/watch?v=LCYYpz_SkyM&list=PLFgYYyKrJPRNNFqZpZuZRnRvimltPc1GH",
+                  "videoType": "clip",
+                  "date": "2025.06.01",
+                  "duration": "16:09",
+                  "viewCount": 13249,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/LCYYpz_SkyM/hqdefault.jpg",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mu8vcbd833227-1",
+                  "title": "얌태식 면접 보러 왔습니다ㅣGTA5 [콩밥특별시 2화]",
+                  "url": "https://www.youtube.com/watch?v=OLHGW2EUf8c&list=PLFgYYyKrJPRNNFqZpZuZRnRvimltPc1GH",
+                  "videoType": "clip",
+                  "date": "2025.06.04",
+                  "duration": "10:46",
+                  "viewCount": 1505,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/OLHGW2EUf8c/hqdefault.jpg",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mu8vcbd85d1gi-2",
+                  "title": "얌태식 새 RP 찾았습니다ㅣGTA5 [콩밥특별시 3화]",
+                  "url": "https://www.youtube.com/watch?v=-K8KLgsmcRQ&list=PLFgYYyKrJPRNNFqZpZuZRnRvimltPc1GH",
+                  "videoType": "clip",
+                  "date": "2025.06.07",
+                  "duration": "14:42",
+                  "viewCount": 2697,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/-K8KLgsmcRQ/hqdefault.jpg",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mu8vcbd87cb49-3",
+                  "title": "못난 놈들은 서로 얼굴만 봐도 흥겹다ㅣGTA5 [콩밥특별시 4화]",
+                  "url": "https://www.youtube.com/watch?v=SVL3vuXp-t8&list=PLFgYYyKrJPRNNFqZpZuZRnRvimltPc1GH",
+                  "videoType": "clip",
+                  "date": "2025.06.15",
+                  "duration": "14:50",
+                  "viewCount": 2033,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/SVL3vuXp-t8/hqdefault.jpg",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mu8vcbd8p4eks-4",
+                  "title": "흑화한 얌태식ㅣGTA5 [콩밥특별시 5화]",
+                  "url": "https://www.youtube.com/watch?v=5R7eHoZN62w&list=PLFgYYyKrJPRNNFqZpZuZRnRvimltPc1GH",
+                  "videoType": "clip",
+                  "date": "2025.06.19",
+                  "duration": "22:59",
+                  "viewCount": 1898,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/5R7eHoZN62w/hqdefault.jpg",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mu8vcbd8x3hb5-5",
+                  "title": "야 너도 할 수 있어ㅣGTA5 [콩밥특별시 6화]",
+                  "url": "https://www.youtube.com/watch?v=3cGetONOjcc&list=PLFgYYyKrJPRNNFqZpZuZRnRvimltPc1GH",
+                  "videoType": "clip",
+                  "date": "2025.06.20",
+                  "duration": "22:43",
+                  "viewCount": 2718,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/3cGetONOjcc/hqdefault.jpg",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mu8vcbd8dp0yk-6",
+                  "title": "방금 갱 들어온 사람ㅣGTA5 [콩밥특별시 7화]",
+                  "url": "https://www.youtube.com/watch?v=yyF5bfJ8JxY&list=PLFgYYyKrJPRNNFqZpZuZRnRvimltPc1GH",
+                  "videoType": "clip",
+                  "date": "2025.06.26",
+                  "duration": "18:49",
+                  "viewCount": 7391,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/yyF5bfJ8JxY/hqdefault.jpg",
+                  "displayOrder": 6
+                },
+                {
+                  "id": "v-mu8vcbd8z33yh-7",
+                  "title": "우리 내일 같이..!ㅣGTA5 [콩밥특별시 완]",
+                  "url": "https://www.youtube.com/watch?v=gZy8UPZQsz0&list=PLFgYYyKrJPRNNFqZpZuZRnRvimltPc1GH",
+                  "videoType": "clip",
+                  "date": "2025.07.01",
+                  "duration": "27:20",
+                  "viewCount": 5625,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/gZy8UPZQsz0/hqdefault.jpg",
+                  "displayOrder": 7
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",
@@ -23041,6 +24678,60 @@
                   "status": "active",
                   "badgeColor": "bg-zinc-700",
                   "displayOrder": 4
+                }
+              ],
+              "category": "gang",
+              "subgroup": "gang-girlbang"
+            },
+            {
+              "id": "gang-girlbang-4",
+              "name": "나예삐",
+              "streamer": "찡스",
+              "role": "조직원",
+              "swatRole": "",
+              "status": "active",
+              "badgeColor": "bg-zinc-700",
+              "avatar": "https://yt3.googleusercontent.com/KPIECX_-wi15cebWRyITzwJoXZ9CFOXQLInxRE0TqPkNUPpLQ-m1j7QB5f-rNYqAafqrKUQkxA=s160-c-k-c0x00ffffff-no-rj",
+              "displayOrder": 5,
+              "subscriberCount": "2,860명",
+              "youtubeUrl": "https://www.youtube.com/@찡스-i8y",
+              "videos": [],
+              "affiliations": [
+                {
+                  "category": "gang",
+                  "subgroup": "gang-girlbang",
+                  "role": "조직원",
+                  "swatRole": "",
+                  "status": "active",
+                  "badgeColor": "bg-zinc-700",
+                  "displayOrder": 5
+                }
+              ],
+              "category": "gang",
+              "subgroup": "gang-girlbang"
+            },
+            {
+              "id": "gang-girlbang-5",
+              "name": "홍길동1",
+              "streamer": "박홍시",
+              "role": "조직원",
+              "swatRole": "",
+              "status": "active",
+              "badgeColor": "bg-zinc-700",
+              "avatar": "https://yt3.googleusercontent.com/gs5ZQYuCTBMW0YilN6cnP9m1_kfaNnwslA1a8-Beh6WSIsGCQ-55ZopY5_6e6Ntc9qMDnftL6A=s160-c-k-c0x00ffffff-no-rj",
+              "displayOrder": 6,
+              "subscriberCount": "1.3만 명",
+              "youtubeUrl": "https://www.youtube.com/@persimmon0927",
+              "videos": [],
+              "affiliations": [
+                {
+                  "category": "gang",
+                  "subgroup": "gang-girlbang",
+                  "role": "조직원",
+                  "swatRole": "",
+                  "status": "active",
+                  "badgeColor": "bg-zinc-700",
+                  "displayOrder": 6
                 }
               ],
               "category": "gang",
@@ -23076,38 +24767,11 @@
                   "swatRole": "",
                   "status": "active",
                   "badgeColor": "bg-zinc-700",
-                  "displayOrder": 5
+                  "displayOrder": 7
                 }
               ],
               "category": "ems",
               "subgroup": null
-            },
-            {
-              "id": "gang-girlbang-7",
-              "name": "좋듀",
-              "streamer": "영듀",
-              "role": "조직원",
-              "swatRole": "",
-              "status": "active",
-              "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
-              "displayOrder": 6,
-              "subscriberCount": "",
-              "youtubeUrl": "",
-              "videos": [],
-              "affiliations": [
-                {
-                  "category": "gang",
-                  "subgroup": "gang-girlbang",
-                  "role": "조직원",
-                  "swatRole": "",
-                  "status": "active",
-                  "badgeColor": "bg-zinc-700",
-                  "displayOrder": 6
-                }
-              ],
-              "category": "gang",
-              "subgroup": "gang-girlbang"
             },
             {
               "id": "gang-girlbang-8",
@@ -23117,37 +24781,10 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
-              "displayOrder": 7,
-              "subscriberCount": "",
-              "youtubeUrl": "",
-              "videos": [],
-              "affiliations": [
-                {
-                  "category": "gang",
-                  "subgroup": "gang-girlbang",
-                  "role": "조직원",
-                  "swatRole": "",
-                  "status": "active",
-                  "badgeColor": "bg-zinc-700",
-                  "displayOrder": 7
-                }
-              ],
-              "category": "gang",
-              "subgroup": "gang-girlbang"
-            },
-            {
-              "id": "gang-girlbang-9",
-              "name": "얌태식",
-              "streamer": "얌얌",
-              "role": "조직원",
-              "swatRole": "",
-              "status": "active",
-              "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/yJ8gOZeDTzocprK9iJOwQbZQzKboCeDeH-bt67QVGyOroQCLppi7_ETUQqMlbQZMg8CJUgPsx5E=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 8,
-              "subscriberCount": "",
-              "youtubeUrl": "",
+              "subscriberCount": "373명",
+              "youtubeUrl": "https://www.youtube.com/@호라미유튜브",
               "videos": [],
               "affiliations": [
                 {
@@ -23171,10 +24808,10 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/yIfimKGhAY4-zbTIfhOG-fJwhCWTN2p08PiXGZ4eprDZq4t1jz7xuUa1CZhuRdeidkp1iBInaA=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 9,
-              "subscriberCount": "",
-              "youtubeUrl": "",
+              "subscriberCount": "2.1만 명",
+              "youtubeUrl": "https://www.youtube.com/@루코",
               "videos": [],
               "affiliations": [
                 {
@@ -23206,10 +24843,10 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-red-600",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://nng-phinf.pstatic.net/MjAyNDAxMDJfNiAg/MDAxNzA0MTQ5MjIyNjc0.rbh0Mvgc4fD3ZpDIxZd1baHBwN9f4UwbzB-zQFz0bW4g.534F5767iF8yRT-Q2i_hQ-HP64saJxlNnlyx7NhkH_Eg.PNG/23_12_08___.png?type=f120_120_na",
               "displayOrder": 0,
-              "subscriberCount": "",
-              "youtubeUrl": "",
+              "subscriberCount": "8,894명",
+              "youtubeUrl": "https://chzzk.naver.com/cb2d7c109e1c4bea0cf45bb4b4971832",
               "videos": [],
               "affiliations": [
                 {
@@ -23233,11 +24870,312 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/gZ8u3StY1omSAYl0YgGN1yGjIKszluUp1o1InjIvyAnxZbHid2EClRsym-0Svv-USJ_x7YndzQ=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 1,
-              "subscriberCount": "",
-              "youtubeUrl": "",
-              "videos": [],
+              "subscriberCount": "1.2만 명",
+              "youtubeUrl": "https://www.youtube.com/@비행돼지",
+              "videos": [
+                {
+                  "id": "v-mu8viemc128dc-0",
+                  "title": "근데 그 술을 먹인놈이 접니다 [콩밥특별시 돼실장 #1]",
+                  "url": "https://www.youtube.com/watch?v=2G76sL6LrHI&list=PLGVE4D19gyJA03UF1NOyqOV2uGzsO9AQ7",
+                  "videoType": "clip",
+                  "date": "2025.05.30",
+                  "duration": "12:28",
+                  "viewCount": 1207,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/2G76sL6LrHI/hqdefault.jpg",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mu8viemcdnkfo-1",
+                  "title": "여긴 여자가 9 남자가 1인데요.... [콩밥특별시 돼실장 #2]",
+                  "url": "https://www.youtube.com/watch?v=vhE_qF6q5fo&list=PLGVE4D19gyJA03UF1NOyqOV2uGzsO9AQ7",
+                  "videoType": "clip",
+                  "date": "2025.06.06",
+                  "duration": "10:58",
+                  "viewCount": 755,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/vhE_qF6q5fo/hqdefault.jpg",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mu8viemcju25y-2",
+                  "title": "애들은 셋이면 되겠지? [콩밥특별시 돼실장 #3]",
+                  "url": "https://www.youtube.com/watch?v=WcaeX_IaHOE&list=PLGVE4D19gyJA03UF1NOyqOV2uGzsO9AQ7",
+                  "videoType": "clip",
+                  "date": "2025.06.16",
+                  "duration": "11:49",
+                  "viewCount": 1346,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/WcaeX_IaHOE/hqdefault.jpg",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mu8viemciafxs-3",
+                  "title": "RP에 과몰입해서 진짜 우는 아저씨 [콩밥특별시 돼실장 #4]",
+                  "url": "https://www.youtube.com/watch?v=IbC0vGMrt6c&list=PLGVE4D19gyJA03UF1NOyqOV2uGzsO9AQ7",
+                  "videoType": "clip",
+                  "date": "2025.06.18",
+                  "duration": "9:48",
+                  "viewCount": 1296,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/IbC0vGMrt6c/hqdefault.jpg",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mu8viemc54iqq-4",
+                  "title": "이리와봐 확 보여줘 버린다 [콩밥특별시 돼실장 #5]",
+                  "url": "https://www.youtube.com/watch?v=lkhTgrbGXaU&list=PLGVE4D19gyJA03UF1NOyqOV2uGzsO9AQ7",
+                  "videoType": "clip",
+                  "date": "2025.10.24",
+                  "duration": "11:00",
+                  "viewCount": 337,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/lkhTgrbGXaU/hqdefault.jpg",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mu8viemcqgiu5-5",
+                  "title": "이 싸움이 끝나면 그녀에게... [콩밥특별시 돼실장 #6]",
+                  "url": "https://www.youtube.com/watch?v=QkMNy0jKP8s&list=PLGVE4D19gyJA03UF1NOyqOV2uGzsO9AQ7",
+                  "videoType": "clip",
+                  "date": "2025.10.26",
+                  "duration": "10:24",
+                  "viewCount": 418,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/QkMNy0jKP8s/hqdefault.jpg",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mu8viemc08aah-6",
+                  "title": "헤어진 전 부인 [콩밥특별시 돼실장 #7]",
+                  "url": "https://www.youtube.com/watch?v=UWWPOgBzN9M&list=PLGVE4D19gyJA03UF1NOyqOV2uGzsO9AQ7",
+                  "videoType": "clip",
+                  "date": "2025.10.31",
+                  "duration": "11:56",
+                  "viewCount": 549,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/UWWPOgBzN9M/hqdefault.jpg",
+                  "displayOrder": 6
+                },
+                {
+                  "id": "v-mu8viemc4w35o-7",
+                  "title": "이건 내가 생각한 엔딩이 아니야ㅑㅑㅑ [콩밥특별시 돼실장 #8 END]",
+                  "url": "https://www.youtube.com/watch?v=Ivazhl6C7Cg&list=PLGVE4D19gyJA03UF1NOyqOV2uGzsO9AQ7",
+                  "videoType": "clip",
+                  "date": "2025.11.04",
+                  "duration": "9:59",
+                  "viewCount": 754,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/Ivazhl6C7Cg/hqdefault.jpg",
+                  "displayOrder": 7
+                },
+                {
+                  "id": "v-mu8vk6d8p1976-0",
+                  "title": "『 2025.5.25 콩밥 특별시 '돼실장' #1 』",
+                  "url": "https://www.youtube.com/watch?v=yT5v_VR_LQU",
+                  "videoType": "full",
+                  "date": "2025.05.26",
+                  "duration": "1:52:22",
+                  "viewCount": 270,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/yT5v_VR_LQU/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 8
+                },
+                {
+                  "id": "v-mu8vk6d8y7rij-1",
+                  "title": "『 2025.5.25 콩밥 특별시 '돼실장' #2 』",
+                  "url": "https://www.youtube.com/watch?v=8PSxDzLEnh0",
+                  "videoType": "full",
+                  "date": "2025.05.27",
+                  "duration": "7:37:51",
+                  "viewCount": 238,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/8PSxDzLEnh0/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 9
+                },
+                {
+                  "id": "v-mu8vk6d86x27l-2",
+                  "title": "『 2025.5.26 콩밥 특별시 '돼실장' #3 』",
+                  "url": "https://www.youtube.com/watch?v=fFF6URkeo6w",
+                  "videoType": "full",
+                  "date": "2025.05.27",
+                  "duration": "13:49:50",
+                  "viewCount": 305,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/fFF6URkeo6w/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 10
+                },
+                {
+                  "id": "v-mu8vk6d8e0alg-3",
+                  "title": "『 2025.5.27 콩밥 특별시 '돼실장' #4 』",
+                  "url": "https://www.youtube.com/watch?v=OKKS0xjejsE",
+                  "videoType": "full",
+                  "date": "2025.05.28",
+                  "duration": "13:09:56",
+                  "viewCount": 299,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/OKKS0xjejsE/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 11
+                },
+                {
+                  "id": "v-mu8vk6d8ml7hr-4",
+                  "title": "『 2025.5.28 콩밥 특별시 '돼실장' #5 』",
+                  "url": "https://www.youtube.com/watch?v=H2p5qokNZM0",
+                  "videoType": "full",
+                  "date": "2025.05.29",
+                  "duration": "1:32:41",
+                  "viewCount": 128,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/H2p5qokNZM0/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 12
+                },
+                {
+                  "id": "v-mu8vk6d8cxi5d-5",
+                  "title": "『 2025.5.28 콩밥 특별시 '돼실장' #6 』",
+                  "url": "https://www.youtube.com/watch?v=wmQ_5x05XcU",
+                  "videoType": "full",
+                  "date": "2025.05.29",
+                  "duration": "10:54:33",
+                  "viewCount": 269,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/wmQ_5x05XcU/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 13
+                },
+                {
+                  "id": "v-mu8vk6d85p5c4-6",
+                  "title": "『 2025.5.29 콩밥 특별시 '돼실장' #7 』",
+                  "url": "https://www.youtube.com/watch?v=GmhpslxfEdM",
+                  "videoType": "full",
+                  "date": "2025.05.30",
+                  "duration": "12:45:42",
+                  "viewCount": 258,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/GmhpslxfEdM/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 14
+                },
+                {
+                  "id": "v-mu8vk6d8nnuco-7",
+                  "title": "『 2025.5.31 콩밥 특별시 '돼실장' #8 』",
+                  "url": "https://www.youtube.com/watch?v=L83aO6XfYJE",
+                  "videoType": "full",
+                  "date": "2025.06.01",
+                  "duration": "13:14:21",
+                  "viewCount": 330,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/L83aO6XfYJE/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 15
+                },
+                {
+                  "id": "v-mu8vk6d8s9lhu-8",
+                  "title": "『 2025.6.1 콩밥 특별시 '돼실장' #9 』",
+                  "url": "https://www.youtube.com/watch?v=c9oxjjAsLAI",
+                  "videoType": "full",
+                  "date": "2025.06.02",
+                  "duration": "12:42:50",
+                  "viewCount": 213,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/c9oxjjAsLAI/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 16
+                },
+                {
+                  "id": "v-mu8vk6d8n414o-9",
+                  "title": "『 2025.6.2 콩밥 특별시 '돼실장' #10 』",
+                  "url": "https://www.youtube.com/watch?v=aJdV1AZWyyc",
+                  "videoType": "full",
+                  "date": "2025.06.03",
+                  "duration": "4:58:21",
+                  "viewCount": 156,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/aJdV1AZWyyc/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 17
+                },
+                {
+                  "id": "v-mu8vk6d8x8kmk-10",
+                  "title": "『 2025.6.2 콩밥 특별시 '돼실장' #11 』",
+                  "url": "https://www.youtube.com/watch?v=MwjzX5fYp6Y",
+                  "videoType": "full",
+                  "date": "2025.06.03",
+                  "duration": "4:19:03",
+                  "viewCount": 130,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/MwjzX5fYp6Y/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 18
+                },
+                {
+                  "id": "v-mu8vk6d8pyrb6-11",
+                  "title": "『 2025.6.3 콩밥 특별시 '돼실장' #12 』",
+                  "url": "https://www.youtube.com/watch?v=uU60Ic-OmFg",
+                  "videoType": "full",
+                  "date": "2025.06.04",
+                  "duration": "9:07:53",
+                  "viewCount": 161,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/uU60Ic-OmFg/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 19
+                },
+                {
+                  "id": "v-mu8vk6d8e4vb0-12",
+                  "title": "『 2025.6.4 콩밥 특별시 '돼실장' #13 』",
+                  "url": "https://www.youtube.com/watch?v=BlAYoOi9dH4",
+                  "videoType": "full",
+                  "date": "2025.06.05",
+                  "duration": "11:00:08",
+                  "viewCount": 241,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/BlAYoOi9dH4/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 20
+                },
+                {
+                  "id": "v-mu8vk6d8ts5k2-13",
+                  "title": "『 2025.6.5 콩밥 특별시 '돼실장' #14 』",
+                  "url": "https://www.youtube.com/watch?v=wlMXqFQ2W3o",
+                  "videoType": "full",
+                  "date": "2025.06.06",
+                  "duration": "10:36:53",
+                  "viewCount": 247,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/wlMXqFQ2W3o/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 21
+                },
+                {
+                  "id": "v-mu8vk6d81bltu-14",
+                  "title": "『 2025.6.6 콩밥 특별시 '돼실장' #15 』",
+                  "url": "https://www.youtube.com/watch?v=yqEKkNhUW40",
+                  "videoType": "full",
+                  "date": "2025.06.07",
+                  "duration": "10:06:29",
+                  "viewCount": 251,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/yqEKkNhUW40/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 22
+                },
+                {
+                  "id": "v-mu8vk6d81chyg-15",
+                  "title": "『 2025.6.7 콩밥 특별시 '돼실장' #15 』",
+                  "url": "https://www.youtube.com/watch?v=xivZnWTcvcU",
+                  "videoType": "full",
+                  "date": "2025.06.08",
+                  "duration": "9:35:51",
+                  "viewCount": 170,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/xivZnWTcvcU/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 23
+                },
+                {
+                  "id": "v-mu8vk6d8t7bs0-16",
+                  "title": "『 2025.6.8 콩밥 특별시 '돼실장' #16 FIN 』",
+                  "url": "https://www.youtube.com/watch?v=p9mWXnONneA",
+                  "videoType": "full",
+                  "date": "2025.06.09",
+                  "duration": "7:53:48",
+                  "viewCount": 200,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/p9mWXnONneA/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 24
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",
@@ -23260,11 +25198,240 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/nN9-9ibuI922WyyPTA1iyh2--Zkw_pjW3lqFLpC_TNHFr0Dw7ySXU1e8Tgk8SfZONgWPKOdw=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 2,
-              "subscriberCount": "",
-              "youtubeUrl": "",
-              "videos": [],
+              "subscriberCount": "31.3만 명",
+              "youtubeUrl": "https://www.youtube.com/@KORYSU24",
+              "videos": [
+                {
+                  "id": "v-mu8vocot0293",
+                  "title": "고양이가 사람이 되면 벌어지는 일?🤔 - GTA5 콩밥특별시 -",
+                  "url": "https://www.youtube.com/watch?v=tJkkr1ZKzIA",
+                  "videoType": "clip",
+                  "date": "2025.05.25",
+                  "duration": "1:34:46",
+                  "viewCount": 21493,
+                  "description": "",
+                  "displayOrder": 0,
+                  "thumbnailUrl": "https://img.youtube.com/vi/tJkkr1ZKzIA/hqdefault.jpg"
+                },
+                {
+                  "id": "v-mu8vqju19o3n4-0",
+                  "title": "[25.05.24] 콩밥특별시 (1), 테스트서버 참가",
+                  "url": "https://www.youtube.com/watch?v=pdzXiZk7Zbk&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.07.17",
+                  "duration": "2:17:06",
+                  "viewCount": 415,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/pdzXiZk7Zbk/hqdefault.jpg",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mu8vqju1z8u4n-1",
+                  "title": "[25.05.25] 콩밥특별시 (2), 본섭시작, 캐릭터생성",
+                  "url": "https://www.youtube.com/watch?v=a-oLF5OVDs0&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.07.18",
+                  "duration": "1:27:36",
+                  "viewCount": 135,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/a-oLF5OVDs0/hqdefault.jpg",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mu8vqju1dc0bx-2",
+                  "title": "[25.05.25] 콩밥특별시 (3), 성실한 시민",
+                  "url": "https://www.youtube.com/watch?v=ap69TDJlDR0&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.07.18",
+                  "duration": "8:01:49",
+                  "viewCount": 389,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/ap69TDJlDR0/hqdefault.jpg",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mu8vqju1lyj86-3",
+                  "title": "[25.05.26] 콩밥특별시 (4), 운영자랑 친구하기",
+                  "url": "https://www.youtube.com/watch?v=ZM51gEqcsAc&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.07.19",
+                  "duration": "9:08:40",
+                  "viewCount": 368,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/ZM51gEqcsAc/hqdefault.jpg",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mu8vqju1mgvl8-4",
+                  "title": "[25.05.27] 콩밥특별시 (5), 도레미파의 탄생",
+                  "url": "https://www.youtube.com/watch?v=rMuH_2pYNk0&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.07.21",
+                  "duration": "12:13:42",
+                  "viewCount": 274,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/rMuH_2pYNk0/hqdefault.jpg",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mu8vqju13fgqp-5",
+                  "title": "[25.05.28] 콩밥특별시 (6), 본격적인 갱단생활",
+                  "url": "https://www.youtube.com/watch?v=rO5qzc2TZlA&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.07.21",
+                  "duration": "6:57:55",
+                  "viewCount": 201,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/rO5qzc2TZlA/hqdefault.jpg",
+                  "displayOrder": 6
+                },
+                {
+                  "id": "v-mu8vqju1u8b42-6",
+                  "title": "[25.05.28] 콩밥특별시 (7), 갱단 아지트 후보지 탐색",
+                  "url": "https://www.youtube.com/watch?v=K-tS-diraPg&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.07.22",
+                  "duration": "1:47:59",
+                  "viewCount": 94,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/K-tS-diraPg/hqdefault.jpg",
+                  "displayOrder": 7
+                },
+                {
+                  "id": "v-mu8vqju1gyxxz-7",
+                  "title": "[25.05.29] 콩밥특별시 (8), 초호화 갱단 아지트 생활",
+                  "url": "https://www.youtube.com/watch?v=B0J6xnTnQW8&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.07.22",
+                  "duration": "13:06:34",
+                  "viewCount": 282,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/B0J6xnTnQW8/hqdefault.jpg",
+                  "displayOrder": 8
+                },
+                {
+                  "id": "v-mu8vqju1cl5in-8",
+                  "title": "[25.05.31] 콩밥특별시 (9), 도레미파 간부 납치사건",
+                  "url": "https://www.youtube.com/watch?v=9XlhuRps0uI&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.07.23",
+                  "duration": "13:59:36",
+                  "viewCount": 283,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/9XlhuRps0uI/hqdefault.jpg",
+                  "displayOrder": 9
+                },
+                {
+                  "id": "v-mu8vqju1o0z5y-9",
+                  "title": "[25.06.01] 콩밥특별시 (10), 본격적인 갱단생활",
+                  "url": "https://www.youtube.com/watch?v=_XwIj6wWQqQ&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.08.03",
+                  "duration": "9:01:57",
+                  "viewCount": 333,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/_XwIj6wWQqQ/hqdefault.jpg",
+                  "displayOrder": 10
+                },
+                {
+                  "id": "v-mu8vqju11hqkc-10",
+                  "title": "[25.06.02] 콩밥특별시 (11), 은행털이",
+                  "url": "https://www.youtube.com/watch?v=Kwc1s3sZJGw&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.08.07",
+                  "duration": "14:05:45",
+                  "viewCount": 136,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/Kwc1s3sZJGw/hqdefault.jpg",
+                  "displayOrder": 11
+                },
+                {
+                  "id": "v-mu8vqju1g95hl-11",
+                  "title": "[25.06.03] 콩밥특별시 (12), 갱단구역전쟁",
+                  "url": "https://www.youtube.com/watch?v=UMBrJQ0rupY&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.08.04",
+                  "duration": "9:24:49",
+                  "viewCount": 172,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/UMBrJQ0rupY/hqdefault.jpg",
+                  "displayOrder": 12
+                },
+                {
+                  "id": "v-mu8vqju1ily0f-12",
+                  "title": "[25.06.04] 콩밥특별시 (13), 훈남이 된 길남이",
+                  "url": "https://www.youtube.com/watch?v=SsSk5WKSSgY&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.08.05",
+                  "duration": "10:08:42",
+                  "viewCount": 244,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/SsSk5WKSSgY/hqdefault.jpg",
+                  "displayOrder": 13
+                },
+                {
+                  "id": "v-mu8vqju1otn0v-13",
+                  "title": "[25.06.05] 콩밥특별시 (14), 갱단 연합 결성",
+                  "url": "https://www.youtube.com/watch?v=N-cuTCzA0nM&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.08.05",
+                  "duration": "9:53:35",
+                  "viewCount": 246,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/N-cuTCzA0nM/hqdefault.jpg",
+                  "displayOrder": 14
+                },
+                {
+                  "id": "v-mu8vqju1tz646-14",
+                  "title": "[25.06.06] 콩밥특별시 (15), 간호사와의 첫 데이트",
+                  "url": "https://www.youtube.com/watch?v=XvNJiM0UVP4&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.08.06",
+                  "duration": "9:44:13",
+                  "viewCount": 344,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/XvNJiM0UVP4/hqdefault.jpg",
+                  "displayOrder": 15
+                },
+                {
+                  "id": "v-mu8vqju15ujrw-15",
+                  "title": "[25.06.07] 콩밥특별시 (16), 경찰vs갱단, 대활약",
+                  "url": "https://www.youtube.com/watch?v=Ni7CMhcLV3M&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.08.06",
+                  "duration": "9:11:42",
+                  "viewCount": 192,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/Ni7CMhcLV3M/hqdefault.jpg",
+                  "displayOrder": 16
+                },
+                {
+                  "id": "v-mu8vqju1pxjud-16",
+                  "title": "[25.06.07] 콩밥특별시 (17), 결혼에 골인한 길남이",
+                  "url": "https://www.youtube.com/watch?v=Jc0YgCnLYO8&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.08.07",
+                  "duration": "10:42:25",
+                  "viewCount": 240,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/Jc0YgCnLYO8/hqdefault.jpg",
+                  "displayOrder": 17
+                },
+                {
+                  "id": "v-mu8vqju19ofax-17",
+                  "title": "[25.06.09] 콩밥특별시 (18), 콩밥완, 후열노가리",
+                  "url": "https://www.youtube.com/watch?v=IiYtGDdNsBs&list=PLPhfiwVhzwFs",
+                  "videoType": "full",
+                  "date": "2026.08.07",
+                  "duration": "4:39:03",
+                  "viewCount": 125,
+                  "description": "",
+                  "thumbnailUrl": "https://img.youtube.com/vi/IiYtGDdNsBs/hqdefault.jpg",
+                  "displayOrder": 18
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",
@@ -23368,10 +25535,10 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/fjPhXS5FTr4I5L90tGrEvMZvLfh5YD264XfoK64GyiLWbw8kNQOZyE8jHZTLo6nJLroBg9W_bw0=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 6,
-              "subscriberCount": "",
-              "youtubeUrl": "",
+              "subscriberCount": "2,960명",
+              "youtubeUrl": "https://www.youtube.com/@브이챠",
               "videos": [],
               "affiliations": [
                 {
@@ -26018,7 +28185,8 @@
                   "duration": "11:31:30",
                   "description": "",
                   "displayOrder": 19,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtzohmnn7jf17-1",
@@ -26029,7 +28197,8 @@
                   "duration": "6:00:01",
                   "description": "",
                   "displayOrder": 20,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtzohmnn89eaw-2",
@@ -26040,7 +28209,8 @@
                   "duration": "7:08:27",
                   "description": "",
                   "displayOrder": 21,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtzohmnn4zt09-3",
@@ -26051,7 +28221,8 @@
                   "duration": "11:53:05",
                   "description": "",
                   "displayOrder": 22,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtzohmnnw8eb9-4",
@@ -26062,7 +28233,8 @@
                   "duration": "2:07:07",
                   "description": "",
                   "displayOrder": 23,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtzohmnnlwjnk-5",
@@ -26073,7 +28245,8 @@
                   "duration": "5:07:24",
                   "description": "",
                   "displayOrder": 24,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtzohmnndh3my-6",
@@ -26084,7 +28257,8 @@
                   "duration": "5:33:12",
                   "description": "",
                   "displayOrder": 25,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtzohmnnc31ne-7",
@@ -26095,7 +28269,8 @@
                   "duration": "7:41:40",
                   "description": "",
                   "displayOrder": 26,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtzohmnnc514u-8",
@@ -26106,7 +28281,8 @@
                   "duration": "6:30:59",
                   "description": "",
                   "displayOrder": 27,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtzohmnne5npr-9",
@@ -26117,7 +28293,8 @@
                   "duration": "6:23:18",
                   "description": "",
                   "displayOrder": 28,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtzohmnn0bsqa-10",
@@ -26128,7 +28305,8 @@
                   "duration": "6:38:17",
                   "description": "",
                   "displayOrder": 29,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mtzohmnnruac8-11",
@@ -26139,7 +28317,8 @@
                   "duration": "8:00:35",
                   "description": "",
                   "displayOrder": 30,
-                  "thumbnailUrl": "null"
+                  "thumbnailUrl": "null",
+                  "viewCount": null
                 }
               ],
               "affiliations": [
@@ -32695,7 +34874,8 @@
                   "duration": "9:25:20",
                   "description": "",
                   "displayOrder": 0,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/MnLLJtG30vE/mqdefault.jpg"
+                  "thumbnailUrl": "https://i.ytimg.com/vi/MnLLJtG30vE/mqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mu70czszwkurf-1",
@@ -32706,7 +34886,8 @@
                   "duration": "6:52:35",
                   "description": "",
                   "displayOrder": 1,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/z79Q4OLHvgI/mqdefault.jpg"
+                  "thumbnailUrl": "https://i.ytimg.com/vi/z79Q4OLHvgI/mqdefault.jpg",
+                  "viewCount": null
                 }
               ],
               "affiliations": [
@@ -33037,7 +35218,8 @@
                   "duration": "3:26",
                   "description": "",
                   "displayOrder": 5,
-                  "thumbnailUrl": "https://img.youtube.com/vi/1pXl8WCNrLM/hqdefault.jpg"
+                  "thumbnailUrl": "https://img.youtube.com/vi/1pXl8WCNrLM/hqdefault.jpg",
+                  "viewCount": null
                 },
                 {
                   "id": "v-mu70mlgd6rnyc-0",
@@ -37098,6 +39280,28 @@
       "members": [],
       "lovelines": [
         {
+          "id": "love-1789852315158",
+          "status": "결혼",
+          "statusType": "married",
+          "heartEmoji": "💍",
+          "person1": {
+            "name": "길남이",
+            "streamer": "코리수",
+            "badge": "💀 도레미파",
+            "badgeColor": "bg-red-950/80 text-red-300 border-red-700/50",
+            "avatar": "https://yt3.googleusercontent.com/nN9-9ibuI922WyyPTA1iyh2--Zkw_pjW3lqFLpC_TNHFr0Dw7ySXU1e8Tgk8SfZONgWPKOdw=s160-c-k-c0x00ffffff-no-rj",
+            "memberId": "gang-doremifa-3"
+          },
+          "person2": {
+            "name": "암살챠",
+            "streamer": "브이챠",
+            "badge": "💀 도레미파",
+            "badgeColor": "bg-red-950/80 text-red-300 border-red-700/50",
+            "avatar": "https://yt3.googleusercontent.com/fjPhXS5FTr4I5L90tGrEvMZvLfh5YD264XfoK64GyiLWbw8kNQOZyE8jHZTLo6nJLroBg9W_bw0=s160-c-k-c0x00ffffff-no-rj",
+            "memberId": "gang-doremifa-7"
+          }
+        },
+        {
           "id": "love-1789802800249",
           "status": "결혼",
           "statusType": "married",
@@ -37145,6 +39349,28 @@
     }
   ],
   "lovelines": [
+    {
+      "id": "love-1789852315158",
+      "status": "결혼",
+      "statusType": "married",
+      "heartEmoji": "💍",
+      "person1": {
+        "name": "길남이",
+        "streamer": "코리수",
+        "badge": "💀 도레미파",
+        "badgeColor": "bg-red-950/80 text-red-300 border-red-700/50",
+        "avatar": "https://yt3.googleusercontent.com/nN9-9ibuI922WyyPTA1iyh2--Zkw_pjW3lqFLpC_TNHFr0Dw7ySXU1e8Tgk8SfZONgWPKOdw=s160-c-k-c0x00ffffff-no-rj",
+        "memberId": "gang-doremifa-3"
+      },
+      "person2": {
+        "name": "암살챠",
+        "streamer": "브이챠",
+        "badge": "💀 도레미파",
+        "badgeColor": "bg-red-950/80 text-red-300 border-red-700/50",
+        "avatar": "https://yt3.googleusercontent.com/fjPhXS5FTr4I5L90tGrEvMZvLfh5YD264XfoK64GyiLWbw8kNQOZyE8jHZTLo6nJLroBg9W_bw0=s160-c-k-c0x00ffffff-no-rj",
+        "memberId": "gang-doremifa-7"
+      }
+    },
     {
       "id": "love-1789802800249",
       "status": "결혼",
