@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>콩밥특별시 - 방문자 통계 분석 대시보드</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#ef4444',
+              gold: '#f59e0b',
+              dark: '#09090b',
+              card: '#121216',
+              border: '#27272a'
+            }
+          },
+          fontFamily: {
+            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: #09090b;
+      color: #f4f4f5;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #09090b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27272a;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3f3f46;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-indigo-600 selection:text-white pb-12">
+
+  <!-- 상단 헤더 내비게이션 -->
+  <header class="sticky top-0 z-40 bg-[#09090b]/90 backdrop-blur-xl border-b border-zinc-800 shadow-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20 gap-4">
+        <!-- 로고 & 타이틀 -->
+        <div class="flex items-center gap-3">
+          <a href="./index.html" class="flex items-center gap-3 group transition-transform hover:scale-[1.02]">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-indigo-950/80 border border-indigo-500/50 flex items-center justify-center text-xl shadow-lg shadow-indigo-950/60 flex-shrink-0">
+              📊
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h1 class="text-base sm:text-lg font-black tracking-tight text-white">콩밥특별시 통계 센터</h1>
+                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-500/40">GA4 연동</span>
+              </div>
+              <p class="text-xs text-zinc-400 hidden sm:block">깃허브 배포 사이트 방문자 & 트래픽 종합 분석 대시보드</p>
+            </div>
+          </a>
+        </div>
+
+        <!-- 우측 컨트롤 버튼들 -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <div class="hidden md:flex flex-col items-end text-[11px] text-zinc-400 font-mono">
+            <span id="header-updated-at">조회 대기 중...</span>
+          </div>
+
+          <button 
+            id="refresh-btn" 
+            onclick="fetchDashboardData(true)" 
+            class="px-3 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-indigo-600/30 cursor-pointer flex items-center gap-1.5 flex-shrink-0"
+          >
+            <span id="refresh-icon">🔄</span>
+            <span class="hidden sm:inline">통계</span><span>새로고침</span>
+          </button>
+
+          <a 
+            href="./index.html" 
+            class="px-3 sm:px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 flex-shrink-0"
+          >
+            <span>←</span>
+            <span class="hidden sm:inline">메인 사이트</span><span>홈</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 대시보드 본문 -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- 경고 / 에러 배너 (비정상 시 표시) -->
+    <div id="error-banner" class="hidden bg-red-950/80 border border-red-800/80 rounded-2xl p-4 text-sm text-red-200 flex items-start gap-3 shadow-lg">
+      <span class="text-xl flex-shrink-0">⚠️</span>
+      <div class="flex-1 space-y-1">
+        <div class="font-bold" id="error-title">통계 데이터 로드 실패</div>
+        <div class="text-xs text-red-300 leading-relaxed" id="error-desc"></div>
+        <div class="text-xs text-amber-300/90 pt-1" id="error-hint"></div>
+      </div>
+    </div>
+
+    <!-- 1. 핵심 KPI 카드 그리드 (6개 지표) -->
+    <section>
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm font-bold text-zinc-300 flex items-center gap-2">
+          <span>⚡</span>
+          <span>주요 방문자 지표 (트래픽 개요)</span>
+        </h2>
+        <span class="text-xs text-zinc-500">Google Analytics 4 실시간 집계</span>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+        <!-- 1. 실시간 동시 접속자 -->
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-4 flex flex-col justify-between shadow-md relative overflow-hidden group hover:border-emerald-500/40 transition-all">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-zinc-400">실시간 접속</span>
+            <span class="relative flex h-2.5 w-2.5">
+              <span id="realtime-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span id="realtime-dot" class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+            </span>
+          </div>
+          <div class="mt-3">
+            <div id="kpi-realtime" class="text-3xl font-black text-emerald-400 tracking-tight flex items-baseline gap-1">-</div>
+            <p id="kpi-realtime-sub" class="text-[11px] text-zinc-500 mt-0.5">최근 30분 활동 기준</p>
+          </div>
+        </div>
+
+        <!-- 2. 오늘 방문자 -->
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-4 flex flex-col justify-between shadow-md group hover:border-amber-500/40 transition-all">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-zinc-400">오늘 순방문자</span>
+            <span class="text-sm">📅</span>
+          </div>
+          <div class="mt-3">
+            <div id="kpi-today-users" class="text-3xl font-black text-amber-400 tracking-tight">-</div>
+            <p id="kpi-today-sub" class="text-[11px] text-zinc-500 mt-0.5">신규 - / 재방문 -</p>
+          </div>
+        </div>
+
+        <!-- 3. 어제 방문자 -->
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-4 flex flex-col justify-between shadow-md group hover:border-zinc-600 transition-all">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-zinc-400">어제 순방문자</span>
+            <span class="text-sm">⏳</span>
+          </div>
+          <div class="mt-3">
+            <div id="kpi-yesterday-users" class="text-3xl font-black text-zinc-300 tracking-tight">-</div>
+            <p id="kpi-yesterday-sub" class="text-[11px] text-zinc-500 mt-0.5">신규 - / 재방문 -</p>
+          </div>
+        </div>
+
+        <!-- 4. 전체 누적 방문자 -->
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-4 flex flex-col justify-between shadow-md group hover:border-indigo-500/40 transition-all">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-zinc-400">전체 누적 방문자</span>
+            <span class="text-sm">🏆</span>
+          </div>
+          <div class="mt-3">
+            <div id="kpi-total-users" class="text-3xl font-black text-indigo-400 tracking-tight">-</div>
+            <p id="kpi-total-views" class="text-[11px] text-zinc-500 mt-0.5">총 조회수 -</p>
+          </div>
+        </div>
+
+        <!-- 5. 평균 체류 시간 -->
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-4 flex flex-col justify-between shadow-md group hover:border-sky-500/40 transition-all">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-zinc-400">평균 체류 시간</span>
+            <span class="text-sm">⏱️</span>
+          </div>
+          <div class="mt-3">
+            <div id="kpi-duration" class="text-3xl font-black text-sky-400 tracking-tight">-</div>
+            <p id="kpi-sessions" class="text-[11px] text-zinc-500 mt-0.5">총 세션 -</p>
+          </div>
+        </div>
+
+        <!-- 6. 이탈률 -->
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-4 flex flex-col justify-between shadow-md group hover:border-rose-500/40 transition-all">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-zinc-400">이탈률 (Bounce)</span>
+            <span class="text-sm">🚪</span>
+          </div>
+          <div class="mt-3">
+            <div id="kpi-bounce" class="text-3xl font-black text-rose-400 tracking-tight">-</div>
+            <p class="text-[11px] text-zinc-500 mt-0.5">첫 화면 즉시 이탈 비율</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1-B. 콩밥 시민 방문 빈도 & 충성도 분석 (신규 1회 vs 2회 이상 재방문) -->
+    <section class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 shadow-lg">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 border-b border-zinc-800/80 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-base">🍚</span>
+          <h3 class="text-sm font-bold text-white">콩밥 시민 방문 빈도 & 재방문 분석</h3>
+          <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-600/40">기기 식별 집계</span>
+        </div>
+        <div class="text-xs text-zinc-400 flex items-center gap-1.5">
+          <span>시민 1인당 평균 접속:</span>
+          <strong id="kpi-sessions-per-user" class="text-amber-400 font-mono font-bold text-sm">-회</strong>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+        <!-- 1. 새싹 콩밥이 (1회차 첫 방문) -->
+        <div class="bg-zinc-950/70 border border-zinc-800/70 rounded-xl p-4 flex items-center justify-between group hover:border-emerald-500/40 transition-all">
+          <div>
+            <div class="flex items-center gap-1.5 text-xs text-zinc-400 font-semibold">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span>새싹 콩밥이 (1회차 첫 방문)</span>
+            </div>
+            <div id="freq-new-users" class="text-2xl font-black text-emerald-400 mt-1.5 font-mono">-명</div>
+            <div id="freq-new-rate" class="text-[11px] text-zinc-500 mt-0.5">전체의 -% (첫 접속 기기)</div>
+          </div>
+          <div class="text-3xl opacity-80 group-hover:scale-110 transition-transform">🌱</div>
+        </div>
+
+        <!-- 2. 단골 콩밥이 (2회 이상 재방문) -->
+        <div class="bg-zinc-950/70 border border-zinc-800/70 rounded-xl p-4 flex items-center justify-between group hover:border-indigo-500/40 transition-all">
+          <div>
+            <div class="flex items-center gap-1.5 text-xs text-zinc-400 font-semibold">
+              <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+              <span>단골 콩밥이 (2회 이상 재방문)</span>
+            </div>
+            <div id="freq-return-users" class="text-2xl font-black text-indigo-400 mt-1.5 font-mono">-명</div>
+            <div id="freq-return-rate" class="text-[11px] text-zinc-500 mt-0.5">재방문율 -% (다시 찾아온 기기)</div>
+          </div>
+          <div class="text-3xl opacity-80 group-hover:scale-110 transition-transform">✨</div>
+        </div>
+
+        <!-- 3. 1인당 평균 접속 횟수 & 누적 세션 -->
+        <div class="bg-zinc-950/70 border border-zinc-800/70 rounded-xl p-4 flex items-center justify-between group hover:border-amber-500/40 transition-all">
+          <div>
+            <div class="flex items-center gap-1.5 text-xs text-zinc-400 font-semibold">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              <span>1인당 평균 접속 횟수</span>
+            </div>
+            <div id="freq-avg-sessions" class="text-2xl font-black text-amber-400 mt-1.5 font-mono">-회</div>
+            <div id="freq-total-sessions" class="text-[11px] text-zinc-500 mt-0.5">총 접속 세션 -회 발생</div>
+          </div>
+          <div class="text-3xl opacity-80 group-hover:scale-110 transition-transform">🔄</div>
+        </div>
+      </div>
+
+      <!-- 신규 vs 재방문 비율 비주얼 게이지 바 -->
+      <div class="mt-4 pt-3 border-t border-zinc-800/60">
+        <div class="flex items-center justify-between text-xs text-zinc-400 mb-1.5">
+          <span class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>새싹 콩밥이 (1회 첫 방문)</span>
+            <strong id="bar-new-percent" class="text-emerald-300 font-mono">0%</strong>
+          </span>
+          <span class="flex items-center gap-1.5">
+            <strong id="bar-return-percent" class="text-indigo-300 font-mono">0%</strong>
+            <span>단골 콩밥이 (2회 이상 재방문)</span>
+            <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+          </span>
+        </div>
+        <div class="w-full h-3 bg-zinc-950 rounded-full overflow-hidden flex p-0.5 border border-zinc-800/80">
+          <div id="progress-new" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-l-full transition-all duration-500" style="width: 50%;"></div>
+          <div id="progress-return" class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-r-full transition-all duration-500" style="width: 50%;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 방문자 추이 & 24시간 피크 타임 (2분할) -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- 2-A. 최근 14일 일별 방문자 추이 -->
+      <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 shadow-lg flex flex-col">
+        <div class="flex items-center justify-between mb-4 border-b border-zinc-800/80 pb-3">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>📈</span>
+            <span>최근 14일간 일별 방문자 & 페이지뷰</span>
+          </h3>
+          <div class="flex items-center gap-3 text-[11px] text-zinc-400">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-indigo-500 inline-block"></span>방문자</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-emerald-400 inline-block"></span>페이지뷰</span>
+          </div>
+        </div>
+        <div id="daily-chart-container" class="space-y-2 max-h-72 overflow-y-auto flex-1 pr-1">
+          <div class="text-xs text-zinc-500 py-10 text-center">일별 통계 데이터를 불러오는 중...</div>
+        </div>
+      </div>
+
+      <!-- 2-B. 24시간 피크타임 시간대별 접속 분포 -->
+      <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 shadow-lg flex flex-col">
+        <div class="flex items-center justify-between mb-4 border-b border-zinc-800/80 pb-3">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>⏰</span>
+            <span>하루 24시간 시간대별 접속 분포 (피크 타임)</span>
+          </h3>
+          <span class="text-xs text-zinc-500">시간대별 누적 방문자</span>
+        </div>
+        <div id="hourly-chart-container" class="space-y-1.5 max-h-72 overflow-y-auto flex-1 pr-1">
+          <div class="text-xs text-zinc-500 py-10 text-center">시간대별 통계 데이터를 불러오는 중...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 유입 경로 & 인기 페이지 (2분할) -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- 3-A. 유입 경로 순위 (치지직, 디스코드 등) -->
+      <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 shadow-lg">
+        <div class="flex items-center justify-between mb-4 border-b border-zinc-800/80 pb-3">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>🌐</span>
+            <span>유입 경로 순위 (어디서 타고 들어왔는가)</span>
+          </h3>
+          <span class="text-xs text-zinc-500">최근 30일 세션 기준</span>
+        </div>
+        <div id="sources-container" class="space-y-2.5 max-h-64 overflow-y-auto pr-1">
+          <div class="text-xs text-zinc-500 py-8 text-center">유입 경로 데이터를 불러오는 중...</div>
+        </div>
+      </div>
+
+      <!-- 3-B. 사이트 내 인기 화면 / 페이지 -->
+      <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 shadow-lg">
+        <div class="flex items-center justify-between mb-4 border-b border-zinc-800/80 pb-3">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>🔥</span>
+            <span>가장 많이 본 페이지 & 화면 경로</span>
+          </h3>
+          <span class="text-xs text-zinc-500">최근 30일 조회수 기준</span>
+        </div>
+        <div id="top-pages-container" class="space-y-2.5 max-h-64 overflow-y-auto pr-1">
+          <div class="text-xs text-zinc-500 py-8 text-center">인기 페이지 데이터를 불러오는 중...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 기기 환경 & 브라우저 & 접속 지역 (3분할) -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- 4-A. 모바일 vs PC vs 태블릿 -->
+      <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 shadow-lg">
+        <div class="flex items-center justify-between mb-4 border-b border-zinc-800/80 pb-3">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>📱</span>
+            <span>접속 기기 점유율</span>
+          </h3>
+        </div>
+        <div id="devices-container" class="space-y-3">
+          <div class="text-xs text-zinc-500 py-6 text-center">기기 데이터를 불러오는 중...</div>
+        </div>
+      </div>
+
+      <!-- 4-B. 스마트폰 OS 및 브라우저 -->
+      <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 shadow-lg">
+        <div class="flex items-center justify-between mb-4 border-b border-zinc-800/80 pb-3">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>💻</span>
+            <span>운영체제(OS) & 브라우저</span>
+          </h3>
+        </div>
+        <div id="os-browser-container" class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+          <div class="text-xs text-zinc-500 py-6 text-center">OS/브라우저 데이터를 불러오는 중...</div>
+        </div>
+      </div>
+
+      <!-- 4-C. 접속 도시 순위 (서울, 부산 등) -->
+      <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 shadow-lg">
+        <div class="flex items-center justify-between mb-4 border-b border-zinc-800/80 pb-3">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>📍</span>
+            <span>접속 도시 순위 (지역)</span>
+          </h3>
+        </div>
+        <div id="cities-container" class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+          <div class="text-xs text-zinc-500 py-6 text-center">지역 데이터를 불러오는 중...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 안내 배너 -->
+    <div class="bg-zinc-950/90 border border-zinc-800/90 rounded-2xl p-4 text-xs text-zinc-400 leading-relaxed space-y-1.5">
+      <div class="font-bold text-zinc-300 flex items-center gap-2">
+        <span>💡</span>
+        <span>Google Analytics 4(GA4) 데이터 집계 원리 안내</span>
+      </div>
+      <p>• <strong>실시간 접속자(Realtime Users)</strong>: 최근 30분 이내에 깃허브 배포 사이트(<code>eokeon.github.io/kongbab</code>)에서 활동한 순방문자 수입니다. 방문자가 창을 닫고 30분이 지나면 활동 세션이 만료되어 <strong>자연스럽게 0명</strong>으로 변경됩니다. 상단의 <strong>[배포 사이트 접속 테스트]</strong> 버튼을 누르면 15초 내에 즉시 다시 카운트됩니다.</p>
+      <p>• <strong>유입 경로, 일별/시간대별 통계</strong>: 구글 애널리틱스 서버의 일괄 배치(Batch) 처리 주기에 따라 최초 추적 코드 연동 후 24시간 내에 점진적으로 완전하게 집계됩니다.</p>
+      <p>• 본 대시보드는 로컬 스프링부트 서버(<code>localhost:8080</code>)의 보안 관리자 API를 통해 조회되며, 외부 방문자나 배포 사이트에서는 노출되지 않습니다.</p>
+    </div>
+
+  </main>
+
+  <script>
+    const API_BASE = (
+      window.location.protocol === "file:" || 
+      window.location.port === "63342" || 
+      (window.location.hostname === "localhost" && window.location.port !== "8080") ||
+      (window.location.hostname === "127.0.0.1" && window.location.port !== "8080")
+    ) ? "http://localhost:8080" : "";
+
+    function getAuthHeaders() {
+      const headers = {};
+      const token = localStorage.getItem("kongbab_admin_token");
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+      return headers;
+    }
+
+    const fmt = n => (n != null ? Number(n).toLocaleString() : "0");
+
+    function formatDuration(sec) {
+      sec = Math.round(Number(sec) || 0);
+      if (sec < 60) return `${sec}초`;
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${m}분 ${s}초`;
+    }
+
+    // XSS 방어: HTML 특수문자 이스케이프 함수
+    function escapeHtml(str) {
+      if (str == null) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // ⚡ 실시간 접속자 단독 초고속 로드 (0.3초)
+    async function fetchRealtimeOnly() {
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/analytics/realtime`, {
+          headers: getAuthHeaders(),
+          credentials: "include"
+        });
+        if (res.status === 401) {
+          showAuthLockOverlay();
+          return;
+        }
+        const data = await res.json().catch(() => null);
+        if (res.ok && data && data.success) {
+          updateRealtimeUI(Number(data.realtimeUsers) || 0);
+        }
+      } catch (err) {
+        console.warn("실시간 접속자 단독 로드 지연:", err);
+      }
+    }
+
+    function updateRealtimeUI(count) {
+      const el = document.getElementById("kpi-realtime");
+      const sub = document.getElementById("kpi-realtime-sub");
+      const ping = document.getElementById("realtime-ping");
+      const dot = document.getElementById("realtime-dot");
+
+      if (el) {
+        el.textContent = `${fmt(count)}명`;
+      }
+      if (count > 0) {
+        if (el) el.className = "text-3xl font-black text-emerald-400 tracking-tight flex items-baseline gap-1";
+        if (sub) {
+          sub.textContent = "현재 배포 사이트 접속 중 🟢";
+          sub.className = "text-[11px] text-emerald-400/90 font-medium mt-0.5";
+        }
+        if (ping) ping.classList.remove("hidden");
+        if (dot) dot.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500";
+      } else {
+        if (el) el.className = "text-3xl font-black text-zinc-300 tracking-tight flex items-baseline gap-1";
+        if (sub) {
+          sub.textContent = "최근 30분 활동 기준 (대기 중)";
+          sub.className = "text-[11px] text-zinc-500 mt-0.5";
+        }
+        if (ping) ping.classList.add("hidden");
+        if (dot) dot.className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-zinc-600";
+      }
+    }
+
+    let isFetching = false;
+    let refreshCooldownUntil = 0;
+
+    async function fetchDashboardData(forceRefresh = false) {
+      const now = Date.now();
+      if (forceRefresh && now < refreshCooldownUntil) {
+        const remainSec = Math.ceil((refreshCooldownUntil - now) / 1000);
+        showToastNotification(`⚠️ 쿨다운 중입니다. ${remainSec}초 후에 다시 시도해 주세요.`);
+        return;
+      }
+
+      if (isFetching) return;
+      isFetching = true;
+
+      const refreshBtn = document.getElementById("refresh-btn");
+      const refreshIcon = document.getElementById("refresh-icon");
+      if (refreshIcon) refreshIcon.classList.add("animate-spin");
+      if (refreshBtn) refreshBtn.classList.add("opacity-70", "pointer-events-none");
+
+      const errBanner = document.getElementById("error-banner");
+      if (errBanner) errBanner.classList.add("hidden");
+
+      try {
+        const query = forceRefresh ? "?refresh=true" : "";
+        const res = await fetch(`${API_BASE}/api/admin/analytics/summary${query}`, {
+          headers: getAuthHeaders(),
+          credentials: "include"
+        });
+
+        // 401 Unauthorized인 경우 관리자 로그인 락 오버레이 표시
+        if (res.status === 401) {
+          showAuthLockOverlay();
+          return;
+        }
+
+        const data = await res.json().catch(() => null);
+
+        if (!res.ok || !data || !data.success) {
+          showError(data?.message || `조회 실패 (HTTP ${res.status})`, data?.hint);
+          return;
+        }
+
+        if (forceRefresh) {
+          refreshCooldownUntil = Date.now() + 10000; // 10초 쿨다운 설정
+        }
+
+        hideAuthLockOverlay();
+        renderAll(data);
+      } catch (err) {
+        console.error("대시보드 통계 로드 에러:", err);
+        showError("백엔드 서버(Spring Boot 8080)와 통신할 수 없습니다.", "인텔리제이에서 서버가 실행 중인지 확인해 주세요.");
+      } finally {
+        isFetching = false;
+        if (refreshIcon) refreshIcon.classList.remove("animate-spin");
+        if (refreshBtn) refreshBtn.classList.remove("opacity-70", "pointer-events-none");
+      }
+    }
+
+    function showAuthLockOverlay() {
+      let overlay = document.getElementById("auth-lock-overlay");
+      if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = "auth-lock-overlay";
+        overlay.className = "fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4";
+        overlay.innerHTML = `
+          <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl text-center space-y-5">
+            <div class="w-14 h-14 rounded-2xl bg-indigo-950 border border-indigo-500/50 flex items-center justify-center text-2xl mx-auto shadow-lg">
+              🔒
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-white">관리자 인증이 필요합니다</h3>
+              <p class="text-xs text-zinc-400 mt-1">본 대시보드는 콩밥특별시 관리자 전용 비공개 페이지입니다.</p>
+            </div>
+            <form onsubmit="handleInlineAdminLogin(event)" class="space-y-3 text-left">
+              <div>
+                <label class="text-[11px] font-semibold text-zinc-400">아이디</label>
+                <input type="text" id="inline-admin-user" class="w-full mt-1 px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500" required />
+              </div>
+              <div>
+                <label class="text-[11px] font-semibold text-zinc-400">비밀번호</label>
+                <input type="password" id="inline-admin-pass" class="w-full mt-1 px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500" required />
+              </div>
+              <div id="inline-login-err" class="text-xs text-red-400 hidden"></div>
+              <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-md mt-2 cursor-pointer">
+                로그인 및 통계 열람
+              </button>
+            </form>
+            <div class="pt-2 border-t border-zinc-800">
+              <a href="./index.html" class="text-xs text-zinc-500 hover:text-zinc-300 transition-colors">← 메인 페이지로 돌아가기</a>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+      }
+      overlay.classList.remove("hidden");
+    }
+
+    function hideAuthLockOverlay() {
+      const overlay = document.getElementById("auth-lock-overlay");
+      if (overlay) overlay.classList.add("hidden");
+    }
+
+    async function handleInlineAdminLogin(e) {
+      if (e) e.preventDefault();
+      const u = document.getElementById("inline-admin-user")?.value.trim() || "";
+      const p = document.getElementById("inline-admin-pass")?.value || "";
+      const err = document.getElementById("inline-login-err");
+
+      try {
+        const res = await fetch(`${API_BASE}/api/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ username: u, password: p })
+        });
+        const data = await res.json();
+        if (data && data.success && data.token) {
+          localStorage.setItem("kongbab_admin_token", data.token);
+          hideAuthLockOverlay();
+          fetchDashboardData(false);
+        } else {
+          if (err) {
+            err.textContent = data?.message || "아이디 또는 비밀번호가 일치하지 않습니다.";
+            err.classList.remove("hidden");
+          }
+        }
+      } catch (e) {
+        if (err) {
+          err.textContent = "백엔드 서버 통신 실패";
+          err.classList.remove("hidden");
+        }
+      }
+    }
+
+    function showToastNotification(msg) {
+      let toast = document.getElementById("dashboard-toast");
+      if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "dashboard-toast";
+        toast.className = "fixed bottom-5 right-5 z-50 bg-zinc-900 border border-zinc-700 text-white text-xs px-4 py-2.5 rounded-2xl shadow-2xl transition-opacity duration-300";
+        document.body.appendChild(toast);
+      }
+      toast.textContent = msg;
+      toast.style.opacity = "1";
+      setTimeout(() => {
+        toast.style.opacity = "0";
+      }, 3000);
+    }
+
+    function showError(message, hint) {
+      const errBanner = document.getElementById("error-banner");
+      const errDesc = document.getElementById("error-desc");
+      const errHint = document.getElementById("error-hint");
+
+      if (errBanner && errDesc) {
+        errBanner.classList.remove("hidden");
+        errDesc.textContent = escapeHtml(message);
+        if (errHint) errHint.textContent = hint ? `💡 조치 안내: ${escapeHtml(hint)}` : "";
+      }
+    }
+
+    function renderAll(data) {
+      const headerTime = document.getElementById("header-updated-at");
+      if (headerTime) headerTime.textContent = `최근 갱신: ${escapeHtml(data.updatedAt) || '방금'}`;
+
+      const ov = data.overview || {};
+      const today = data.today || {};
+      const yest = data.yesterday || {};
+
+      updateRealtimeUI(Number(data.realtimeUsers) || 0);
+      document.getElementById("kpi-today-users").textContent = `${fmt(today.users)}명`;
+      document.getElementById("kpi-today-sub").textContent = `신규 ${fmt(today.newUsers)}명 / 재방문 ${fmt(today.returningUsers)}명`;
+
+      document.getElementById("kpi-yesterday-users").textContent = `${fmt(yest.users)}명`;
+      document.getElementById("kpi-yesterday-sub").textContent = `신규 ${fmt(yest.newUsers)}명 / 재방문 ${fmt(yest.returningUsers)}명`;
+
+      document.getElementById("kpi-total-users").textContent = `${fmt(ov.totalUsers)}명`;
+      document.getElementById("kpi-total-views").textContent = `총 페이지뷰 ${fmt(ov.pageViews)}회`;
+
+      document.getElementById("kpi-duration").textContent = formatDuration(ov.avgDurationSeconds);
+      document.getElementById("kpi-sessions").textContent = `총 세션 ${fmt(ov.sessions)}회`;
+
+      document.getElementById("kpi-bounce").textContent = `${ov.bounceRate || 0}%`;
+
+      renderUserLoyalty(ov);
+      renderDailyChart(data.dailyStats || []);
+      renderHourlyChart(data.hourlyStats || []);
+      renderSources(data.sources || []);
+      renderTopPages(data.topPages || []);
+      renderDevices(data.devices || []);
+      renderOsAndBrowsers(data.operatingSystems || [], data.browsers || []);
+      renderCities(data.cities || []);
+    }
+
+    function renderUserLoyalty(ov) {
+      const totalU = Number(ov.totalUsers) || 0;
+      const newU = Number(ov.newUsers) || 0;
+      const returnU = Number(ov.returningUsers) || 0;
+      const totalSess = Number(ov.sessions) || 0;
+      const avgSess = ov.sessionsPerUser != null ? ov.sessionsPerUser : (totalU > 0 ? (Math.round((totalSess / totalU) * 10) / 10) : 0);
+      const returnRate = ov.returnRate != null ? ov.returnRate : (totalU > 0 ? (Math.round((returnU / totalU * 100) * 10) / 10) : 0);
+      const newRate = totalU > 0 ? (Math.round((newU / totalU * 100) * 10) / 10) : 0;
+
+      const elAvg = document.getElementById("kpi-sessions-per-user");
+      if (elAvg) elAvg.textContent = `${avgSess}회`;
+
+      const elNewU = document.getElementById("freq-new-users");
+      if (elNewU) elNewU.textContent = `${fmt(newU)}명`;
+
+      const elNewRate = document.getElementById("freq-new-rate");
+      if (elNewRate) elNewRate.textContent = `전체의 ${newRate}% (첫 접속 기기)`;
+
+      const elReturnU = document.getElementById("freq-return-users");
+      if (elReturnU) elReturnU.textContent = `${fmt(returnU)}명`;
+
+      const elReturnRate = document.getElementById("freq-return-rate");
+      if (elReturnRate) elReturnRate.textContent = `재방문율 ${returnRate}% (다시 찾아온 기기)`;
+
+      const elAvgSess = document.getElementById("freq-avg-sessions");
+      if (elAvgSess) elAvgSess.textContent = `평균 ${avgSess}회`;
+
+      const elTotalSess = document.getElementById("freq-total-sessions");
+      if (elTotalSess) elTotalSess.textContent = `총 접속 세션 ${fmt(totalSess)}회 발생`;
+
+      const elBarNew = document.getElementById("bar-new-percent");
+      if (elBarNew) elBarNew.textContent = `${newRate}%`;
+
+      const elBarReturn = document.getElementById("bar-return-percent");
+      if (elBarReturn) elBarReturn.textContent = `${returnRate}%`;
+
+      const progNew = document.getElementById("progress-new");
+      const progReturn = document.getElementById("progress-return");
+      if (progNew && progReturn) {
+        if (totalU > 0) {
+          progNew.style.width = `${newRate}%`;
+          progReturn.style.width = `${returnRate}%`;
+        } else {
+          progNew.style.width = `50%`;
+          progReturn.style.width = `50%`;
+        }
+      }
+    }
+
+    function renderDailyChart(list) {
+      const container = document.getElementById("daily-chart-container");
+      if (!container) return;
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="text-xs text-zinc-500 py-10 text-center">수집된 일별 통계가 아직 없습니다.</div>`;
+        return;
+      }
+
+      const maxUsers = Math.max(...list.map(d => d.users || 0), 1);
+      const reversed = list.slice().reverse();
+
+      container.innerHTML = reversed.map(item => {
+        const percent = Math.min(100, Math.max(3, Math.round(((item.users || 0) / maxUsers) * 100)));
+        const safeDate = escapeHtml(item.date);
+        return `
+          <div class="flex items-center gap-3 text-xs py-2 px-3 rounded-xl hover:bg-zinc-800/60 transition-colors">
+            <span class="w-24 font-mono text-zinc-400 flex-shrink-0">${safeDate}</span>
+            <div class="flex-1 h-3.5 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800">
+              <div class="h-full bg-gradient-to-r from-indigo-600 via-indigo-400 to-emerald-400 rounded-full transition-all duration-500" style="width: ${percent}%;"></div>
+            </div>
+            <div class="flex items-center gap-2 min-w-[130px] justify-end flex-shrink-0">
+              <span class="font-bold text-white">${fmt(item.users)}명</span>
+              <span class="text-[11px] text-zinc-500 font-mono">(${fmt(item.views)} PV)</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderHourlyChart(list) {
+      const container = document.getElementById("hourly-chart-container");
+      if (!container) return;
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="text-xs text-zinc-500 py-10 text-center">시간대별 통계가 아직 없습니다.</div>`;
+        return;
+      }
+
+      const maxUsers = Math.max(...list.map(d => d.users || 0), 1);
+
+      container.innerHTML = list.map(item => {
+        const percent = Math.min(100, Math.max(2, Math.round(((item.users || 0) / maxUsers) * 100)));
+        const isPeak = item.users === maxUsers && maxUsers > 0;
+        const safeHour = escapeHtml(item.hour);
+        return `
+          <div class="flex items-center gap-2.5 text-xs py-1 px-2.5 rounded-lg hover:bg-zinc-800/50 transition-colors ${isPeak ? 'bg-amber-950/30 border border-amber-500/30' : ''}">
+            <span class="w-12 font-mono ${isPeak ? 'text-amber-400 font-bold' : 'text-zinc-400'} flex-shrink-0">${safeHour}</span>
+            <div class="flex-1 h-2.5 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800">
+              <div class="h-full ${isPeak ? 'bg-gradient-to-r from-amber-500 to-red-500' : 'bg-indigo-500'} rounded-full transition-all duration-300" style="width: ${percent}%;"></div>
+            </div>
+            <span class="font-mono text-right min-w-[50px] ${isPeak ? 'text-amber-300 font-bold' : 'text-zinc-300'}">${fmt(item.users)}명</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderSources(list) {
+      const container = document.getElementById("sources-container");
+      if (!container) return;
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="text-xs text-zinc-500 py-8 text-center">수집된 유입 경로가 아직 없습니다. (치지직/디스코드 등에서 링크를 타고 접속 시 생성됩니다)</div>`;
+        return;
+      }
+
+      const maxUsers = Math.max(...list.map(d => d.users || 0), 1);
+
+      container.innerHTML = list.map((item, idx) => {
+        const percent = Math.min(100, Math.max(4, Math.round(((item.users || 0) / maxUsers) * 100)));
+        const safeName = escapeHtml(item.name);
+        return `
+          <div class="space-y-1 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="font-medium text-zinc-200 flex items-center gap-2 truncate">
+                <span class="w-5 h-5 rounded-md bg-zinc-800 text-zinc-400 font-mono text-[10px] flex items-center justify-center font-bold flex-shrink-0">${idx + 1}</span>
+                <span class="truncate" title="${safeName}">${safeName}</span>
+              </span>
+              <span class="font-bold text-white flex-shrink-0 ml-2">${fmt(item.users)}명 <span class="text-[10px] text-zinc-500 font-normal">(${fmt(item.sessions)}세션)</span></span>
+            </div>
+            <div class="w-full h-2 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800/80">
+              <div class="h-full bg-gradient-to-r from-indigo-500 to-sky-400 rounded-full" style="width: ${percent}%;"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderTopPages(list) {
+      const container = document.getElementById("top-pages-container");
+      if (!container) return;
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="text-xs text-zinc-500 py-8 text-center">인기 페이지 데이터가 아직 없습니다.</div>`;
+        return;
+      }
+
+      const maxViews = Math.max(...list.map(d => d.views || 0), 1);
+
+      container.innerHTML = list.map((item, idx) => {
+        const percent = Math.min(100, Math.max(4, Math.round(((item.views || 0) / maxViews) * 100)));
+        const safePath = escapeHtml(item.path);
+        return `
+          <div class="space-y-1 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="font-medium text-zinc-200 flex items-center gap-2 truncate">
+                <span class="w-5 h-5 rounded-md bg-zinc-800 text-zinc-400 font-mono text-[10px] flex items-center justify-center font-bold flex-shrink-0">${idx + 1}</span>
+                <span class="font-mono text-zinc-300 truncate" title="${safePath}">${safePath}</span>
+              </span>
+              <span class="font-bold text-emerald-400 flex-shrink-0 ml-2">${fmt(item.views)} PV <span class="text-[10px] text-zinc-500 font-normal">(${fmt(item.users)}명)</span></span>
+            </div>
+            <div class="w-full h-2 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800/80">
+              <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full" style="width: ${percent}%;"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderDevices(list) {
+      const container = document.getElementById("devices-container");
+      if (!container) return;
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="text-xs text-zinc-500 py-6 text-center">기기 데이터가 아직 없습니다.</div>`;
+        return;
+      }
+
+      const total = list.reduce((sum, d) => sum + (d.users || 0), 0) || 1;
+
+      container.innerHTML = list.map(item => {
+        const ratio = Math.round(((item.users || 0) / total) * 100);
+        let icon = "💻";
+        if (item.name.includes("모바일")) icon = "📱";
+        if (item.name.includes("태블릿")) icon = "📟";
+        const safeName = escapeHtml(item.name);
+
+        return `
+          <div class="space-y-1.5 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-1.5 font-medium text-zinc-200">
+                <span>${icon}</span>
+                <span>${safeName}</span>
+              </span>
+              <span class="font-bold text-white">${ratio}% <span class="text-[10px] text-zinc-500">(${fmt(item.users)}명)</span></span>
+            </div>
+            <div class="w-full h-2.5 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800">
+              <div class="h-full bg-gradient-to-r from-amber-500 to-rose-500 rounded-full" style="width: ${ratio}%;"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderOsAndBrowsers(osList, browserList) {
+      const container = document.getElementById("os-browser-container");
+      if (!container) return;
+
+      const topOs = osList.slice(0, 4);
+      const topBrowsers = browserList.slice(0, 4);
+
+      if (topOs.length === 0 && topBrowsers.length === 0) {
+        container.innerHTML = `<div class="text-xs text-zinc-500 py-6 text-center">OS/브라우저 데이터가 아직 없습니다.</div>`;
+        return;
+      }
+
+      let html = `<div class="space-y-3 text-xs">`;
+
+      if (topOs.length > 0) {
+        html += `
+          <div>
+            <div class="text-[11px] font-bold text-zinc-400 mb-1.5 uppercase tracking-wider">주요 운영체제 (OS)</div>
+            <div class="space-y-1">
+              ${topOs.map(o => `
+                <div class="flex items-center justify-between py-0.5 text-zinc-300">
+                  <span class="truncate">${escapeHtml(o.name)}</span>
+                  <span class="font-bold text-white font-mono">${fmt(o.users)}명</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      if (topBrowsers.length > 0) {
+        html += `
+          <div class="pt-2 border-t border-zinc-800/80">
+            <div class="text-[11px] font-bold text-zinc-400 mb-1.5 uppercase tracking-wider">주요 웹 브라우저</div>
+            <div class="space-y-1">
+              ${topBrowsers.map(b => `
+                <div class="flex items-center justify-between py-0.5 text-zinc-300">
+                  <span class="truncate">${escapeHtml(b.name)}</span>
+                  <span class="font-bold text-white font-mono">${fmt(b.users)}명</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+
+    function renderCities(list) {
+      const container = document.getElementById("cities-container");
+      if (!container) return;
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="text-xs text-zinc-500 py-6 text-center">지역 데이터가 아직 없습니다.</div>`;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="space-y-1.5 text-xs">
+          ${list.map((c, idx) => `
+            <div class="flex items-center justify-between py-1 px-2 rounded-lg hover:bg-zinc-800/60 transition-colors">
+              <span class="flex items-center gap-2 text-zinc-300 truncate">
+                <span class="w-4 text-[10px] text-zinc-500 font-mono text-center font-bold">${idx + 1}</span>
+                <span class="truncate font-medium">${escapeHtml(c.name)}</span>
+              </span>
+              <span class="font-bold text-white font-mono flex-shrink-0">${fmt(c.users)}명</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // 1. 실시간 접속자 즉시 단독 로드 (0.3초 이내 반응)
+    fetchRealtimeOnly();
+
+    // 2. 전체 통계 대시보드 로드 (~0.9초)
+    fetchDashboardData(false);
+
+    // 15초마다 실시간 접속자만 가볍게 백그라운드 자동 갱신 (탭 활성화 시에만 동작하여 자원 절약)
+    setInterval(() => {
+      if (!document.hidden) {
+        fetchRealtimeOnly();
+      }
+    }, 15000);
+
+    // 3분마다 전체 통계 대시보드 백그라운드 자동 갱신 (탭 활성화 시에만 동작)
+    setInterval(() => {
+      if (!document.hidden) {
+        fetchDashboardData(false);
+      }
+    }, 180000);
+
+    // 브라우저 탭으로 다시 복귀 시 즉시 최신 실시간 접속자 갱신
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        fetchRealtimeOnly();
+      }
+    });
+  </script>
+</body>
+</html>
