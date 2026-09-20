@@ -36,7 +36,7 @@ test {
     useJUnitPlatform()
 }
 
-// static ?�더???�일?�을 docs ?�더�??�동 복사 (배포 불필??관리자 ?�용 ?�면 ?�외)
+// static 폴더의 파일들을 docs 폴더로 자동 복사 (배포 불필요 관리자 전용 화면 제외)
 tasks.register('copyToDocs', Copy) {
     from 'src/main/resources/static'
     into 'docs'
