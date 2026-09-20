@@ -716,10 +716,7 @@ async function submitMultiVideos() {
       v.displayOrder = idx;
     });
 
-    // DB 및 로컬스토리지 동기화
-    if (typeof syncAllStreamersToDb === "function") {
-      await syncAllStreamersToDb(extractAllStreamersFromKongbapData());
-    }
+    // 1. [낙관적 UI 즉시 반영 (0ms 체감 속도)] 모달 즉시 닫기 & 화면 렌더링
     if (typeof invalidateMemberVideoCaches === "function") {
       invalidateMemberVideoCaches(state.currentMember);
     }
@@ -737,7 +734,21 @@ async function submitMultiVideos() {
       msg += ` (${skippedCount}개 중복 건너뜀)`;
     }
     showToast(msg);
-    createBackupSnapshot(`영상 다중 일괄 등록: ${state.currentMember.name} (${addedCount}개)`);
+
+    // 2. [비차단 백그라운드 DB 동기화 및 백업]
+    const backupReason = `영상 다중 일괄 등록: ${state.currentMember.name} (${addedCount}개)`;
+    (async () => {
+      try {
+        if (typeof syncAllStreamersToDb === "function") {
+          await syncAllStreamersToDb(extractAllStreamersFromKongbapData());
+        }
+        if (typeof createBackupSnapshot === "function") {
+          createBackupSnapshot(backupReason);
+        }
+      } catch (err) {
+        console.error("다중 영상 백그라운드 동기화 오류:", err);
+      }
+    })();
   } finally {
     isSubmittingMultiVideos = false;
     if (submitBtn) {
@@ -813,7 +824,6 @@ async function handleSaveVideo(e) {
         };
         savedVideo = state.currentMember.videos[idx];
         showToast("✓ 영상이 수정되었습니다.");
-        createBackupSnapshot(`영상 수정: ${state.currentMember.name} - ${title}`);
       }
     } else {
       const newVideo = {
@@ -835,16 +845,9 @@ async function handleSaveVideo(e) {
       });
       savedVideo = newVideo;
       showToast("✓ 영상이 등록되었습니다.");
-      createBackupSnapshot(`영상 추가: ${state.currentMember.name} - ${title}`);
     }
 
-    // 변경된 displayOrder 전체 동기화 및 DB 저장
-    if (typeof syncAllStreamersToDb === "function") {
-      await syncAllStreamersToDb(extractAllStreamersFromKongbapData());
-    } else if (savedVideo) {
-      await saveVideoToDb(state.currentMember.id, savedVideo);
-    }
-
+    // 1. [낙관적 UI 즉시 반영 (0ms 체감 속도)] 모달 즉시 닫기 및 화면 즉각 렌더링
     if (typeof invalidateMemberVideoCaches === "function") {
       invalidateMemberVideoCaches(state.currentMember);
     }
@@ -857,6 +860,25 @@ async function handleSaveVideo(e) {
 
     const container = document.getElementById("main-content");
     if (container) renderMemberVideos(container);
+
+    // 2. [비차단 초고속 백그라운드 DB 동기화] 4MB 전체 동기화 대신 해당 영상 단일 저장(saveVideoToDb)
+    const memberId = state.currentMember.id;
+    const actionLabel = editingVideoId ? `영상 수정: ${state.currentMember.name} - ${title}` : `영상 추가: ${state.currentMember.name} - ${title}`;
+
+    (async () => {
+      try {
+        if (savedVideo && typeof saveVideoToDb === "function") {
+          await saveVideoToDb(memberId, savedVideo);
+        } else if (typeof syncAllStreamersToDb === "function") {
+          await syncAllStreamersToDb(extractAllStreamersFromKongbapData());
+        }
+        if (typeof createBackupSnapshot === "function") {
+          createBackupSnapshot(actionLabel);
+        }
+      } catch (err) {
+        console.error("영상 백그라운드 DB 동기화 오류:", err);
+      }
+    })();
   } finally {
     isSavingSingleVideo = false;
     if (saveBtn) {
@@ -927,15 +949,25 @@ async function sortMemberVideosByDate() {
   }
   persistData();
 
-  if (typeof syncAllStreamersToDb === "function") {
-    await syncAllStreamersToDb(extractAllStreamersFromKongbapData());
-  }
-
-  createBackupSnapshot(`영상 날짜순 정렬: ${state.currentMember.name}`);
+  // 1. [낙관적 UI 즉시 반영 (0ms 체감 속도)] 화면 즉시 렌더링
   showToast("✓ 게시일자가 빠른 순서(1번부터)로 정렬되었습니다.");
-
   const container = document.getElementById("main-content");
   if (container) renderMemberVideos(container);
+
+  // 2. [비차단 백그라운드 DB 동기화 및 백업]
+  const memberName = state.currentMember.name;
+  (async () => {
+    try {
+      if (typeof syncAllStreamersToDb === "function") {
+        await syncAllStreamersToDb(extractAllStreamersFromKongbapData());
+      }
+      if (typeof createBackupSnapshot === "function") {
+        createBackupSnapshot(`영상 날짜순 정렬: ${memberName}`);
+      }
+    } catch (err) {
+      console.error("영상 정렬 백그라운드 동기화 오류:", err);
+    }
+  })();
 }
 
 async function confirmDeleteAllMemberVideos() {

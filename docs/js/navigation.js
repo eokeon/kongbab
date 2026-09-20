@@ -293,9 +293,46 @@ let isSearchHistoryPushed = false;
 let isReturningToList = false;
 let isReturningToCategory = false;
 
+let lastTrackedGaUrl = (typeof window !== "undefined") ? (window.location.pathname + window.location.search) : null;
+
+function sendGaPageView(url) {
+  if (typeof gtag === "function") {
+    try {
+      const fullUrl = url && url.startsWith("http") ? url : (window.location.origin + (url || (window.location.pathname + window.location.search)));
+      const u = new URL(fullUrl, window.location.origin);
+      const gaPath = u.pathname + u.search;
+      if (lastTrackedGaUrl === gaPath) return;
+      lastTrackedGaUrl = gaPath;
+
+      gtag("event", "page_view", {
+        page_title: document.title,
+        page_location: u.href,
+        page_path: gaPath
+      });
+    } catch (e) {}
+  }
+}
+
 function buildNavUrl(catId, groupId, memberId, videoTab, searchQuery) {
-  // 주소창 뒤에 ?category=... 같은 파라미터가 보이지 않도록 깔끔한 기본 경로만 반환
-  return window.location.pathname;
+  const params = new URLSearchParams();
+  if (catId) {
+    params.set("category", catId);
+  }
+  if (groupId) {
+    params.set("group", groupId);
+  }
+  if (memberId) {
+    params.set("member", memberId);
+  }
+  if (videoTab && videoTab !== "clip") {
+    params.set("tab", videoTab);
+  }
+  if (searchQuery) {
+    params.set("search", searchQuery);
+  }
+
+  const qs = params.toString();
+  return qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
 }
 
 function parseUrlNavState() {
@@ -371,6 +408,7 @@ function pushNavHistory() {
     window.history.pushState(hState, "", url);
   } catch (e) {}
   updatePageTitle();
+  sendGaPageView(url);
 }
 
 function replaceNavHistory() {
@@ -390,6 +428,7 @@ function replaceNavHistory() {
     window.history.replaceState(hState, "", url);
   } catch (e) {}
   updatePageTitle();
+  sendGaPageView(url);
 }
 
 function applyNavState(navState, options = {}) {
@@ -1155,6 +1194,8 @@ function setupEventListeners() {
         lastSelectedMemberId = previousMember;
       }
       applyNavState(targetNavState, { shouldRestoreScroll });
+      updatePageTitle();
+      sendGaPageView(window.location.href);
     } finally {
       isHistoryNavigating = false;
     }

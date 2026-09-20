@@ -1,8 +1,8 @@
 {
   "appName": "kongbap-gta-rp",
   "version": "1.0",
-  "createdAt": "2026.09.20 23:55:25",
-  "reason": "인원 수정: 포루쉐 (포냐) - 소속 1개",
+  "createdAt": "2026.09.21 01:02:06",
+  "reason": "영상 삭제: 흑강혁 - [콩밥서버] 덕문이 등장",
   "stats": {
     "totalCategories": 8,
     "totalMembers": 228,
@@ -25574,10 +25574,10 @@
                   "videoType": "clip",
                   "date": "2025.06.13",
                   "duration": "3:28",
-                  "viewCount": 1635,
                   "description": "",
                   "displayOrder": 0,
-                  "thumbnailUrl": "https://img.youtube.com/vi/YB5BlF8jIyY/hqdefault.jpg"
+                  "thumbnailUrl": "https://img.youtube.com/vi/YB5BlF8jIyY/hqdefault.jpg",
+                  "viewCount": 1635
                 }
               ],
               "affiliations": [
@@ -25614,10 +25614,10 @@
                   "videoType": "full",
                   "date": "2025.05.24",
                   "duration": "1:35:45",
-                  "viewCount": 1182,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/b0LW1InRn30/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 0
+                  "displayOrder": 0,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/b0LW1InRn30/mqdefault.jpg",
+                  "viewCount": 1182
                 },
                 {
                   "id": "v-mu9xozvc50y8l-1",
@@ -25626,10 +25626,10 @@
                   "videoType": "full",
                   "date": "2025.05.26",
                   "duration": "2:20:21",
-                  "viewCount": 1990,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/8l7V06Rjzq8/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 1
+                  "displayOrder": 1,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/8l7V06Rjzq8/mqdefault.jpg",
+                  "viewCount": 1990
                 },
                 {
                   "id": "v-mu9xozvcenvwp-2",
@@ -25638,10 +25638,10 @@
                   "videoType": "full",
                   "date": "2025.05.28",
                   "duration": "5:42:36",
-                  "viewCount": 1822,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/N71vF_TEPH0/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 2
+                  "displayOrder": 2,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/N71vF_TEPH0/mqdefault.jpg",
+                  "viewCount": 1822
                 },
                 {
                   "id": "v-mu9xozvcnttcj-3",
@@ -25650,10 +25650,10 @@
                   "videoType": "full",
                   "date": "2025.05.29",
                   "duration": "4:04:10",
-                  "viewCount": 3057,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/Vlp3hij2gTA/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 3
+                  "displayOrder": 3,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/Vlp3hij2gTA/mqdefault.jpg",
+                  "viewCount": 3057
                 },
                 {
                   "id": "v-mu9xozvcvw3wu-4",
@@ -25662,10 +25662,10 @@
                   "videoType": "full",
                   "date": "2025.06.05",
                   "duration": "2:35:46",
-                  "viewCount": 872,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/0QQYpjjJzkA/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 4
+                  "displayOrder": 4,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/0QQYpjjJzkA/mqdefault.jpg",
+                  "viewCount": 872
                 },
                 {
                   "id": "v-mu9xozvca32tv-5",
@@ -25674,10 +25674,10 @@
                   "videoType": "full",
                   "date": "2025.06.05",
                   "duration": "7:04:10",
-                  "viewCount": 1246,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/g2EW_fDhxeQ/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 5
+                  "displayOrder": 5,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/g2EW_fDhxeQ/mqdefault.jpg",
+                  "viewCount": 1246
                 },
                 {
                   "id": "v-mu9xozvcpwaaw-6",
@@ -25686,10 +25686,10 @@
                   "videoType": "full",
                   "date": "2025.06.07",
                   "duration": "3:30:06",
-                  "viewCount": 767,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/mqetbhqtfFA/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 6
+                  "displayOrder": 6,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/mqetbhqtfFA/mqdefault.jpg",
+                  "viewCount": 767
                 },
                 {
                   "id": "v-mu9xozvc7y0rp-7",
@@ -25698,10 +25698,10 @@
                   "videoType": "full",
                   "date": "2025.06.08",
                   "duration": "2:49:57",
-                  "viewCount": 1425,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/4XMmFG6--mg/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 7
+                  "displayOrder": 7,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/4XMmFG6--mg/mqdefault.jpg",
+                  "viewCount": 1425
                 },
                 {
                   "id": "v-mu9xozvc1w2hb-8",
@@ -25710,10 +25710,10 @@
                   "videoType": "full",
                   "date": "2025.06.11",
                   "duration": "3:30:41",
-                  "viewCount": 830,
-                  "thumbnailUrl": "https://i.ytimg.com/vi/C-J9FiTL4HY/mqdefault.jpg",
                   "description": "",
-                  "displayOrder": 8
+                  "displayOrder": 8,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/C-J9FiTL4HY/mqdefault.jpg",
+                  "viewCount": 830
                 }
               ],
               "affiliations": [
@@ -25750,10 +25750,10 @@
                   "videoType": "clip",
                   "date": "2025.06.21",
                   "duration": "4:43",
-                  "viewCount": 2498,
                   "description": "",
                   "displayOrder": 0,
-                  "thumbnailUrl": "https://img.youtube.com/vi/6d5EqZTyysk/hqdefault.jpg"
+                  "thumbnailUrl": "https://img.youtube.com/vi/6d5EqZTyysk/hqdefault.jpg",
+                  "viewCount": 2498
                 }
               ],
               "affiliations": [
