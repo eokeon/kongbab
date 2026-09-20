@@ -33,7 +33,7 @@ const DEFAULT_CATEGORIES = [
   { id: "loveline", name: "러브라인", emoji: "💕", badge: "LOVE", icon: "heart", color: "pink", hasSubgroups: false, members: [] }
 ];
 
-const KONGBAB_DATA = {
+const KONGBAP_DATA = {
   serverName: "콩밥특별시 아카이브",
   categories: JSON.parse(JSON.stringify(DEFAULT_CATEGORIES))
 };
@@ -49,7 +49,7 @@ const state = {
 };
 
 if (typeof window !== "undefined") {
-  window.KONGBAB_DATA = KONGBAB_DATA;
+  window.KONGBAP_DATA = KONGBAP_DATA;
   window.state = state;
 }
 
@@ -59,8 +59,8 @@ function isAdmin() {
 
 function loadStoredAuth() {
   try {
-    const saved = localStorage.getItem("kongbab_auth_user");
-    const expireAt = localStorage.getItem("kongbab_auth_expire_at");
+    const saved = localStorage.getItem("kongbap_auth_user");
+    const expireAt = localStorage.getItem("kongbap_auth_expire_at");
     const now = Date.now();
 
     if (saved && expireAt && now < Number(expireAt)) {
@@ -124,7 +124,7 @@ function applyCategoryStructure(structureCategories) {
   if (!Array.isArray(structureCategories) || structureCategories.length === 0) return;
 
   const catMap = new Map();
-  KONGBAB_DATA.categories.forEach(c => catMap.set(c.id, c));
+  KONGBAP_DATA.categories.forEach(c => catMap.set(c.id, c));
 
   const reorderedCats = [];
   structureCategories.forEach(savedCat => {
@@ -187,7 +187,7 @@ function applyCategoryStructure(structureCategories) {
     }
   }
 
-  KONGBAB_DATA.categories = reorderedCats;
+  KONGBAP_DATA.categories = reorderedCats;
 }
 
 const CURRENT_DATA_VERSION = "20260919_gang_mariadb_sync_v6";
@@ -195,15 +195,15 @@ window.CURRENT_DATA_VERSION = CURRENT_DATA_VERSION;
 
 function loadStoredData() {
   try {
-    const storedVersion = localStorage.getItem("kongbab_data_version");
+    const storedVersion = localStorage.getItem("kongbap_data_version");
     if (storedVersion !== CURRENT_DATA_VERSION) {
       console.log(`[버전 갱신] 새 데이터 버전(${CURRENT_DATA_VERSION}) 감지. 기존 로컬 캐시를 무효화하고 최신 겸직 연동 데이터를 새로고침합니다.`);
-      localStorage.removeItem("kongbab_custom_data");
-      localStorage.setItem("kongbab_data_version", CURRENT_DATA_VERSION);
+      localStorage.removeItem("kongbap_custom_data");
+      localStorage.setItem("kongbap_data_version", CURRENT_DATA_VERSION);
       return;
     }
 
-    const saved = localStorage.getItem("kongbab_custom_data");
+    const saved = localStorage.getItem("kongbap_custom_data");
     if (saved) {
       const parsed = JSON.parse(saved);
       if (parsed && Array.isArray(parsed.categories)) {
@@ -237,15 +237,15 @@ function loadStoredData() {
 
         if (cachedMemberSet.size < 220 || yastationMemberCount === 0 || gangMemberCount < 100 || !hasLinkedGangMembers) {
           console.log(`[캐시 갱신] 최신 겸직 연동 인원 반영을 위해 구버전 로컬 캐시(고유 인원: ${cachedMemberSet.size}명, 갱단: ${gangMemberCount}명)를 무효화합니다.`);
-          localStorage.removeItem("kongbab_custom_data");
-          localStorage.setItem("kongbab_data_version", CURRENT_DATA_VERSION);
+          localStorage.removeItem("kongbap_custom_data");
+          localStorage.setItem("kongbap_data_version", CURRENT_DATA_VERSION);
           return;
         }
 
         applyCategoryStructure(parsed.categories);
 
         parsed.categories.forEach(savedCat => {
-          const liveCat = KONGBAB_DATA.categories.find(c => c.id === savedCat.id);
+          const liveCat = KONGBAP_DATA.categories.find(c => c.id === savedCat.id);
           if (!liveCat) return;
           if (liveCat.hasSubgroups && Array.isArray(savedCat.groups)) {
             savedCat.groups.forEach(savedG => {
@@ -321,8 +321,8 @@ window.getMemberPlatformVideoCounts = getMemberPlatformVideoCounts;
 
 let persistTimer = null;
 function invalidateRuntimeCaches() {
-  if (KONGBAB_DATA && Array.isArray(KONGBAB_DATA.categories)) {
-    KONGBAB_DATA.categories.forEach(c => {
+  if (KONGBAP_DATA && Array.isArray(KONGBAP_DATA.categories)) {
+    KONGBAP_DATA.categories.forEach(c => {
       c._cachedMembers = null;
       c._cachedVideoStats = null;
       c._cachedSubBadges = null;
@@ -358,8 +358,8 @@ function persistData(immediate = false) {
 
   const saveToStorage = () => {
     try {
-      localStorage.setItem("kongbab_data_version", CURRENT_DATA_VERSION);
-      localStorage.setItem("kongbab_custom_data", JSON.stringify(KONGBAB_DATA));
+      localStorage.setItem("kongbap_data_version", CURRENT_DATA_VERSION);
+      localStorage.setItem("kongbap_custom_data", JSON.stringify(KONGBAP_DATA));
     } catch (e) {
       console.error("로컬 캐시 저장 실패", e);
     }
@@ -686,8 +686,8 @@ function updateStats() {
   let totalVideos = 0;
   let totalViews = 0;
 
-  if (KONGBAB_DATA && KONGBAB_DATA.categories) {
-    KONGBAB_DATA.categories.forEach(cat => {
+  if (KONGBAP_DATA && KONGBAP_DATA.categories) {
+    KONGBAP_DATA.categories.forEach(cat => {
       const members = getCategoryMembers(cat);
       members.forEach(m => {
         if (!m) return;

@@ -211,7 +211,7 @@ function getSubscriberLookupTarget(member) {
 // 유튜브 핸들(@handle) -> 고유 채널 ID(UC...) 로컬 영구 캐시 (일괄 배치 조회 가속용)
 function getHandleChannelCache() {
   try {
-    const raw = localStorage.getItem("kongbab_yt_handle_cache");
+    const raw = localStorage.getItem("kongbap_yt_handle_cache");
     return raw ? JSON.parse(raw) : {};
   } catch (e) {
     return {};
@@ -220,7 +220,7 @@ function getHandleChannelCache() {
 
 function saveHandleChannelCache(cache) {
   try {
-    localStorage.setItem("kongbab_yt_handle_cache", JSON.stringify(cache));
+    localStorage.setItem("kongbap_yt_handle_cache", JSON.stringify(cache));
   } catch (e) {}
 }
 
@@ -368,7 +368,7 @@ async function executeSubscriberSync(onProgress) {
     if (!isConnected) return 0;
   }
 
-  const allMembers = extractAllStreamersFromKongbabData();
+  const allMembers = extractAllStreamersFromKongbapData();
   // 대상: 오직 인원 정보에 유튜브 또는 치지직 링크(youtubeUrl)가 등록된 인원만 대상
   const targets = allMembers.filter(m => m.youtubeUrl && m.youtubeUrl.trim());
   if (targets.length === 0) return 0;
@@ -600,7 +600,7 @@ async function executeSubscriberSync(onProgress) {
 
     if (subStr) {
       m.subscriberCount = subStr;
-      KONGBAB_DATA.categories.forEach(cat => {
+      KONGBAP_DATA.categories.forEach(cat => {
         if (cat.hasSubgroups) {
           (cat.groups || []).forEach(g => {
             (g.members || []).forEach(mem => {
@@ -629,7 +629,7 @@ async function executeSubscriberSync(onProgress) {
 
   const syncPromises = [];
   if (typeof syncAllStreamersToDb === "function") {
-    syncPromises.push(syncAllStreamersToDb(extractAllStreamersFromKongbabData()));
+    syncPromises.push(syncAllStreamersToDb(extractAllStreamersFromKongbapData()));
   }
   if (typeof createBackupSnapshot === "function") {
     syncPromises.push(createBackupSnapshot(`구독자/팔로워 수 일괄 갱신 (${updatedCount}명)`, false));

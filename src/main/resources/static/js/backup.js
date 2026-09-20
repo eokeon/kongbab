@@ -4,7 +4,7 @@ let isServerConnected = false;
 let isBackupModalOpen = false;
 
 function getBackupDirectoryPath() {
-  return serverBackupInfo?.directory || "D:\\백업 파일\\KONGBAB_BACKUPS_JSON";
+  return serverBackupInfo?.directory || "D:\\백업 파일\\kongbap_backupS_JSON";
 }
 
 async function checkBackupServerHealth(notifyToast = false) {
@@ -203,8 +203,8 @@ function createBackupSnapshot(actionReason = "데이터 변경", showFeedback = 
 
   const uniqueMembers = new Map();
   let totalVideos = 0;
-  if (KONGBAB_DATA && KONGBAB_DATA.categories) {
-    KONGBAB_DATA.categories.forEach(cat => {
+  if (KONGBAP_DATA && KONGBAP_DATA.categories) {
+    KONGBAP_DATA.categories.forEach(cat => {
       const mems = getCategoryMembers(cat);
       mems.forEach(m => {
         if (!m) return;
@@ -228,25 +228,25 @@ function createBackupSnapshot(actionReason = "데이터 변경", showFeedback = 
     return;
   }
 
-  const cleanCategories = JSON.parse(JSON.stringify(KONGBAB_DATA.categories, (key, value) => {
+  const cleanCategories = JSON.parse(JSON.stringify(KONGBAP_DATA.categories, (key, value) => {
     if (key.startsWith("_")) return undefined;
     return value;
   }));
 
   // 러브라인 데이터 수집 및 백업 스냅샷 동기화
-  const lovelinesList = typeof getLovelineList === "function" ? getLovelineList() : (KONGBAB_DATA?.lovelines || []);
+  const lovelinesList = typeof getLovelineList === "function" ? getLovelineList() : (KONGBAP_DATA?.lovelines || []);
   const loveCat = cleanCategories.find(c => c.id === "loveline");
   if (loveCat) {
     loveCat.lovelines = lovelinesList;
   }
 
   const payload = {
-    appName: "kongbab-gta-rp",
+    appName: "kongbap-gta-rp",
     version: "1.0",
     createdAt: displayTime,
     reason: actionReason,
     stats: {
-      totalCategories: KONGBAB_DATA && KONGBAB_DATA.categories ? KONGBAB_DATA.categories.length : 0,
+      totalCategories: KONGBAP_DATA && KONGBAP_DATA.categories ? KONGBAP_DATA.categories.length : 0,
       totalMembers,
       totalVideos,
       totalLovelines: lovelinesList.length
@@ -610,7 +610,7 @@ async function handleRestoreBackup(fileName, displayLabel) {
         if (typeof fetchStreamersFromDb === "function") {
           const dbStreamers = await fetchStreamersFromDb();
           if (Array.isArray(dbStreamers)) {
-            applyStreamersToKongbabData(dbStreamers);
+            applyStreamersToKongbapData(dbStreamers);
           }
         }
 
@@ -683,7 +683,7 @@ async function handleBackupFileUpload(event) {
           if (typeof fetchStreamersFromDb === "function") {
             const dbStreamers = await fetchStreamersFromDb();
             if (Array.isArray(dbStreamers)) {
-              applyStreamersToKongbabData(dbStreamers);
+              applyStreamersToKongbapData(dbStreamers);
             }
           }
 

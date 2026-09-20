@@ -139,7 +139,7 @@ function loadAffDataIntoForm(key) {
 
   // 소속별 설정 힌트 라벨 갱신
   const affs = getSelectedAffiliations();
-  const cat = KONGBAB_DATA.categories.find(c => c.id === data.category);
+  const cat = KONGBAP_DATA.categories.find(c => c.id === data.category);
   let name = cat?.name || data.category;
   let emoji = cat?.emoji || '';
   if (data.subgroup && cat?.groups) {
@@ -210,7 +210,7 @@ function renderModalAffTabs() {
 
   buttonContainer.innerHTML = affs.map(a => {
     const k = getAffKey(a.category, a.subgroup);
-    const cat = KONGBAB_DATA.categories.find(c => c.id === a.category);
+    const cat = KONGBAP_DATA.categories.find(c => c.id === a.category);
     let name = cat?.name || a.category;
     let emoji = cat?.emoji || '';
     if (a.subgroup && cat?.groups) {
@@ -255,7 +255,7 @@ function switchModalAffTab(newKey) {
 window.switchModalAffTab = switchModalAffTab;
 
 function findMemberLocation(memberId) {
-  for (const cat of KONGBAB_DATA.categories) {
+  for (const cat of KONGBAP_DATA.categories) {
     if (!cat.hasSubgroups) {
       const found = (cat.members || []).find(m => String(m.id) === String(memberId));
       if (found) return { category: cat, group: null, member: found };
@@ -271,7 +271,7 @@ function findMemberLocation(memberId) {
 
 function findAllMemberLocations(memberId) {
   const locs = [];
-  for (const cat of KONGBAB_DATA.categories) {
+  for (const cat of KONGBAP_DATA.categories) {
     if (!cat.hasSubgroups) {
       const found = (cat.members || []).find(m => String(m.id) === String(memberId));
       if (found) locs.push({ category: cat, group: null, member: found });
@@ -286,8 +286,8 @@ function findAllMemberLocations(memberId) {
 }
 
 function setupAffiliationPanels() {
-  const gangCat = KONGBAB_DATA.categories.find(c => c.id === "gang");
-  const bizCat = KONGBAB_DATA.categories.find(c => c.id === "business");
+  const gangCat = KONGBAP_DATA.categories.find(c => c.id === "gang");
+  const bizCat = KONGBAP_DATA.categories.find(c => c.id === "business");
 
   const gangContainer = document.getElementById("aff-gang-chips");
   if (gangContainer && gangCat?.groups) {
@@ -573,8 +573,8 @@ window.handleBadgeChange = handleBadgeChange;
 
 function getSelectedAffiliations() {
   const affs = [];
-  const categories = (KONGBAB_DATA && Array.isArray(KONGBAB_DATA.categories))
-    ? KONGBAB_DATA.categories
+  const categories = (KONGBAP_DATA && Array.isArray(KONGBAP_DATA.categories))
+    ? KONGBAP_DATA.categories
     : [{ id: "police" }, { id: "ems" }, { id: "gang" }, { id: "business" }, { id: "press" }, { id: "citizen" }, { id: "guide" }];
 
   categories.forEach(cat => {
@@ -621,7 +621,7 @@ function updateSelectedAffiliationCount() {
   }
 
   const names = affs.map(a => {
-    const cat = KONGBAB_DATA.categories.find(c => c.id === a.category);
+    const cat = KONGBAP_DATA.categories.find(c => c.id === a.category);
     if (a.subgroup && cat?.groups) {
       const g = cat.groups.find(group => group.id === a.subgroup);
       return `${cat.emoji || ''} ${g ? g.name : cat.name}`;
@@ -1004,7 +1004,7 @@ async function handleSaveMember(e) {
       if (existingAff && existingAff.displayOrder != null) {
         aff.displayOrder = existingAff.displayOrder;
       } else {
-        const targetCat = KONGBAB_DATA.categories.find(c => c.id === aff.category);
+        const targetCat = KONGBAP_DATA.categories.find(c => c.id === aff.category);
         if (targetCat) {
           if (targetCat.hasSubgroups && aff.subgroup) {
             const targetGroup = (targetCat.groups || []).find(g => g.id === aff.subgroup);
@@ -1017,7 +1017,7 @@ async function handleSaveMember(e) {
         }
       }
     } else {
-      const targetCat = KONGBAB_DATA.categories.find(c => c.id === aff.category);
+      const targetCat = KONGBAP_DATA.categories.find(c => c.id === aff.category);
       if (targetCat) {
         if (targetCat.hasSubgroups && aff.subgroup) {
           const targetGroup = (targetCat.groups || []).find(g => g.id === aff.subgroup);
@@ -1099,7 +1099,7 @@ async function handleSaveMember(e) {
 
     // 2) 새로 선택된 소속에 아직 포함되지 않았으면 추가 (각 소속별 직위/직책/뱃지색상 격리 주입)
     selectedAffiliations.forEach(aff => {
-      const cat = KONGBAB_DATA.categories.find(c => c.id === aff.category);
+      const cat = KONGBAP_DATA.categories.find(c => c.id === aff.category);
       if (!cat) return;
 
       const affKey = getAffKey(aff.category, aff.subgroup);
@@ -1188,7 +1188,7 @@ async function handleSaveMember(e) {
 
     // 선택된 모든 소속에 새 멤버 추가 (각 소속별 직위/직책/뱃지색상 격리 주입)
     selectedAffiliations.forEach(aff => {
-      const cat = KONGBAB_DATA.categories.find(c => c.id === aff.category);
+      const cat = KONGBAP_DATA.categories.find(c => c.id === aff.category);
       if (!cat) return;
 
       const affKey = getAffKey(aff.category, aff.subgroup);
@@ -1253,7 +1253,7 @@ async function handleSaveMember(e) {
         if (typeof fetchMemberSubscriberFromYouTube === "function") {
           const countStr = await fetchMemberSubscriberFromYouTube(targetMemberObj);
           if (countStr) {
-            KONGBAB_DATA.categories.forEach(cat => {
+            KONGBAP_DATA.categories.forEach(cat => {
               if (cat.hasSubgroups) {
                 (cat.groups || []).forEach(g => {
                   (g.members || []).forEach(m => {
@@ -1449,7 +1449,7 @@ async function executeRemoveMemberAffiliation(memberId, catId, groupId = null) {
 
   const member = allLocs[0].member;
   const targetName = `${member.name} (${member.streamer})`;
-  const cat = KONGBAB_DATA.categories.find(c => c.id === catId);
+  const cat = KONGBAP_DATA.categories.find(c => c.id === catId);
   const group = (cat?.groups || []).find(g => g.id === groupId);
   const tabLabel = group ? `${group.emoji || ''} ${group.name}` : `${cat?.emoji || ''} ${cat?.name || catId}`;
 

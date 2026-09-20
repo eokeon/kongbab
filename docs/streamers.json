@@ -1,12 +1,12 @@
 {
-  "appName": "kongbab-gta-rp",
+  "appName": "kongbap-gta-rp",
   "version": "1.0",
-  "createdAt": "2026.09.20 20:40:01",
-  "reason": "영상 조회수 일괄 갱신 (성공: 2138건, 조회불가: 68건, 실패: 0건)",
+  "createdAt": "2026.09.20 23:55:25",
+  "reason": "인원 수정: 포루쉐 (포냐) - 소속 1개",
   "stats": {
     "totalCategories": 8,
     "totalMembers": 228,
-    "totalVideos": 2206,
+    "totalVideos": 2217,
     "totalLovelines": 3
   },
   "categories": [
@@ -25454,10 +25454,10 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/lgzpWB_mpBlDNjiG-6y65TCVfiZ_xuJPZOX75FIV48H_zF4Yvw0IO-ow_u-ELUOukdN9viXF=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 3,
               "subscriberCount": "",
-              "youtubeUrl": "",
+              "youtubeUrl": "https://www.youtube.com/@gg0ng_ju",
               "videos": [],
               "affiliations": [
                 {
@@ -25481,10 +25481,10 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/JLl6XNZRl9pYv8eks86m_9D7Hv9GVJKVnuk9w6_o9v4X1xs5ufBJsq_JUpsXNDnoxh0pf4Erlw=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 4,
               "subscriberCount": "",
-              "youtubeUrl": "",
+              "youtubeUrl": "https://www.youtube.com/@뀨냥냥-w3y",
               "videos": [],
               "affiliations": [
                 {
@@ -25508,10 +25508,10 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/v8a6q3TPPQWlHDlrxxAcIpPlznDiN1-7jfLpBxIPwbCzD4vCw9sptDyXtSzzvZKH87dAVPJaqy4=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 5,
               "subscriberCount": "",
-              "youtubeUrl": "",
+              "youtubeUrl": "https://www.youtube.com/@saeyobim",
               "videos": [],
               "affiliations": [
                 {
@@ -25562,11 +25562,24 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/Ev3t7e0rz7ZnXxo9Tew2TJOaNkrZqtTYjEyzBDRcy50UlRE0WDkIqNvkPC_WR5WiQv-atvh7Ccs=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 7,
               "subscriberCount": "",
-              "youtubeUrl": "",
-              "videos": [],
+              "youtubeUrl": "https://www.youtube.com/@u_grandmother",
+              "videos": [
+                {
+                  "id": "v-mu9xkm3nkxem",
+                  "title": "[콩서트Ver.] 각설희(유할매) - Can't Take My Eyes Off You",
+                  "url": "https://youtu.be/YB5BlF8jIyY",
+                  "videoType": "clip",
+                  "date": "2025.06.13",
+                  "duration": "3:28",
+                  "viewCount": 1635,
+                  "description": "",
+                  "displayOrder": 0,
+                  "thumbnailUrl": "https://img.youtube.com/vi/YB5BlF8jIyY/hqdefault.jpg"
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",
@@ -25589,11 +25602,120 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/pH1xg0CTiaI2JvDL--6zl_5D6M-oZbhiPRp_DGQZWSqPOimg6yqHQeQcsJb5KQP0lz3ECqH6Ug=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 8,
               "subscriberCount": "",
-              "youtubeUrl": "",
-              "videos": [],
+              "youtubeUrl": "https://www.youtube.com/@남궁혁",
+              "videos": [
+                {
+                  "id": "v-mu9xozvcr7qu6-0",
+                  "title": "2025-05-23) 콩밥특별시 RP짜기 & 저챗 다시보기",
+                  "url": "https://www.youtube.com/watch?v=b0LW1InRn30",
+                  "videoType": "full",
+                  "date": "2025.05.24",
+                  "duration": "1:35:45",
+                  "viewCount": 1182,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/b0LW1InRn30/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 0
+                },
+                {
+                  "id": "v-mu9xozvc50y8l-1",
+                  "title": "2025-05-25) GTA서버 콩밥특별시 1일차 다시보기",
+                  "url": "https://www.youtube.com/watch?v=8l7V06Rjzq8",
+                  "videoType": "full",
+                  "date": "2025.05.26",
+                  "duration": "2:20:21",
+                  "viewCount": 1990,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/8l7V06Rjzq8/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 1
+                },
+                {
+                  "id": "v-mu9xozvcenvwp-2",
+                  "title": "2025-05-27) 남궁세가 이야기 & 콩밥특별시 2일차 다시보기",
+                  "url": "https://www.youtube.com/watch?v=N71vF_TEPH0",
+                  "videoType": "full",
+                  "date": "2025.05.28",
+                  "duration": "5:42:36",
+                  "viewCount": 1822,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/N71vF_TEPH0/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 2
+                },
+                {
+                  "id": "v-mu9xozvcnttcj-3",
+                  "title": "2025-05-28) 언레일드2 합방 (w/ 민수하, 서애덕) & 콩밥특별시 3일차 다시보기",
+                  "url": "https://www.youtube.com/watch?v=Vlp3hij2gTA",
+                  "videoType": "full",
+                  "date": "2025.05.29",
+                  "duration": "4:04:10",
+                  "viewCount": 3057,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/Vlp3hij2gTA/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 3
+                },
+                {
+                  "id": "v-mu9xozvcvw3wu-4",
+                  "title": "2025-06-03) 감기 짧뱅 & 콩밥특별시 4일차 다시보기",
+                  "url": "https://www.youtube.com/watch?v=0QQYpjjJzkA",
+                  "videoType": "full",
+                  "date": "2025.06.05",
+                  "duration": "2:35:46",
+                  "viewCount": 872,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/0QQYpjjJzkA/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 4
+                },
+                {
+                  "id": "v-mu9xozvca32tv-5",
+                  "title": "2025-06-04) 갱단 합류 콩밥특별시 5일차 다시보기",
+                  "url": "https://www.youtube.com/watch?v=g2EW_fDhxeQ",
+                  "videoType": "full",
+                  "date": "2025.06.05",
+                  "duration": "7:04:10",
+                  "viewCount": 1246,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/g2EW_fDhxeQ/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 5
+                },
+                {
+                  "id": "v-mu9xozvcpwaaw-6",
+                  "title": "2025-06-05) 콩밥특별시 6일차 다시보기",
+                  "url": "https://www.youtube.com/watch?v=mqetbhqtfFA",
+                  "videoType": "full",
+                  "date": "2025.06.07",
+                  "duration": "3:30:06",
+                  "viewCount": 767,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/mqetbhqtfFA/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 6
+                },
+                {
+                  "id": "v-mu9xozvc7y0rp-7",
+                  "title": "2025-06-07) 콩밥특별시 갱 vs 경찰 전쟁 다시보기",
+                  "url": "https://www.youtube.com/watch?v=4XMmFG6--mg",
+                  "videoType": "full",
+                  "date": "2025.06.08",
+                  "duration": "2:49:57",
+                  "viewCount": 1425,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/4XMmFG6--mg/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 7
+                },
+                {
+                  "id": "v-mu9xozvc1w2hb-8",
+                  "title": "2025-06-08) 콩밥특별시 마지막 날 다시보기",
+                  "url": "https://www.youtube.com/watch?v=C-J9FiTL4HY",
+                  "videoType": "full",
+                  "date": "2025.06.11",
+                  "duration": "3:30:41",
+                  "viewCount": 830,
+                  "thumbnailUrl": "https://i.ytimg.com/vi/C-J9FiTL4HY/mqdefault.jpg",
+                  "description": "",
+                  "displayOrder": 8
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",
@@ -25616,11 +25738,24 @@
               "swatRole": "",
               "status": "active",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/P55XIg9rcUfYZwLetz1beX7fCymNTK9VwygY5oevUFPfmNjNCU2vj9I5QkbnpFHw2e3FFyjYRA=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 9,
               "subscriberCount": "",
-              "youtubeUrl": "",
-              "videos": [],
+              "youtubeUrl": "https://www.youtube.com/@U-Lili22",
+              "videos": [
+                {
+                  "id": "v-mu9xt8icp47u",
+                  "title": "병약소녀의 콩밥특별시 생존기",
+                  "url": "https://www.youtube.com/watch?v=6d5EqZTyysk&pp=0gcJCSQMAYcqIYzv",
+                  "videoType": "clip",
+                  "date": "2025.06.21",
+                  "duration": "4:43",
+                  "viewCount": 2498,
+                  "description": "",
+                  "displayOrder": 0,
+                  "thumbnailUrl": "https://img.youtube.com/vi/6d5EqZTyysk/hqdefault.jpg"
+                }
+              ],
               "affiliations": [
                 {
                   "category": "gang",
@@ -25643,10 +25778,10 @@
               "swatRole": "",
               "status": "resigned",
               "badgeColor": "bg-zinc-700",
-              "avatar": "assets/default-avatar.svg",
+              "avatar": "https://yt3.googleusercontent.com/RrwmA8CVd66rMSezzijIqkRaBz3GzWS4K8js_JIzROuRdAoDXMTTkf_6bwr8KIKsF78d1aIBc2U=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 10,
               "subscriberCount": "",
-              "youtubeUrl": "",
+              "youtubeUrl": "https://www.youtube.com/@PoNya216",
               "videos": [],
               "affiliations": [
                 {

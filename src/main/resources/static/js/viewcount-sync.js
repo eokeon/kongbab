@@ -16,11 +16,11 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = 3500) {
 }
 
 // 등록된 전체 영상 목록 수집 (각 영상 객체의 레퍼런스 유지)
-function extractAllVideosFromKongbabData() {
+function extractAllVideosFromKongbapData() {
   const videoList = [];
-  const kbData = (typeof KONGBAB_DATA !== "undefined" && KONGBAB_DATA)
-    ? KONGBAB_DATA
-    : (typeof window !== "undefined" && window.KONGBAB_DATA ? window.KONGBAB_DATA : null);
+  const kbData = (typeof KONGBAP_DATA !== "undefined" && KONGBAP_DATA)
+    ? KONGBAP_DATA
+    : (typeof window !== "undefined" && window.KONGBAP_DATA ? window.KONGBAP_DATA : null);
   if (!kbData || !Array.isArray(kbData.categories)) return videoList;
 
   const seenMemberSet = new Set();
@@ -69,10 +69,10 @@ async function executeViewCountSync(onProgress) {
     hasServer = await checkBackupServerHealth();
   }
 
-  let allItems = extractAllVideosFromKongbabData();
+  let allItems = extractAllVideosFromKongbapData();
   if (allItems.length === 0 && typeof loadStoredData === "function") {
     loadStoredData();
-    allItems = extractAllVideosFromKongbabData();
+    allItems = extractAllVideosFromKongbapData();
   }
   if (allItems.length === 0) {
     return { success: false, message: "갱신 대상 영상이 없습니다. 데이터 로딩 후 다시 시도해주세요.", updatedCount: 0, totalCount: 0, hasServer };
@@ -324,9 +324,9 @@ async function executeViewCountSync(onProgress) {
   let backupSynced = false;
   if (hasServer) {
     const syncPromises = [];
-    if (typeof syncAllStreamersToDb === "function" && typeof extractAllStreamersFromKongbabData === "function") {
+    if (typeof syncAllStreamersToDb === "function" && typeof extractAllStreamersFromKongbapData === "function") {
       syncPromises.push(
-        syncAllStreamersToDb(extractAllStreamersFromKongbabData())
+        syncAllStreamersToDb(extractAllStreamersFromKongbapData())
           .then(res => { if (res) dbSynced = true; })
           .catch(err => console.warn("DB 동기화 중 오류:", err))
       );
@@ -357,5 +357,5 @@ async function executeViewCountSync(onProgress) {
   };
 }
 
-window.extractAllVideosFromKongbabData = extractAllVideosFromKongbabData;
+window.extractAllVideosFromKongbapData = extractAllVideosFromKongbapData;
 window.executeViewCountSync = executeViewCountSync;

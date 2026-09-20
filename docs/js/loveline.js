@@ -26,7 +26,7 @@ const MOCK_LOVELINE_IDS = new Set(["love-1", "love-2", "love-3", "love-4", "love
 // 로컬 스토리지 데이터 로드 / 저장 (관계 분류 정규화 및 목 데이터 제거)
 function getLovelineList() {
   try {
-    const saved = localStorage.getItem("kongbab_lovelines_data");
+    const saved = localStorage.getItem("kongbap_lovelines_data");
     if (saved) {
       const parsed = JSON.parse(saved);
       if (Array.isArray(parsed) && parsed.length > 0) {
@@ -53,8 +53,8 @@ function getLovelineList() {
             item.heartEmoji = "💖";
           }
         });
-        if (filtered.length !== parsed.length) {
-          localStorage.setItem("kongbab_lovelines_data", JSON.stringify(filtered));
+        if (filtered.length !== parsed.length || !localStorage.getItem("kongbap_lovelines_data")) {
+          localStorage.setItem("kongbap_lovelines_data", JSON.stringify(filtered));
         }
         return filtered;
       }
@@ -63,13 +63,13 @@ function getLovelineList() {
     console.warn("러브라인 로컬 데이터 로드 실패:", e);
   }
 
-  // 로컬 스토리지에 데이터가 없을 때 KONGBAB_DATA 및 카테고리에서 fallback 로드
-  if (typeof KONGBAB_DATA !== "undefined" && KONGBAB_DATA) {
-    if (Array.isArray(KONGBAB_DATA.lovelines) && KONGBAB_DATA.lovelines.length > 0) {
-      return KONGBAB_DATA.lovelines;
+  // 로컬 스토리지에 데이터가 없을 때 KONGBAP_DATA 및 카테고리에서 fallback 로드
+  if (typeof KONGBAP_DATA !== "undefined" && KONGBAP_DATA) {
+    if (Array.isArray(KONGBAP_DATA.lovelines) && KONGBAP_DATA.lovelines.length > 0) {
+      return KONGBAP_DATA.lovelines;
     }
-    if (Array.isArray(KONGBAB_DATA.categories)) {
-      const loveCat = KONGBAB_DATA.categories.find(c => c.id === "loveline");
+    if (Array.isArray(KONGBAP_DATA.categories)) {
+      const loveCat = KONGBAP_DATA.categories.find(c => c.id === "loveline");
       if (loveCat && Array.isArray(loveCat.lovelines) && loveCat.lovelines.length > 0) {
         return loveCat.lovelines;
       }
@@ -105,12 +105,12 @@ function saveLovelineList(list, actionReason = null) {
       return copy;
     });
 
-    localStorage.setItem("kongbab_lovelines_data", JSON.stringify(cleaned));
+    localStorage.setItem("kongbap_lovelines_data", JSON.stringify(cleaned));
 
-    if (typeof KONGBAB_DATA !== "undefined" && KONGBAB_DATA) {
-      KONGBAB_DATA.lovelines = cleaned;
-      if (Array.isArray(KONGBAB_DATA.categories)) {
-        const loveCat = KONGBAB_DATA.categories.find(c => c.id === "loveline");
+    if (typeof KONGBAP_DATA !== "undefined" && KONGBAP_DATA) {
+      KONGBAP_DATA.lovelines = cleaned;
+      if (Array.isArray(KONGBAP_DATA.categories)) {
+        const loveCat = KONGBAP_DATA.categories.find(c => c.id === "loveline");
         if (loveCat) {
           loveCat.lovelines = cleaned;
         }
@@ -139,8 +139,8 @@ function getSystemMemberIndex() {
   if (_systemMemberIndexCache) return _systemMemberIndexCache;
   const idMap = new Map();
   const allList = [];
-  if (KONGBAB_DATA && Array.isArray(KONGBAB_DATA.categories)) {
-    for (const cat of KONGBAB_DATA.categories) {
+  if (KONGBAP_DATA && Array.isArray(KONGBAP_DATA.categories)) {
+    for (const cat of KONGBAP_DATA.categories) {
       if (cat.id === "loveline" || cat.id === "guide") continue;
       if (cat.hasSubgroups && Array.isArray(cat.groups)) {
         for (const g of cat.groups) {
@@ -586,9 +586,9 @@ let _searchableMembersCache = null;
 function getAllSearchableMembers() {
   if (_searchableMembersCache) return _searchableMembersCache;
   const list = [];
-  if (!KONGBAB_DATA || !Array.isArray(KONGBAB_DATA.categories)) return list;
+  if (!KONGBAP_DATA || !Array.isArray(KONGBAP_DATA.categories)) return list;
 
-  KONGBAB_DATA.categories.forEach(cat => {
+  KONGBAP_DATA.categories.forEach(cat => {
     if (cat.id === "loveline" || cat.id === "guide") return;
     const catName = cat.name || "";
     const catEmoji = cat.emoji || "";

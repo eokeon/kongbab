@@ -389,7 +389,7 @@
         <span>💡</span>
         <span>Google Analytics 4(GA4) 데이터 집계 원리 안내</span>
       </div>
-      <p>• <strong>실시간 접속자(Realtime Users)</strong>: 최근 30분 이내에 깃허브 배포 사이트(<code>eokeon.github.io/kongbab</code>)에서 활동한 순방문자 수입니다. 방문자가 창을 닫고 30분이 지나면 활동 세션이 만료되어 <strong>자연스럽게 0명</strong>으로 변경됩니다. 상단의 <strong>[배포 사이트 접속 테스트]</strong> 버튼을 누르면 15초 내에 즉시 다시 카운트됩니다.</p>
+      <p>• <strong>실시간 접속자(Realtime Users)</strong>: 최근 30분 이내에 깃허브 배포 사이트(<code>eokeon.github.io/kongbap</code>)에서 활동한 순방문자 수입니다. 방문자가 창을 닫고 30분이 지나면 활동 세션이 만료되어 <strong>자연스럽게 0명</strong>으로 변경됩니다. 상단의 <strong>[배포 사이트 접속 테스트]</strong> 버튼을 누르면 15초 내에 즉시 다시 카운트됩니다.</p>
       <p>• <strong>유입 경로, 일별/시간대별 통계</strong>: 구글 애널리틱스 서버의 일괄 배치(Batch) 처리 주기에 따라 최초 추적 코드 연동 후 24시간 내에 점진적으로 완전하게 집계됩니다.</p>
       <p>• 본 대시보드는 로컬 스프링부트 서버(<code>localhost:8080</code>)의 보안 관리자 API를 통해 조회되며, 외부 방문자나 배포 사이트에서는 노출되지 않습니다.</p>
     </div>
@@ -406,7 +406,7 @@
 
     function getAuthHeaders() {
       const headers = {};
-      const token = localStorage.getItem("kongbab_admin_token");
+      const token = localStorage.getItem("kongbap_admin_token");
       if (token) {
         headers["Authorization"] = `Bearer ${token}`;
       }
@@ -599,7 +599,7 @@
         });
         const data = await res.json();
         if (data && data.success && data.token) {
-          localStorage.setItem("kongbab_admin_token", data.token);
+          localStorage.setItem("kongbap_admin_token", data.token);
           hideAuthLockOverlay();
           fetchDashboardData(false);
         } else {

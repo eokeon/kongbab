@@ -1,9 +1,9 @@
 server.port=8080
-spring.application.name=kongbab
+spring.application.name=kongbap
 
 # MariaDB 연결 설정
 spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
-spring.datasource.url=jdbc:mariadb://localhost:3306/kongbab?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false
+spring.datasource.url=jdbc:mariadb://localhost:3306/kongbap?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false
 spring.datasource.username=root
 spring.datasource.password=your_password_here
 
@@ -13,22 +13,22 @@ spring.jpa.show-sql=false
 spring.jpa.properties.hibernate.format_sql=false
 
 # 백업 파일 저장 설정
-kongbab.backup.directory=D:/백업 파일/KONGBAB_BACKUPS_JSON
-kongbab.backup.max-count=300
+kongbap.backup.directory=D:/백업 파일/KONGBAP_BACKUPS_JSON
+kongbap.backup.max-count=300
 
 # 관리자 계정 설정 (BCrypt 해시 또는 평문 비밀번호 모두 지원)
-kongbab.admin.username=admin
-kongbab.admin.password=your_admin_password_here
+kongbap.admin.username=admin
+kongbap.admin.password=your_admin_password_here
 
 # 보안 설정 (Brute-Force 방어 및 토큰/쿠키 보안)
-kongbab.security.max-login-attempts=5
-kongbab.security.lockout-duration-minutes=15
+kongbap.security.max-login-attempts=5
+kongbap.security.lockout-duration-minutes=15
 # 토큰 서명용 비밀키 (미입력 시 기본 난수/솔트 적용)
-kongbab.security.token-secret=your_strong_random_token_secret_here
+kongbap.security.token-secret=your_strong_random_token_secret_here
 # HTTPS 환경에서 운영 시 true로 설정 (SameSite=Lax 쿠키에 Secure 플래그 적용)
-kongbab.security.cookie.secure=false
+kongbap.security.cookie.secure=false
 # CORS 허용 도메인 (쉼표로 구분)
-kongbab.cors.allowed-origins=http://localhost:8080,http://localhost:63342,http://127.0.0.1:8080,http://127.0.0.1:63342
+kongbap.cors.allowed-origins=http://localhost:8080,http://localhost:63342,http://127.0.0.1:8080,http://127.0.0.1:63342
 
 # 시스템 내부 에러 및 스택트레이스 노출 방지
 server.error.include-stacktrace=never

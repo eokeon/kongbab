@@ -7,7 +7,7 @@ const API_BASE = (
 
 function getAuthHeaders() {
   const headers = {};
-  const token = localStorage.getItem("kongbab_admin_token");
+  const token = localStorage.getItem("kongbap_admin_token");
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
@@ -24,7 +24,7 @@ async function apiLogin(username, password) {
     });
     const data = await res.json();
     if (data && data.success && data.token) {
-      localStorage.setItem("kongbab_admin_token", data.token);
+      localStorage.setItem("kongbap_admin_token", data.token);
     }
     return data;
   } catch (e) {
@@ -35,7 +35,7 @@ async function apiLogin(username, password) {
 
 async function apiLogout() {
   try {
-    localStorage.removeItem("kongbab_admin_token");
+    localStorage.removeItem("kongbap_admin_token");
     const res = await fetch(`${API_BASE}/api/auth/logout`, { 
       method: "POST",
       credentials: "include",
@@ -58,7 +58,7 @@ async function apiGetMe() {
     if (res.ok) {
       const data = await res.json();
       if (data && data.success && data.role === "admin" && data.token) {
-        localStorage.setItem("kongbab_admin_token", data.token);
+        localStorage.setItem("kongbap_admin_token", data.token);
       }
       return data;
     }
@@ -113,7 +113,7 @@ async function fetchCategoryStructure() {
         if (typeof applyCategoryStructure === "function") {
           applyCategoryStructure(data.categories);
         }
-        if (typeof countTotalMembersInCategories === "function" && countTotalMembersInCategories(KONGBAB_DATA?.categories) > 0) {
+        if (typeof countTotalMembersInCategories === "function" && countTotalMembersInCategories(KONGBAP_DATA?.categories) > 0) {
           persistData();
         }
         return data.categories;
@@ -130,7 +130,7 @@ async function fetchCategoryStructure() {
       if (typeof applyCategoryStructure === "function") {
         applyCategoryStructure(staticData.categories);
       }
-      if (typeof countTotalMembersInCategories === "function" && countTotalMembersInCategories(KONGBAB_DATA?.categories) > 0) {
+      if (typeof countTotalMembersInCategories === "function" && countTotalMembersInCategories(KONGBAP_DATA?.categories) > 0) {
         persistData();
       }
       return staticData.categories;
@@ -210,8 +210,8 @@ function countTotalMembersInCategories(categories) {
 
 function mergeStaticStreamersWithLocalVideos(staticStreamers) {
   const localVideoMap = new Map();
-  if (KONGBAB_DATA && Array.isArray(KONGBAB_DATA.categories)) {
-    KONGBAB_DATA.categories.forEach(cat => {
+  if (KONGBAP_DATA && Array.isArray(KONGBAP_DATA.categories)) {
+    KONGBAP_DATA.categories.forEach(cat => {
       const mems = cat.hasSubgroups ? (cat.groups || []).flatMap(g => g.members || []) : (cat.members || []);
       mems.forEach(m => {
         if (m && m.id && Array.isArray(m.videos) && m.videos.length > 0) {
@@ -290,7 +290,7 @@ async function fetchStreamersFromDb() {
       if (missingFromDb.length > 0 || obsoleteInDb.length > 0 || hasAffiliationMismatch || dbList.length !== staticIdSet.size) {
         console.log(`[DB 최신화 동기화] DB 상태(인원: ${dbList.length}명, 누락: ${missingFromDb.length}, 구버전초과: ${obsoleteInDb.length})를 정적 최신 기준(${staticIdSet.size}명)과 즉시 동기화합니다.`);
         const mergedList = mergeStaticStreamersWithLocalVideos(rawStaticList);
-        applyStreamersToKongbabData(mergedList);
+        applyStreamersToKongbapData(mergedList);
         persistData(true);
         syncAllStreamersToDb(mergedList);
         return "STATIC_CATEGORIES_LOADED";
@@ -308,7 +308,7 @@ async function fetchStreamersFromDb() {
     }
     const rawStaticList = extractAllStreamersFromStatic(staticData);
     const mergedList = mergeStaticStreamersWithLocalVideos(rawStaticList);
-    applyStreamersToKongbabData(mergedList);
+    applyStreamersToKongbapData(mergedList);
     persistData(true);
     console.log(`[정적 데이터 로드] 최신 겸직 연동 260슬롯/228명 인원 및 데이터 동기화 완료 (총 ${staticMembersCount}명).`);
 
@@ -708,7 +708,7 @@ function getAffiliationDisplayOrder(member, categoryId, subgroupId = null) {
 }
 
 function sortAllMembersByAffiliationOrder() {
-  KONGBAB_DATA.categories.forEach(cat => {
+  KONGBAP_DATA.categories.forEach(cat => {
     if (cat.hasSubgroups) {
       (cat.groups || []).forEach(g => {
         if (g.members && g.members.length > 1) {
@@ -741,10 +741,11 @@ function sortAllMembersByAffiliationOrder() {
 window.getAffiliationDisplayOrder = getAffiliationDisplayOrder;
 window.sortAllMembersByAffiliationOrder = sortAllMembersByAffiliationOrder;
 
-function applyStreamersToKongbabData(dbStreamers) {
+function applyStreamersToKongbapData(dbStreamers) {
+
   if (!Array.isArray(dbStreamers)) return;
 
-  KONGBAB_DATA.categories.forEach(cat => {
+  KONGBAP_DATA.categories.forEach(cat => {
     if (cat.hasSubgroups) {
       (cat.groups || []).forEach(g => { g.members = []; });
     } else {
@@ -801,7 +802,7 @@ function applyStreamersToKongbabData(dbStreamers) {
 
     // 소속된 모든 위치(카테고리/조직)에 동일한 memberObj 인스턴스를 추가 (겸직 반영)
     affs.forEach(aff => {
-      const cat = KONGBAB_DATA.categories.find(c => c.id === aff.category);
+      const cat = KONGBAP_DATA.categories.find(c => c.id === aff.category);
       if (!cat) return;
 
       if (cat.hasSubgroups) {
@@ -828,7 +829,7 @@ function applyStreamersToKongbabData(dbStreamers) {
   persistData();
 }
 
-function extractAllStreamersFromKongbabData() {
+function extractAllStreamersFromKongbapData() {
   const memberMap = new Map();
   let fallbackGlobalOrder = 0;
 
@@ -895,7 +896,7 @@ function extractAllStreamersFromKongbabData() {
     }
   };
 
-  (KONGBAB_DATA.categories || []).forEach(cat => {
+  (KONGBAP_DATA.categories || []).forEach(cat => {
     if (cat.hasSubgroups) {
       (cat.groups || []).forEach(g => {
         const mems = g.members || [];
@@ -944,5 +945,8 @@ async function apiGetAnalyticsSummary(forceRefresh = false) {
   }
 }
 
-
+if (typeof window !== "undefined") {
+  window.extractAllStreamersFromKongbapData = extractAllStreamersFromKongbapData;
+  window.applyStreamersToKongbapData = applyStreamersToKongbapData;
+}
 

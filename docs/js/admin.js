@@ -44,8 +44,8 @@ async function handleAdminLogin(e) {
     const expireAt = Date.now() + expireDuration;
 
     state.currentUser = { role: res.role || "admin", username: res.username || "admin" };
-    localStorage.setItem("kongbab_auth_user", JSON.stringify(state.currentUser));
-    localStorage.setItem("kongbab_auth_expire_at", String(expireAt));
+    localStorage.setItem("kongbap_auth_user", JSON.stringify(state.currentUser));
+    localStorage.setItem("kongbap_auth_expire_at", String(expireAt));
 
     closeLoginModal();
     renderHeaderAuth();
@@ -59,8 +59,8 @@ async function handleAdminLogin(e) {
 
 async function handleGuestLogin() {
   state.currentUser = { role: "guest", username: "게스트" };
-  localStorage.setItem("kongbab_auth_user", JSON.stringify(state.currentUser));
-  localStorage.removeItem("kongbab_auth_expire_at");
+  localStorage.setItem("kongbap_auth_user", JSON.stringify(state.currentUser));
+  localStorage.removeItem("kongbap_auth_expire_at");
   await apiLogout();
   closeLoginModal();
   renderHeaderAuth();
@@ -71,8 +71,8 @@ async function handleGuestLogin() {
 async function logoutUser() {
   await apiLogout();
   state.currentUser = { role: "guest", username: "게스트" };
-  localStorage.setItem("kongbab_auth_user", JSON.stringify(state.currentUser));
-  localStorage.removeItem("kongbab_auth_expire_at");
+  localStorage.setItem("kongbap_auth_user", JSON.stringify(state.currentUser));
+  localStorage.removeItem("kongbap_auth_expire_at");
   renderHeaderAuth();
   renderContent();
   showToast("로그아웃되었습니다.");
@@ -96,8 +96,8 @@ let currentAdminSettingsTab = 'subscribers';
 
 function updateAdminSettingsModalCounts() {
   // 1. 등록된 유튜브 링크(youtubeUrl)가 있는 대상 인원수 계산
-  const allMembers = typeof extractAllStreamersFromKongbabData === "function" 
-    ? extractAllStreamersFromKongbabData() 
+  const allMembers = typeof extractAllStreamersFromKongbapData === "function" 
+    ? extractAllStreamersFromKongbapData() 
     : [];
   const targetCount = allMembers.filter(m => m.youtubeUrl && m.youtubeUrl.trim()).length;
 
@@ -129,8 +129,8 @@ function updateAdminSettingsModalCounts() {
   }
 
   // 2. 등록된 전체 영상 개수 (유튜브 / 치지직) 계산
-  const allVideos = typeof extractAllVideosFromKongbabData === "function"
-    ? extractAllVideosFromKongbabData()
+  const allVideos = typeof extractAllVideosFromKongbapData === "function"
+    ? extractAllVideosFromKongbapData()
     : [];
   let ytVideoCount = 0;
   let chzzkVideoCount = 0;

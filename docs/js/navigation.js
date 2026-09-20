@@ -16,14 +16,14 @@ function renderSearchResults(container) {
   // 빠른 O(1) 카테고리/조직 참조용 맵 색인
   const catMap = new Map();
   const grpMap = new Map();
-  (KONGBAB_DATA.categories || []).forEach(c => {
+  (KONGBAP_DATA.categories || []).forEach(c => {
     catMap.set(c.id, c);
     if (c.hasSubgroups && Array.isArray(c.groups)) {
       c.groups.forEach(g => grpMap.set(g.id, g));
     }
   });
 
-  (KONGBAB_DATA.categories || []).forEach(cat => {
+  (KONGBAP_DATA.categories || []).forEach(cat => {
     const processMember = (member, group) => {
       if (!member) return;
       const memberKey = member.id || `${member.streamer}_${member.name}`;
@@ -350,7 +350,7 @@ function pushNavHistory() {
 
   const currentHState = window.history.state;
   if (currentHState &&
-      currentHState.isKongbabApp &&
+      currentHState.isKongbapApp &&
       currentHState.category === snapshot.category &&
       currentHState.group === snapshot.group &&
       currentHState.member === snapshot.member &&
@@ -365,7 +365,7 @@ function pushNavHistory() {
   const hState = {
     ...snapshot,
     depth: appHistoryDepth,
-    isKongbabApp: true
+    isKongbapApp: true
   };
   try {
     window.history.pushState(hState, "", url);
@@ -384,7 +384,7 @@ function replaceNavHistory() {
   const hState = {
     ...snapshot,
     depth: currentDepth,
-    isKongbabApp: true
+    isKongbapApp: true
   };
   try {
     window.history.replaceState(hState, "", url);
@@ -398,7 +398,7 @@ function applyNavState(navState, options = {}) {
   state.navigationSource = navState.source || null;
 
   const targetCatId = navState.category || "police";
-  const cat = (KONGBAB_DATA.categories || []).find(c => c.id === targetCatId) || (KONGBAB_DATA.categories || [])[0];
+  const cat = (KONGBAP_DATA.categories || []).find(c => c.id === targetCatId) || (KONGBAP_DATA.categories || [])[0];
   if (cat) {
     state.currentCategory = cat.id;
   }
@@ -434,7 +434,7 @@ function applyNavState(navState, options = {}) {
     }
     // 전역 카테고리 폴백 탐색
     if (!state.currentMember) {
-      for (const c of (KONGBAB_DATA.categories || [])) {
+      for (const c of (KONGBAP_DATA.categories || [])) {
         if (c.hasSubgroups) {
           for (const g of (c.groups || [])) {
             const m = (g.members || []).find(item => String(item.id) === String(navState.member));
@@ -494,21 +494,21 @@ function applyNavState(navState, options = {}) {
 
 function saveNavigationState() {
   try {
-    sessionStorage.setItem("kongbab_nav_category", state.currentCategory || "police");
+    sessionStorage.setItem("kongbap_nav_category", state.currentCategory || "police");
     if (state.currentGroup && state.currentGroup.id) {
-      sessionStorage.setItem("kongbab_nav_group", state.currentGroup.id);
+      sessionStorage.setItem("kongbap_nav_group", state.currentGroup.id);
     } else {
-      sessionStorage.removeItem("kongbab_nav_group");
+      sessionStorage.removeItem("kongbap_nav_group");
     }
     if (state.currentMember && state.currentMember.id) {
-      sessionStorage.setItem("kongbab_nav_member", state.currentMember.id);
+      sessionStorage.setItem("kongbap_nav_member", state.currentMember.id);
     } else {
-      sessionStorage.removeItem("kongbab_nav_member");
+      sessionStorage.removeItem("kongbap_nav_member");
     }
     if (state.navigationSource) {
-      sessionStorage.setItem("kongbab_nav_source", state.navigationSource);
+      sessionStorage.setItem("kongbap_nav_source", state.navigationSource);
     } else {
-      sessionStorage.removeItem("kongbab_nav_source");
+      sessionStorage.removeItem("kongbap_nav_source");
     }
   } catch (e) {}
 }
@@ -527,7 +527,7 @@ function restoreNavigationState() {
     let targetSource = null;
 
     // 1. 브라우저 새로고침(F5) 시 기존 history.state가 보존되어 있다면 최우선 복원
-    if (hState && hState.isKongbabApp) {
+    if (hState && hState.isKongbapApp) {
       targetCat = hState.category;
       targetGroup = hState.group;
       targetMember = hState.member;
@@ -541,24 +541,24 @@ function restoreNavigationState() {
       targetMember = urlState.member;
       targetTab = urlState.videoTab || "clip";
       targetSearch = urlState.searchQuery || "";
-      targetSource = sessionStorage.getItem("kongbab_nav_source") || null;
+      targetSource = sessionStorage.getItem("kongbap_nav_source") || null;
       appHistoryDepth = 0;
     } else {
-      targetCat = sessionStorage.getItem("kongbab_nav_category");
-      targetGroup = sessionStorage.getItem("kongbab_nav_group");
+      targetCat = sessionStorage.getItem("kongbap_nav_category");
+      targetGroup = sessionStorage.getItem("kongbap_nav_group");
       targetMember = null;
       targetSource = null;
-      try { sessionStorage.removeItem("kongbab_nav_member"); } catch(e) {}
-      try { sessionStorage.removeItem("kongbab_nav_source"); } catch(e) {}
+      try { sessionStorage.removeItem("kongbap_nav_member"); } catch(e) {}
+      try { sessionStorage.removeItem("kongbap_nav_source"); } catch(e) {}
       appHistoryDepth = 0;
     }
 
     state.navigationSource = targetSource;
 
-    if (targetCat && KONGBAB_DATA.categories.some(c => c.id === targetCat)) {
+    if (targetCat && KONGBAP_DATA.categories.some(c => c.id === targetCat)) {
       state.currentCategory = targetCat;
     } else {
-      state.currentCategory = (KONGBAB_DATA.categories[0] && KONGBAB_DATA.categories[0].id) || "police";
+      state.currentCategory = (KONGBAP_DATA.categories[0] && KONGBAP_DATA.categories[0].id) || "police";
     }
 
     const cat = getCurrentCategory();
@@ -586,7 +586,7 @@ function restoreNavigationState() {
         if (m) state.currentMember = m;
       }
       if (!state.currentMember) {
-        for (const c of (KONGBAB_DATA.categories || [])) {
+        for (const c of (KONGBAP_DATA.categories || [])) {
           if (c.hasSubgroups) {
             for (const g of (c.groups || [])) {
               const m = (g.members || []).find(item => String(item.id) === String(targetMember));
@@ -636,9 +636,9 @@ let lastMemberScrollY = null;
 let lastSelectedMemberId = null;
 
 try {
-  const savedY = sessionStorage.getItem("kongbab_member_scroll_y");
+  const savedY = sessionStorage.getItem("kongbap_member_scroll_y");
   if (savedY !== null) lastMemberScrollY = parseFloat(savedY);
-  const savedMemId = sessionStorage.getItem("kongbab_last_member_id");
+  const savedMemId = sessionStorage.getItem("kongbap_last_member_id");
   if (savedMemId) lastSelectedMemberId = savedMemId;
 } catch (e) {}
 
@@ -646,11 +646,11 @@ function recordMemberClickPosition(memberId) {
   lastMemberScrollY = window.scrollY;
   lastSelectedMemberId = memberId;
   try {
-    sessionStorage.setItem("kongbab_member_scroll_y", String(window.scrollY));
+    sessionStorage.setItem("kongbap_member_scroll_y", String(window.scrollY));
     if (memberId) {
-      sessionStorage.setItem("kongbab_last_member_id", memberId);
+      sessionStorage.setItem("kongbap_last_member_id", memberId);
     } else {
-      sessionStorage.removeItem("kongbab_last_member_id");
+      sessionStorage.removeItem("kongbap_last_member_id");
     }
   } catch (e) {}
 }
@@ -662,8 +662,8 @@ function restoreMemberScrollPosition() {
   lastMemberScrollY = null;
   lastSelectedMemberId = null;
   try {
-    sessionStorage.removeItem("kongbab_member_scroll_y");
-    sessionStorage.removeItem("kongbab_last_member_id");
+    sessionStorage.removeItem("kongbap_member_scroll_y");
+    sessionStorage.removeItem("kongbap_last_member_id");
   } catch (e) {}
 
   const doScroll = () => {
@@ -705,13 +705,13 @@ function goBackFromMember(type, targetId) {
   isSearchHistoryPushed = false;
   clearSearchInput();
   try {
-    sessionStorage.removeItem("kongbab_nav_member");
+    sessionStorage.removeItem("kongbap_nav_member");
   } catch (e) {}
 
   const wasFromLoveline = type === 'loveline' || state.navigationSource === 'loveline';
   state.navigationSource = null;
   try {
-    sessionStorage.removeItem("kongbab_nav_source");
+    sessionStorage.removeItem("kongbap_nav_source");
   } catch (e) {}
 
   if (wasFromLoveline) {
@@ -729,7 +729,7 @@ function goBackFromMember(type, targetId) {
 
   saveNavigationState();
 
-  if (window.history.state && window.history.state.isKongbabApp && (window.history.state.depth > 0)) {
+  if (window.history.state && window.history.state.isKongbapApp && (window.history.state.depth > 0)) {
     isReturningToList = true;
     window.history.back();
     setTimeout(() => {
@@ -763,15 +763,15 @@ function selectCategory(catId) {
   state.currentMember = null;
   state.navigationSource = null;
   try {
-    sessionStorage.removeItem("kongbab_nav_source");
+    sessionStorage.removeItem("kongbap_nav_source");
   } catch (e) {}
   state.searchQuery = "";
   isSearchHistoryPushed = false;
   lastMemberScrollY = null;
   lastSelectedMemberId = null;
   try {
-    sessionStorage.removeItem("kongbab_member_scroll_y");
-    sessionStorage.removeItem("kongbab_last_member_id");
+    sessionStorage.removeItem("kongbap_member_scroll_y");
+    sessionStorage.removeItem("kongbap_last_member_id");
   } catch (e) {}
   clearSearchInput();
   saveNavigationState();
@@ -788,19 +788,19 @@ function resetToCategory(catId) {
   state.currentMember = null;
   state.navigationSource = null;
   try {
-    sessionStorage.removeItem("kongbab_nav_source");
+    sessionStorage.removeItem("kongbap_nav_source");
   } catch (e) {}
   state.searchQuery = "";
   isSearchHistoryPushed = false;
   clearSearchInput();
   try {
-    sessionStorage.removeItem("kongbab_nav_member");
-    sessionStorage.removeItem("kongbab_nav_group");
+    sessionStorage.removeItem("kongbap_nav_member");
+    sessionStorage.removeItem("kongbap_nav_group");
   } catch (e) {}
 
   saveNavigationState();
 
-  if (window.history.state && window.history.state.isKongbabApp && (window.history.state.depth > 0)) {
+  if (window.history.state && window.history.state.isKongbapApp && (window.history.state.depth > 0)) {
     isReturningToCategory = true;
     window.history.back();
     setTimeout(() => {
@@ -863,12 +863,12 @@ function selectDirectMember(memberId) {
   recordMemberClickPosition(memberId);
   state.navigationSource = null;
   try {
-    sessionStorage.removeItem("kongbab_nav_source");
+    sessionStorage.removeItem("kongbap_nav_source");
   } catch (e) {}
   const cat = getCurrentCategory();
   let member = (cat?.members || []).find(m => String(m.id) === String(memberId));
   if (!member) {
-    for (const c of (KONGBAB_DATA.categories || [])) {
+    for (const c of (KONGBAP_DATA.categories || [])) {
       if (c.hasSubgroups) {
         for (const g of (c.groups || [])) {
           const found = (g.members || []).find(m => String(m.id) === String(memberId));
@@ -915,14 +915,14 @@ function selectGroupMember(memberId) {
   recordMemberClickPosition(memberId);
   state.navigationSource = null;
   try {
-    sessionStorage.removeItem("kongbab_nav_source");
+    sessionStorage.removeItem("kongbap_nav_source");
   } catch (e) {}
   let member = null;
   if (state.currentGroup) {
     member = (state.currentGroup.members || []).find(m => String(m.id) === String(memberId));
   }
   if (!member) {
-    for (const c of (KONGBAB_DATA.categories || [])) {
+    for (const c of (KONGBAP_DATA.categories || [])) {
       if (c.hasSubgroups) {
         for (const g of (c.groups || [])) {
           const found = (g.members || []).find(m => String(m.id) === String(memberId));
@@ -962,7 +962,7 @@ function selectGroupMember(memberId) {
 
 function selectGroupFromSearch(catId, groupId) {
   state.currentCategory = catId;
-  const cat = KONGBAB_DATA.categories.find(c => c.id === catId);
+  const cat = KONGBAP_DATA.categories.find(c => c.id === catId);
   if (cat?.hasSubgroups) {
     state.currentGroup = (cat.groups || []).find(g => String(g.id) === String(groupId));
     state.currentMember = null;
@@ -982,14 +982,14 @@ function selectMemberFromSearch(catId, groupId, memberId, source = null) {
   state.navigationSource = source || null;
   if (source) {
     try {
-      sessionStorage.setItem("kongbab_nav_source", source);
+      sessionStorage.setItem("kongbap_nav_source", source);
     } catch (e) {}
   } else {
     try {
-      sessionStorage.removeItem("kongbab_nav_source");
+      sessionStorage.removeItem("kongbap_nav_source");
     } catch (e) {}
   }
-  const cat = KONGBAB_DATA.categories.find(c => c.id === catId);
+  const cat = KONGBAP_DATA.categories.find(c => c.id === catId);
 
   let member = null;
   if (cat && cat.hasSubgroups && groupId) {
@@ -1003,7 +1003,7 @@ function selectMemberFromSearch(catId, groupId, memberId, source = null) {
   }
 
   if (!member) {
-    for (const c of (KONGBAB_DATA.categories || [])) {
+    for (const c of (KONGBAP_DATA.categories || [])) {
       if (c.hasSubgroups) {
         for (const g of (c.groups || [])) {
           const found = (g.members || []).find(m => String(m.id) === String(memberId));
@@ -1046,7 +1046,7 @@ function clearSearch() {
   state.searchQuery = "";
   isSearchHistoryPushed = false;
   clearSearchInput();
-  if (window.history.state && window.history.state.isKongbabApp && window.history.state.depth > 0) {
+  if (window.history.state && window.history.state.isKongbapApp && window.history.state.depth > 0) {
     window.history.back();
     return;
   }
@@ -1122,14 +1122,14 @@ function setupEventListeners() {
 
     const previousMember = state.currentMember ? state.currentMember.id : null;
     let targetNavState;
-    if (e.state && e.state.isKongbabApp) {
+    if (e.state && e.state.isKongbapApp) {
       targetNavState = { ...e.state };
       appHistoryDepth = typeof e.state.depth === "number" ? e.state.depth : 0;
     } else {
-      const savedCat = sessionStorage.getItem("kongbab_nav_category");
-      const savedGroup = sessionStorage.getItem("kongbab_nav_group");
+      const savedCat = sessionStorage.getItem("kongbap_nav_category");
+      const savedGroup = sessionStorage.getItem("kongbap_nav_group");
       targetNavState = {
-        category: savedCat || (KONGBAB_DATA.categories[0] && KONGBAB_DATA.categories[0].id) || "police",
+        category: savedCat || (KONGBAP_DATA.categories[0] && KONGBAP_DATA.categories[0].id) || "police",
         group: savedGroup || null,
         member: null,
         videoTab: "clip",

@@ -19,11 +19,11 @@ window.invalidateLeaderboardCache = invalidateLeaderboardCache;
 // 전체 멤버 목록 및 통계 데이터 추출 (고유 스트리머 기준 중복 제거 및 겸직 소속 병합)
 function getAllMembersWithLeaderboardStats() {
   if (cachedLeaderboardMembers) return cachedLeaderboardMembers;
-  if (!KONGBAB_DATA || !KONGBAB_DATA.categories) return [];
+  if (!KONGBAP_DATA || !KONGBAP_DATA.categories) return [];
 
   const memberMap = new Map();
 
-  KONGBAB_DATA.categories.forEach(cat => {
+  KONGBAP_DATA.categories.forEach(cat => {
     const processMember = (m, group) => {
       if (!m) return;
       const key = m.id || (m.streamer && m.name ? `${m.streamer}_${m.name}` : m.name);
@@ -124,9 +124,9 @@ function computeMemberLeaderboardStats(m, cat, group) {
 
   // 소속 텍스트 생성 (겸직 다중 소속 반영)
   let displayAffiliation = group ? `${group.emoji || ''} ${group.name}`.trim() : `${cat.emoji || ''} ${cat.name}`.trim();
-  if (Array.isArray(m.affiliations) && m.affiliations.length > 1 && KONGBAB_DATA && Array.isArray(KONGBAB_DATA.categories)) {
+  if (Array.isArray(m.affiliations) && m.affiliations.length > 1 && KONGBAP_DATA && Array.isArray(KONGBAP_DATA.categories)) {
     const allNames = m.affiliations.map(a => {
-      const c = KONGBAB_DATA.categories.find(cItem => cItem.id === a.category);
+      const c = KONGBAP_DATA.categories.find(cItem => cItem.id === a.category);
       if (!c) return a.category;
       if (c.hasSubgroups) {
         const g = (c.groups || []).find(grp => grp.id === a.subgroup);
@@ -950,7 +950,7 @@ function selectMemberFromLeaderboard(catId, groupId, memberName, memberId = null
   state.currentMember = null;
   state.searchQuery = "";
 
-  const cat = (KONGBAB_DATA.categories || []).find(c => c.id === catId);
+  const cat = (KONGBAP_DATA.categories || []).find(c => c.id === catId);
   if (!cat) return;
 
   const matchFn = m => (memberId && String(m.id) === String(memberId)) || m.name === memberName || m.streamer === memberName;

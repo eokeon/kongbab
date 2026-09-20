@@ -428,10 +428,10 @@ async function flushPendingCardReorderSync() {
 
   const syncPromises = [];
   if (hasGroup && typeof saveCategoryStructureToDb === "function") {
-    syncPromises.push(saveCategoryStructureToDb(KONGBAB_DATA.categories));
+    syncPromises.push(saveCategoryStructureToDb(KONGBAP_DATA.categories));
   }
   if (!isLovelineOnly && typeof syncAllStreamersToDb === "function") {
-    const allStreamers = typeof extractAllStreamersFromKongbabData === "function" ? extractAllStreamersFromKongbabData() : null;
+    const allStreamers = typeof extractAllStreamersFromKongbapData === "function" ? extractAllStreamersFromKongbapData() : null;
     if (allStreamers && allStreamers.length >= 140) {
       syncPromises.push(syncAllStreamersToDb(allStreamers));
     } else {

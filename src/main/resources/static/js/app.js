@@ -5,8 +5,8 @@ async function initializeApplication() {
   setupEventListeners();
 
   // 1. 이미 캐시된 데이터가 있다면 즉시 화면을 렌더링하여 첫 로딩 체감 속도를 0ms(즉시 표시)로 극대화
-  const hasCachedData = KONGBAB_DATA && Array.isArray(KONGBAB_DATA.categories) &&
-    KONGBAB_DATA.categories.some(c => (c.hasSubgroups ? (c.groups || []).some(g => (g.members || []).length > 0) : (c.members || []).length > 0));
+  const hasCachedData = KONGBAP_DATA && Array.isArray(KONGBAP_DATA.categories) &&
+    KONGBAP_DATA.categories.some(c => (c.hasSubgroups ? (c.groups || []).some(g => (g.members || []).length > 0) : (c.members || []).length > 0));
 
   if (hasCachedData) {
     if (typeof restoreNavigationState === "function") {
@@ -25,12 +25,12 @@ async function initializeApplication() {
       if (me.role === "admin") {
         state.currentUser = { role: "admin", username: me.username };
         const expireDuration = (me.expiresInSeconds || 3600) * 1000;
-        localStorage.setItem("kongbab_auth_user", JSON.stringify(state.currentUser));
-        localStorage.setItem("kongbab_auth_expire_at", String(Date.now() + expireDuration));
+        localStorage.setItem("kongbap_auth_user", JSON.stringify(state.currentUser));
+        localStorage.setItem("kongbap_auth_expire_at", String(Date.now() + expireDuration));
       } else {
         state.currentUser = { role: "guest", username: "게스트" };
-        localStorage.setItem("kongbab_auth_user", JSON.stringify(state.currentUser));
-        localStorage.removeItem("kongbab_auth_expire_at");
+        localStorage.setItem("kongbap_auth_user", JSON.stringify(state.currentUser));
+        localStorage.removeItem("kongbap_auth_expire_at");
       }
       renderHeaderAuth();
     }
@@ -51,10 +51,10 @@ async function initializeApplication() {
       loadedFromDb = true;
     } else if (Array.isArray(dbStreamers)) {
       if (dbStreamers.length > 0) {
-        applyStreamersToKongbabData(dbStreamers);
+        applyStreamersToKongbapData(dbStreamers);
         loadedFromDb = true;
       } else {
-        const currentList = extractAllStreamersFromKongbabData();
+        const currentList = extractAllStreamersFromKongbapData();
         if (currentList.length > 0) {
           await syncAllStreamersToDb(currentList);
         }

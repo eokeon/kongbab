@@ -718,7 +718,7 @@ async function submitMultiVideos() {
 
     // DB 및 로컬스토리지 동기화
     if (typeof syncAllStreamersToDb === "function") {
-      await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
+      await syncAllStreamersToDb(extractAllStreamersFromKongbapData());
     }
     if (typeof invalidateMemberVideoCaches === "function") {
       invalidateMemberVideoCaches(state.currentMember);
@@ -840,7 +840,7 @@ async function handleSaveVideo(e) {
 
     // 변경된 displayOrder 전체 동기화 및 DB 저장
     if (typeof syncAllStreamersToDb === "function") {
-      await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
+      await syncAllStreamersToDb(extractAllStreamersFromKongbapData());
     } else if (savedVideo) {
       await saveVideoToDb(state.currentMember.id, savedVideo);
     }
@@ -928,7 +928,7 @@ async function sortMemberVideosByDate() {
   persistData();
 
   if (typeof syncAllStreamersToDb === "function") {
-    await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
+    await syncAllStreamersToDb(extractAllStreamersFromKongbapData());
   }
 
   createBackupSnapshot(`영상 날짜순 정렬: ${state.currentMember.name}`);
@@ -993,7 +993,7 @@ async function deleteAllMemberVideos() {
       console.error("전체 영상 삭제 실패:", err);
     });
   } else if (typeof syncAllStreamersToDb === "function") {
-    syncAllStreamersToDb(extractAllStreamersFromKongbabData()).catch(err => {
+    syncAllStreamersToDb(extractAllStreamersFromKongbapData()).catch(err => {
       console.error(err);
     });
   }

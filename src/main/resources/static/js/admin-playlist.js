@@ -612,7 +612,7 @@ async function handleBatchImportPlaylist(e) {
 
     // DB 및 로컬 동기화
     if (typeof syncAllStreamersToDb === "function") {
-      await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
+      await syncAllStreamersToDb(extractAllStreamersFromKongbapData());
     }
     if (typeof invalidateMemberVideoCaches === "function") {
       invalidateMemberVideoCaches(state.currentMember);

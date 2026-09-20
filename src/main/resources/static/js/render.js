@@ -449,9 +449,9 @@ function renderCategoryTabs() {
   const secondaryContainer = document.getElementById("secondary-tabs");
 
   // 직업 카테고리 (경찰, EMS, 갱단, 사업체, 기자, 시민 등)
-  const jobCategories = KONGBAB_DATA.categories.filter(cat => cat.id !== "guide" && cat.id !== "loveline");
+  const jobCategories = KONGBAP_DATA.categories.filter(cat => cat.id !== "guide" && cat.id !== "loveline");
   // 하단 2행 탭 (가이드, 러브라인)
-  const subCategories = KONGBAB_DATA.categories.filter(cat => cat.id === "guide" || cat.id === "loveline");
+  const subCategories = KONGBAP_DATA.categories.filter(cat => cat.id === "guide" || cat.id === "loveline");
 
   function renderCategoryBtn(cat) {
     const isActive = state.currentCategory === cat.id && !state.searchQuery;
@@ -484,7 +484,7 @@ function renderCategoryTabs() {
     tabContainer.innerHTML = jobCategories.map(renderCategoryBtn).join("");
     secondaryContainer.innerHTML = subCategories.map(renderCategoryBtn).join("");
   } else {
-    tabContainer.innerHTML = KONGBAB_DATA.categories.map(renderCategoryBtn).join("");
+    tabContainer.innerHTML = KONGBAP_DATA.categories.map(renderCategoryBtn).join("");
   }
 
   const floatingContainer = document.getElementById("floating-category-tabs");
@@ -616,7 +616,7 @@ function updateFloatingCategoryNavVisibility() {
 window.updateFloatingCategoryNavVisibility = updateFloatingCategoryNavVisibility;
 
 function getCurrentCategory() {
-  return KONGBAB_DATA.categories.find(c => c.id === state.currentCategory) || KONGBAB_DATA.categories[0];
+  return KONGBAP_DATA.categories.find(c => c.id === state.currentCategory) || KONGBAP_DATA.categories[0];
 }
 
 function renderContent() {
@@ -1665,7 +1665,7 @@ function renderMemberVideos(container) {
   let affiliationsText = baseAffiliation;
   if (Array.isArray(member.affiliations) && member.affiliations.length > 1) {
     const allNames = member.affiliations.map(a => {
-      const c = KONGBAB_DATA.categories.find(catItem => catItem.id === a.category);
+      const c = KONGBAP_DATA.categories.find(catItem => catItem.id === a.category);
       if (a.subgroup && c?.groups) {
         const g = c.groups.find(grp => grp.id === a.subgroup);
         return `${c?.emoji || ''} ${g ? g.name : c?.name}`;
