@@ -644,192 +644,226 @@ function reverseMultiVideos() {
   renderMultiVideoPreviewList();
 }
 
+let isSubmittingMultiVideos = false;
 async function submitMultiVideos() {
+  if (isSubmittingMultiVideos) return;
   if (!isAdmin()) return;
   if (!state.currentMember) return;
 
-  if (typeof requireServerConnection === "function") {
-    const isConnected = await requireServerConnection("영상 다중 일괄 등록");
-    if (!isConnected) return;
+  const submitBtn = document.getElementById("btn-submit-multi-videos");
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.classList.add("opacity-50", "pointer-events-none");
   }
+  isSubmittingMultiVideos = true;
 
-  const selectedVideos = loadedMultiVideos.filter(v => v.selected !== false);
-  if (selectedVideos.length === 0) {
-    alert("등록할 영상을 1개 이상 선택해주세요.");
-    return;
-  }
-
-  const typeRadio = document.querySelector('input[name="video-multi-type"]:checked');
-  const videoType = typeRadio ? typeRadio.value : "clip";
-  const skipDuplicates = document.getElementById("video-multi-skip-duplicates")?.checked ?? true;
-
-  if (!state.currentMember.videos) state.currentMember.videos = [];
-
-  const existingUrls = new Set(
-    state.currentMember.videos.map(v => (v.url || "").trim().toLowerCase()).filter(Boolean)
-  );
-
-  let addedCount = 0;
-  let skippedCount = 0;
-
-  for (const item of selectedVideos) {
-    const cleanUrl = (item.url || "").trim();
-    if (skipDuplicates && cleanUrl && existingUrls.has(cleanUrl.toLowerCase())) {
-      skippedCount++;
-      continue;
+  try {
+    if (typeof requireServerConnection === "function") {
+      const isConnected = await requireServerConnection("영상 다중 일괄 등록");
+      if (!isConnected) return;
     }
 
-    const newVideo = {
-      id: "v-" + Date.now().toString(36) + Math.random().toString(36).substr(2, 5) + "-" + addedCount,
-      title: item.title || "영상",
-      url: item.url,
-      videoType: videoType,
-      date: item.date || getTodayDateString(),
-      duration: item.duration || "",
-      viewCount: item.viewCount !== undefined ? item.viewCount : null,
-      thumbnailUrl: item.thumbnailUrl || "",
-      description: ""
-    };
+    const selectedVideos = loadedMultiVideos.filter(v => v.selected !== false);
+    if (selectedVideos.length === 0) {
+      alert("등록할 영상을 1개 이상 선택해주세요.");
+      return;
+    }
 
-    state.currentMember.videos.push(newVideo);
-    if (cleanUrl) existingUrls.add(cleanUrl.toLowerCase());
-    addedCount++;
+    const typeRadio = document.querySelector('input[name="video-multi-type"]:checked');
+    const videoType = typeRadio ? typeRadio.value : "clip";
+    const skipDuplicates = document.getElementById("video-multi-skip-duplicates")?.checked ?? true;
+
+    if (!state.currentMember.videos) state.currentMember.videos = [];
+
+    const existingUrls = new Set(
+      state.currentMember.videos.map(v => (v.url || "").trim().toLowerCase()).filter(Boolean)
+    );
+
+    let addedCount = 0;
+    let skippedCount = 0;
+
+    for (const item of selectedVideos) {
+      const cleanUrl = (item.url || "").trim();
+      if (skipDuplicates && cleanUrl && existingUrls.has(cleanUrl.toLowerCase())) {
+        skippedCount++;
+        continue;
+      }
+
+      const newVideo = {
+        id: "v-" + Date.now().toString(36) + Math.random().toString(36).substr(2, 5) + "-" + addedCount,
+        title: item.title || "영상",
+        url: item.url,
+        videoType: videoType,
+        date: item.date || getTodayDateString(),
+        duration: item.duration || "",
+        viewCount: item.viewCount !== undefined ? item.viewCount : null,
+        thumbnailUrl: item.thumbnailUrl || "",
+        description: ""
+      };
+
+      state.currentMember.videos.push(newVideo);
+      if (cleanUrl) existingUrls.add(cleanUrl.toLowerCase());
+      addedCount++;
+    }
+
+    if (addedCount === 0) {
+      alert("선택된 영상들이 이미 등록되어 있어 추가할 새 영상이 없습니다.");
+      return;
+    }
+
+    // 추가한 순서 그대로 맨 뒤에 쌓이도록 순차적으로 displayOrder 재부여
+    state.currentMember.videos.forEach((v, idx) => {
+      v.displayOrder = idx;
+    });
+
+    // DB 및 로컬스토리지 동기화
+    if (typeof syncAllStreamersToDb === "function") {
+      await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
+    }
+    if (typeof invalidateMemberVideoCaches === "function") {
+      invalidateMemberVideoCaches(state.currentMember);
+    }
+    persistData();
+    updateStats();
+    closeVideoModal();
+
+    // 해당 탭으로 자동 전환하여 방금 추가된 영상들이 바로 보이도록 설정
+    state.currentVideoTab = videoType;
+    const container = document.getElementById("main-content");
+    if (container) renderMemberVideos(container);
+
+    let msg = `✓ ${addedCount}개 영상이 성공적으로 일괄 등록되었습니다!`;
+    if (skippedCount > 0) {
+      msg += ` (${skippedCount}개 중복 건너뜀)`;
+    }
+    showToast(msg);
+    createBackupSnapshot(`영상 다중 일괄 등록: ${state.currentMember.name} (${addedCount}개)`);
+  } finally {
+    isSubmittingMultiVideos = false;
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.classList.remove("opacity-50", "pointer-events-none");
+    }
   }
-
-  if (addedCount === 0) {
-    alert("선택된 영상들이 이미 등록되어 있어 추가할 새 영상이 없습니다.");
-    return;
-  }
-
-  // 추가한 순서 그대로 맨 뒤에 쌓이도록 순차적으로 displayOrder 재부여
-  state.currentMember.videos.forEach((v, idx) => {
-    v.displayOrder = idx;
-  });
-
-  // DB 및 로컬스토리지 동기화
-  if (typeof syncAllStreamersToDb === "function") {
-    await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
-  }
-  if (typeof invalidateMemberVideoCaches === "function") {
-    invalidateMemberVideoCaches(state.currentMember);
-  }
-  persistData();
-  updateStats();
-  closeVideoModal();
-
-  // 해당 탭으로 자동 전환하여 방금 추가된 영상들이 바로 보이도록 설정
-  state.currentVideoTab = videoType;
-  const container = document.getElementById("main-content");
-  if (container) renderMemberVideos(container);
-
-  let msg = `✓ ${addedCount}개 영상이 성공적으로 일괄 등록되었습니다!`;
-  if (skippedCount > 0) {
-    msg += ` (${skippedCount}개 중복 건너뜀)`;
-  }
-  showToast(msg);
-  createBackupSnapshot(`영상 다중 일괄 등록: ${state.currentMember.name} (${addedCount}개)`);
 }
 
 // ==========================================
 // 단일 영상 등록/수정 저장
 // ==========================================
 
+let isSavingSingleVideo = false;
 async function handleSaveVideo(e) {
   if (e) e.preventDefault();
+  if (isSavingSingleVideo) return;
   if (!isAdmin()) return;
   if (!state.currentMember) return;
 
-  if (typeof requireServerConnection === "function") {
-    const isConnected = await requireServerConnection(editingVideoId ? "영상 수정" : "영상 추가");
-    if (!isConnected) return;
+  const saveBtn = document.getElementById("btn-save-single-video") || (e?.target?.querySelector ? e.target.querySelector('button[type="submit"]') : null);
+  if (saveBtn) {
+    saveBtn.disabled = true;
+    saveBtn.classList.add("opacity-50", "pointer-events-none");
   }
+  isSavingSingleVideo = true;
 
-  const url = document.getElementById("video-form-url").value.trim();
-  const title = document.getElementById("video-form-title").value.trim();
-  const date = document.getElementById("video-form-date").value.trim() || getTodayDateString();
-  const durationInput = document.getElementById("video-form-duration");
-  const duration = durationInput ? durationInput.value.trim() : "";
-  const formDesc = document.getElementById("video-form-desc");
-  const desc = formDesc ? formDesc.value.trim() : "";
-  const typeRadio = document.querySelector('input[name="video-form-type"]:checked');
-  const videoType = typeRadio ? typeRadio.value : "clip";
+  try {
+    if (typeof requireServerConnection === "function") {
+      const isConnected = await requireServerConnection(editingVideoId ? "영상 수정" : "영상 추가");
+      if (!isConnected) return;
+    }
 
-  if (!url || !title) {
-    alert("URL과 제목을 입력해주세요.");
-    return;
-  }
+    const url = document.getElementById("video-form-url").value.trim();
+    const title = document.getElementById("video-form-title").value.trim();
+    const date = document.getElementById("video-form-date").value.trim() || getTodayDateString();
+    const durationInput = document.getElementById("video-form-duration");
+    const duration = durationInput ? durationInput.value.trim() : "";
+    const formDesc = document.getElementById("video-form-desc");
+    const desc = formDesc ? formDesc.value.trim() : "";
+    const typeRadio = document.querySelector('input[name="video-form-type"]:checked');
+    const videoType = typeRadio ? typeRadio.value : "clip";
 
-  if (!state.currentMember.videos) state.currentMember.videos = [];
+    if (!url || !title) {
+      alert("URL과 제목을 입력해주세요.");
+      return;
+    }
 
-  const thumbnailUrl = (lastFetchedVideoInfo && (lastFetchedVideoInfo.url === url || (lastFetchedVideoInfo.videoId && url.includes(lastFetchedVideoInfo.videoId))) && lastFetchedVideoInfo.thumbnailUrl)
-    ? lastFetchedVideoInfo.thumbnailUrl
-    : (editingVideoId ? (state.currentMember.videos.find(v => String(v.id) === String(editingVideoId))?.thumbnailUrl || '') : '');
+    if (!state.currentMember.videos) state.currentMember.videos = [];
 
-  const viewCount = (lastFetchedVideoInfo && (lastFetchedVideoInfo.url === url || (lastFetchedVideoInfo.videoId && url.includes(lastFetchedVideoInfo.videoId))) && lastFetchedVideoInfo.viewCount !== undefined)
-    ? lastFetchedVideoInfo.viewCount
-    : (editingVideoId ? (state.currentMember.videos.find(v => String(v.id) === String(editingVideoId))?.viewCount ?? null) : null);
+    const thumbnailUrl = (lastFetchedVideoInfo && (lastFetchedVideoInfo.url === url || (lastFetchedVideoInfo.videoId && url.includes(lastFetchedVideoInfo.videoId))) && lastFetchedVideoInfo.thumbnailUrl)
+      ? lastFetchedVideoInfo.thumbnailUrl
+      : (editingVideoId ? (state.currentMember.videos.find(v => String(v.id) === String(editingVideoId))?.thumbnailUrl || '') : '');
 
-  let savedVideo = null;
-  if (editingVideoId) {
-    const idx = state.currentMember.videos.findIndex(v => String(v.id) === String(editingVideoId));
-    if (idx !== -1) {
-      state.currentMember.videos[idx] = {
-        ...state.currentMember.videos[idx],
-        url,
+    const viewCount = (lastFetchedVideoInfo && (lastFetchedVideoInfo.url === url || (lastFetchedVideoInfo.videoId && url.includes(lastFetchedVideoInfo.videoId))) && lastFetchedVideoInfo.viewCount !== undefined)
+      ? lastFetchedVideoInfo.viewCount
+      : (editingVideoId ? (state.currentMember.videos.find(v => String(v.id) === String(editingVideoId))?.viewCount ?? null) : null);
+
+    let savedVideo = null;
+    if (editingVideoId) {
+      const idx = state.currentMember.videos.findIndex(v => String(v.id) === String(editingVideoId));
+      if (idx !== -1) {
+        state.currentMember.videos[idx] = {
+          ...state.currentMember.videos[idx],
+          url,
+          title,
+          videoType,
+          date,
+          duration,
+          description: desc,
+          ...(viewCount !== undefined && viewCount !== null ? { viewCount } : {}),
+          ...(thumbnailUrl ? { thumbnailUrl } : {})
+        };
+        savedVideo = state.currentMember.videos[idx];
+        showToast("✓ 영상이 수정되었습니다.");
+        createBackupSnapshot(`영상 수정: ${state.currentMember.name} - ${title}`);
+      }
+    } else {
+      const newVideo = {
+        id: "v-" + Date.now().toString(36) + Math.random().toString(36).substr(2, 4),
         title,
+        url,
         videoType,
         date,
         duration,
+        viewCount: viewCount ?? null,
         description: desc,
-        ...(viewCount !== undefined && viewCount !== null ? { viewCount } : {}),
+        displayOrder: state.currentMember.videos.length,
         ...(thumbnailUrl ? { thumbnailUrl } : {})
       };
-      savedVideo = state.currentMember.videos[idx];
-      showToast("✓ 영상이 수정되었습니다.");
-      createBackupSnapshot(`영상 수정: ${state.currentMember.name} - ${title}`);
+      state.currentMember.videos.push(newVideo);
+      // 추가한 순서대로 뒤에 쌓이도록 순차적으로 displayOrder 부여 (재정렬하지 않음)
+      state.currentMember.videos.forEach((v, idx) => {
+        v.displayOrder = idx;
+      });
+      savedVideo = newVideo;
+      showToast("✓ 영상이 등록되었습니다.");
+      createBackupSnapshot(`영상 추가: ${state.currentMember.name} - ${title}`);
     }
-  } else {
-    const newVideo = {
-      id: "v-" + Date.now().toString(36) + Math.random().toString(36).substr(2, 4),
-      title,
-      url,
-      videoType,
-      date,
-      duration,
-      viewCount: viewCount ?? null,
-      description: desc,
-      displayOrder: state.currentMember.videos.length,
-      ...(thumbnailUrl ? { thumbnailUrl } : {})
-    };
-    state.currentMember.videos.push(newVideo);
-    // 추가한 순서대로 뒤에 쌓이도록 순차적으로 displayOrder 부여 (재정렬하지 않음)
-    state.currentMember.videos.forEach((v, idx) => {
-      v.displayOrder = idx;
-    });
-    savedVideo = newVideo;
-    showToast("✓ 영상이 등록되었습니다.");
-    createBackupSnapshot(`영상 추가: ${state.currentMember.name} - ${title}`);
+
+    // 변경된 displayOrder 전체 동기화 및 DB 저장
+    if (typeof syncAllStreamersToDb === "function") {
+      await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
+    } else if (savedVideo) {
+      await saveVideoToDb(state.currentMember.id, savedVideo);
+    }
+
+    if (typeof invalidateMemberVideoCaches === "function") {
+      invalidateMemberVideoCaches(state.currentMember);
+    }
+    persistData();
+    updateStats();
+    closeVideoModal();
+
+    // 방금 추가/수정한 영상 탭으로 전환하여 즉시 확인 가능하도록 처리
+    state.currentVideoTab = videoType;
+
+    const container = document.getElementById("main-content");
+    if (container) renderMemberVideos(container);
+  } finally {
+    isSavingSingleVideo = false;
+    if (saveBtn) {
+      saveBtn.disabled = false;
+      saveBtn.classList.remove("opacity-50", "pointer-events-none");
+    }
   }
-
-  // 변경된 displayOrder 전체 동기화 및 DB 저장
-  if (typeof syncAllStreamersToDb === "function") {
-    await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
-  } else if (savedVideo) {
-    await saveVideoToDb(state.currentMember.id, savedVideo);
-  }
-
-  if (typeof invalidateMemberVideoCaches === "function") {
-    invalidateMemberVideoCaches(state.currentMember);
-  }
-  persistData();
-  updateStats();
-  closeVideoModal();
-
-  // 방금 추가/수정한 영상 탭으로 전환하여 즉시 확인 가능하도록 처리
-  state.currentVideoTab = videoType;
-
-  const container = document.getElementById("main-content");
-  if (container) renderMemberVideos(container);
 }
 
 async function deleteVideo(videoId) {

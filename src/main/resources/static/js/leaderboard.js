@@ -342,6 +342,21 @@ function openLeaderboardModal() {
   modal.classList.remove("hidden");
   modal.classList.add("flex");
   document.body.style.overflow = "hidden";
+
+  // 모달 오픈 시 항상 맨 위로 스크롤 초기화
+  const modalContent = document.getElementById("leaderboard-modal-content");
+  if (modalContent) {
+    modalContent.scrollTop = 0;
+    const innerScrolls = modalContent.querySelectorAll(".overflow-y-auto");
+    innerScrolls.forEach(el => { el.scrollTop = 0; });
+  }
+  requestAnimationFrame(() => {
+    if (modalContent) {
+      modalContent.scrollTop = 0;
+      const innerScrolls = modalContent.querySelectorAll(".overflow-y-auto");
+      innerScrolls.forEach(el => { el.scrollTop = 0; });
+    }
+  });
 }
 
 // 모달 닫기
@@ -352,6 +367,14 @@ function closeLeaderboardModal() {
   modal.classList.add("hidden");
   modal.classList.remove("flex");
   document.body.style.overflow = "";
+
+  // 닫을 때도 스크롤 위치 초기화
+  const modalContent = document.getElementById("leaderboard-modal-content");
+  if (modalContent) {
+    modalContent.scrollTop = 0;
+    const innerScrolls = modalContent.querySelectorAll(".overflow-y-auto");
+    innerScrolls.forEach(el => { el.scrollTop = 0; });
+  }
 }
 
 // 탭 변경
@@ -479,7 +502,7 @@ function renderGlobalStatsCards(globalStats) {
         <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-amber-400 tracking-tight leading-tight my-0.5">${globalStats.totalDurStr}</div>
         <div class="flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
           <div class="h-4 flex items-center text-zinc-400 font-medium truncate" title="전체 등록 영상 총 누적 조회수: ${globalStats.totalViews.toLocaleString()}회">
-            👁️ ${globalStats.totalViewsStr}
+            ${globalStats.totalViewsStr}
           </div>
         </div>
       </div>
@@ -499,7 +522,7 @@ function renderGlobalStatsCards(globalStats) {
         <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-red-400 tracking-tight leading-tight my-0.5">${globalStats.totalClipDurStr}</div>
         <div class="flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
           <div class="h-4 flex items-center text-zinc-400 font-medium truncate" title="편집 영상 총 조회수: ${globalStats.totalClipViews.toLocaleString()}회">
-            👁️ ${globalStats.totalClipViewsStr}
+            ${globalStats.totalClipViewsStr}
           </div>
         </div>
       </div>
@@ -519,7 +542,7 @@ function renderGlobalStatsCards(globalStats) {
         <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-indigo-400 tracking-tight leading-tight my-0.5">${globalStats.totalFullDurStr}</div>
         <div class="flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
           <div class="h-4 flex items-center text-zinc-400 font-medium truncate" title="풀 영상 총 조회수: ${globalStats.totalFullViews.toLocaleString()}회">
-            👁️ ${globalStats.totalFullViewsStr}
+            ${globalStats.totalFullViewsStr}
           </div>
         </div>
       </div>
@@ -539,7 +562,7 @@ function renderGlobalStatsCards(globalStats) {
         <div class="min-h-[24px] sm:min-h-[26px] flex items-center text-sm sm:text-lg font-bold text-amber-300 tracking-tight leading-tight my-0.5">${globalStats.totalBingeDurStr}</div>
         <div class="flex flex-col gap-0.5 text-[10px] sm:text-[11px] leading-tight">
           <div class="h-4 flex items-center text-zinc-400 font-medium truncate" title="몰아보기 총 조회수: ${globalStats.totalBingeViews.toLocaleString()}회">
-            👁️ ${globalStats.totalBingeViewsStr}
+            ${globalStats.totalBingeViewsStr}
           </div>
         </div>
       </div>
@@ -660,17 +683,17 @@ function renderLeaderboardDynamicContent() {
   // 값 포맷 헬퍼
   const getTabMetric = (m) => {
     if (currentLeaderboardTab === 'total') {
-      return { valStr: m.totalDurStr, subStr: `${m.totalCount}개 영상 · 👁️ ${m.totalViewsStr}`, sec: m.totalSec };
+      return { valStr: m.totalDurStr, subStr: '', sec: m.totalSec };
     } else if (currentLeaderboardTab === 'views') {
-      return { valStr: m.totalViewsStr, subStr: `${m.totalCount}개 영상 · ${m.totalDurStr}`, sec: m.totalViews };
+      return { valStr: m.totalViewsStr, subStr: '', sec: m.totalViews };
     } else if (currentLeaderboardTab === 'clip') {
-      return { valStr: m.clipDurStr, subStr: `${m.clipCount}개 · 👁️ ${m.clipViewsStr}`, sec: m.clipSec };
+      return { valStr: m.clipDurStr, subStr: '', sec: m.clipSec };
     } else if (currentLeaderboardTab === 'full') {
-      return { valStr: m.fullDurStr, subStr: `${m.fullCount}개 · 👁️ ${m.fullViewsStr}`, sec: m.fullSec };
+      return { valStr: m.fullDurStr, subStr: '', sec: m.fullSec };
     } else if (currentLeaderboardTab === 'binge') {
-      return { valStr: m.bingeDurStr, subStr: `${m.bingeCount}개 · 👁️ ${m.bingeViewsStr}`, sec: m.bingeSec };
+      return { valStr: m.bingeDurStr, subStr: '', sec: m.bingeSec };
     } else {
-      return { valStr: `${m.totalCount}개`, subStr: `${m.totalDurStr} · 👁️ ${m.totalViewsStr}`, sec: m.totalCount };
+      return { valStr: `${m.totalCount}개`, subStr: '', sec: m.totalCount };
     }
   };
 
@@ -734,7 +757,6 @@ function renderLeaderboardDynamicContent() {
           </div>
           <div class="w-full pt-2 border-t border-zinc-800 flex flex-col items-center">
             <span class="text-base font-bold text-white">${getTabMetric(top2).valStr}</span>
-            <span class="text-[11px] text-zinc-400">${getTabMetric(top2).subStr}</span>
           </div>
         </div>
 
@@ -766,7 +788,6 @@ function renderLeaderboardDynamicContent() {
           </div>
           <div class="w-full pt-2 border-t border-zinc-800 flex flex-col items-center">
             <span class="text-lg font-black text-amber-400">${getTabMetric(top1).valStr}</span>
-            <span class="text-xs text-zinc-400">${getTabMetric(top1).subStr}</span>
           </div>
         </div>
 
@@ -798,7 +819,6 @@ function renderLeaderboardDynamicContent() {
           </div>
           <div class="w-full pt-2 border-t border-zinc-800 flex flex-col items-center">
             <span class="text-base font-bold text-white">${getTabMetric(top3).valStr}</span>
-            <span class="text-[11px] text-zinc-400">${getTabMetric(top3).subStr}</span>
           </div>
         </div>
       </div>
@@ -812,7 +832,7 @@ function renderLeaderboardDynamicContent() {
         <div class="w-8 sm:w-12 text-center flex-shrink-0">순위</div>
         <div class="flex-1 px-2 sm:px-3">스트리머 / 인원</div>
         <div class="hidden sm:block w-36 px-2 text-left">소속</div>
-        <div class="w-28 sm:w-56 px-1.5 sm:px-2 text-right">기록 / 세부 통계</div>
+        <div class="w-28 sm:w-56 px-1.5 sm:px-2 text-right">기록</div>
         <div class="hidden sm:block w-8"></div>
       </div>
 
@@ -899,8 +919,7 @@ function renderLeaderboardDynamicContent() {
                 <div class="font-bold text-xs sm:text-sm text-white tracking-tight leading-tight">
                   ${metric.valStr}
                 </div>
-                <div class="flex items-center justify-end gap-1.5 sm:gap-2 mt-0.5 sm:mt-1">
-                  <span class="text-[10px] sm:text-[11px] text-zinc-300 font-medium">${metric.subStr}</span>
+                <div class="flex items-center justify-end mt-0.5 sm:mt-1">
                   <div class="w-16 sm:w-20 bg-zinc-800 rounded-full h-1.5 overflow-hidden hidden sm:block">
                     <div class="bg-amber-400 h-full rounded-full transition-all duration-300" style="width: ${percent}%;"></div>
                   </div>

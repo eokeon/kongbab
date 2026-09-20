@@ -94,50 +94,7 @@ let isSyncingSubscribers = false;
 let isSyncingViewCounts = false;
 let currentAdminSettingsTab = 'subscribers';
 
-function switchAdminSettingsTab(tab) {
-  currentAdminSettingsTab = tab;
-  const subTabBtn = document.getElementById("admin-tab-btn-subscribers");
-  const viewTabBtn = document.getElementById("admin-tab-btn-views");
-  const subPanel = document.getElementById("admin-panel-subscribers");
-  const viewPanel = document.getElementById("admin-panel-views");
-
-  if (tab === 'subscribers') {
-    if (subTabBtn) {
-      subTabBtn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all bg-amber-500 text-black shadow-md shadow-amber-500/20";
-    }
-    if (viewTabBtn) {
-      viewTabBtn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-semibold transition-all text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/80";
-    }
-    if (subPanel) subPanel.classList.remove("hidden");
-    if (viewPanel) viewPanel.classList.add("hidden");
-  } else {
-    if (subTabBtn) {
-      subTabBtn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-semibold transition-all text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/80";
-    }
-    if (viewTabBtn) {
-      viewTabBtn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all bg-emerald-500 text-black shadow-md shadow-emerald-500/20";
-    }
-    if (subPanel) subPanel.classList.add("hidden");
-    if (viewPanel) viewPanel.classList.remove("hidden");
-  }
-}
-
-function openAdminSettingsModal() {
-  if (!isAdmin()) {
-    alert("어드민 전용 기능입니다.");
-    return;
-  }
-
-  const modal = document.getElementById("admin-settings-modal");
-  if (!modal) return;
-
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
-  document.body.style.overflow = "hidden";
-
-  // 기본 탭 설정
-  switchAdminSettingsTab(currentAdminSettingsTab || 'subscribers');
-
+function updateAdminSettingsModalCounts() {
   // 1. 등록된 유튜브 링크(youtubeUrl)가 있는 대상 인원수 계산
   const allMembers = typeof extractAllStreamersFromKongbabData === "function" 
     ? extractAllStreamersFromKongbabData() 
@@ -155,12 +112,14 @@ function openAdminSettingsModal() {
     const logBox = document.getElementById("admin-sub-log-box");
     const btn = document.getElementById("admin-sub-sync-btn");
 
-    if (progressBar) progressBar.style.width = "0%";
-    if (progressText) progressText.textContent = `대기 중 (대상: ${targetCount}명)`;
-    if (logBox) {
+    if (progressBar && (!progressBar.style.width || progressBar.style.width === "0%")) progressBar.style.width = "0%";
+    if (progressText && (!progressText.textContent || progressText.textContent.startsWith("대기 중"))) {
+      progressText.textContent = `대기 중 (대상: ${targetCount}명)`;
+    }
+    if (logBox && (!logBox.children.length || logBox.innerHTML.includes("갱신 준비 완료"))) {
       logBox.innerHTML = `<div class="text-zinc-500 text-xs italic">갱신 준비 완료. 아래 [구독자·팔로워 수 일괄 갱신 시작] 버튼을 눌러주세요.</div>`;
     }
-    if (btn) {
+    if (btn && !btn.disabled) {
       btn.disabled = false;
       btn.innerHTML = `
         <svg class="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
@@ -197,12 +156,14 @@ function openAdminSettingsModal() {
     const logBox = document.getElementById("admin-view-log-box");
     const btn = document.getElementById("admin-view-sync-btn");
 
-    if (progressBar) progressBar.style.width = "0%";
-    if (progressText) progressText.textContent = `대기 중 (대상: ${allVideos.length}개)`;
-    if (logBox) {
+    if (progressBar && (!progressBar.style.width || progressBar.style.width === "0%")) progressBar.style.width = "0%";
+    if (progressText && (!progressText.textContent || progressText.textContent.startsWith("대기 중"))) {
+      progressText.textContent = `대기 중 (대상: ${allVideos.length}개)`;
+    }
+    if (logBox && (!logBox.children.length || logBox.innerHTML.includes("갱신 준비 완료"))) {
       logBox.innerHTML = `<div class="text-zinc-500 text-xs italic">갱신 준비 완료. 아래 [전체 영상 조회수 일괄 갱신 시작] 버튼을 눌러주세요.</div>`;
     }
-    if (btn) {
+    if (btn && !btn.disabled) {
       btn.disabled = false;
       btn.innerHTML = `
         <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
@@ -210,6 +171,54 @@ function openAdminSettingsModal() {
       `;
     }
   }
+}
+
+function switchAdminSettingsTab(tab) {
+  currentAdminSettingsTab = tab;
+  const subTabBtn = document.getElementById("admin-tab-btn-subscribers");
+  const viewTabBtn = document.getElementById("admin-tab-btn-views");
+  const subPanel = document.getElementById("admin-panel-subscribers");
+  const viewPanel = document.getElementById("admin-panel-views");
+
+  if (tab === 'subscribers') {
+    if (subTabBtn) {
+      subTabBtn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all bg-amber-500 text-black shadow-md shadow-amber-500/20";
+    }
+    if (viewTabBtn) {
+      viewTabBtn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-semibold transition-all text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/80";
+    }
+    if (subPanel) subPanel.classList.remove("hidden");
+    if (viewPanel) viewPanel.classList.add("hidden");
+  } else {
+    if (subTabBtn) {
+      subTabBtn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-semibold transition-all text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/80";
+    }
+    if (viewTabBtn) {
+      viewTabBtn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all bg-emerald-500 text-black shadow-md shadow-emerald-500/20";
+    }
+    if (subPanel) subPanel.classList.add("hidden");
+    if (viewPanel) viewPanel.classList.remove("hidden");
+  }
+
+  updateAdminSettingsModalCounts();
+}
+
+function openAdminSettingsModal() {
+  if (!isAdmin()) {
+    alert("어드민 전용 기능입니다.");
+    return;
+  }
+
+  const modal = document.getElementById("admin-settings-modal");
+  if (!modal) return;
+
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+  document.body.style.overflow = "hidden";
+
+  // 기본 탭 설정 및 인원/영상 카운트 최신화
+  switchAdminSettingsTab(currentAdminSettingsTab || 'subscribers');
+  updateAdminSettingsModalCounts();
 }
 
 function closeAdminSettingsModal() {
@@ -256,12 +265,12 @@ async function startSubscriberSync() {
 
       if (logBox) {
         const line = document.createElement("div");
-        line.className = "text-xs py-0.5 font-mono flex items-center justify-between gap-2";
+        line.className = "text-xs sm:text-[13px] py-1 font-mono flex items-center justify-between gap-3";
         const isSuccess = status.startsWith("성공");
         line.innerHTML = `
           <div class="truncate">
             <span class="text-zinc-500">[${current}/${total}]</span>
-            <span class="text-zinc-200 font-medium ml-1">${streamerName}</span>
+            <span class="text-zinc-200 font-medium ml-1.5">${streamerName}</span>
           </div>
           <span class="flex-shrink-0 ${isSuccess ? 'text-emerald-400 font-bold' : 'text-zinc-400'}">${status}</span>
         `;
@@ -330,12 +339,12 @@ async function startViewCountSync() {
 
       if (logBox) {
         const line = document.createElement("div");
-        line.className = "text-xs py-0.5 font-mono flex items-center justify-between gap-2";
+        line.className = "text-xs sm:text-[13px] py-1 font-mono flex items-center justify-between gap-3";
         const isSuccess = status.includes("성공");
         line.innerHTML = `
           <div class="truncate">
             <span class="text-zinc-500">[${current}/${total}]</span>
-            <span class="text-zinc-200 font-medium ml-1">${detailText}</span>
+            <span class="text-zinc-200 font-medium ml-1.5">${detailText}</span>
           </div>
           <span class="flex-shrink-0 ${isSuccess ? 'text-emerald-400 font-bold' : 'text-zinc-400'}">${status}</span>
         `;
@@ -345,20 +354,56 @@ async function startViewCountSync() {
     });
 
     if (res && res.success) {
+      if (progressBar) progressBar.style.width = "100%";
+      const unavailCount = res.unavailableCount || 0;
+      const failCount = res.failedCount || 0;
+      if (progressText) {
+        progressText.textContent = `완료 (성공: ${res.updatedCount.toLocaleString()}건 / 조회불가: ${unavailCount.toLocaleString()}건 / 실패: ${failCount.toLocaleString()}건)`;
+      }
       if (logBox) {
         const finishLine = document.createElement("div");
-        finishLine.className = "text-xs py-2 font-bold text-emerald-400 border-t border-zinc-800 mt-2";
+        finishLine.className = "text-xs py-3 font-mono border-t border-zinc-800 mt-2 space-y-2.5";
         const serverStatusMsg = res.hasServer 
-          ? (res.backupSynced ? "MariaDB 및 백업 스냅샷에 최신화되었습니다." : "화면에 반영 및 DB 동기화가 완료되었습니다.")
-          : "브라우저 화면 및 로컬 캐시에 즉시 반영되었습니다. (서버 미연결)";
-        finishLine.textContent = `🎉 일괄 갱신 완료! 총 ${res.updatedCount}개 영상의 조회수가 ${serverStatusMsg}`;
+          ? (res.backupSynced ? "MariaDB 및 백업 스냅샷에 최신화 저장 완료" : "화면 반영 및 DB 동기화 완료")
+          : "브라우저 화면 및 로컬 캐시에 반영 완료 (서버 미연결)";
+
+        finishLine.innerHTML = `
+          <div class="text-emerald-400 font-bold flex items-center justify-between flex-wrap gap-2 text-sm">
+            <span class="flex items-center gap-1.5">
+              <span>🎉</span>
+              <span>전체 영상 조회수 일괄 갱신 완료!</span>
+            </span>
+            <span class="text-xs font-mono text-zinc-400">
+              성공: <strong class="text-emerald-400">${res.updatedCount.toLocaleString()}건</strong> · 조회불가: <strong class="text-amber-400">${unavailCount.toLocaleString()}건</strong> · 실패: <strong class="${failCount > 0 ? 'text-red-400 font-bold' : 'text-zinc-400'}">${failCount.toLocaleString()}건</strong>
+            </span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 py-2 bg-zinc-900/90 rounded-xl px-3 border border-zinc-800/80 text-xs">
+            <div class="flex items-center justify-between sm:justify-start gap-1.5">
+              <span class="text-zinc-400">최신화 성공:</span>
+              <strong class="text-emerald-400 font-bold">${res.updatedCount.toLocaleString()}건</strong>
+            </div>
+            <div class="flex items-center justify-between sm:justify-start gap-1.5">
+              <span class="text-zinc-400">조회불가(비공개·삭제):</span>
+              <strong class="text-amber-400 font-bold">${unavailCount.toLocaleString()}건</strong>
+            </div>
+            <div class="flex items-center justify-between sm:justify-start gap-1.5">
+              <span class="text-zinc-400">실패(오류):</span>
+              <strong class="${failCount > 0 ? 'text-red-400 font-bold' : 'text-zinc-400'}">${failCount.toLocaleString()}건</strong>
+            </div>
+          </div>
+          <div class="text-zinc-400 text-[11px] leading-relaxed">
+            • 총 <strong>${res.totalCount.toLocaleString()}개</strong> 대상 영상 중 <strong class="text-emerald-400">${res.updatedCount.toLocaleString()}개</strong>의 실시간 조회수가 최신화되었습니다.<br>
+            • ${serverStatusMsg}
+          </div>
+        `;
         logBox.appendChild(finishLine);
         logBox.scrollTop = logBox.scrollHeight;
       }
+
       const backupToastMsg = res.backupSynced 
         ? `<br><span class="text-[11px] text-amber-300">💾 최신 데이터 자동 백업 완료</span>` 
         : "";
-      showToast(`🎉 전체 영상 조회수 일괄 갱신 완료 (${res.updatedCount}개)${backupToastMsg}`);
+      showToast(`🎉 영상 조회수 일괄 갱신 완료<br><span class="text-[11px] text-zinc-300">성공: ${res.updatedCount.toLocaleString()}건 · 조회불가: ${unavailCount.toLocaleString()}건 · 실패: ${failCount.toLocaleString()}건</span>${backupToastMsg}`);
     } else {
       showToast(`⚠️ 조회수 갱신 중 문제가 발생했습니다: ${res?.message || '실패'}`);
     }

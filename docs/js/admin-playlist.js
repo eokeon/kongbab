@@ -511,115 +511,132 @@ async function fetchPlaylistPreview() {
   }
 }
 
+let isSubmittingPlaylist = false;
 async function handleBatchImportPlaylist(e) {
   if (e) e.preventDefault();
+  if (isSubmittingPlaylist) return;
   if (!isAdmin()) return;
   if (!state.currentMember) return;
 
-  if (typeof requireServerConnection === "function") {
-    const isConnected = await requireServerConnection("재생목록 일괄 등록");
-    if (!isConnected) return;
+  const submitBtn = document.getElementById("btn-submit-playlist");
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.classList.add("opacity-50", "pointer-events-none");
   }
+  isSubmittingPlaylist = true;
 
-  if (!loadedPlaylistVideos || loadedPlaylistVideos.length === 0) {
-    showToast("먼저 재생목록을 불러와주세요.");
-    return;
-  }
-
-  const typeRadio = document.querySelector('input[name="playlist-form-type"]:checked');
-  const videoType = typeRadio ? typeRadio.value : "clip";
-  const skipDuplicates = document.getElementById("playlist-skip-duplicates")?.checked ?? true;
-  const keepOrder = document.getElementById("playlist-keep-order")?.checked ?? true;
-
-  // 1. 기존 영상 중 url이 없거나 'undefined'로 잘못 들어간 불량 영상 자동 정리
-  if (Array.isArray(state.currentMember.videos)) {
-    state.currentMember.videos = state.currentMember.videos.filter(v => v && v.url && v.url !== "undefined" && v.url.trim() !== "");
-  } else {
-    state.currentMember.videos = [];
-  }
-
-  const existingUrls = new Set(state.currentMember.videos.map(v => (v.url || "").trim()).filter(u => u && u !== "undefined"));
-  const existingIds = new Set(state.currentMember.videos.map(v => extractYoutubeId(v.url)).filter(Boolean));
-
-  let addedCount = 0;
-  let skippedCount = 0;
-
-  const playlistUrlInput = document.getElementById("playlist-form-url");
-  const currentPlaylistId = playlistUrlInput ? extractPlaylistId(playlistUrlInput.value) : null;
-
-  for (let i = 0; i < loadedPlaylistVideos.length; i++) {
-    const item = loadedPlaylistVideos[i];
-    const videoId = item.videoId || extractYoutubeId(item.url);
-    let videoUrl = (item.url && item.url !== "undefined") ? item.url : "";
-    if (!videoUrl) {
-      videoUrl = videoId ? (currentPlaylistId ? `https://www.youtube.com/watch?v=${videoId}&list=${currentPlaylistId}` : `https://www.youtube.com/watch?v=${videoId}`) : "";
-    } else if (currentPlaylistId && !videoUrl.includes("list=")) {
-      videoUrl = `https://www.youtube.com/watch?v=${videoId}&list=${currentPlaylistId}`;
+  try {
+    if (typeof requireServerConnection === "function") {
+      const isConnected = await requireServerConnection("재생목록 일괄 등록");
+      if (!isConnected) return;
     }
 
-    if (!videoUrl || !videoId) {
-      console.warn("유효하지 않은 영상 항목 건너뜀:", item);
-      continue;
+    if (!loadedPlaylistVideos || loadedPlaylistVideos.length === 0) {
+      showToast("먼저 재생목록을 불러와주세요.");
+      return;
     }
 
-    if (skipDuplicates && (existingUrls.has(videoUrl) || existingIds.has(videoId))) {
-      skippedCount++;
-      continue;
+    const typeRadio = document.querySelector('input[name="playlist-form-type"]:checked');
+    const videoType = typeRadio ? typeRadio.value : "clip";
+    const skipDuplicates = document.getElementById("playlist-skip-duplicates")?.checked ?? true;
+    const keepOrder = document.getElementById("playlist-keep-order")?.checked ?? true;
+
+    // 1. 기존 영상 중 url이 없거나 'undefined'로 잘못 들어간 불량 영상 자동 정리
+    if (Array.isArray(state.currentMember.videos)) {
+      state.currentMember.videos = state.currentMember.videos.filter(v => v && v.url && v.url !== "undefined" && v.url.trim() !== "");
+    } else {
+      state.currentMember.videos = [];
     }
 
-    const newVideo = {
-      id: "v-" + Date.now().toString(36) + Math.random().toString(36).substr(2, 5) + "-" + i,
-      title: item.title || "유튜브 영상",
-      url: videoUrl,
-      videoType: videoType,
-      date: item.publishedDate || getTodayDateString(),
-      duration: item.duration || "",
-      viewCount: item.viewCount !== undefined ? item.viewCount : null,
-      description: item.description || "",
-      thumbnailUrl: item.thumbnailUrl || (videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : "")
-    };
+    const existingUrls = new Set(state.currentMember.videos.map(v => (v.url || "").trim()).filter(u => u && u !== "undefined"));
+    const existingIds = new Set(state.currentMember.videos.map(v => extractYoutubeId(v.url)).filter(Boolean));
 
-    state.currentMember.videos.push(newVideo);
-    existingUrls.add(videoUrl);
-    existingIds.add(videoId);
-    addedCount++;
-  }
+    let addedCount = 0;
+    let skippedCount = 0;
 
-  if (addedCount === 0) {
-    alert("선택된 재생목록의 모든 영상이 이미 등록되어 있어 추가할 새 영상이 없습니다.");
-    return;
-  }
+    const playlistUrlInput = document.getElementById("playlist-form-url");
+    const currentPlaylistId = playlistUrlInput ? extractPlaylistId(playlistUrlInput.value) : null;
 
-  if (!keepOrder) {
-    // 사용자가 모달 순서 유지를 해제한 경우에만 전체 날짜순 정렬
-    sortVideosByDateAsc(state.currentMember.videos);
-  } else {
-    // 모달에서 지정/조정한 순서를 그대로 보존하도록 순차적으로 displayOrder 재부여
-    state.currentMember.videos.forEach((v, idx) => {
-      v.displayOrder = idx;
-    });
-  }
+    for (let i = 0; i < loadedPlaylistVideos.length; i++) {
+      const item = loadedPlaylistVideos[i];
+      const videoId = item.videoId || extractYoutubeId(item.url);
+      let videoUrl = (item.url && item.url !== "undefined") ? item.url : "";
+      if (!videoUrl) {
+        videoUrl = videoId ? (currentPlaylistId ? `https://www.youtube.com/watch?v=${videoId}&list=${currentPlaylistId}` : `https://www.youtube.com/watch?v=${videoId}`) : "";
+      } else if (currentPlaylistId && !videoUrl.includes("list=")) {
+        videoUrl = `https://www.youtube.com/watch?v=${videoId}&list=${currentPlaylistId}`;
+      }
 
-  // DB 및 로컬 동기화
-  if (typeof syncAllStreamersToDb === "function") {
-    await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
-  }
-  if (typeof invalidateMemberVideoCaches === "function") {
-    invalidateMemberVideoCaches(state.currentMember);
-  }
-  persistData();
-  updateStats();
-  closePlaylistModal();
+      if (!videoUrl || !videoId) {
+        console.warn("유효하지 않은 영상 항목 건너뜀:", item);
+        continue;
+      }
 
-  // 해당 탭으로 자동 전환하여 방금 추가된 영상들이 바로 보이도록 설정
-  state.currentVideoTab = videoType;
-  const container = document.getElementById("main-content");
-  if (container) renderMemberVideos(container);
+      if (skipDuplicates && (existingUrls.has(videoUrl) || existingIds.has(videoId))) {
+        skippedCount++;
+        continue;
+      }
 
-  let msg = `✓ ${addedCount}개 영상이 일괄 등록되었습니다!`;
-  if (skippedCount > 0) {
-    msg += ` (${skippedCount}개 중복 건너뜀)`;
+      const newVideo = {
+        id: "v-" + Date.now().toString(36) + Math.random().toString(36).substr(2, 5) + "-" + i,
+        title: item.title || "유튜브 영상",
+        url: videoUrl,
+        videoType: videoType,
+        date: item.publishedDate || getTodayDateString(),
+        duration: item.duration || "",
+        viewCount: item.viewCount !== undefined ? item.viewCount : null,
+        description: item.description || "",
+        thumbnailUrl: item.thumbnailUrl || (videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : "")
+      };
+
+      state.currentMember.videos.push(newVideo);
+      existingUrls.add(videoUrl);
+      existingIds.add(videoId);
+      addedCount++;
+    }
+
+    if (addedCount === 0) {
+      alert("선택된 재생목록의 모든 영상이 이미 등록되어 있어 추가할 새 영상이 없습니다.");
+      return;
+    }
+
+    if (!keepOrder) {
+      // 사용자가 모달 순서 유지를 해제한 경우에만 전체 날짜순 정렬
+      sortVideosByDateAsc(state.currentMember.videos);
+    } else {
+      // 모달에서 지정/조정한 순서를 그대로 보존하도록 순차적으로 displayOrder 재부여
+      state.currentMember.videos.forEach((v, idx) => {
+        v.displayOrder = idx;
+      });
+    }
+
+    // DB 및 로컬 동기화
+    if (typeof syncAllStreamersToDb === "function") {
+      await syncAllStreamersToDb(extractAllStreamersFromKongbabData());
+    }
+    if (typeof invalidateMemberVideoCaches === "function") {
+      invalidateMemberVideoCaches(state.currentMember);
+    }
+    persistData();
+    updateStats();
+    closePlaylistModal();
+
+    // 해당 탭으로 자동 전환하여 방금 추가된 영상들이 바로 보이도록 설정
+    state.currentVideoTab = videoType;
+    const container = document.getElementById("main-content");
+    if (container) renderMemberVideos(container);
+
+    let msg = `✓ ${addedCount}개 영상이 일괄 등록되었습니다!`;
+    if (skippedCount > 0) {
+      msg += ` (${skippedCount}개 중복 건너뜀)`;
+    }
+    showToast(msg);
+    createBackupSnapshot(`재생목록 일괄 등록: ${state.currentMember.name} (${addedCount}개)`);
+  } finally {
+    isSubmittingPlaylist = false;
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.classList.remove("opacity-50", "pointer-events-none");
+    }
   }
-  showToast(msg);
-  createBackupSnapshot(`재생목록 일괄 등록: ${state.currentMember.name} (${addedCount}개)`);
 }

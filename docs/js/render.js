@@ -682,20 +682,40 @@ function renderMemberCard(member, dragType, clickFn, categoryId = null, subgroup
   const admin = isAdmin();
   const cachedSub = typeof getCachedSubscriber === "function" ? getCachedSubscriber(member.id) : null;
 
+  let totalViews = 0;
+  if (Array.isArray(member.videos)) {
+    for (let i = 0; i < member.videos.length; i++) {
+      const v = member.videos[i];
+      if (v && v.viewCount != null) {
+        const vc = Number(v.viewCount);
+        if (!isNaN(vc) && vc > 0) totalViews += vc;
+      }
+    }
+  }
+
+  const viewsFormatted = typeof formatViewCount === "function"
+    ? (formatViewCount(totalViews) || `${totalViews.toLocaleString()}회`)
+    : `${totalViews.toLocaleString()}회`;
+
+  const viewTextHtml = `<span class="text-zinc-500">·</span><span class="text-zinc-300 font-bold" title="총 조회수: ${totalViews.toLocaleString()}회">${viewsFormatted}</span>`;
+
   let videoStatHtml = '';
   if (chzzkCount > 0 && ytCount > 0) {
     videoStatHtml = `
       <span>유튜브 <strong class="text-red-400 font-bold">${ytCount}개</strong></span>
-      <span class="text-zinc-600">|</span>
+      <span class="text-zinc-600">·</span>
       <span>치지직 <strong class="text-emerald-400 font-bold">${chzzkCount}개</strong></span>
+      ${viewTextHtml}
     `;
   } else if (chzzkCount > 0) {
     videoStatHtml = `
       <span>치지직 영상 <strong class="text-emerald-400 font-bold">${chzzkCount}개</strong></span>
+      ${viewTextHtml}
     `;
   } else {
     videoStatHtml = `
       <span>유튜브 영상 <strong class="text-red-400 font-bold">${ytCount}개</strong></span>
+      ${viewTextHtml}
     `;
   }
 
@@ -1136,6 +1156,7 @@ function renderSubgroupList(container, cat) {
             <span class="flex items-center gap-1.5 text-red-400 font-semibold bg-black/60 px-2 py-0.5 rounded-lg border border-white/5 shadow-inner flex-wrap">
               ${SVG_ICONS.youtube}
               <span>영상 ${totalVideos}개</span>
+              ${formattedGroupViews ? `<span class="text-zinc-500">·</span><span class="text-zinc-300 font-bold">${formattedGroupViews}</span>` : ''}
             </span>
           </div>
         </div>
@@ -1165,6 +1186,7 @@ function renderSubgroupList(container, cat) {
           <span class="flex items-center gap-1.5 text-red-400 font-semibold flex-wrap">
             ${SVG_ICONS.youtube}
             <span>영상 ${totalVideos}개</span>
+            ${formattedGroupViews ? `<span class="text-zinc-500">·</span><span class="text-zinc-300 font-bold">${formattedGroupViews}</span>` : ''}
           </span>
         </div>
       </div>
@@ -1324,7 +1346,7 @@ function renderMemberVideoTabsTopHtml(summary, currentTab) {
       <span class="text-xl sm:text-3xl font-black text-red-400 my-0.5 block tracking-tight">${clipCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
       <span class="text-[11px] sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${clipTotalDuration}</span>
       <span class="text-[10px] sm:text-xs text-zinc-300 font-semibold font-mono block bg-black/40 px-2 py-0.5 rounded-lg border border-zinc-700/50 mt-1" title="편집 영상 총 조회수: ${clipTotalViews.toLocaleString()}회">
-        👁️ 조회수 ${clipViewsFormatted}
+        조회수 ${clipViewsFormatted}
       </span>
     </button>
     <button onclick="setVideoTab('full')" title="풀 영상만 보기" class="bg-zinc-950/80 hover:bg-zinc-800/90 border ${currentTab === 'full' ? 'border-indigo-500 ring-2 ring-indigo-500/30 bg-indigo-950/20' : 'border-zinc-800'} rounded-xl sm:rounded-2xl p-2.5 sm:px-5 sm:py-3 text-center sm:min-w-[130px] transition-all cursor-pointer shadow-lg group">
@@ -1332,7 +1354,7 @@ function renderMemberVideoTabsTopHtml(summary, currentTab) {
       <span class="text-xl sm:text-3xl font-black text-indigo-400 my-0.5 block tracking-tight">${fullCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
       <span class="text-[11px] sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${fullTotalDuration}</span>
       <span class="text-[10px] sm:text-xs text-zinc-300 font-semibold font-mono block bg-black/40 px-2 py-0.5 rounded-lg border border-zinc-700/50 mt-1" title="풀 영상 총 조회수: ${fullTotalViews.toLocaleString()}회">
-        👁️ 조회수 ${fullViewsFormatted}
+        조회수 ${fullViewsFormatted}
       </span>
     </button>
     ${bingeCount > 0 ? `
@@ -1341,7 +1363,7 @@ function renderMemberVideoTabsTopHtml(summary, currentTab) {
         <span class="text-xl sm:text-3xl font-black text-amber-400 my-0.5 block tracking-tight">${bingeCount}<span class="text-xs sm:text-sm font-semibold text-zinc-300 ml-1">개</span></span>
         <span class="text-[11px] sm:text-sm text-amber-300 font-extrabold font-mono block bg-black/60 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-amber-500/30 shadow-inner mt-1">${bingeTotalDuration}</span>
         <span class="text-[10px] sm:text-xs text-zinc-300 font-semibold font-mono block bg-black/40 px-2 py-0.5 rounded-lg border border-zinc-700/50 mt-1" title="몰아보기 영상 총 조회수: ${bingeTotalViews.toLocaleString()}회">
-          👁️ 조회수 ${bingeViewsFormatted}
+          조회수 ${bingeViewsFormatted}
         </span>
       </button>
     ` : ''}
@@ -1528,7 +1550,7 @@ function renderMemberVideoCardsHtml(displayedVideos, summary, currentTab) {
               ${formattedViews ? `
                 <div class="bg-black/85 backdrop-blur-sm text-[11px] font-medium text-zinc-300 px-2 py-0.5 rounded-md flex items-center gap-1 shadow-sm" title="${viewCountNum != null ? viewCountNum.toLocaleString() + '회 시청' : ''}">
                   <svg class="w-3 h-3 text-zinc-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                  <span>조회수 ${formattedViews}</span>
+                  <span>${formattedViews}</span>
                 </div>
               ` : ''}
             </div>

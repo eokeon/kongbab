@@ -48,6 +48,11 @@ const state = {
   currentUser: { role: "guest", username: "게스트" }
 };
 
+if (typeof window !== "undefined") {
+  window.KONGBAB_DATA = KONGBAB_DATA;
+  window.state = state;
+}
+
 function isAdmin() {
   return !!(state.currentUser && state.currentUser.role === "admin");
 }
@@ -716,14 +721,20 @@ function updateStats() {
   const statEl = document.getElementById("header-stats");
   if (statEl) {
     statEl.innerHTML = `
-      <span class="inline-flex items-center gap-1.5 font-bold text-amber-400 group-hover:text-amber-300 transition-colors">
-        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
-        <span>통계</span>
-      </span>
-      <span class="text-zinc-700">|</span>
-      <span class="inline-flex items-center gap-1.5"><strong class="text-white">${totalMembers}</strong>명 인원</span>
-      <span class="text-zinc-700">|</span>
-      <span class="inline-flex items-center gap-1.5"><strong class="text-red-400">${totalVideos}</strong>개 영상</span>
+      <div class="flex items-center justify-between gap-4 sm:gap-6 w-full">
+        <div class="flex flex-col justify-center items-center sm:items-start gap-1">
+          <div class="flex items-center gap-1.5 font-bold text-xs sm:text-sm text-amber-400 group-hover:text-amber-300 transition-colors">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
+            <span>종합 통계</span>
+          </div>
+          <div class="flex items-center gap-2 text-[11px] sm:text-xs text-zinc-400">
+            <span><strong class="text-white font-semibold">${totalMembers}</strong>명 인원</span>
+            <span class="text-zinc-600">·</span>
+            <span><strong class="text-red-400 font-semibold">${totalVideos}</strong>개 영상</span>
+          </div>
+        </div>
+        <svg class="w-4 h-4 text-zinc-600 group-hover:text-amber-400 group-hover:translate-x-0.5 transition-all flex-shrink-0 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </div>
     `;
   }
 }

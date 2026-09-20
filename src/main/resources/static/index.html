@@ -123,15 +123,15 @@
   </div>
 
   <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
-    <div class="mb-5 sm:mb-6 flex flex-col gap-2.5 sm:gap-3 border-b border-zinc-800/80 pb-4 sm:pb-5">
-      <!-- 1행: 직업 탭 (좌측) & 우측 종합 통계 배너 -->
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4">
-        <div id="category-tabs" class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1 sm:py-0 flex-nowrap min-w-0 max-w-full"></div>
-        <div id="header-stats" onclick="openLeaderboardModal()" title="전체 종합 통계 보기 (클릭)" class="text-xs text-zinc-400 flex items-center justify-center sm:justify-start gap-2 sm:gap-2.5 bg-zinc-900/80 hover:bg-zinc-800/90 px-3 sm:px-4 py-2 rounded-xl border border-zinc-800 hover:border-amber-500/50 flex-shrink-0 cursor-pointer transition-all shadow-md group select-none self-center sm:self-start lg:self-auto w-full sm:w-auto"></div>
+    <div class="mb-5 sm:mb-6 flex flex-col lg:flex-row lg:items-stretch justify-between gap-3 sm:gap-4 border-b border-zinc-800/80 pb-4 sm:pb-5">
+      <!-- 직업 탭 2줄 (1행: 직업 탭, 2행: 가이드, 러브라인 탭) -->
+      <div class="flex flex-col gap-1.5 sm:gap-2 min-w-0 flex-1 justify-center">
+        <div id="category-tabs" class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5 flex-nowrap min-w-0 max-w-full"></div>
+        <div id="secondary-tabs" class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5 flex-nowrap min-w-0 max-w-full"></div>
       </div>
 
-      <!-- 2행 (아래): 가이드, 러브라인 탭 -->
-      <div id="secondary-tabs" class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5 flex-nowrap min-w-0 max-w-full"></div>
+      <!-- 우측: 종합 통계 버튼 (2줄 높이에 맞춰 확장 & 좌우 너비 확대) -->
+      <div id="header-stats" onclick="openLeaderboardModal()" title="전체 종합 통계 보기 (클릭)" class="flex items-center justify-center bg-zinc-900/80 hover:bg-zinc-800/90 px-5 sm:px-6 lg:px-7 lg:min-w-[220px] py-2 sm:py-2.5 rounded-2xl border border-zinc-800 hover:border-amber-500/50 flex-shrink-0 cursor-pointer transition-all shadow-md group select-none w-full lg:w-auto"></div>
     </div>
 
     <section id="main-content" class="animate-fade-in"></section>
@@ -380,7 +380,8 @@
           </button>
           <button 
             type="submit" 
-            class="px-5 py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-xl transition-colors cursor-pointer shadow-md shadow-red-600/30"
+            id="btn-save-single-video"
+            class="px-5 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:pointer-events-none text-white text-xs font-bold rounded-xl transition-colors cursor-pointer shadow-md shadow-red-600/30"
           >
             저장하기
           </button>
@@ -1074,31 +1075,31 @@
   <!-- 어드민 설정 모달 (유튜브 구독자 일괄 갱신 등) -->
   <!-- Admin Settings Modal (구독자 및 영상 조회수 일괄 갱신) -->
   <div id="admin-settings-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-2.5 sm:p-4 select-none" draggable="false" onclick="if(event.target === this) closeAdminSettingsModal()">
-    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl sm:rounded-3xl w-full max-w-xl max-h-[92vh] overflow-y-auto shadow-2xl p-4 sm:p-6 md:p-8 flex flex-col select-none" draggable="false">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl sm:rounded-3xl w-full max-w-3xl lg:max-w-4xl max-h-[92vh] overflow-y-auto shadow-2xl p-5 sm:p-7 md:p-8 flex flex-col select-none" draggable="false">
       <!-- 헤더 -->
-      <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-4">
+      <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-5">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-2xl bg-amber-950/80 border border-amber-600/50 flex items-center justify-center text-xl shadow-md">
+          <div class="w-11 h-11 rounded-2xl bg-amber-950/80 border border-amber-600/50 flex items-center justify-center text-2xl shadow-md">
             🛡️
           </div>
           <div>
-            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+            <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
               <span>어드민 설정 센터</span>
-              <span class="text-xs px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-500/40 font-bold">관리자 도구</span>
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-500/40 font-bold">관리자 도구</span>
             </h3>
-            <p class="text-xs text-zinc-400 mt-0.5">유튜브 구독자·팔로워 수 및 전체 영상 조회수 실시간 일괄 갱신 도구</p>
+            <p class="text-xs sm:text-sm text-zinc-400 mt-0.5">유튜브 구독자·팔로워 수 및 전체 영상 조회수 실시간 일괄 갱신 도구</p>
           </div>
         </div>
-        <button onclick="closeAdminSettingsModal()" class="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors flex-shrink-0">✕</button>
+        <button onclick="closeAdminSettingsModal()" class="w-9 h-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors flex-shrink-0 text-base">✕</button>
       </div>
 
       <!-- 탭 컨트롤 -->
-      <div class="flex items-center gap-1.5 p-1 bg-zinc-950/80 border border-zinc-800 rounded-2xl mb-5 flex-shrink-0">
+      <div class="flex items-center gap-2 p-1.5 bg-zinc-950/80 border border-zinc-800 rounded-2xl mb-5 flex-shrink-0">
         <button 
           type="button"
           id="admin-tab-btn-subscribers"
           onclick="switchAdminSettingsTab('subscribers')" 
-          class="flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all bg-amber-500 text-black shadow-md shadow-amber-500/20 flex items-center justify-center gap-1.5 cursor-pointer"
+          class="flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all bg-amber-500 text-black shadow-md shadow-amber-500/20 flex items-center justify-center gap-2 cursor-pointer"
         >
           <span>📺</span>
           <span>구독자·팔로워 갱신</span>
@@ -1107,7 +1108,7 @@
           type="button"
           id="admin-tab-btn-views"
           onclick="switchAdminSettingsTab('views')" 
-          class="flex-1 py-2 px-3 rounded-xl text-xs font-semibold transition-all text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/80 flex items-center justify-center gap-1.5 cursor-pointer"
+          class="flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/80 flex items-center justify-center gap-2 cursor-pointer"
         >
           <span>👁️</span>
           <span>전체 영상 조회수 갱신</span>
@@ -1117,48 +1118,48 @@
       <!-- 1. 구독자/팔로워 일괄 갱신 패널 -->
       <div id="admin-panel-subscribers">
         <!-- 안내 및 현황 카드 -->
-        <div class="bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-3.5 sm:p-4 mb-5 space-y-3">
-          <div class="flex items-center justify-between text-xs flex-wrap gap-2">
-            <span class="text-zinc-300 flex items-center gap-1.5 font-bold">
+        <div class="bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-4 sm:p-5 mb-5 space-y-3">
+          <div class="flex items-center justify-between text-xs sm:text-sm flex-wrap gap-2">
+            <span class="text-zinc-200 flex items-center gap-2 font-bold">
               <span>📺</span>
               <span>구독자 / 팔로워 수 일괄 갱신 기준</span>
             </span>
-            <span class="text-xs px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 font-semibold">
-              조회 대상: <strong id="admin-sub-target-count" class="text-amber-400">0명</strong>
+            <span class="text-xs sm:text-sm px-2.5 py-1 rounded-lg bg-zinc-800 text-zinc-200 font-semibold">
+              조회 대상: <strong id="admin-sub-target-count" class="text-amber-400 font-bold">0명</strong>
             </span>
           </div>
-          <p class="text-xs text-zinc-400 leading-relaxed">
+          <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed">
             • 인원 정보(정보 수정)에 등록된 <span class="text-amber-400 font-bold">유튜브 또는 치지직 공식 채널 링크</span>를 기준으로 구독자/팔로워 수를 실시간 조회 및 갱신합니다. (채널 링크가 등록된 인원만 대상)
           </p>
         </div>
 
         <!-- 실행 섹션 -->
-        <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-3.5 sm:p-4 mb-4">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
-              <span>⚡</span>
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-4 sm:p-6 mb-5 shadow-inner">
+          <div class="flex items-center justify-between mb-3.5 flex-wrap gap-2">
+            <span class="text-xs sm:text-sm font-bold text-zinc-200 uppercase tracking-wider flex items-center gap-2">
+              <span class="text-base">⚡</span>
               <span>진행 상황</span>
             </span>
-            <span id="admin-sub-progress-text" class="text-xs font-mono font-semibold text-amber-400">대기 중</span>
+            <span id="admin-sub-progress-text" class="text-sm sm:text-base font-mono font-bold text-amber-400">대기 중</span>
           </div>
 
           <!-- 프로그레스 바 -->
-          <div class="w-full h-2.5 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800 mb-4">
+          <div class="w-full h-3.5 sm:h-4 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800 mb-4 p-0.5">
             <div id="admin-sub-progress-bar" class="h-full bg-gradient-to-r from-red-600 via-amber-500 to-emerald-500 rounded-full transition-all duration-300" style="width: 0%;"></div>
           </div>
 
           <!-- 로그 출력 창 -->
-          <div id="admin-sub-log-box" class="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3 h-40 overflow-y-auto font-mono text-xs space-y-1">
+          <div id="admin-sub-log-box" class="bg-zinc-950 border border-zinc-800/80 rounded-xl p-4 h-64 sm:h-80 overflow-y-auto font-mono text-xs sm:text-[13px] leading-relaxed space-y-1.5 shadow-inner">
             <div class="text-zinc-500 italic">갱신 준비 완료. 아래 [구독자·팔로워 수 일괄 갱신 시작] 버튼을 눌러주세요.</div>
           </div>
         </div>
 
         <!-- 모달 하단 버튼 -->
-        <div class="pt-4 border-t border-zinc-800 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
+        <div class="pt-4 border-t border-zinc-800 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <button 
             type="button" 
             onclick="closeAdminSettingsModal()" 
-            class="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold rounded-xl transition-colors cursor-pointer flex items-center justify-center"
+            class="px-6 py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white text-xs sm:text-sm font-semibold rounded-xl transition-colors cursor-pointer flex items-center justify-center"
           >
             닫기
           </button>
@@ -1166,7 +1167,7 @@
             type="button" 
             id="admin-sub-sync-btn"
             onclick="startSubscriberSync()" 
-            class="px-5 py-2.5 bg-gradient-to-r from-red-600 via-amber-600 to-emerald-600 hover:from-red-500 hover:to-emerald-500 text-white text-xs font-bold rounded-xl transition-all shadow-lg shadow-red-600/25 cursor-pointer flex items-center justify-center gap-2"
+            class="px-6 py-3 bg-gradient-to-r from-red-600 via-amber-600 to-emerald-600 hover:from-red-500 hover:to-emerald-500 text-white text-xs sm:text-sm font-bold rounded-xl transition-all shadow-lg shadow-red-600/25 cursor-pointer flex items-center justify-center gap-2"
           >
             <svg class="w-4 h-4 text-white fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             <span>구독자·팔로워 수 일괄 갱신 시작</span>
@@ -1177,48 +1178,48 @@
       <!-- 2. 전체 영상 조회수 일괄 갱신 패널 -->
       <div id="admin-panel-views" class="hidden">
         <!-- 안내 및 현황 카드 -->
-        <div class="bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-3.5 sm:p-4 mb-5 space-y-3">
-          <div class="flex items-center justify-between text-xs flex-wrap gap-2">
-            <span class="text-zinc-300 flex items-center gap-1.5 font-bold">
+        <div class="bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-4 sm:p-5 mb-5 space-y-3">
+          <div class="flex items-center justify-between text-xs sm:text-sm flex-wrap gap-2">
+            <span class="text-zinc-200 flex items-center gap-2 font-bold">
               <span>👁️</span>
               <span>전체 영상 실시간 조회수 일괄 갱신 기준</span>
             </span>
-            <span class="text-xs px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 font-semibold">
-              조회 대상: <strong id="admin-view-target-count" class="text-emerald-400">0개</strong> <span class="text-zinc-500 text-[10px] font-mono">(유튜브 <span id="admin-view-yt-count">0</span> · 치지직 <span id="admin-view-chzzk-count">0</span>)</span>
+            <span class="text-xs sm:text-sm px-2.5 py-1 rounded-lg bg-zinc-800 text-zinc-200 font-semibold">
+              조회 대상: <strong id="admin-view-target-count" class="text-emerald-400 font-bold">0개</strong> <span class="text-zinc-500 text-xs font-mono">(유튜브 <span id="admin-view-yt-count">0</span> · 치지직 <span id="admin-view-chzzk-count">0</span>)</span>
             </span>
           </div>
-          <p class="text-xs text-zinc-400 leading-relaxed">
+          <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed">
             • 공식 <span class="text-emerald-400 font-bold">YouTube Data API v3</span>(50개 묶음 초고속 배치) 및 <span class="text-[#00ffa3] font-bold">치지직 VOD API</span>를 통해 아카이브에 등록된 모든 영상의 실시간 조회수를 단 2~3초 만에 최신 수치로 동기화합니다.
           </p>
         </div>
 
         <!-- 실행 섹션 -->
-        <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-3.5 sm:p-4 mb-4">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
-              <span>⚡</span>
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-4 sm:p-6 mb-5 shadow-inner">
+          <div class="flex items-center justify-between mb-3.5 flex-wrap gap-2">
+            <span class="text-xs sm:text-sm font-bold text-zinc-200 uppercase tracking-wider flex items-center gap-2">
+              <span class="text-base">⚡</span>
               <span>진행 상황</span>
             </span>
-            <span id="admin-view-progress-text" class="text-xs font-mono font-semibold text-emerald-400">대기 중</span>
+            <span id="admin-view-progress-text" class="text-sm sm:text-base font-mono font-bold text-emerald-400">대기 중</span>
           </div>
 
           <!-- 프로그레스 바 -->
-          <div class="w-full h-2.5 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800 mb-4">
+          <div class="w-full h-3.5 sm:h-4 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800 mb-4 p-0.5">
             <div id="admin-view-progress-bar" class="h-full bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-400 rounded-full transition-all duration-300" style="width: 0%;"></div>
           </div>
 
           <!-- 로그 출력 창 -->
-          <div id="admin-view-log-box" class="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3 h-40 overflow-y-auto font-mono text-xs space-y-1">
+          <div id="admin-view-log-box" class="bg-zinc-950 border border-zinc-800/80 rounded-xl p-4 h-64 sm:h-80 overflow-y-auto font-mono text-xs sm:text-[13px] leading-relaxed space-y-1.5 shadow-inner">
             <div class="text-zinc-500 italic">갱신 준비 완료. 아래 [전체 영상 조회수 일괄 갱신 시작] 버튼을 눌러주세요.</div>
           </div>
         </div>
 
         <!-- 모달 하단 버튼 -->
-        <div class="pt-4 border-t border-zinc-800 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
+        <div class="pt-4 border-t border-zinc-800 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <button 
             type="button" 
             onclick="closeAdminSettingsModal()" 
-            class="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold rounded-xl transition-colors cursor-pointer flex items-center justify-center"
+            class="px-6 py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white text-xs sm:text-sm font-semibold rounded-xl transition-colors cursor-pointer flex items-center justify-center"
           >
             닫기
           </button>
@@ -1226,7 +1227,7 @@
             type="button" 
             id="admin-view-sync-btn"
             onclick="startViewCountSync()" 
-            class="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold rounded-xl transition-all shadow-lg shadow-emerald-600/25 cursor-pointer flex items-center justify-center gap-2"
+            class="px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs sm:text-sm font-bold rounded-xl transition-all shadow-lg shadow-emerald-600/25 cursor-pointer flex items-center justify-center gap-2"
           >
             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
             <span>전체 영상 조회수 일괄 갱신 시작</span>
@@ -1269,22 +1270,22 @@
     </div>
   </div>
 
-  <script src="./js/state.js?v=20260920_views_sync_v2"></script>
-  <script src="./js/api.js?v=20260920_views_sync_v2"></script>
-  <script src="./js/subscriber-sync.js?v=20260920_views_sync_v2"></script>
-  <script src="./js/viewcount-sync.js?v=20260920_views_sync_v2"></script>
-  <script src="./js/drag-drop.js?v=20260920_views_sync_v2"></script>
-  <script src="./js/backup.js?v=20260920_views_sync_v2"></script>
-  <script src="./js/admin-video.js?v=20260920_views_sync_v2"></script>
-  <script src="./js/admin-member.js?v=20260920_views_sync_v2"></script>
-  <script src="./js/admin-playlist.js?v=20260920_views_sync_v2"></script>
-  <script src="./js/admin-analytics.js?v=20260920_views_sync_v2"></script>
-  <script src="./js/admin.js?v=20260920_views_sync_v2"></script>
-  <script src="./js/render.js?v=20260920_views_sync_v2"></script>
-  <script src="./js/navigation.js?v=20260920_views_sync_v2"></script>
-  <script src="./js/leaderboard.js?v=20260920_views_sync_v2"></script>
-  <script src="./js/loveline.js?v=20260920_views_sync_v2"></script>
-  <script src="./js/app.js?v=20260920_views_sync_v2"></script>
+  <script src="./js/state.js?v=20260920_views_sync_v15"></script>
+  <script src="./js/api.js?v=20260920_views_sync_v15"></script>
+  <script src="./js/subscriber-sync.js?v=20260920_views_sync_v15"></script>
+  <script src="./js/viewcount-sync.js?v=20260920_views_sync_v15"></script>
+  <script src="./js/drag-drop.js?v=20260920_views_sync_v15"></script>
+  <script src="./js/backup.js?v=20260920_views_sync_v15"></script>
+  <script src="./js/admin-video.js?v=20260920_views_sync_v15"></script>
+  <script src="./js/admin-member.js?v=20260920_views_sync_v15"></script>
+  <script src="./js/admin-playlist.js?v=20260920_views_sync_v15"></script>
+  <script src="./js/admin-analytics.js?v=20260920_views_sync_v15"></script>
+  <script src="./js/admin.js?v=20260920_views_sync_v15"></script>
+  <script src="./js/render.js?v=20260920_views_sync_v15"></script>
+  <script src="./js/navigation.js?v=20260920_views_sync_v15"></script>
+  <script src="./js/leaderboard.js?v=20260920_views_sync_v15"></script>
+  <script src="./js/loveline.js?v=20260920_views_sync_v15"></script>
+  <script src="./js/app.js?v=20260920_views_sync_v15"></script>
   <script>
     // 데이터 및 저작권 보호 안내
     console.log(

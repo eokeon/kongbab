@@ -30,7 +30,11 @@ public class ChzzkService {
 
     public ChzzkService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+        var factory = new org.springframework.http.client.SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(java.time.Duration.ofSeconds(3));
+        factory.setReadTimeout(java.time.Duration.ofSeconds(4));
         this.restClient = RestClient.builder()
+                .requestFactory(factory)
                 .defaultHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
                 .build();
     }
