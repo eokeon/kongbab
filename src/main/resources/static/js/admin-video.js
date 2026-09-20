@@ -435,7 +435,7 @@ async function handleFetchMultiVideos() {
 
   const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
     ? getEffectiveYouTubeApiKey() 
-    : (localStorage.getItem("youtube_api_key") || "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA");
+    : (localStorage.getItem("youtube_api_key") || "AIzaSyCV5H0pcS3oz28AZS2oO3LiilfTZ3mUubo");
 
   // URL들을 YouTube와 Chzzk로 분류
   const items = [];

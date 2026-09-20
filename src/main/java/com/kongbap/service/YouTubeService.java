@@ -22,6 +22,10 @@ public class YouTubeService {
     @Value("${youtube.api.key:}")
     private String apiKey;
 
+    public String getApiKey() {
+        return apiKey;
+    }
+
     private final RestClient restClient;
     private final ObjectMapper objectMapper;
 

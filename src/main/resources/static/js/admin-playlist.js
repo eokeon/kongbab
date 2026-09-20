@@ -105,7 +105,7 @@ async function apiGetPlaylistInfo(urlOrId) {
     if (videoIds.length > 0) {
       const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
         ? getEffectiveYouTubeApiKey() 
-        : (localStorage.getItem("youtube_api_key") || "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA");
+        : (localStorage.getItem("youtube_api_key") || "AIzaSyCV5H0pcS3oz28AZS2oO3LiilfTZ3mUubo");
       const fetchedVideos = [];
       for (let i = 0; i < videoIds.length; i += 50) {
         const chunk = videoIds.slice(i, i + 50);
@@ -173,7 +173,7 @@ async function apiGetPlaylistInfo(urlOrId) {
     try {
       const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
         ? getEffectiveYouTubeApiKey() 
-        : (localStorage.getItem("youtube_api_key") || "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA");
+        : (localStorage.getItem("youtube_api_key") || "AIzaSyCV5H0pcS3oz28AZS2oO3LiilfTZ3mUubo");
       let pageToken = "";
 
       for (let p = 0; p < 6; p++) {
@@ -224,7 +224,7 @@ async function apiGetPlaylistInfo(urlOrId) {
   try {
     const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
       ? getEffectiveYouTubeApiKey() 
-      : (localStorage.getItem("youtube_api_key") || "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA");
+      : (localStorage.getItem("youtube_api_key") || "AIzaSyCV5H0pcS3oz28AZS2oO3LiilfTZ3mUubo");
     const vIds = videos.map(v => v.videoId || extractYoutubeId(v.url)).filter(Boolean);
 
     for (let i = 0; i < vIds.length; i += 50) {

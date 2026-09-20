@@ -51,9 +51,23 @@ public class GoogleAnalyticsService {
     private static final long CACHE_TTL_MS = 180_000L;
     private static final long FORCE_REFRESH_COOLDOWN_MS = 10_000L;
 
+    // 전체 누적 기준 시작일 (모든 기간 데이터 영구 누적)
+    private static final String ALL_TIME_START_DATE = "2020-01-01";
+    private static final String ACCUMULATED_STATS_FILE = "src/main/resources/analytics-accumulated.json";
+    private static final String BUILD_ACCUMULATED_STATS_FILE = "build/resources/main/analytics-accumulated.json";
+
     private volatile Map<String, Object> cachedSummary;
     private volatile long cacheExpiryTime = 0;
     private volatile long lastFetchTime = 0;
+
+    @jakarta.annotation.PostConstruct
+    public void init() {
+        Map<String, Object> loaded = loadAccumulatedStats();
+        if (loaded != null) {
+            this.cachedSummary = loaded;
+            log.info("저장된 GA4 전체 누적 통계 데이터를 성공적으로 로드했습니다.");
+        }
+    }
 
     // 실시간 사용자 단독 조회용 10초 캐시
     private static final long REALTIME_CACHE_TTL_MS = 10_000L;
@@ -259,10 +273,17 @@ public class GoogleAnalyticsService {
                 lastFetchTime = currentNow;
                 cacheExpiryTime = currentNow + CACHE_TTL_MS;
 
-                log.info("GA4 방문자 통계 배치 조회 완료: {}ms 소요 (실시간 유저: {}명)", result.get("elapsedMs"), realtimeUsers);
+                saveAccumulatedStats(result);
+
+                log.info("GA4 전체 누적 방문자 통계 배치 조회 완료: {}ms 소요 (실시간 유저: {}명)", result.get("elapsedMs"), realtimeUsers);
 
             } catch (Exception e) {
                 log.error("Google Analytics 배치 조회 실패: {}", e.getMessage(), e);
+                Map<String, Object> loaded = loadAccumulatedStats();
+                if (loaded != null) {
+                    log.info("GA4 API 호출 실패로 저장된 전체 누적 통계 파일 데이터 반환");
+                    return loaded;
+                }
                 result.put("success", false);
                 result.put("message", "구글 애널리틱스 통계 조회 실패: " + e.getMessage());
                 result.put("hint", "구글 애널리틱스 관리자 페이지에서 서비스 계정(konbab-reader@kongbap.iam.gserviceaccount.com)이 뷰어로 추가되었는지 확인해 주세요.");
@@ -270,6 +291,41 @@ public class GoogleAnalyticsService {
 
             return result;
         }
+    }
+
+    private void saveAccumulatedStats(Map<String, Object> data) {
+        if (data == null || !Boolean.TRUE.equals(data.get("success"))) return;
+        try {
+            byte[] bytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(data);
+            File f1 = new File(ACCUMULATED_STATS_FILE);
+            if (f1.getParentFile() != null && !f1.getParentFile().exists()) {
+                f1.getParentFile().mkdirs();
+            }
+            java.nio.file.Files.write(f1.toPath(), bytes);
+
+            File f2 = new File(BUILD_ACCUMULATED_STATS_FILE);
+            if (f2.getParentFile() != null && f2.getParentFile().exists()) {
+                java.nio.file.Files.write(f2.toPath(), bytes);
+            }
+            log.info("GA4 전체 누적 통계 파일 저장 완료 ({})", ACCUMULATED_STATS_FILE);
+        } catch (Exception e) {
+            log.warn("누적 통계 파일 저장 실패: {}", e.getMessage());
+        }
+    }
+
+    private Map<String, Object> loadAccumulatedStats() {
+        try {
+            File f = new File(ACCUMULATED_STATS_FILE);
+            if (!f.exists()) {
+                f = new File(BUILD_ACCUMULATED_STATS_FILE);
+            }
+            if (f.exists()) {
+                return objectMapper.readValue(f, new com.fasterxml.jackson.core.type.TypeReference<Map<String, Object>>() {});
+            }
+        } catch (Exception e) {
+            log.warn("누적 통계 파일 로딩 실패: {}", e.getMessage());
+        }
+        return null;
     }
 
     private JsonNode executeBatch(String batchName, HttpHeaders headers, ObjectNode batchBody) {
@@ -292,9 +348,9 @@ public class GoogleAnalyticsService {
         ObjectNode batch = objectMapper.createObjectNode();
         ArrayNode reqs = batch.putArray("requests");
 
-        // 0. Overview
+        // 0. Overview (전체 기간 누적 집계)
         ObjectNode rOverview = reqs.addObject();
-        rOverview.putArray("dateRanges").addObject().put("startDate", "30daysAgo").put("endDate", "today");
+        rOverview.putArray("dateRanges").addObject().put("startDate", ALL_TIME_START_DATE).put("endDate", "today");
         ArrayNode mOverview = rOverview.putArray("metrics");
         mOverview.addObject().put("name", "totalUsers");
         mOverview.addObject().put("name", "newUsers");
@@ -303,9 +359,9 @@ public class GoogleAnalyticsService {
         mOverview.addObject().put("name", "userEngagementDuration");
         mOverview.addObject().put("name", "bounceRate");
 
-        // 1. Daily
+        // 1. Daily (최근 30일간 일별 추이)
         ObjectNode rDaily = reqs.addObject();
-        rDaily.putArray("dateRanges").addObject().put("startDate", "14daysAgo").put("endDate", "today");
+        rDaily.putArray("dateRanges").addObject().put("startDate", "30daysAgo").put("endDate", "today");
         rDaily.putArray("dimensions").addObject().put("name", "date");
         ArrayNode mDaily = rDaily.putArray("metrics");
         mDaily.addObject().put("name", "totalUsers");
@@ -315,38 +371,38 @@ public class GoogleAnalyticsService {
         oDaily.putObject("dimension").put("dimensionName", "date");
         oDaily.put("desc", false);
 
-        // 2. Sources
+        // 2. Sources (전체 기간 누적 유입 경로)
         ObjectNode rSources = reqs.addObject();
-        rSources.putArray("dateRanges").addObject().put("startDate", "30daysAgo").put("endDate", "today");
+        rSources.putArray("dateRanges").addObject().put("startDate", ALL_TIME_START_DATE).put("endDate", "today");
         rSources.putArray("dimensions").addObject().put("name", "sessionSource");
         ArrayNode mSources = rSources.putArray("metrics");
         mSources.addObject().put("name", "totalUsers");
         mSources.addObject().put("name", "sessions");
-        rSources.put("limit", 10);
+        rSources.put("limit", 30);
         ObjectNode oSources = rSources.putArray("orderBys").addObject();
         oSources.putObject("metric").put("metricName", "totalUsers");
         oSources.put("desc", true);
 
-        // 3. Devices
+        // 3. Devices (전체 기간 누적 기기별 분류)
         ObjectNode rDevices = reqs.addObject();
-        rDevices.putArray("dateRanges").addObject().put("startDate", "30daysAgo").put("endDate", "today");
+        rDevices.putArray("dateRanges").addObject().put("startDate", ALL_TIME_START_DATE).put("endDate", "today");
         rDevices.putArray("dimensions").addObject().put("name", "deviceCategory");
         ArrayNode mDevices = rDevices.putArray("metrics");
         mDevices.addObject().put("name", "totalUsers");
         mDevices.addObject().put("name", "sessions");
-        rDevices.put("limit", 5);
+        rDevices.put("limit", 10);
         ObjectNode oDevices = rDevices.putArray("orderBys").addObject();
         oDevices.putObject("metric").put("metricName", "totalUsers");
         oDevices.put("desc", true);
 
-        // 4. Top Pages
+        // 4. Top Pages (전체 기간 누적 인기 페이지)
         ObjectNode rPages = reqs.addObject();
-        rPages.putArray("dateRanges").addObject().put("startDate", "30daysAgo").put("endDate", "today");
+        rPages.putArray("dateRanges").addObject().put("startDate", ALL_TIME_START_DATE).put("endDate", "today");
         rPages.putArray("dimensions").addObject().put("name", "pagePath");
         ArrayNode mPages = rPages.putArray("metrics");
         mPages.addObject().put("name", "screenPageViews");
         mPages.addObject().put("name", "totalUsers");
-        rPages.put("limit", 10);
+        rPages.put("limit", 30);
         ObjectNode oPages = rPages.putArray("orderBys").addObject();
         oPages.putObject("metric").put("metricName", "screenPageViews");
         oPages.put("desc", true);
@@ -358,39 +414,39 @@ public class GoogleAnalyticsService {
         ObjectNode batch = objectMapper.createObjectNode();
         ArrayNode reqs = batch.putArray("requests");
 
-        // 0. OS
+        // 0. OS (전체 기간 누적 운영체제)
         ObjectNode rOs = reqs.addObject();
-        rOs.putArray("dateRanges").addObject().put("startDate", "30daysAgo").put("endDate", "today");
+        rOs.putArray("dateRanges").addObject().put("startDate", ALL_TIME_START_DATE).put("endDate", "today");
         rOs.putArray("dimensions").addObject().put("name", "operatingSystem");
         rOs.putArray("metrics").addObject().put("name", "totalUsers");
-        rOs.put("limit", 8);
+        rOs.put("limit", 20);
         ObjectNode oOs = rOs.putArray("orderBys").addObject();
         oOs.putObject("metric").put("metricName", "totalUsers");
         oOs.put("desc", true);
 
-        // 1. Browsers
+        // 1. Browsers (전체 기간 누적 브라우저)
         ObjectNode rBrowsers = reqs.addObject();
-        rBrowsers.putArray("dateRanges").addObject().put("startDate", "30daysAgo").put("endDate", "today");
+        rBrowsers.putArray("dateRanges").addObject().put("startDate", ALL_TIME_START_DATE).put("endDate", "today");
         rBrowsers.putArray("dimensions").addObject().put("name", "browser");
         rBrowsers.putArray("metrics").addObject().put("name", "totalUsers");
-        rBrowsers.put("limit", 8);
+        rBrowsers.put("limit", 20);
         ObjectNode oBrowsers = rBrowsers.putArray("orderBys").addObject();
         oBrowsers.putObject("metric").put("metricName", "totalUsers");
         oBrowsers.put("desc", true);
 
-        // 2. Cities
+        // 2. Cities (전체 기간 누적 접속 지역 - 상위 50개 도시)
         ObjectNode rCities = reqs.addObject();
-        rCities.putArray("dateRanges").addObject().put("startDate", "30daysAgo").put("endDate", "today");
+        rCities.putArray("dateRanges").addObject().put("startDate", ALL_TIME_START_DATE).put("endDate", "today");
         rCities.putArray("dimensions").addObject().put("name", "city");
         rCities.putArray("metrics").addObject().put("name", "totalUsers");
-        rCities.put("limit", 10);
+        rCities.put("limit", 50);
         ObjectNode oCities = rCities.putArray("orderBys").addObject();
         oCities.putObject("metric").put("metricName", "totalUsers");
         oCities.put("desc", true);
 
-        // 3. Hourly
+        // 3. Hourly (최근 30일간 시간대별 분포)
         ObjectNode rHourly = reqs.addObject();
-        rHourly.putArray("dateRanges").addObject().put("startDate", "14daysAgo").put("endDate", "today");
+        rHourly.putArray("dateRanges").addObject().put("startDate", "30daysAgo").put("endDate", "today");
         rHourly.putArray("dimensions").addObject().put("name", "hour");
         ArrayNode mHourly = rHourly.putArray("metrics");
         mHourly.addObject().put("name", "totalUsers");

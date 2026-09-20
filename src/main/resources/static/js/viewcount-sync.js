@@ -80,7 +80,7 @@ async function executeViewCountSync(onProgress) {
 
   const apiKey = typeof getEffectiveYouTubeApiKey === "function"
     ? getEffectiveYouTubeApiKey()
-    : (localStorage.getItem("youtube_api_key") || "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA");
+    : (localStorage.getItem("youtube_api_key") || "AIzaSyCV5H0pcS3oz28AZS2oO3LiilfTZ3mUubo");
 
   // 유튜브 / 치지직 / 기타 분류
   const ytItems = [];

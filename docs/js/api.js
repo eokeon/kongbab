@@ -604,15 +604,48 @@ async function apiGetYouTubeInfo(url) {
     console.warn("백엔드 YouTube API 조회 실패, 프론트 대체 조회 진행:", e);
   }
 
-const YOUTUBE_DEFAULT_API_KEY = "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA";
+const YOUTUBE_DEFAULT_API_KEY = "AIzaSyCV5H0pcS3oz28AZS2oO3LiilfTZ3mUubo";
+let backendYouTubeApiKey = "";
+
+async function initYouTubeApiKeyFromBackend() {
+  if (backendYouTubeApiKey) return backendYouTubeApiKey;
+  try {
+    const headers = typeof getAuthHeaders === "function" ? getAuthHeaders() : {};
+    const res = await fetch(`${API_BASE}/api/youtube/key`, {
+      credentials: "include",
+      headers
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.apiKey && data.apiKey.trim()) {
+        backendYouTubeApiKey = data.apiKey.trim();
+        return backendYouTubeApiKey;
+      }
+    } else {
+      console.warn("YouTube API 키 조회 비정상 응답:", res.status);
+    }
+  } catch (e) {
+    console.warn("YouTube API 키 백엔드 연동 오류:", e);
+  }
+  return "";
+}
+window.initYouTubeApiKeyFromBackend = initYouTubeApiKeyFromBackend;
+if (typeof window !== "undefined") {
+  initYouTubeApiKeyFromBackend();
+}
 
 function getEffectiveYouTubeApiKey() {
   try {
     const stored = localStorage.getItem("youtube_api_key");
-    if (stored && stored.trim() && stored.trim() !== "AIzaSyAyY4g9-iwjwQNXb5F9Xx0LLGtLUEpowl8") {
+    if (stored && stored.trim() && 
+        stored.trim() !== "AIzaSyAyY4g9-iwjwQNXb5F9Xx0LLGtLUEpowl8" &&
+        stored.trim() !== "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA") {
       return stored.trim();
     }
   } catch (e) {}
+  if (backendYouTubeApiKey && backendYouTubeApiKey.trim()) {
+    return backendYouTubeApiKey.trim();
+  }
   return YOUTUBE_DEFAULT_API_KEY;
 }
 window.getEffectiveYouTubeApiKey = getEffectiveYouTubeApiKey;

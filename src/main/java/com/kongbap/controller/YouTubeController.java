@@ -44,4 +44,10 @@ public class YouTubeController {
         java.util.List<YouTubeInfoDto> list = youtubeService.getPlaylistVideos(query);
         return ResponseEntity.ok(list);
     }
+
+    @GetMapping("/key")
+    public ResponseEntity<java.util.Map<String, String>> getApiKey() {
+        String key = youtubeService.getApiKey();
+        return ResponseEntity.ok(java.util.Map.of("apiKey", key != null ? key : ""));
+    }
 }

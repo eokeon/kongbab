@@ -266,7 +266,7 @@ async function fetchMemberSubscriberFromYouTube(member) {
   // 2) 유튜브 채널 구독자 조회
   const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
     ? getEffectiveYouTubeApiKey() 
-    : (localStorage.getItem("youtube_api_key") || "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA");
+    : (localStorage.getItem("youtube_api_key") || "AIzaSyCV5H0pcS3oz28AZS2oO3LiilfTZ3mUubo");
   if (!apiKey) return null;
 
   const handleCache = getHandleChannelCache();
@@ -368,6 +368,10 @@ async function executeSubscriberSync(onProgress) {
     if (!isConnected) return 0;
   }
 
+  if (typeof initYouTubeApiKeyFromBackend === "function") {
+    await initYouTubeApiKeyFromBackend();
+  }
+
   const allMembers = extractAllStreamersFromKongbapData();
   // 대상: 오직 인원 정보에 유튜브 또는 치지직 링크(youtubeUrl)가 등록된 인원만 대상
   const targets = allMembers.filter(m => m.youtubeUrl && m.youtubeUrl.trim());
@@ -396,9 +400,16 @@ async function executeSubscriberSync(onProgress) {
 
   const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
     ? getEffectiveYouTubeApiKey() 
-    : (localStorage.getItem("youtube_api_key") || "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA");
+    : (localStorage.getItem("youtube_api_key") || "AIzaSyCV5H0pcS3oz28AZS2oO3LiilfTZ3mUubo");
   if (!apiKey && ytItems.length > 0) {
-    throw new Error("유튜브 API 키가 설정되지 않았습니다.");
+    if (chzzkItems.length === 0) {
+      throw new Error("유튜브 API 키가 설정되지 않았습니다. 관리자 설정에서 유튜브 API 키를 등록해주세요.");
+    } else {
+      console.warn("[Subscriber Sync] 유튜브 API 키가 설정되지 않아 치지직 채널만 우선 갱신합니다.");
+      if (onProgress) {
+        onProgress(0, targetItems.length, "유튜브 채널", "⚠️ API 키 미설정 (치지직 우선 진행)");
+      }
+    }
   }
 
   // --- 1-1단계: 치지직 채널 병렬 동시 사전 조회 (동시 8개 요청 풀) ---
@@ -617,7 +628,8 @@ async function executeSubscriberSync(onProgress) {
       const platformPrefix = isChzzk ? "치지직 팔로워" : "유튜브 구독자";
       if (onProgress) onProgress(processedCount, targetItems.length, m.streamer, `성공 (${platformPrefix} ${subStr})`);
     } else {
-      if (onProgress) onProgress(processedCount, targetItems.length, m.streamer, "조회 실패/비공개");
+      const failReason = (!isChzzk && !apiKey) ? "API 키 미설정" : "조회 실패/비공개";
+      if (onProgress) onProgress(processedCount, targetItems.length, m.streamer, failReason);
     }
 
     // 부드러운 UI 갱신을 위해 초단위 미세 틱 양보 (15ms)

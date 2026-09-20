@@ -45,7 +45,7 @@ public class BatchViewCountSyncTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Value("${youtube.api.key:AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA}")
+    @Value("${youtube.api.key:}")
     private String youtubeApiKey;
 
     private static final String STATIC_JSON_PATH = "src/main/resources/static/streamers.json";
