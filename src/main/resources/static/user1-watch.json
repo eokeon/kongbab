@@ -1,0 +1,53 @@
+{
+  "exportedAt" : "2026-09-22T05:57:49.716932",
+  "username" : "user1",
+  "summary" : {
+    "username" : "user1",
+    "totalWatchedSeconds" : 37232,
+    "totalWatchedHours" : 10.3,
+    "totalWatchedDurationFormatted" : "10시간 20분",
+    "totalWatchedMembers" : 2,
+    "totalWatchedSections" : 2,
+    "totalWatchedVideos" : 16,
+    "members" : [ {
+      "streamerId" : "pol-2",
+      "streamerName" : "박정의 / 밥좀우 / 피닉스박",
+      "category" : "police",
+      "watchedSections" : [ "clip" ],
+      "totalSeconds" : 21528,
+      "durationFormatted" : "5시간 58분",
+      "totalVideos" : 8,
+      "lastUpdatedAt" : "2026-09-22T05:57:49.7159306"
+    }, {
+      "streamerId" : "m-mtxvjb7wxx12",
+      "streamerName" : "김윤성",
+      "category" : "police",
+      "watchedSections" : [ "clip" ],
+      "totalSeconds" : 15704,
+      "durationFormatted" : "4시간 21분",
+      "totalVideos" : 8,
+      "lastUpdatedAt" : "2026-09-22T05:54:57.712924"
+    } ]
+  },
+  "records" : [ {
+    "id" : 1,
+    "streamerId" : "m-mtxvjb7wxx12",
+    "streamerName" : "김윤성",
+    "category" : "police",
+    "videoType" : "clip",
+    "watched" : true,
+    "watchedSeconds" : 15704,
+    "videoCount" : 8,
+    "updatedAt" : "2026-09-22T05:54:57.712924"
+  }, {
+    "id" : 3,
+    "streamerId" : "pol-2",
+    "streamerName" : "박정의 / 밥좀우 / 피닉스박",
+    "category" : "police",
+    "videoType" : "clip",
+    "watched" : true,
+    "watchedSeconds" : 21528,
+    "videoCount" : 8,
+    "updatedAt" : "2026-09-22T05:57:49.7159306"
+  } ]
+}

@@ -109,6 +109,37 @@ public class AdminTokenService {
         }
     }
 
+    public String validateAndExtractUsername(String token) {
+        if (token == null || token.isBlank()) {
+            return null;
+        }
+        try {
+            byte[] decodedBytes = Base64.getUrlDecoder().decode(token.trim());
+            String decoded = new String(decodedBytes, StandardCharsets.UTF_8);
+            String[] parts = decoded.split(":");
+            if (parts.length != 3) {
+                return null;
+            }
+            String username = parts[0];
+            long expiry = Long.parseLong(parts[1]);
+            String signature = parts[2];
+
+            if (System.currentTimeMillis() > expiry) {
+                return null;
+            }
+            String expectedSignature = sign(username + ":" + expiry);
+            if (MessageDigest.isEqual(
+                    signature.getBytes(StandardCharsets.UTF_8),
+                    expectedSignature.getBytes(StandardCharsets.UTF_8)
+            )) {
+                return username;
+            }
+        } catch (Exception e) {
+            log.debug("토큰 검증 실패: {}", e.getMessage());
+        }
+        return null;
+    }
+
     public String extractToken(HttpServletRequest request) {
         if (request == null) return null;
 
@@ -144,16 +175,17 @@ public class AdminTokenService {
         HttpSession session = request.getSession(false);
         if (session != null) {
             Object user = session.getAttribute(AuthController.SESSION_USER_KEY);
-            if (adminUsername.equals(user)) {
+            if (user != null && !user.toString().isBlank()) {
                 return true;
             }
         }
 
         // 2. 토큰 추출 및 검증 (서버 재시작 후 세션 복구)
         String token = extractToken(request);
-        if (token != null && validateToken(token, adminUsername)) {
+        String username = validateAndExtractUsername(token);
+        if (username != null) {
             HttpSession newSession = request.getSession(true);
-            newSession.setAttribute(AuthController.SESSION_USER_KEY, adminUsername);
+            newSession.setAttribute(AuthController.SESSION_USER_KEY, username);
             newSession.setAttribute(AuthController.SESSION_LOGIN_TIME_KEY, System.currentTimeMillis());
             newSession.setMaxInactiveInterval((int) (TOKEN_VALIDITY_MILLIS / 1000L));
 
@@ -161,7 +193,7 @@ public class AdminTokenService {
             if (response != null) {
                 addTokenCookie(response, token, isHttpsRequest(request));
             }
-            log.info("서버 재시작 후 영구 토큰으로 관리자 세션이 자동 복구되었습니다: {}", adminUsername);
+            log.info("서버 재시작 후 영구 토큰으로 세션이 자동 복구되었습니다: {}", username);
             return true;
         }
 

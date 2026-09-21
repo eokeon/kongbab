@@ -1,11 +1,14 @@
 package com.kongbap.controller;
 
 import com.kongbap.domain.AdminLoginLog;
+import com.kongbap.domain.AppUser;
 import com.kongbap.dto.AuthResponse;
 import com.kongbap.dto.LoginRequest;
 import com.kongbap.repository.AdminLoginLogRepository;
+import com.kongbap.repository.AppUserRepository;
 import com.kongbap.service.AdminTokenService;
 import com.kongbap.service.LoginAttemptService;
+import com.kongbap.service.PasswordEncoderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -32,6 +36,8 @@ public class AuthController {
     private final AdminLoginLogRepository adminLoginLogRepository;
     private final AdminTokenService adminTokenService;
     private final LoginAttemptService loginAttemptService;
+    private final AppUserRepository appUserRepository;
+    private final PasswordEncoderService passwordEncoderService;
 
     @Value("${kongbap.admin.username:admin}")
     private String adminUsername;
@@ -74,10 +80,17 @@ public class AuthController {
                     .build());
         }
 
-        // 2. 비밀번호 암호화 검증 (BCrypt 및 타이밍 공격 방지 안전 비교)
-        boolean isUsernameValid = adminUsername.equals(inputUsername);
-        boolean isPasswordValid = adminTokenService.matchesAdminPassword(request.getPassword());
-        boolean isValid = isUsernameValid && isPasswordValid;
+        // 2. 관리자 또는 일반 유저(user1 등) 비밀번호 암호화 검증
+        boolean isAdmin = adminUsername.equals(inputUsername) && adminTokenService.matchesAdminPassword(request.getPassword());
+        Optional<AppUser> userOpt = Optional.empty();
+        boolean isUser = false;
+        if (!isAdmin) {
+            userOpt = appUserRepository.findByUsername(inputUsername);
+            if (userOpt.isPresent() && passwordEncoderService.matches(request.getPassword(), userOpt.get().getPassword())) {
+                isUser = true;
+            }
+        }
+        boolean isValid = isAdmin || isUser;
 
         // DB에 로그인 기록 저장
         AdminLoginLog logEntry = AdminLoginLog.builder()
@@ -94,24 +107,38 @@ public class AuthController {
             loginAttemptService.loginSucceeded(clientIp);
             loginAttemptService.loginSucceeded(inputUsername);
 
+            String authenticatedUsername = isAdmin ? adminUsername : userOpt.get().getUsername();
+            String role = isAdmin ? "admin" : (userOpt.get().getRole() != null ? userOpt.get().getRole() : "user");
+
+            if (isUser) {
+                AppUser u = userOpt.get();
+                u.setLastLoginAt(LocalDateTime.now());
+                appUserRepository.save(u);
+            }
+
             long now = System.currentTimeMillis();
             session.setMaxInactiveInterval(SESSION_TIMEOUT_SECONDS);
-            session.setAttribute(SESSION_USER_KEY, adminUsername);
+            session.setAttribute(SESSION_USER_KEY, authenticatedUsername);
+            session.setAttribute("KONGBAP_USER_ROLE", role);
             session.setAttribute(SESSION_LOGIN_TIME_KEY, now);
 
             // 서버 재시작 후에도 로그인 유지를 위한 영구 토큰 및 SameSite 쿠키 발급
-            String token = adminTokenService.generateToken(adminUsername);
+            String token = adminTokenService.generateToken(authenticatedUsername);
             boolean isSecure = adminTokenService.isHttpsRequest(httpRequest);
             adminTokenService.addTokenCookie(httpResponse, token, isSecure);
 
+            String successMsg = isAdmin 
+                    ? "관리자로 로그인되었습니다. (서버 재시작 후에도 로그인 유지)" 
+                    : (authenticatedUsername + "님 환영합니다.");
+
             return ResponseEntity.ok(AuthResponse.builder()
                     .success(true)
-                    .role("admin")
-                    .username(adminUsername)
+                    .role(role)
+                    .username(authenticatedUsername)
                     .loginTime(now)
                     .expiresInSeconds((long) SESSION_TIMEOUT_SECONDS)
                     .token(token)
-                    .message("로그인되었습니다. (서버 재시작 후에도 로그인 유지)")
+                    .message(successMsg)
                     .build());
         }
 
@@ -139,6 +166,7 @@ public class AuthController {
         if (session != null) {
             session.removeAttribute(SESSION_USER_KEY);
             session.removeAttribute(SESSION_LOGIN_TIME_KEY);
+            session.removeAttribute("KONGBAP_USER_ROLE");
             session.invalidate();
         }
         boolean isSecure = adminTokenService.isHttpsRequest(request);
@@ -161,28 +189,39 @@ public class AuthController {
 
         HttpSession currentSession = request.getSession(false);
         if (currentSession != null) {
-            Object user = currentSession.getAttribute(SESSION_USER_KEY);
-            if (user != null && adminUsername.equals(user.toString())) {
-                Long loginTime = (Long) currentSession.getAttribute(SESSION_LOGIN_TIME_KEY);
-                long now = System.currentTimeMillis();
-                if (loginTime == null) loginTime = now;
+            Object userObj = currentSession.getAttribute(SESSION_USER_KEY);
+            if (userObj != null) {
+                String sessionUsername = userObj.toString();
+                boolean isAdmin = adminUsername.equals(sessionUsername);
+                Optional<AppUser> userOpt = (!isAdmin) ? appUserRepository.findByUsername(sessionUsername) : Optional.empty();
 
-                String token = adminTokenService.extractToken(request);
-                if (token == null) {
-                    token = adminTokenService.generateToken(adminUsername);
-                    boolean isSecure = adminTokenService.isHttpsRequest(request);
-                    adminTokenService.addTokenCookie(response, token, isSecure);
+                if (isAdmin || userOpt.isPresent()) {
+                    String role = isAdmin ? "admin" : (userOpt.get().getRole() != null ? userOpt.get().getRole() : "user");
+                    Long loginTime = (Long) currentSession.getAttribute(SESSION_LOGIN_TIME_KEY);
+                    long now = System.currentTimeMillis();
+                    if (loginTime == null) loginTime = now;
+
+                    String token = adminTokenService.extractToken(request);
+                    if (token == null) {
+                        token = adminTokenService.generateToken(sessionUsername);
+                        boolean isSecure = adminTokenService.isHttpsRequest(request);
+                        adminTokenService.addTokenCookie(response, token, isSecure);
+                    }
+
+                    String statusMsg = isAdmin 
+                            ? "관리자 로그인 상태입니다. (서버 재시작 후에도 유지)" 
+                            : (sessionUsername + " 로그인 상태입니다.");
+
+                    return ResponseEntity.ok(AuthResponse.builder()
+                            .success(true)
+                            .role(role)
+                            .username(sessionUsername)
+                            .loginTime(loginTime)
+                            .expiresInSeconds((long) SESSION_TIMEOUT_SECONDS)
+                            .token(token)
+                            .message(statusMsg)
+                            .build());
                 }
-
-                return ResponseEntity.ok(AuthResponse.builder()
-                        .success(true)
-                        .role("admin")
-                        .username(adminUsername)
-                        .loginTime(loginTime)
-                        .expiresInSeconds((long) SESSION_TIMEOUT_SECONDS)
-                        .token(token)
-                        .message("관리자 로그인 상태입니다. (서버 재시작 후에도 유지)")
-                        .build());
             }
         }
 

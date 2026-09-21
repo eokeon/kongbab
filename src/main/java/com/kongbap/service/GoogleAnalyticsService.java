@@ -31,6 +31,9 @@ public class GoogleAnalyticsService {
     private final ResourceLoader resourceLoader;
     private final ObjectMapper objectMapper;
 
+    @org.springframework.beans.factory.annotation.Autowired(required = false)
+    private StreamerService streamerService;
+
     @Value("${google.analytics.property-id:}")
     private String propertyId;
 
@@ -395,14 +398,14 @@ public class GoogleAnalyticsService {
         oDevices.putObject("metric").put("metricName", "totalUsers");
         oDevices.put("desc", true);
 
-        // 4. Top Pages (전체 기간 누적 인기 페이지)
+        // 4. Top Pages (전체 기간 누적 인기 페이지 및 화면 경로 - 쿼리 파라미터 보존)
         ObjectNode rPages = reqs.addObject();
         rPages.putArray("dateRanges").addObject().put("startDate", ALL_TIME_START_DATE).put("endDate", "today");
-        rPages.putArray("dimensions").addObject().put("name", "pagePath");
+        rPages.putArray("dimensions").addObject().put("name", "pagePathPlusQueryString");
         ArrayNode mPages = rPages.putArray("metrics");
         mPages.addObject().put("name", "screenPageViews");
         mPages.addObject().put("name", "totalUsers");
-        rPages.put("limit", 30);
+        rPages.put("limit", 150);
         ObjectNode oPages = rPages.putArray("orderBys").addObject();
         oPages.putObject("metric").put("metricName", "screenPageViews");
         oPages.put("desc", true);
@@ -546,20 +549,175 @@ public class GoogleAnalyticsService {
         List<Map<String, Object>> list = new ArrayList<>();
         if (reportNode == null) return list;
         JsonNode rows = reportNode.path("rows");
-        if (rows.isArray()) {
-            for (JsonNode row : rows) {
-                String path = row.path("dimensionValues").get(0).path("value").asText("");
-                long views = Long.parseLong(row.path("metricValues").get(0).path("value").asText("0"));
-                long users = Long.parseLong(row.path("metricValues").get(1).path("value").asText("0"));
+        if (!rows.isArray() || rows.isEmpty()) return list;
 
-                Map<String, Object> item = new HashMap<>();
-                item.put("path", path);
-                item.put("views", views);
-                item.put("users", users);
-                list.add(item);
+        // 콩밥/직업/인원(멤버) 단위까지 정규화하여 합산
+        // 세부 영상 탭(?tab=full, ?tab=binge 등)은 해당 인원의 조회수로 집계
+        Map<String, PageStatHolder> aggregated = new LinkedHashMap<>();
+
+        for (JsonNode row : rows) {
+            String rawPath = row.path("dimensionValues").get(0).path("value").asText("");
+            long views = Long.parseLong(row.path("metricValues").get(0).path("value").asText("0"));
+            long users = Long.parseLong(row.path("metricValues").get(1).path("value").asText("0"));
+
+            String normalized = normalizePathToMember(rawPath);
+            PageStatHolder holder = aggregated.get(normalized);
+            if (holder == null) {
+                holder = new PageStatHolder(normalized, rawPath);
+                aggregated.put(normalized, holder);
             }
+            holder.views += views;
+            holder.users = Math.max(holder.users, users);
+        }
+
+        List<PageStatHolder> sorted = new ArrayList<>(aggregated.values());
+        sorted.sort((a, b) -> Long.compare(b.views, a.views));
+
+        int limit = Math.min(sorted.size(), 50);
+        for (int i = 0; i < limit; i++) {
+            PageStatHolder h = sorted.get(i);
+            Map<String, Object> item = new HashMap<>();
+            item.put("path", h.normalizedPath);
+            item.put("rawPath", h.rawPath);
+            item.put("views", h.views);
+            item.put("users", h.users);
+            if (h.category != null) item.put("category", h.category);
+            if (h.group != null) item.put("group", h.group);
+            if (h.member != null) item.put("member", h.member);
+            if (h.search != null) item.put("search", h.search);
+
+            // 스트리머/인원 상세 이름 매핑
+            if (h.member != null && streamerService != null) {
+                try {
+                    streamerService.getStreamer(h.member).ifPresent(s -> {
+                        String name = s.getName() != null ? s.getName().trim() : "";
+                        String streamer = s.getStreamer() != null ? s.getStreamer().trim() : "";
+                        if (!name.isBlank() && !streamer.isBlank() && !name.equalsIgnoreCase(streamer)) {
+                            item.put("title", name + " (" + streamer + ")");
+                        } else if (!streamer.isBlank()) {
+                            item.put("title", streamer);
+                        } else if (!name.isBlank()) {
+                            item.put("title", name);
+                        }
+                    });
+                } catch (Exception ignored) {}
+            }
+
+            list.add(item);
         }
         return list;
+    }
+
+    /**
+     * URL 경로를 '콩밥 / 직업 / 인원(멤버)' 계층까지만 유지하도록 정규화합니다.
+     * 뒤에 붙는 영상 세부 탭(&tab=full, &tab=binge 등)은 제거하여 해당 인원 단위로 조회수를 통합합니다.
+     */
+    private String normalizePathToMember(String rawPath) {
+        if (rawPath == null || rawPath.isBlank()) return "/kongbap/";
+
+        // 1. URL 내 비정상 중복 물음표(?) 정제 (두 번째 ? 이후 꼬인 쿼리스트링 제거)
+        int firstQ = rawPath.indexOf('?');
+        if (firstQ >= 0) {
+            int secondQ = rawPath.indexOf('?', firstQ + 1);
+            if (secondQ > 0) {
+                rawPath = rawPath.substring(0, secondQ);
+            }
+        }
+
+        int qIdx = rawPath.indexOf('?');
+        if (qIdx < 0) {
+            String pathOnly = rawPath;
+            if (pathOnly.endsWith("index.html")) {
+                pathOnly = pathOnly.substring(0, pathOnly.length() - "index.html".length());
+            }
+            if (!pathOnly.endsWith("/")) pathOnly += "/";
+            return pathOnly.isEmpty() ? "/kongbap/" : pathOnly;
+        }
+
+        String basePath = rawPath.substring(0, qIdx);
+        if (basePath.endsWith("index.html")) {
+            basePath = basePath.substring(0, basePath.length() - "index.html".length());
+        }
+        if (!basePath.endsWith("/")) basePath += "/";
+
+        String query = rawPath.substring(qIdx + 1);
+        String[] pairs = query.split("&");
+        String category = null;
+        String group = null;
+        String member = null;
+        String search = null;
+
+        for (String pair : pairs) {
+            int eq = pair.indexOf('=');
+            if (eq > 0) {
+                String k = pair.substring(0, eq).trim();
+                String v = pair.substring(eq + 1).trim();
+                try {
+                    v = java.net.URLDecoder.decode(v, java.nio.charset.StandardCharsets.UTF_8);
+                } catch (Exception ignored) {}
+                if (v.contains("?")) {
+                    v = v.substring(0, v.indexOf('?'));
+                }
+                v = v.trim();
+                if ("category".equalsIgnoreCase(k)) category = v;
+                else if ("group".equalsIgnoreCase(k)) group = v;
+                else if ("member".equalsIgnoreCase(k)) member = v;
+                else if ("search".equalsIgnoreCase(k)) search = v;
+            }
+        }
+
+        // 직업 / 인원(멤버) 단위까지만 유지 (영상 tab, 기타 파라미터 제외하여 합산)
+        List<String> kept = new ArrayList<>();
+        if (category != null && !category.isBlank()) kept.add("category=" + category);
+        if (group != null && !group.isBlank()) kept.add("group=" + group);
+        if (member != null && !member.isBlank()) kept.add("member=" + member);
+        if (search != null && !search.isBlank()) kept.add("search=" + search);
+
+        if (kept.isEmpty()) {
+            return basePath;
+        }
+        return basePath + "?" + String.join("&", kept);
+    }
+
+    private static class PageStatHolder {
+        String normalizedPath;
+        String rawPath;
+        String category;
+        String group;
+        String member;
+        String search;
+        long views = 0;
+        long users = 0;
+
+        public PageStatHolder(String normalizedPath, String rawPath) {
+            this.normalizedPath = normalizedPath;
+            this.rawPath = rawPath;
+            parseParams(normalizedPath);
+        }
+
+        private void parseParams(String path) {
+            int qIdx = path.indexOf('?');
+            if (qIdx < 0) return;
+            String query = path.substring(qIdx + 1);
+            for (String pair : query.split("&")) {
+                int eq = pair.indexOf('=');
+                if (eq > 0) {
+                    String k = pair.substring(0, eq).trim();
+                    String v = pair.substring(eq + 1).trim();
+                    try {
+                        v = java.net.URLDecoder.decode(v, java.nio.charset.StandardCharsets.UTF_8);
+                    } catch (Exception ignored) {}
+                    if (v.contains("?")) {
+                        v = v.substring(0, v.indexOf('?'));
+                    }
+                    v = v.trim();
+                    if ("category".equalsIgnoreCase(k)) this.category = v;
+                    else if ("group".equalsIgnoreCase(k)) this.group = v;
+                    else if ("member".equalsIgnoreCase(k)) this.member = v;
+                    else if ("search".equalsIgnoreCase(k)) this.search = v;
+                }
+            }
+        }
     }
 
     private List<Map<String, Object>> parseHourly(JsonNode reportNode) {

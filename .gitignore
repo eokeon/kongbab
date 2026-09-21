@@ -36,3 +36,5 @@ src/main/resources/application*.yaml
 *.log
 hs_err_pid*.log
 docs/analytics.html
+analytics-accumulated.json
+src/main/resources/analytics-accumulated.json

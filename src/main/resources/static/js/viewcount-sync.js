@@ -75,8 +75,21 @@ async function executeViewCountSync(onProgress) {
     allItems = extractAllVideosFromKongbapData();
   }
   if (allItems.length === 0) {
-    return { success: false, message: "갱신 대상 영상이 없습니다. 데이터 로딩 후 다시 시도해주세요.", updatedCount: 0, totalCount: 0, hasServer };
+    return { success: false, message: "갱신 대상 영상이 없습니다. 데이터 로딩 후 다시 시도해주세요.", updatedCount: 0, totalCount: 0, totalIncrease: 0, hasServer };
   }
+
+  // 원래 조회수 정보가 등록되어 있던 영상 기록 (원래 정보가 있었던 대상만 기존 대비 증가량 계산)
+  const originalViewCountMap = new Map();
+  allItems.forEach(item => {
+    const v = item.video;
+    if (v && !originalViewCountMap.has(v)) {
+      const rawCount = v.viewCount;
+      const num = (rawCount !== undefined && rawCount !== null && rawCount !== "") ? Number(rawCount) : null;
+      if (num !== null && !isNaN(num) && num > 0) {
+        originalViewCountMap.set(v, num);
+      }
+    }
+  });
 
   const apiKey = typeof getEffectiveYouTubeApiKey === "function"
     ? getEffectiveYouTubeApiKey()
@@ -311,13 +324,42 @@ async function executeViewCountSync(onProgress) {
     await new Promise(r => setTimeout(r, 20));
   }
 
-  // 3단계: 로컬 캐시 무효화 및 데이터 저장
+  // 3단계: 기존 대비 총 조회수 증가량 계산 (원래 조회수 정보가 등록되어 있던 영상 기준)
+  let totalViewIncrease = 0;
+  let prevTotalViews = 0;
+  let newTotalViews = 0;
+  let increasedVideosCount = 0;
+
+  const countedVideos = new Set();
+  allItems.forEach(item => {
+    const v = item.video;
+    if (!v || countedVideos.has(v)) return;
+    countedVideos.add(v);
+
+    if (originalViewCountMap.has(v)) {
+      const prevCount = originalViewCountMap.get(v);
+      const newCount = Number(v.viewCount);
+      if (!isNaN(newCount) && newCount >= 0) {
+        prevTotalViews += prevCount;
+        newTotalViews += newCount;
+        const diff = newCount - prevCount;
+        if (diff > 0) {
+          totalViewIncrease += diff;
+          increasedVideosCount++;
+        }
+      }
+    }
+  });
+
+  // 로컬 캐시 무효화 및 데이터 저장
   if (typeof clearRenderStatsCache === "function") clearRenderStatsCache();
   if (typeof invalidateLeaderboardCache === "function") invalidateLeaderboardCache();
   if (typeof persistData === "function") persistData(true);
   if (typeof updateStats === "function") updateStats();
-  if (typeof renderCategoryTabs === "function") renderCategoryTabs();
-  if (typeof renderContent === "function") renderContent();
+  if (typeof state !== "undefined" && state.currentCategory !== "adminpage") {
+    if (typeof renderCategoryTabs === "function") renderCategoryTabs();
+    if (typeof renderContent === "function") renderContent();
+  }
 
   // 4단계: 서버 연결되어 있는 경우 MariaDB 및 백업 스냅샷 동기화
   let dbSynced = false;
@@ -332,8 +374,11 @@ async function executeViewCountSync(onProgress) {
       );
     }
     if (typeof createBackupSnapshot === "function") {
+      const backupDesc = totalViewIncrease > 0
+        ? `영상 조회수 일괄 갱신 (성공: ${updatedCount}건, 증가: +${totalViewIncrease.toLocaleString()}회, 조회불가: ${unavailableCount}건, 실패: ${failedCount}건)`
+        : `영상 조회수 일괄 갱신 (성공: ${updatedCount}건, 조회불가: ${unavailableCount}건, 실패: ${failedCount}건)`;
       syncPromises.push(
-        createBackupSnapshot(`영상 조회수 일괄 갱신 (성공: ${updatedCount}건, 조회불가: ${unavailableCount}건, 실패: ${failedCount}건)`, false)
+        createBackupSnapshot(backupDesc, false)
           .then(res => { if (res) backupSynced = true; })
           .catch(err => console.warn("백업 스냅샷 저장 중 오류:", err))
       );
@@ -353,7 +398,12 @@ async function executeViewCountSync(onProgress) {
     unavailableList,
     hasServer,
     dbSynced,
-    backupSynced
+    backupSynced,
+    totalIncrease: totalViewIncrease,
+    increasedVideosCount,
+    prevTotalViews,
+    newTotalViews,
+    hasPrevCount: originalViewCountMap.size
   };
 }
 

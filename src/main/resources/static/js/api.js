@@ -22,13 +22,31 @@ async function apiLogin(username, password) {
       credentials: "include",
       body: JSON.stringify({ username, password })
     });
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
     const data = await res.json();
     if (data && data.success && data.token) {
       localStorage.setItem("kongbap_admin_token", data.token);
     }
     return data;
   } catch (e) {
-    console.error("로그인 요청 실패:", e);
+    console.warn("로그인 서버 미연결 (정적 배포 모드 감지):", e);
+
+    // GitHub Pages 정적 배포 fallback: user1 / user2 계정 오프라인 로그인 지원
+    if ((username === "user1" || username === "user2") && password === "1234") {
+      const mockToken = `static_offline_token_${username}_${Date.now()}`;
+      localStorage.setItem("kongbap_admin_token", mockToken);
+      return {
+        success: true,
+        role: "user",
+        username: username,
+        token: mockToken,
+        expiresInSeconds: 2592000,
+        message: "배포 사이트(읽기 전용 모드)로 로그인되었습니다."
+      };
+    }
+
     return { success: false, message: "백엔드 서버와 통신할 수 없습니다." };
   }
 }
@@ -57,13 +75,25 @@ async function apiGetMe() {
     });
     if (res.ok) {
       const data = await res.json();
-      if (data && data.success && data.role === "admin" && data.token) {
+      if (data && data.success && data.token) {
         localStorage.setItem("kongbap_admin_token", data.token);
       }
       return data;
     }
+    throw new Error(`HTTP ${res.status}`);
   } catch (e) {
-    console.warn("세션 사용자 조회 실패:", e);
+    console.warn("세션 사용자 조회 실패 (정적 세션 탐색):", e);
+    // GitHub Pages 정적 배포 fallback: 로컬 스토리지에 유저 정보가 있다면 세션 복원
+    try {
+      const savedAuth = localStorage.getItem("kongbap_auth_user");
+      const expireAt = localStorage.getItem("kongbap_auth_expire_at");
+      if (savedAuth && expireAt && Date.now() < Number(expireAt)) {
+        const user = JSON.parse(savedAuth);
+        if (user && (user.role === "user" || user.role === "admin")) {
+          return { success: true, role: user.role, username: user.username, message: "정적 배포 세션 유지" };
+        }
+      }
+    } catch (err) {}
   }
   return null;
 }
@@ -83,6 +113,180 @@ async function apiGetLoginLogs() {
   }
   return [];
 }
+
+// ==========================================
+// 사용자 시청 기록 및 마이페이지 API
+// ==========================================
+async function apiGetWatchRecords() {
+  try {
+    const res = await fetch(`${API_BASE}/api/user/watch/records`, {
+      cache: "no-store",
+      credentials: "include",
+      headers: getAuthHeaders()
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (e) {
+    console.warn("시청 기록 서버 미연결 (정적 배포 파일 탐색):", e);
+  }
+
+  // GitHub Pages 정적 배포 fallback: user1-watch.json 에서 로컬 동기화 데이터 로드
+  try {
+    const staticRes = await fetch(`./user1-watch.json?v=${window.CURRENT_DATA_VERSION || Date.now()}`);
+    if (staticRes.ok) {
+      const staticData = await staticRes.json();
+      return staticData.records || [];
+    }
+  } catch (err) {}
+
+  return [];
+}
+
+async function apiToggleWatch(payload) {
+  try {
+    const res = await fetch(`${API_BASE}/api/user/watch/toggle`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders()
+      },
+      credentials: "include",
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (e) {
+    console.warn("시청 기록 저장 실패 (정적 배포 읽기 전용):", e);
+  }
+  return null;
+}
+
+async function apiGetMyPageSummary() {
+  try {
+    const res = await fetch(`${API_BASE}/api/user/mypage`, {
+      cache: "no-store",
+      credentials: "include",
+      headers: getAuthHeaders()
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (e) {
+    console.warn("마이페이지 통계 서버 미연결 (정적 배포 파일 탐색):", e);
+  }
+
+  // GitHub Pages 정적 배포 fallback: user1-watch.json 에서 로컬 동기화 데이터 로드
+  try {
+    const staticRes = await fetch(`./user1-watch.json?v=${window.CURRENT_DATA_VERSION || Date.now()}`);
+    if (staticRes.ok) {
+      const staticData = await staticRes.json();
+      const s = staticData.summary || staticData;
+      if (s && Array.isArray(s.members) && s.members.length > 0) {
+        return s;
+      }
+    }
+  } catch (err) {}
+
+  // 로컬 브라우저 상태(state.userWatchRecords) 기반 실시간 동적 생성 fallback
+  if (typeof buildLocalMyPageSummary === "function") {
+    return buildLocalMyPageSummary();
+  }
+
+  return null;
+}
+
+function buildLocalMyPageSummary() {
+  const records = state.userWatchRecords ? Object.values(state.userWatchRecords) : [];
+  const watchedRecords = records.filter(r => r && (r.watched === true || r.watched === "true"));
+
+  const byStreamer = new Map();
+  watchedRecords.forEach(r => {
+    if (!r.streamerId) return;
+    if (!byStreamer.has(r.streamerId)) {
+      byStreamer.set(r.streamerId, []);
+    }
+    byStreamer.get(r.streamerId).push(r);
+  });
+
+  const memberDtos = [];
+  let totalWatchedSeconds = 0;
+  let totalWatchedVideos = 0;
+
+  byStreamer.forEach((recs, streamerId) => {
+    let originalMember = null;
+    for (const c of (KONGBAP_DATA.categories || [])) {
+      if (c.hasSubgroups) {
+        for (const g of (c.groups || [])) {
+          const f = (g.members || []).find(m => String(m.id) === String(streamerId) || String(m.customId) === String(streamerId));
+          if (f) { originalMember = f; break; }
+        }
+      } else {
+        const f = (c.members || []).find(m => String(m.id) === String(streamerId) || String(m.customId) === String(streamerId));
+        if (f) { originalMember = f; break; }
+      }
+      if (originalMember) break;
+    }
+
+    const sum = originalMember && typeof getMemberVideoSummary === "function"
+      ? getMemberVideoSummary(originalMember)
+      : null;
+
+    const watchedSections = recs.map(r => r.videoType).filter(Boolean);
+    let memberSeconds = 0;
+    let memberVideos = 0;
+
+    watchedSections.forEach(sec => {
+      if (sum) {
+        if (sec === "clip") {
+          memberSeconds += (sum.clipTotalSeconds || 0);
+          memberVideos += (sum.clipCount || 0);
+        } else if (sec === "full") {
+          memberSeconds += (sum.fullTotalSeconds || 0);
+          memberVideos += (sum.fullCount || 0);
+        } else if (sec === "binge") {
+          memberSeconds += (sum.bingeTotalSeconds || 0);
+          memberVideos += (sum.bingeCount || 0);
+        }
+      } else {
+        const r = recs.find(it => it.videoType === sec);
+        if (r) {
+          memberSeconds += Number(r.watchedSeconds) || 0;
+          memberVideos += Number(r.videoCount) || 0;
+        }
+      }
+    });
+
+    totalWatchedSeconds += memberSeconds;
+    totalWatchedVideos += memberVideos;
+
+    memberDtos.push({
+      streamerId: streamerId,
+      streamerName: originalMember ? (originalMember.streamer || originalMember.name) : (recs[0]?.streamerName || streamerId),
+      category: originalMember ? originalMember.category : (recs[0]?.category || null),
+      watchedSections: watchedSections,
+      totalSeconds: memberSeconds,
+      durationFormatted: typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(memberSeconds) : `${Math.round(memberSeconds / 60)}분`,
+      totalVideos: memberVideos
+    });
+  });
+
+  const totalHours = Math.round((totalWatchedSeconds / 3600.0) * 10.0) / 10.0;
+  const username = (state.currentUser && state.currentUser.username) || "사용자";
+
+  return {
+    username: username,
+    totalWatchedSeconds: totalWatchedSeconds,
+    totalWatchedHours: totalHours,
+    totalWatchedDurationFormatted: typeof formatSecondsToHangul === "function" ? formatSecondsToHangul(totalWatchedSeconds) : `${Math.round(totalWatchedSeconds / 3600)}시간`,
+    totalWatchedMembers: memberDtos.length,
+    totalWatchedSections: watchedRecords.length,
+    totalWatchedVideos: totalWatchedVideos,
+    members: memberDtos
+  };
+}
+window.buildLocalMyPageSummary = buildLocalMyPageSummary;
 
 let _staticStreamersPromise = null;
 function getStaticStreamersData() {

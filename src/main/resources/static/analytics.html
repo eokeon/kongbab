@@ -290,7 +290,7 @@
             <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-emerald-400 inline-block"></span>페이지뷰</span>
           </div>
         </div>
-        <div id="daily-chart-container" class="space-y-2 max-h-72 overflow-y-auto flex-1 pr-1">
+        <div id="daily-chart-container" class="space-y-2 flex-1">
           <div class="text-xs text-zinc-500 py-10 text-center">일별 통계 데이터를 불러오는 중...</div>
         </div>
       </div>
@@ -304,7 +304,7 @@
           </h3>
           <span class="text-xs text-zinc-500">시간대별 누적 방문자</span>
         </div>
-        <div id="hourly-chart-container" class="space-y-1.5 max-h-72 overflow-y-auto flex-1 pr-1">
+        <div id="hourly-chart-container" class="space-y-1.5 flex-1">
           <div class="text-xs text-zinc-500 py-10 text-center">시간대별 통계 데이터를 불러오는 중...</div>
         </div>
       </div>
@@ -321,21 +321,31 @@
           </h3>
           <span class="text-xs text-zinc-500">전체 누적 세션 기준</span>
         </div>
-        <div id="sources-container" class="space-y-2.5 max-h-64 overflow-y-auto pr-1">
+        <div id="sources-container" class="space-y-2.5">
           <div class="text-xs text-zinc-500 py-8 text-center">유입 경로 데이터를 불러오는 중...</div>
         </div>
       </div>
 
       <!-- 3-B. 사이트 내 인기 화면 / 페이지 -->
       <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 shadow-lg">
-        <div class="flex items-center justify-between mb-4 border-b border-zinc-800/80 pb-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-zinc-800/80 pb-3">
           <h3 class="text-sm font-bold text-white flex items-center gap-2">
             <span>🔥</span>
-            <span>가장 많이 본 페이지 & 화면 경로</span>
+            <span>가장 많이 본 페이지 & 직업 / 인원별 조회</span>
           </h3>
-          <span class="text-xs text-zinc-500">전체 누적 조회수 기준</span>
+          <div class="inline-flex rounded-xl bg-zinc-950 p-1 border border-zinc-800 text-xs self-start sm:self-auto shadow-inner">
+            <button id="top-tab-job" onclick="setTopPageTab('job')" class="px-3 py-1 rounded-lg font-bold transition-all text-zinc-400 hover:text-white cursor-pointer">
+              직업별 통계
+            </button>
+            <button id="top-tab-member" onclick="setTopPageTab('member')" class="px-3 py-1 rounded-lg font-bold transition-all bg-indigo-600 text-white shadow-md cursor-pointer">
+              인원별 통계
+            </button>
+            <button id="top-tab-all" onclick="setTopPageTab('all')" class="px-3 py-1 rounded-lg font-bold transition-all text-zinc-400 hover:text-white cursor-pointer">
+              전체
+            </button>
+          </div>
         </div>
-        <div id="top-pages-container" class="space-y-2.5 max-h-64 overflow-y-auto pr-1">
+        <div id="top-pages-container" class="space-y-2">
           <div class="text-xs text-zinc-500 py-8 text-center">인기 페이지 데이터를 불러오는 중...</div>
         </div>
       </div>
@@ -366,7 +376,7 @@
           </h3>
           <span class="text-xs text-zinc-500">전체 누적</span>
         </div>
-        <div id="os-browser-container" class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+        <div id="os-browser-container" class="space-y-2.5">
           <div class="text-xs text-zinc-500 py-6 text-center">OS/브라우저 데이터를 불러오는 중...</div>
         </div>
       </div>
@@ -380,7 +390,7 @@
           </h3>
           <span class="text-xs text-zinc-500">전체 누적</span>
         </div>
-        <div id="cities-container" class="space-y-2.5 max-h-72 overflow-y-auto pr-1">
+        <div id="cities-container" class="space-y-2.5">
           <div class="text-xs text-zinc-500 py-6 text-center">지역 데이터를 불러오는 중...</div>
         </div>
       </div>
@@ -647,6 +657,7 @@
     }
 
     function renderAll(data) {
+      cachedDashboardData = data;
       const headerTime = document.getElementById("header-updated-at");
       if (headerTime) headerTime.textContent = `최근 갱신: ${escapeHtml(data.updatedAt) || '방금'}`;
 
@@ -816,35 +827,429 @@
       }).join('');
     }
 
+    let streamerMap = {};
+
+    async function loadStreamerMap() {
+      try {
+        const res = await fetch(`${API_BASE}/api/streamers`);
+        if (res.ok) {
+          const list = await res.json();
+          if (Array.isArray(list)) {
+            list.forEach(s => {
+              if (s.id) streamerMap[String(s.id).toLowerCase()] = s;
+            });
+            // 스트리머 맵 로드 후 화면 재렌더링
+            if (cachedDashboardData && cachedDashboardData.topPages) {
+              renderTopPages(cachedDashboardData.topPages);
+            }
+          }
+        }
+      } catch (e) {}
+    }
+
+    const CATEGORY_META = {
+      police: { name: "경찰", emoji: "👮‍♂️", badgeClass: "bg-blue-950/80 text-blue-300 border-blue-600/40" },
+      ems: { name: "EMS", emoji: "🚑", badgeClass: "bg-teal-950/80 text-teal-300 border-teal-600/40" },
+      gang: { name: "갱단", emoji: "💀", badgeClass: "bg-rose-950/80 text-rose-300 border-rose-600/40" },
+      business: { name: "사업체", emoji: "🏢", badgeClass: "bg-amber-950/80 text-amber-300 border-amber-600/40" },
+      press: { name: "기자", emoji: "📰", badgeClass: "bg-sky-950/80 text-sky-300 border-sky-600/40" },
+      citizen: { name: "시민", emoji: "👥", badgeClass: "bg-purple-950/80 text-purple-300 border-purple-600/40" },
+      guide: { name: "가이드", emoji: "🧭", badgeClass: "bg-emerald-950/80 text-emerald-300 border-emerald-600/40" },
+      loveline: { name: "러브라인", emoji: "💕", badgeClass: "bg-pink-950/80 text-pink-300 border-pink-600/40" }
+    };
+
+    const GROUP_NAMES = {
+      "gang-bigdick": "빅딕",
+      "gang-oompa": "움파룸파",
+      "gang-sangryeon": "상련",
+      "gang-goldmoon": "골드문",
+      "gang-nonghyup": "농협",
+      "gang-girlbang": "GIRL BANG",
+      "gang-doremifa": "도레미파",
+      "gang-metalunion": "금속노조",
+      "gang-adventure": "어드벤처",
+      "gang-kgaeng": "깨갱",
+      "gang-streetcat": "길고양이 연합",
+      "gang-blackrose": "흑장미",
+      "biz-yastation": "야스테이션",
+      "biz-lux": "LUX 클럽",
+      "biz-young31": "영써티원",
+      "biz-koi": "KOI 레스토랑"
+    };
+
+    function formatPageHierarchy(item) {
+      let path = item.path || "";
+      if (path === "/kongbap/" || path === "/" || path === "/kongbap" || path === "/index.html") {
+        return {
+          badge: "🏠 메인",
+          badgeClass: "bg-indigo-950/80 text-indigo-300 border border-indigo-600/40",
+          title: "콩밥특별시 아카이브 메인 홈",
+          isMember: false
+        };
+      }
+
+      // 비정상적으로 중복된 물음표(?) 정제
+      const firstQ = path.indexOf("?");
+      if (firstQ >= 0) {
+        const secondQ = path.indexOf("?", firstQ + 1);
+        if (secondQ > 0) {
+          path = path.substring(0, secondQ);
+        }
+      }
+
+      let cat = item.category;
+      let group = item.group;
+      let member = item.member;
+      let search = item.search;
+
+      if (!cat && !member && path.includes("?")) {
+        const qs = path.split("?")[1];
+        const sp = new URLSearchParams(qs);
+        cat = sp.get("category");
+        group = sp.get("group");
+        member = sp.get("member");
+        search = sp.get("search");
+      }
+
+      if (cat && cat.includes("?")) cat = cat.split("?")[0];
+      if (member && member.includes("?")) member = member.split("?")[0];
+      if (group && group.includes("?")) group = group.split("?")[0];
+      if (search && search.includes("?")) search = search.split("?")[0];
+
+      if (search) {
+        return {
+          badge: "🔍 검색",
+          badgeClass: "bg-amber-950/80 text-amber-300 border border-amber-600/40",
+          title: `"${search}" 검색 결과`,
+          isMember: false
+        };
+      }
+
+      const cInfo = CATEGORY_META[cat] || { name: cat || "직업", emoji: "📁", badgeClass: "bg-zinc-800 text-zinc-300 border border-zinc-700" };
+      const gName = GROUP_NAMES[group] || group;
+
+      // 1. 인원(멤버) 상세 조회
+      if (member) {
+        let memberTitle = item.title;
+        if (!memberTitle) {
+          const s = streamerMap[String(member).toLowerCase()];
+          if (s) {
+            const n = s.name || "";
+            const st = s.streamer || "";
+            memberTitle = (n && st && n !== st) ? `${n} (${st})` : (st || n || member);
+          } else {
+            memberTitle = member;
+          }
+        }
+        let badgeText = `${cInfo.emoji} ${cInfo.name}`;
+        if (gName) badgeText += ` > ${gName}`;
+        return {
+          badge: badgeText,
+          badgeClass: `border ${cInfo.badgeClass}`,
+          title: memberTitle,
+          isMember: true
+        };
+      }
+
+      // 2. 그룹(소속) 전체 탭
+      if (group && gName) {
+        return {
+          badge: `${cInfo.emoji} ${cInfo.name}`,
+          badgeClass: `border ${cInfo.badgeClass}`,
+          title: `${gName} 전체 목록`,
+          isMember: false
+        };
+      }
+
+      // 3. 직업/특수 탭 전체 목록
+      return {
+        badge: `${cInfo.emoji} ${cInfo.name}`,
+        badgeClass: `border ${cInfo.badgeClass}`,
+        title: `${cInfo.name} 전체 목록`,
+        isMember: false
+      };
+    }
+
+    let cachedDashboardData = null;
+    let currentTopPageTab = 'member'; // 기본값을 인원별 통계로 시작
+    let topPagesShowAll = false;
+
+    function toggleTopPagesShowAll() {
+      topPagesShowAll = !topPagesShowAll;
+      if (cachedDashboardData && cachedDashboardData.topPages) {
+        renderTopPages(cachedDashboardData.topPages);
+      }
+    }
+
+    function setTopPageTab(tab) {
+      currentTopPageTab = tab;
+      topPagesShowAll = false;
+      const btnJob = document.getElementById("top-tab-job");
+      const btnMember = document.getElementById("top-tab-member");
+      const btnAll = document.getElementById("top-tab-all");
+
+      const activeCls = "px-3 py-1 rounded-lg font-bold transition-all bg-indigo-600 text-white shadow-md cursor-pointer";
+      const inactiveCls = "px-3 py-1 rounded-lg font-bold transition-all text-zinc-400 hover:text-white cursor-pointer";
+
+      if (btnJob) btnJob.className = (tab === 'job') ? activeCls : inactiveCls;
+      if (btnMember) btnMember.className = (tab === 'member') ? activeCls : inactiveCls;
+      if (btnAll) btnAll.className = (tab === 'all') ? activeCls : inactiveCls;
+
+      if (cachedDashboardData && cachedDashboardData.topPages) {
+        renderTopPages(cachedDashboardData.topPages);
+      }
+    }
+
     function renderTopPages(list) {
       const container = document.getElementById("top-pages-container");
       if (!container) return;
 
-      if (list.length === 0) {
+      if (!list || list.length === 0) {
         container.innerHTML = `<div class="text-xs text-zinc-500 py-8 text-center">인기 페이지 데이터가 아직 없습니다.</div>`;
         return;
       }
 
-      const maxViews = Math.max(...list.map(d => d.views || 0), 1);
+      if (currentTopPageTab === 'job') {
+        renderTopPagesJob(list, container);
+      } else if (currentTopPageTab === 'member') {
+        renderTopPagesMember(list, container);
+      } else {
+        renderTopPagesAll(list, container);
+      }
+    }
 
-      container.innerHTML = list.map((item, idx) => {
-        const percent = Math.min(100, Math.max(4, Math.round(((item.views || 0) / maxViews) * 100)));
-        const safePath = escapeHtml(item.path);
+    // [직업별 통계] 렌더링 - 직업 카테고리별 총 누적 합산 순위
+    function renderTopPagesJob(list, container) {
+      const jobStats = {};
+      Object.keys(CATEGORY_META).forEach(catId => {
+        jobStats[catId] = {
+          catId: catId,
+          views: 0,
+          users: 0,
+          memberSet: new Set()
+        };
+      });
+      jobStats["main"] = { catId: "main", views: 0, users: 0, memberSet: new Set() };
+      jobStats["search"] = { catId: "search", views: 0, users: 0, memberSet: new Set() };
+
+      list.forEach(item => {
+        const info = formatPageHierarchy(item);
+        const views = item.views || 0;
+        const users = item.users || 0;
+
+        let cat = item.category;
+        if (!cat && item.path) {
+          const m = item.path.match(/category=([^&?]+)/);
+          if (m) cat = m[1];
+        }
+        if (cat && cat.includes("?")) cat = cat.split("?")[0];
+
+        if (cat && jobStats[cat]) {
+          jobStats[cat].views += views;
+          jobStats[cat].users = Math.max(jobStats[cat].users, users);
+          if (item.member) {
+            const mKey = String(item.member).split("?")[0];
+            jobStats[cat].memberSet.add(mKey);
+          }
+        } else if (item.path && (item.path === "/kongbap/" || item.path.includes("index.html") || item.path === "/")) {
+          jobStats["main"].views += views;
+          jobStats["main"].users = Math.max(jobStats["main"].users, users);
+        } else if (item.search) {
+          jobStats["search"].views += views;
+          jobStats["search"].users = Math.max(jobStats["search"].users, users);
+        }
+      });
+
+      const sortedJobs = Object.values(jobStats)
+        .filter(j => j.views > 0)
+        .sort((a, b) => b.views - a.views);
+
+      if (sortedJobs.length === 0) {
+        container.innerHTML = `<div class="text-xs text-zinc-500 py-8 text-center">직업별 통계 데이터가 아직 없습니다.</div>`;
+        return;
+      }
+
+      const maxViews = Math.max(...sortedJobs.map(j => j.views), 1);
+
+      container.innerHTML = sortedJobs.map((job, idx) => {
+        const percent = Math.min(100, Math.max(4, Math.round((job.views / maxViews) * 100)));
+        let badge, badgeClass, title, subtitle;
+
+        if (job.catId === "main") {
+          badge = "🏠 메인";
+          badgeClass = "bg-indigo-950/80 text-indigo-300 border border-indigo-600/40";
+          title = "콩밥특별시 아카이브 메인 홈";
+          subtitle = "메인 첫 화면 접속";
+        } else if (job.catId === "search") {
+          badge = "🔍 검색";
+          badgeClass = "bg-amber-950/80 text-amber-300 border border-amber-600/40";
+          title = "전체 검색 결과 화면";
+          subtitle = "키워드 검색 열람";
+        } else {
+          const meta = CATEGORY_META[job.catId] || { name: job.catId, emoji: "📁", badgeClass: "bg-zinc-800 text-zinc-300 border border-zinc-700" };
+          badge = `${meta.emoji} ${meta.name}`;
+          badgeClass = `border ${meta.badgeClass}`;
+          title = `${meta.name} 직업 전체 통계`;
+          const mCount = job.memberSet.size;
+          subtitle = mCount > 0 ? `직업 탭 및 소속 인원 ${mCount}명 시청 합산` : `${meta.name} 전체 목록 조회`;
+        }
+
         return `
-          <div class="space-y-1 text-xs">
-            <div class="flex items-center justify-between">
-              <span class="font-medium text-zinc-200 flex items-center gap-2 truncate">
+          <div class="space-y-1.5 p-2.5 rounded-xl hover:bg-zinc-800/40 transition-colors border border-zinc-800/40 hover:border-zinc-700/60 bg-zinc-950/40">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2 min-w-0 flex-1">
                 <span class="w-5 h-5 rounded-md bg-zinc-800 text-zinc-400 font-mono text-[10px] flex items-center justify-center font-bold flex-shrink-0">${idx + 1}</span>
-                <span class="font-mono text-zinc-300 truncate" title="${safePath}">${safePath}</span>
-              </span>
-              <span class="font-bold text-emerald-400 flex-shrink-0 ml-2">${fmt(item.views)} PV <span class="text-[10px] text-zinc-500 font-normal">(${fmt(item.users)}명)</span></span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold flex-shrink-0 ${badgeClass}">
+                  ${badge}
+                </span>
+                <span class="font-bold text-zinc-100 truncate text-xs sm:text-sm" title="${escapeHtml(title)}">
+                  ${escapeHtml(title)}
+                </span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded-md bg-zinc-800 text-zinc-400 border border-zinc-700 font-medium flex-shrink-0">직업 합계</span>
+              </div>
+              <div class="text-right flex-shrink-0">
+                <span class="font-bold text-emerald-400 text-xs sm:text-sm">${fmt(job.views)} PV</span>
+                <span class="text-[10px] text-zinc-500 font-normal ml-1">(${fmt(job.users)}명)</span>
+              </div>
             </div>
-            <div class="w-full h-2 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800/80">
+            <div class="flex items-center justify-between text-[11px] text-zinc-500">
+              <span class="truncate pr-2">${subtitle}</span>
+              <span class="text-[10px] text-zinc-600 font-mono flex-shrink-0">${percent}%</span>
+            </div>
+            <div class="w-full h-1.5 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800/60">
               <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full" style="width: ${percent}%;"></div>
             </div>
           </div>
         `;
       }).join('');
+    }
+
+    // [인원별 통계] 렌더링 - 특정 인원(멤버) 상세 페이지들만 모아서 순위 나열
+    function renderTopPagesMember(list, container) {
+      const memberList = list.filter(item => {
+        const info = formatPageHierarchy(item);
+        return info.isMember;
+      });
+
+      if (memberList.length === 0) {
+        container.innerHTML = `<div class="text-xs text-zinc-500 py-8 text-center">인원(멤버) 상세 통계 데이터가 아직 없습니다.</div>`;
+        return;
+      }
+
+      const maxViews = Math.max(...memberList.map(d => d.views || 0), 1);
+      const displayList = topPagesShowAll ? memberList : memberList.slice(0, 10);
+      const hasMore = memberList.length > 10;
+
+      const itemsHtml = displayList.map((item, idx) => {
+        const percent = Math.min(100, Math.max(4, Math.round(((item.views || 0) / maxViews) * 100)));
+        const info = formatPageHierarchy(item);
+        const safeTitle = escapeHtml(info.title);
+        const safePath = escapeHtml(item.path);
+
+        return `
+          <div class="space-y-1.5 p-2.5 rounded-xl hover:bg-zinc-800/40 transition-colors border border-zinc-800/40 hover:border-zinc-700/60 bg-zinc-950/40">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2 min-w-0 flex-1">
+                <span class="w-5 h-5 rounded-md bg-zinc-800 text-zinc-400 font-mono text-[10px] flex items-center justify-center font-bold flex-shrink-0">${idx + 1}</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold flex-shrink-0 ${info.badgeClass}">
+                  ${info.badge}
+                </span>
+                <span class="font-bold text-zinc-100 truncate text-xs sm:text-sm" title="${safeTitle}">
+                  ${safeTitle}
+                </span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 font-bold flex-shrink-0">인원</span>
+              </div>
+              <div class="text-right flex-shrink-0">
+                <span class="font-bold text-emerald-400 text-xs sm:text-sm">${fmt(item.views)} PV</span>
+                <span class="text-[10px] text-zinc-500 font-normal ml-1">(${fmt(item.users)}명)</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-zinc-500 font-mono">
+              <span class="truncate pr-2" title="${safePath}">${safePath}</span>
+              <span class="text-[10px] text-zinc-600 flex-shrink-0">${percent}%</span>
+            </div>
+            <div class="w-full h-1.5 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800/60">
+              <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full" style="width: ${percent}%;"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      let moreBtnHtml = "";
+      if (hasMore) {
+        moreBtnHtml = `
+          <div class="pt-2 text-center">
+            <button 
+              type="button" 
+              onclick="toggleTopPagesShowAll()" 
+              class="px-4 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-xs text-zinc-300 hover:text-white font-bold transition-all cursor-pointer inline-flex items-center gap-1.5 shadow-sm"
+            >
+              <span>${topPagesShowAll ? '▲ 상위 10개만 접기' : `▼ 전체 ${memberList.length}명 모두 펼치기 (11위 ~ ${memberList.length}위)`}</span>
+            </button>
+          </div>
+        `;
+      }
+
+      container.innerHTML = itemsHtml + moreBtnHtml;
+    }
+
+    // [전체] 렌더링 - 메인 홈, 직업 탭, 인원 전체 순위
+    function renderTopPagesAll(list, container) {
+      const maxViews = Math.max(...list.map(d => d.views || 0), 1);
+      const displayList = topPagesShowAll ? list : list.slice(0, 10);
+      const hasMore = list.length > 10;
+
+      const itemsHtml = displayList.map((item, idx) => {
+        const percent = Math.min(100, Math.max(4, Math.round(((item.views || 0) / maxViews) * 100)));
+        const info = formatPageHierarchy(item);
+        const safeTitle = escapeHtml(info.title);
+        const safePath = escapeHtml(item.path);
+
+        return `
+          <div class="space-y-1.5 p-2.5 rounded-xl hover:bg-zinc-800/40 transition-colors border border-zinc-800/40 hover:border-zinc-700/60 bg-zinc-950/40">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2 min-w-0 flex-1">
+                <span class="w-5 h-5 rounded-md bg-zinc-800 text-zinc-400 font-mono text-[10px] flex items-center justify-center font-bold flex-shrink-0">${idx + 1}</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold flex-shrink-0 ${info.badgeClass}">
+                  ${info.badge}
+                </span>
+                <span class="font-bold text-zinc-100 truncate text-xs sm:text-sm" title="${safeTitle}">
+                  ${safeTitle}
+                </span>
+                ${info.isMember ? '<span class="text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 font-bold flex-shrink-0">인원</span>' : ''}
+              </div>
+              <div class="text-right flex-shrink-0">
+                <span class="font-bold text-emerald-400 text-xs sm:text-sm">${fmt(item.views)} PV</span>
+                <span class="text-[10px] text-zinc-500 font-normal ml-1">(${fmt(item.users)}명)</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-zinc-500 font-mono">
+              <span class="truncate pr-2" title="${safePath}">${safePath}</span>
+              <span class="text-[10px] text-zinc-600 flex-shrink-0">${percent}%</span>
+            </div>
+            <div class="w-full h-1.5 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800/60">
+              <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full" style="width: ${percent}%;"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      let moreBtnHtml = "";
+      if (hasMore) {
+        moreBtnHtml = `
+          <div class="pt-2 text-center">
+            <button 
+              type="button" 
+              onclick="toggleTopPagesShowAll()" 
+              class="px-4 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-xs text-zinc-300 hover:text-white font-bold transition-all cursor-pointer inline-flex items-center gap-1.5 shadow-sm"
+            >
+              <span>${topPagesShowAll ? '▲ 상위 10개만 접기' : `▼ 전체 ${list.length}개 URL 모두 펼치기 (11위 ~ ${list.length}위)`}</span>
+            </button>
+          </div>
+        `;
+      }
+
+      container.innerHTML = itemsHtml + moreBtnHtml;
     }
 
     function renderDevices(list) {
@@ -955,6 +1360,9 @@
         </div>
       `;
     }
+
+    // 0. 스트리머 인원 정보 맵 로드 (인원 상세 명칭 매핑)
+    loadStreamerMap();
 
     // 1. 실시간 접속자 즉시 단독 로드 (0.3초 이내 반응)
     fetchRealtimeOnly();

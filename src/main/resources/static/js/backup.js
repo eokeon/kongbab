@@ -322,13 +322,14 @@ function manualBackupNow() {
 }
 
 function openBackupModal() {
-  const modal = document.getElementById("backup-modal");
-  if (!modal) return;
+  if (typeof selectAdminPage === "function") {
+    selectAdminPage('backup');
+    return;
+  }
+  refreshBackupTabUI();
+}
 
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
-  isBackupModalOpen = true;
-
+function refreshBackupTabUI() {
   const dirEl = document.getElementById("backup-modal-dir-path");
   if (dirEl) dirEl.textContent = getBackupDirectoryPath();
 
@@ -347,6 +348,7 @@ function openBackupModal() {
 
   loadAndRenderBackupList();
 }
+window.refreshBackupTabUI = refreshBackupTabUI;
 
 function closeBackupModal() {
   const modal = document.getElementById("backup-modal");

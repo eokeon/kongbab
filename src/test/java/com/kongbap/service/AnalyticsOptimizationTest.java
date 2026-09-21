@@ -70,4 +70,54 @@ class AnalyticsOptimizationTest {
         Map<String, Object> cooldownRes = googleAnalyticsService.getAnalyticsSummary(true);
         assertThat(cooldownRes).isSameAs(mockCache);
     }
+
+    @Test
+    @DisplayName("GoogleAnalyticsService: 세부 영상 탭(&tab=full 등)을 인원(member) 단위로 정상 정규화 및 합산 검증")
+    void testParseTopPagesNormalizeToMember() throws Exception {
+        String json = """
+        {
+          "rows": [
+            {
+              "dimensionValues": [{"value": "/kongbap/?category=police&member=pol-14&tab=full"}],
+              "metricValues": [{"value": "10"}, {"value": "3"}]
+            },
+            {
+              "dimensionValues": [{"value": "/kongbap/?category=police&member=pol-14&tab=binge"}],
+              "metricValues": [{"value": "5"}, {"value": "2"}]
+            },
+            {
+              "dimensionValues": [{"value": "/kongbap/?category=police"}],
+              "metricValues": [{"value": "20"}, {"value": "8"}]
+            },
+            {
+              "dimensionValues": [{"value": "/kongbap/"}],
+              "metricValues": [{"value": "50"}, {"value": "10"}]
+            }
+          ]
+        }
+        """;
+
+        com.fasterxml.jackson.databind.JsonNode reportNode = objectMapper.readTree(json);
+        java.util.List<Map<String, Object>> topPages = ReflectionTestUtils.invokeMethod(
+                googleAnalyticsService, "parseTopPages", reportNode);
+
+        assertThat(topPages).isNotNull();
+        assertThat(topPages).hasSize(3); // /kongbap/, /kongbap/?category=police, /kongbap/?category=police&member=pol-14
+
+        // 1순위: /kongbap/ (50 views)
+        assertThat(topPages.get(0).get("path")).isEqualTo("/kongbap/");
+        assertThat(topPages.get(0).get("views")).isEqualTo(50L);
+
+        // 2순위: /kongbap/?category=police (20 views)
+        assertThat(topPages.get(1).get("path")).isEqualTo("/kongbap/?category=police");
+        assertThat(topPages.get(1).get("views")).isEqualTo(20L);
+
+        // 3순위: /kongbap/?category=police&member=pol-14 (10 + 5 = 15 views 합산됨!)
+        Map<String, Object> memberItem = topPages.get(2);
+        assertThat(memberItem.get("path")).isEqualTo("/kongbap/?category=police&member=pol-14");
+        assertThat(memberItem.get("views")).isEqualTo(15L);
+        assertThat(memberItem.get("users")).isEqualTo(3L);
+        assertThat(memberItem.get("category")).isEqualTo("police");
+        assertThat(memberItem.get("member")).isEqualTo("pol-14");
+    }
 }

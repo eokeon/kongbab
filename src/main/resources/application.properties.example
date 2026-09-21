@@ -43,3 +43,9 @@ server.servlet.session.cookie.max-age=3600
 # YouTube Data API v3 설정 (Google Cloud Console에서 발급받은 API 키 입력)
 # 미등록 시 oEmbed 방식으로 기본 정보(제목 등)를 자동 조회합니다.
 youtube.api.key=
+
+# 웹 및 API 전송 압축 최적화 (GZIP) - JSON 및 정적 에셋 전송량 대폭 절감
+server.compression.enabled=true
+server.compression.mime-types=text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json,application/xml
+server.compression.min-response-size=1024
+

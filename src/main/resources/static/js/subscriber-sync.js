@@ -365,7 +365,7 @@ async function fetchMemberSubscriberFromYouTube(member) {
 async function executeSubscriberSync(onProgress) {
   if (typeof requireServerConnection === "function") {
     const isConnected = await requireServerConnection("구독자 일괄 갱신");
-    if (!isConnected) return 0;
+    if (!isConnected) return { success: false, updatedCount: 0, totalIncrease: 0, targetsCount: 0 };
   }
 
   if (typeof initYouTubeApiKeyFromBackend === "function") {
@@ -375,7 +375,17 @@ async function executeSubscriberSync(onProgress) {
   const allMembers = extractAllStreamersFromKongbapData();
   // 대상: 오직 인원 정보에 유튜브 또는 치지직 링크(youtubeUrl)가 등록된 인원만 대상
   const targets = allMembers.filter(m => m.youtubeUrl && m.youtubeUrl.trim());
-  if (targets.length === 0) return 0;
+  if (targets.length === 0) return { success: true, updatedCount: 0, totalIncrease: 0, targetsCount: 0 };
+
+  // 원래 구독자/팔로워 정보가 등록되어 있던 인원 기록 (원래 정보가 있었던 대상만 기존 대비 증가량 계산)
+  const originalSubMap = new Map();
+  targets.forEach(m => {
+    const raw = m.subscriberCount;
+    const num = parseSubscriberCount(raw);
+    if (num > 0) {
+      originalSubMap.set(String(m.id), num);
+    }
+  });
 
   // 1단계: 각 멤버별 인원 정보의 링크 분석
   const targetItems = [];
@@ -636,20 +646,59 @@ async function executeSubscriberSync(onProgress) {
     await new Promise(resolve => setTimeout(resolve, 15));
   });
 
+  // 3단계: 기존 대비 총 증가량 계산 (원래 정보가 등록되어 있던 인원 대상)
+  let totalSubIncrease = 0;
+  let prevTotalSub = 0;
+  let newTotalSub = 0;
+  let increasedCount = 0;
+
+  targets.forEach(m => {
+    const memId = String(m.id);
+    if (originalSubMap.has(memId)) {
+      const prevCount = originalSubMap.get(memId);
+      const newCount = parseSubscriberCount(m.subscriberCount);
+      if (newCount > 0) {
+        prevTotalSub += prevCount;
+        newTotalSub += newCount;
+        const diff = newCount - prevCount;
+        if (diff > 0) {
+          totalSubIncrease += diff;
+          increasedCount++;
+        }
+      }
+    }
+  });
+
   persistData();
-  if (typeof renderContent === "function") renderContent();
+  if (typeof state !== "undefined" && state.currentCategory !== "adminpage" && typeof renderContent === "function") {
+    renderContent();
+  }
 
   const syncPromises = [];
   if (typeof syncAllStreamersToDb === "function") {
     syncPromises.push(syncAllStreamersToDb(extractAllStreamersFromKongbapData()));
   }
   if (typeof createBackupSnapshot === "function") {
-    syncPromises.push(createBackupSnapshot(`구독자/팔로워 수 일괄 갱신 (${updatedCount}명)`, false));
+    const backupDesc = totalSubIncrease > 0
+      ? `구독자/팔로워 수 일괄 갱신 (${updatedCount}명, 기존 대비 +${totalSubIncrease.toLocaleString()}명)`
+      : `구독자/팔로워 수 일괄 갱신 (${updatedCount}명)`;
+    syncPromises.push(createBackupSnapshot(backupDesc, false));
   }
 
   try {
     await Promise.all(syncPromises);
   } catch (e) {}
 
-  return updatedCount;
+  return {
+    success: true,
+    updatedCount,
+    targetsCount: targets.length,
+    totalIncrease: totalSubIncrease,
+    prevTotal: prevTotalSub,
+    newTotal: newTotalSub,
+    increasedCount,
+    hasPrevCount: originalSubMap.size,
+    valueOf() { return this.updatedCount; },
+    toString() { return String(this.updatedCount); }
+  };
 }

@@ -50,7 +50,23 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
             }
         }
 
-        // 4. 관리자 세션 검증
+        // 4. 일반 사용자 전용 엔드포인트 (/api/user/**) 검증
+        if (uri.startsWith("/api/user/")) {
+            adminTokenService.validateAndRestoreSession(request, response);
+            HttpSession currentSession = request.getSession(false);
+            if (currentSession != null && currentSession.getAttribute(AuthController.SESSION_USER_KEY) != null) {
+                return true;
+            }
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            Map<String, Object> errorRes = new HashMap<>();
+            errorRes.put("success", false);
+            errorRes.put("message", "로그인이 필요한 작업입니다.");
+            response.getWriter().write(objectMapper.writeValueAsString(errorRes));
+            return false;
+        }
+
+        // 5. 관리자 세션 검증
         HttpSession session = request.getSession(false);
         if (session != null) {
             Object user = session.getAttribute(AuthController.SESSION_USER_KEY);
@@ -59,9 +75,15 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
             }
         }
 
-        // 5. 서버 재시작 후 세션 복구: 영구 토큰(쿠키 또는 Authorization 헤더) 검증
+        // 6. 서버 재시작 후 세션 복구: 영구 토큰(쿠키 또는 Authorization 헤더) 검증 (관리자 기능은 관리자만)
         if (adminTokenService.validateAndRestoreSession(request, response)) {
-            return true;
+            HttpSession restoredSession = request.getSession(false);
+            if (restoredSession != null) {
+                Object user = restoredSession.getAttribute(AuthController.SESSION_USER_KEY);
+                if (adminTokenService.getAdminUsername().equals(user) || "admin".equals(user)) {
+                    return true;
+                }
+            }
         }
 
         log.warn("비인가 접근 차단: [{} {}] IP: {}", method, uri, request.getRemoteAddr());

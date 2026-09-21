@@ -45,7 +45,8 @@ const state = {
   currentVideoTab: "clip",
   searchQuery: "",
   navigationSource: null,
-  currentUser: { role: "guest", username: "게스트" }
+  currentUser: { role: "guest", username: "게스트" },
+  userWatchRecords: {} // key: `${streamerId}_${videoType}` -> record
 };
 
 if (typeof window !== "undefined") {
@@ -57,6 +58,17 @@ function isAdmin() {
   return !!(state.currentUser && state.currentUser.role === "admin");
 }
 
+function isUserLoggedIn() {
+  return !!(state.currentUser && (state.currentUser.role === "user" || state.currentUser.role === "admin"));
+}
+
+function isWatchedSection(streamerId, videoType) {
+  if (!streamerId || !videoType) return false;
+  const key = `${streamerId}_${videoType}`;
+  const record = state.userWatchRecords && state.userWatchRecords[key];
+  return !!(record && (record.watched === true || record.watched === "true"));
+}
+
 function loadStoredAuth() {
   try {
     const saved = localStorage.getItem("kongbap_auth_user");
@@ -65,7 +77,7 @@ function loadStoredAuth() {
 
     if (saved && expireAt && now < Number(expireAt)) {
       const parsed = JSON.parse(saved);
-      if (parsed && parsed.role === "admin") {
+      if (parsed && (parsed.role === "admin" || parsed.role === "user")) {
         state.currentUser = parsed;
         return;
       }
@@ -190,7 +202,7 @@ function applyCategoryStructure(structureCategories) {
   KONGBAP_DATA.categories = reorderedCats;
 }
 
-const CURRENT_DATA_VERSION = "20260919_gang_mariadb_sync_v6";
+const CURRENT_DATA_VERSION = "20260922_admin_opt_v1";
 window.CURRENT_DATA_VERSION = CURRENT_DATA_VERSION;
 
 function loadStoredData() {

@@ -359,6 +359,14 @@ function getCurrentNavSnapshot() {
 
 function updatePageTitle() {
   const baseTitle = "콩밥특별시 아카이브";
+  if (state.currentCategory === "mypage") {
+    document.title = `마이페이지 | ${baseTitle}`;
+    return;
+  }
+  if (state.currentCategory === "adminpage") {
+    document.title = `관리자 센터 | ${baseTitle}`;
+    return;
+  }
   if (state.searchQuery) {
     document.title = `"${state.searchQuery}" 검색 결과 | ${baseTitle}`;
     return;
@@ -436,10 +444,21 @@ function applyNavState(navState, options = {}) {
 
   state.navigationSource = navState.source || null;
 
+  let cat = null;
   const targetCatId = navState.category || "police";
-  const cat = (KONGBAP_DATA.categories || []).find(c => c.id === targetCatId) || (KONGBAP_DATA.categories || [])[0];
-  if (cat) {
-    state.currentCategory = cat.id;
+  if (targetCatId === "mypage") {
+    state.currentCategory = "mypage";
+    state.currentGroup = null;
+    state.currentMember = null;
+  } else if (targetCatId === "adminpage") {
+    state.currentCategory = "adminpage";
+    state.currentGroup = null;
+    state.currentMember = null;
+  } else {
+    cat = (KONGBAP_DATA.categories || []).find(c => c.id === targetCatId) || (KONGBAP_DATA.categories || [])[0];
+    if (cat) {
+      state.currentCategory = cat.id;
+    }
   }
 
   // 그룹 복원
@@ -519,6 +538,7 @@ function applyNavState(navState, options = {}) {
 
   saveNavigationState();
 
+  if (typeof renderHeaderAuth === "function") renderHeaderAuth();
   if (typeof renderCategoryTabs === "function") renderCategoryTabs();
   if (typeof renderContent === "function") renderContent();
 
@@ -594,7 +614,19 @@ function restoreNavigationState() {
 
     state.navigationSource = targetSource;
 
-    if (targetCat && KONGBAP_DATA.categories.some(c => c.id === targetCat)) {
+    if (targetCat === "mypage") {
+      state.currentCategory = "mypage";
+      state.currentGroup = null;
+      state.currentMember = null;
+    } else if (targetCat === "adminpage") {
+      if (typeof isAdmin === "function" && isAdmin()) {
+        state.currentCategory = "adminpage";
+        state.currentGroup = null;
+        state.currentMember = null;
+      } else {
+        state.currentCategory = (KONGBAP_DATA.categories[0] && KONGBAP_DATA.categories[0].id) || "police";
+      }
+    } else if (targetCat && KONGBAP_DATA.categories.some(c => c.id === targetCat)) {
       state.currentCategory = targetCat;
     } else {
       state.currentCategory = (KONGBAP_DATA.categories[0] && KONGBAP_DATA.categories[0].id) || "police";
@@ -815,6 +847,66 @@ function selectCategory(catId) {
   clearSearchInput();
   saveNavigationState();
   pushNavHistory();
+  renderContent();
+  window.scrollTo(0, 0);
+}
+
+function selectMyPage() {
+  closeAllOpenModals();
+  state.currentCategory = "mypage";
+  state.currentGroup = null;
+  state.currentMember = null;
+  state.navigationSource = null;
+  try {
+    sessionStorage.removeItem("kongbap_nav_source");
+    sessionStorage.removeItem("kongbap_nav_group");
+    sessionStorage.removeItem("kongbap_nav_member");
+    sessionStorage.setItem("kongbap_nav_category", "mypage");
+  } catch (e) {}
+  state.searchQuery = "";
+  isSearchHistoryPushed = false;
+  lastMemberScrollY = null;
+  lastSelectedMemberId = null;
+  clearSearchInput();
+  saveNavigationState();
+  pushNavHistory();
+  renderHeaderAuth();
+  renderCategoryTabs();
+  renderContent();
+  window.scrollTo(0, 0);
+}
+
+function selectAdminPage(tab = null) {
+  if (typeof isAdmin === "function" && !isAdmin()) {
+    if (typeof openLoginModal === "function") openLoginModal();
+    return;
+  }
+  closeAllOpenModals();
+  state.currentCategory = "adminpage";
+  state.currentGroup = null;
+  state.currentMember = null;
+  state.navigationSource = null;
+  if (tab && typeof switchAdminPageTab === "function") {
+    state.currentAdminTab = tab;
+    if (typeof currentAdminPageTab !== "undefined") {
+      currentAdminPageTab = tab;
+    }
+  }
+  try {
+    sessionStorage.removeItem("kongbap_nav_source");
+    sessionStorage.removeItem("kongbap_nav_group");
+    sessionStorage.removeItem("kongbap_nav_member");
+    sessionStorage.setItem("kongbap_nav_category", "adminpage");
+  } catch (e) {}
+  state.searchQuery = "";
+  isSearchHistoryPushed = false;
+  lastMemberScrollY = null;
+  lastSelectedMemberId = null;
+  clearSearchInput();
+  saveNavigationState();
+  pushNavHistory();
+  renderHeaderAuth();
+  renderCategoryTabs();
   renderContent();
   window.scrollTo(0, 0);
 }
@@ -1253,13 +1345,58 @@ function setupEventListeners() {
   }, { passive: true });
 }
 
+function selectMemberById(memberId) {
+  closeAllOpenModals();
+  for (const c of (KONGBAP_DATA.categories || [])) {
+    if (c.hasSubgroups) {
+      for (const g of (c.groups || [])) {
+        const found = (g.members || []).find(m => String(m.id) === String(memberId) || String(m.customId) === String(memberId));
+        if (found) {
+          state.currentCategory = c.id;
+          state.currentGroup = g;
+          state.currentMember = found;
+          state.currentVideoTab = "clip";
+          state.navigationSource = "mypage";
+          saveNavigationState();
+          pushNavHistory();
+          renderHeaderAuth();
+          renderCategoryTabs();
+          renderContent();
+          window.scrollTo(0, 0);
+          return;
+        }
+      }
+    } else {
+      const found = (c.members || []).find(m => String(m.id) === String(memberId) || String(m.customId) === String(memberId));
+      if (found) {
+        state.currentCategory = c.id;
+        state.currentGroup = null;
+        state.currentMember = found;
+        state.currentVideoTab = "clip";
+        state.navigationSource = "mypage";
+        saveNavigationState();
+        pushNavHistory();
+        renderHeaderAuth();
+        renderCategoryTabs();
+        renderContent();
+        window.scrollTo(0, 0);
+        return;
+      }
+    }
+  }
+}
+
 window.goBackFromMember = goBackFromMember;
 window.resetToCategory = resetToCategory;
+window.selectMyPage = selectMyPage;
+window.selectAdminPage = selectAdminPage;
+window.selectMemberById = selectMemberById;
 window.recordMemberClickPosition = recordMemberClickPosition;
 window.restoreMemberScrollPosition = restoreMemberScrollPosition;
 window.pushNavHistory = pushNavHistory;
 window.replaceNavHistory = replaceNavHistory;
 window.updatePageTitle = updatePageTitle;
 window.closeAllOpenModals = closeAllOpenModals;
+
 
 

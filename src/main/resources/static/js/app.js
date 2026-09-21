@@ -4,6 +4,10 @@ async function initializeApplication() {
   initBackupStorage();
   setupEventListeners();
 
+  if (isUserLoggedIn() && typeof loadUserWatchRecords === "function") {
+    loadUserWatchRecords();
+  }
+
   // 1. 이미 캐시된 데이터가 있다면 즉시 화면을 렌더링하여 첫 로딩 체감 속도를 0ms(즉시 표시)로 극대화
   const hasCachedData = KONGBAP_DATA && Array.isArray(KONGBAP_DATA.categories) &&
     KONGBAP_DATA.categories.some(c => (c.hasSubgroups ? (c.groups || []).some(g => (g.members || []).length > 0) : (c.members || []).length > 0));
@@ -22,11 +26,14 @@ async function initializeApplication() {
   try {
     const me = await apiGetMe();
     if (me && me.success) {
-      if (me.role === "admin") {
-        state.currentUser = { role: "admin", username: me.username };
+      if (me.role === "admin" || me.role === "user") {
+        state.currentUser = { role: me.role, username: me.username };
         const expireDuration = (me.expiresInSeconds || 3600) * 1000;
         localStorage.setItem("kongbap_auth_user", JSON.stringify(state.currentUser));
         localStorage.setItem("kongbap_auth_expire_at", String(Date.now() + expireDuration));
+        if (typeof loadUserWatchRecords === "function") {
+          await loadUserWatchRecords();
+        }
       } else {
         state.currentUser = { role: "guest", username: "게스트" };
         localStorage.setItem("kongbap_auth_user", JSON.stringify(state.currentUser));
