@@ -23,6 +23,12 @@ async function apiLogin(username, password) {
       body: JSON.stringify({ username, password })
     });
     if (!res.ok) {
+      try {
+        const errData = await res.json();
+        if (errData && errData.message) {
+          return errData;
+        }
+      } catch (parseErr) {}
       throw new Error(`HTTP ${res.status}`);
     }
     const data = await res.json();
@@ -33,21 +39,21 @@ async function apiLogin(username, password) {
   } catch (e) {
     console.warn("로그인 서버 미연결 (정적 배포 모드 감지):", e);
 
-    // GitHub Pages 정적 배포 fallback: user1 / user2 계정 오프라인 로그인 지원
-    if ((username === "user1" || username === "user2") && password === "1234") {
+    // GitHub Pages 정적 배포 fallback: 오직 user1 계정만 오프라인 로그인 허용 (user1 외 타 계정은 전면 차단)
+    if (username === "user1" && password === "1234") {
       const mockToken = `static_offline_token_${username}_${Date.now()}`;
       localStorage.setItem("kongbap_admin_token", mockToken);
       return {
         success: true,
         role: "user",
-        username: username,
+        username: "user1",
         token: mockToken,
         expiresInSeconds: 2592000,
         message: "배포 사이트(읽기 전용 모드)로 로그인되었습니다."
       };
     }
 
-    return { success: false, message: "백엔드 서버와 통신할 수 없습니다." };
+    return { success: false, message: "아이디 또는 비밀번호가 일치하지 않습니다." };
   }
 }
 
@@ -89,7 +95,7 @@ async function apiGetMe() {
       const expireAt = localStorage.getItem("kongbap_auth_expire_at");
       if (savedAuth && expireAt && Date.now() < Number(expireAt)) {
         const user = JSON.parse(savedAuth);
-        if (user && (user.role === "user" || user.role === "admin")) {
+        if (user && (user.role === "admin" || (user.role === "user" && user.username === "user1"))) {
           return { success: true, role: user.role, username: user.username, message: "정적 배포 세션 유지" };
         }
       }

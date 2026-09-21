@@ -24,7 +24,9 @@ public class UserInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         ensureUser("user1", "1234", "user");
-        ensureUser("user2", "1234", "user");
+        try {
+            appUserRepository.findByUsername("user2").ifPresent(appUserRepository::delete);
+        } catch (Exception ignored) {}
         userWatchService.exportUser1WatchDataToJson();
     }
 

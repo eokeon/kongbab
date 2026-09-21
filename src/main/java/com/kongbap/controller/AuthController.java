@@ -80,14 +80,17 @@ public class AuthController {
                     .build());
         }
 
-        // 2. 관리자 또는 일반 유저(user1 등) 비밀번호 암호화 검증
+        // 2. 관리자 또는 일반 유저(user1만 허용) 비밀번호 암호화 검증
         boolean isAdmin = adminUsername.equals(inputUsername) && adminTokenService.matchesAdminPassword(request.getPassword());
         Optional<AppUser> userOpt = Optional.empty();
         boolean isUser = false;
         if (!isAdmin) {
-            userOpt = appUserRepository.findByUsername(inputUsername);
-            if (userOpt.isPresent() && passwordEncoderService.matches(request.getPassword(), userOpt.get().getPassword())) {
-                isUser = true;
+            // 일반 사용자는 오직 user1 계정만 로그인을 허용함 (user2 등 타 계정 로그인 전면 차단)
+            if ("user1".equalsIgnoreCase(inputUsername)) {
+                userOpt = appUserRepository.findByUsername("user1");
+                if (userOpt.isPresent() && passwordEncoderService.matches(request.getPassword(), userOpt.get().getPassword())) {
+                    isUser = true;
+                }
             }
         }
         boolean isValid = isAdmin || isUser;

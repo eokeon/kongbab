@@ -77,9 +77,13 @@ function loadStoredAuth() {
 
     if (saved && expireAt && now < Number(expireAt)) {
       const parsed = JSON.parse(saved);
-      if (parsed && (parsed.role === "admin" || parsed.role === "user")) {
+      if (parsed && (parsed.role === "admin" || (parsed.role === "user" && parsed.username === "user1"))) {
         state.currentUser = parsed;
         return;
+      } else {
+        localStorage.removeItem("kongbap_auth_user");
+        localStorage.removeItem("kongbap_auth_expire_at");
+        localStorage.removeItem("kongbap_admin_token");
       }
     }
   } catch (e) {}

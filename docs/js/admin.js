@@ -38,6 +38,15 @@ async function handleAdminLogin(e) {
     return;
   }
 
+  // user1 및 admin 계정 외의 로그인 시도 차단
+  if (username !== "user1" && username !== "admin") {
+    if (err) {
+      err.textContent = "아이디 또는 비밀번호가 일치하지 않습니다.";
+      err.classList.remove("hidden");
+    }
+    return;
+  }
+
   const res = await apiLogin(username, password);
   if (res && res.success) {
     const expireDuration = (res.expiresInSeconds || 3600) * 1000;

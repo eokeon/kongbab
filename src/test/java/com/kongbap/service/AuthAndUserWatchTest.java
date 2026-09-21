@@ -84,36 +84,27 @@ class AuthAndUserWatchTest {
     }
 
     @Test
-    @DisplayName("UserInitializer: user1과 user2가 없으면 1234 비밀번호로 자동 생성")
-    void testUserInitializer_CreatesUser1AndUser2() {
+    @DisplayName("UserInitializer: user1이 없으면 1234 비밀번호로 자동 생성 및 user2 정리")
+    void testUserInitializer_CreatesUser1AndCleansUser2() {
         when(appUserRepository.findByUsername("user1")).thenReturn(Optional.empty());
-        when(appUserRepository.findByUsername("user2")).thenReturn(Optional.empty());
+        AppUser oldUser2 = AppUser.builder().id(2L).username("user2").build();
+        when(appUserRepository.findByUsername("user2")).thenReturn(Optional.of(oldUser2));
 
         userInitializer.run(null);
 
         ArgumentCaptor<AppUser> captor = ArgumentCaptor.forClass(AppUser.class);
-        verify(appUserRepository, times(2)).save(captor.capture());
+        verify(appUserRepository, times(1)).save(captor.capture());
         List<AppUser> createdList = captor.getAllValues();
 
-        assertThat(createdList).hasSize(2);
+        assertThat(createdList).hasSize(1);
         assertThat(createdList.get(0).getUsername()).isEqualTo("user1");
-        assertThat(createdList.get(1).getUsername()).isEqualTo("user2");
         assertThat(passwordEncoderService.matches("1234", createdList.get(0).getPassword())).isTrue();
-        assertThat(passwordEncoderService.matches("1234", createdList.get(1).getPassword())).isTrue();
+        verify(appUserRepository, times(1)).delete(oldUser2);
     }
 
     @Test
-    @DisplayName("AuthController: user2 / 1234 로그인 성공")
-    void testLogin_User2_Success() {
-        AppUser user2 = AppUser.builder()
-                .id(11L)
-                .username("user2")
-                .password(passwordEncoderService.encode("1234"))
-                .role("user")
-                .build();
-
-        when(appUserRepository.findByUsername("user2")).thenReturn(Optional.of(user2));
-
+    @DisplayName("AuthController: user1 외 일반 사용자(user2) 로그인 차단 검증")
+    void testLogin_User2_Unauthorized() {
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockHttpSession session = new MockHttpSession();
@@ -125,11 +116,10 @@ class AuthAndUserWatchTest {
 
         ResponseEntity<AuthResponse> res = authController.login(loginReq, request, response, session);
 
-        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         assertThat(res.getBody()).isNotNull();
-        assertThat(res.getBody().isSuccess()).isTrue();
-        assertThat(res.getBody().getRole()).isEqualTo("user");
-        assertThat(res.getBody().getUsername()).isEqualTo("user2");
+        assertThat(res.getBody().isSuccess()).isFalse();
+        assertThat(res.getBody().getMessage()).contains("아이디 또는 비밀번호가 일치하지 않습니다");
     }
 
     @Test
