@@ -66,6 +66,9 @@ async function handleAdminLogin(e) {
 
     if (state.currentUser.role === "admin") {
       showToast("🛡️ 어드민 로그인 완료 (30일 동안 로그인 유지)");
+      if (typeof initYouTubeApiKeyFromBackend === "function") {
+        initYouTubeApiKeyFromBackend();
+      }
     } else {
       showToast("👤 로그인되었습니다.");
     }
@@ -795,21 +798,32 @@ async function startSubscriberSync() {
   if (logBox) logBox.innerHTML = "";
 
   try {
+    let liveSuccess = 0;
+    let liveFail = 0;
+
     const syncRes = await executeSubscriberSync((current, total, streamerName, status) => {
+      const isSuccess = status.startsWith("성공");
+      if (isSuccess) {
+        liveSuccess++;
+      } else if (current > 0 && !streamerName.includes("채널")) {
+        liveFail++;
+      }
+
       const pct = Math.round((current / total) * 100);
       if (progressBar) progressBar.style.width = `${pct}%`;
-      if (progressText) progressText.textContent = `${pct}% (${current}/${total}명)`;
+      if (progressText) {
+        progressText.textContent = `${pct}% (${current}/${total}명) · 성공 ${liveSuccess}명 / 실패 ${liveFail}명`;
+      }
 
       if (logBox) {
         const line = document.createElement("div");
         line.className = "text-xs sm:text-[13px] py-1 font-mono flex items-center justify-between gap-3";
-        const isSuccess = status.startsWith("성공");
         line.innerHTML = `
           <div class="truncate">
             <span class="text-zinc-500">[${current}/${total}]</span>
             <span class="text-zinc-200 font-medium ml-1.5">${streamerName}</span>
           </div>
-          <span class="flex-shrink-0 ${isSuccess ? 'text-emerald-400 font-bold' : 'text-zinc-400'}">${status}</span>
+          <span class="flex-shrink-0 ${isSuccess ? 'text-emerald-400 font-bold' : 'text-rose-400 font-medium'}">${status}</span>
         `;
         logBox.appendChild(line);
         logBox.scrollTop = logBox.scrollHeight;
@@ -817,6 +831,15 @@ async function startSubscriberSync() {
     });
 
     const updatedCount = (typeof syncRes === "object" && syncRes !== null) ? syncRes.updatedCount : (Number(syncRes) || 0);
+    const successCount = (typeof syncRes === "object" && syncRes !== null && syncRes.successCount !== undefined) 
+      ? syncRes.successCount 
+      : updatedCount;
+    const totalCount = (typeof syncRes === "object" && syncRes !== null && syncRes.totalCount !== undefined) 
+      ? syncRes.totalCount 
+      : ((syncRes && syncRes.targetsCount) || updatedCount);
+    const failedCount = (typeof syncRes === "object" && syncRes !== null && syncRes.failedCount !== undefined)
+      ? syncRes.failedCount
+      : Math.max(0, totalCount - successCount);
     const totalIncrease = (typeof syncRes === "object" && syncRes !== null) ? (syncRes.totalIncrease || 0) : 0;
     const incText = totalIncrease > 0 
       ? `+${totalIncrease.toLocaleString()}명` 
@@ -827,7 +850,7 @@ async function startSubscriberSync() {
 
     if (progressBar) progressBar.style.width = "100%";
     if (progressText) {
-      progressText.textContent = `100% (${updatedCount}명 갱신 완료 · 기존 대비 총 증가: ${incText})`;
+      progressText.textContent = `100% 완료 (${totalCount}명 중 성공: ${successCount}명, 실패: ${failedCount}명 | 총 증가: ${incText})`;
     }
 
     if (logBox) {
@@ -836,14 +859,26 @@ async function startSubscriberSync() {
       finishLine.innerHTML = `
         <div class="text-emerald-400 font-bold flex items-center justify-between flex-wrap gap-2 text-sm">
           <span class="flex items-center gap-1.5">
-            <span>🎉</span>
-            <span>구독자·팔로워 수 일괄 갱신 완료!</span>
+            <span>${failedCount === 0 ? '🎉' : '📊'}</span>
+            <span>구독자·팔로워 수 조회 완료!</span>
           </span>
-          <span class="text-xs font-mono text-zinc-400">
-            최신화: <strong class="text-emerald-400">${updatedCount}명</strong>
+          <span class="text-xs font-mono flex items-center gap-2">
+            <span class="text-emerald-400 font-bold">성공: ${successCount}명</span>
+            <span class="${failedCount > 0 ? 'text-rose-400 font-bold' : 'text-zinc-500'}">실패: ${failedCount}명</span>
+            <span class="text-zinc-500">/ 총 ${totalCount}명</span>
           </span>
         </div>
-        <div class="p-2.5 bg-zinc-900/90 rounded-xl border border-zinc-800/80 flex items-center justify-between gap-3 text-xs">
+        <div class="grid grid-cols-2 gap-2 mt-2">
+          <div class="p-2.5 bg-emerald-950/30 rounded-xl border border-emerald-800/40 flex items-center justify-between">
+            <span class="text-xs text-emerald-300 font-medium">✅ 조회 성공</span>
+            <strong class="text-emerald-400 font-bold text-sm">${successCount}명</strong>
+          </div>
+          <div class="p-2.5 ${failedCount > 0 ? 'bg-rose-950/30 border-rose-800/40 text-rose-300' : 'bg-zinc-900/60 border-zinc-800/60 text-zinc-400'} rounded-xl border flex items-center justify-between">
+            <span class="text-xs font-medium">${failedCount > 0 ? '❌ 조회 실패' : '✨ 실패 없음'}</span>
+            <strong class="${failedCount > 0 ? 'text-rose-400 font-bold' : 'text-zinc-400'} text-sm">${failedCount}명</strong>
+          </div>
+        </div>
+        <div class="p-2.5 bg-zinc-900/90 rounded-xl border border-zinc-800/80 flex items-center justify-between gap-3 text-xs mt-2">
           <div class="flex items-center gap-2">
             <span class="text-amber-400 font-bold">📈 기존 대비 총 증가량</span>
             <span class="text-zinc-400 text-[11px] font-normal">(기존 등록자 기준)</span>
@@ -853,15 +888,15 @@ async function startSubscriberSync() {
           </div>
         </div>
         <div class="text-zinc-400 text-[11px] leading-relaxed">
-          • 총 <strong>${updatedCount}명</strong>의 구독자 및 팔로워 수가 DB 및 백업에 최신화되었습니다.<br>
-          • 기존 정보가 있던 인원 기준, 총 구독자·팔로워 수가 <strong class="text-emerald-400">${incText}</strong> 증가했습니다.
+          • 전체 <strong>${totalCount}명</strong> 중 <strong class="text-emerald-400">${successCount}명</strong> 성공, <strong class="${failedCount > 0 ? 'text-rose-400' : 'text-zinc-300'}">${failedCount}명</strong> 실패했습니다.<br>
+          • 기존 정보가 있던 인원 기준, 총 구독자·팔로워 수가 <strong class="text-emerald-400">${incText}</strong> 변동되었습니다.
         </div>
       `;
       logBox.appendChild(finishLine);
       logBox.scrollTop = logBox.scrollHeight;
     }
 
-    showToast(`🎉 구독자·팔로워 수 일괄 갱신 완료 (${updatedCount}명 · 총 증가: ${incText})<br><span class="text-[11px] text-amber-300">💾 최신 데이터 자동 백업 완료</span>`);
+    showToast(`${failedCount === 0 ? '🎉' : '📊'} 구독자·팔로워 수 조회 완료 (성공: ${successCount}명 / 실패: ${failedCount}명 · 총 증가: ${incText})<br><span class="text-[11px] text-amber-300">💾 최신 데이터 자동 백업 완료</span>`);
   } catch (err) {
     console.error("구독자 갱신 오류:", err);
     if (logBox) {
@@ -981,6 +1016,32 @@ async function startViewCountSync() {
               <strong class="${failCount > 0 ? 'text-red-400 font-bold' : 'text-zinc-400'}">${failCount.toLocaleString()}건</strong>
             </div>
           </div>
+          ${unavailCount > 0 && Array.isArray(res.unavailableList) && res.unavailableList.length > 0 ? `
+            <details class="mt-2 text-xs bg-zinc-900/60 rounded-xl border border-zinc-800/80 p-2.5">
+              <summary class="cursor-pointer text-amber-400 font-semibold flex items-center justify-between select-none hover:text-amber-300">
+                <span class="flex items-center gap-1.5">
+                  <span>⚠️</span>
+                  <span>조회불가(비공개·삭제) 영상 목록 (${unavailCount.toLocaleString()}건) 확인하기</span>
+                </span>
+                <span class="text-[11px] text-zinc-500 font-normal">클릭하여 펼치기/접기</span>
+              </summary>
+              <div class="mt-2 max-h-56 overflow-y-auto space-y-1.5 pr-1 font-mono text-[11px]">
+                ${res.unavailableList.map((u, idx) => `
+                  <div class="flex items-start justify-between gap-2 p-1.5 rounded bg-zinc-950/70 border border-zinc-800/50">
+                    <div class="min-w-0 flex-1 truncate">
+                      <span class="text-zinc-500">[${idx + 1}]</span>
+                      ${u.streamer ? `<span class="text-emerald-400 font-medium ml-1">[${u.streamer}]</span>` : ''}
+                      <span class="text-zinc-200 ml-1" title="${u.title}">${u.title}</span>
+                    </div>
+                    <div class="flex-shrink-0 flex items-center gap-1.5 text-[10px]">
+                      <span class="text-amber-400 bg-amber-950/40 px-1.5 py-0.5 rounded border border-amber-800/40">${u.reason || '조회불가'}</span>
+                      ${u.url ? `<a href="${u.url}" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">열기 ↗</a>` : ''}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </details>
+          ` : ''}
           <div class="text-zinc-400 text-[11px] leading-relaxed">
             • 총 <strong>${res.totalCount.toLocaleString()}개</strong> 대상 영상 중 <strong class="text-emerald-400">${res.updatedCount.toLocaleString()}개</strong>의 실시간 조회수가 최신화되었습니다.<br>
             • 기존 조회수가 등록되어 있던 영상 기준, 총 조회수가 <strong class="text-emerald-400">${incText}</strong> 증가했습니다.<br>
@@ -1026,4 +1087,6 @@ window.startSubscriberSync = startSubscriberSync;
 window.startViewCountSync = startViewCountSync;
 window.renderAdminPage = renderAdminPage;
 window.switchAdminPageTab = switchAdminPageTab;
+
+
 

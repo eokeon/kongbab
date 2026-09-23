@@ -91,15 +91,19 @@ async function executeViewCountSync(onProgress) {
     }
   });
 
-  const apiKey = typeof getEffectiveYouTubeApiKey === "function"
-    ? getEffectiveYouTubeApiKey()
-    : (localStorage.getItem("youtube_api_key") || "AIzaSyCV5H0pcS3oz28AZS2oO3LiilfTZ3mUubo");
+  let apiKey = "";
+  if (typeof initYouTubeApiKeyFromBackend === "function") {
+    apiKey = await initYouTubeApiKeyFromBackend(true);
+  }
+  if (!apiKey && typeof getEffectiveYouTubeApiKey === "function") {
+    apiKey = getEffectiveYouTubeApiKey();
+  }
 
   // 유튜브 / 치지직 / 기타 분류
   const ytItems = [];
   const chzzkItems = [];
-  const ytIdToVideos = new Map(); // ytId -> [videoObjects]
-  const chzzkNoToVideos = new Map(); // chzzkNo -> [videoObjects]
+  const ytIdToItems = new Map(); // ytId -> [itemObjects with { video, member }]
+  const chzzkNoToItems = new Map(); // chzzkNo -> [itemObjects with { video, member }]
   const unparseableVideos = [];
 
   allItems.forEach(item => {
@@ -108,10 +112,10 @@ async function executeViewCountSync(onProgress) {
     if (isChzzk) {
       const chzzkNo = typeof extractChzzkVideoNo === "function" ? extractChzzkVideoNo(url) : null;
       if (chzzkNo) {
-        if (!chzzkNoToVideos.has(chzzkNo)) {
-          chzzkNoToVideos.set(chzzkNo, []);
+        if (!chzzkNoToItems.has(chzzkNo)) {
+          chzzkNoToItems.set(chzzkNo, []);
         }
-        chzzkNoToVideos.get(chzzkNo).push(item.video);
+        chzzkNoToItems.get(chzzkNo).push(item);
         chzzkItems.push({ ...item, chzzkNo });
       } else {
         unparseableVideos.push(item);
@@ -119,10 +123,10 @@ async function executeViewCountSync(onProgress) {
     } else {
       const ytId = typeof extractYoutubeId === "function" ? extractYoutubeId(url) : null;
       if (ytId && ytId.length === 11) {
-        if (!ytIdToVideos.has(ytId)) {
-          ytIdToVideos.set(ytId, []);
+        if (!ytIdToItems.has(ytId)) {
+          ytIdToItems.set(ytId, []);
         }
-        ytIdToVideos.get(ytId).push(item.video);
+        ytIdToItems.get(ytId).push(item);
         ytItems.push({ ...item, ytId });
       } else {
         unparseableVideos.push(item);
@@ -130,8 +134,8 @@ async function executeViewCountSync(onProgress) {
     }
   });
 
-  const uniqueYtIds = Array.from(ytIdToVideos.keys());
-  const uniqueChzzkNos = Array.from(chzzkNoToVideos.keys());
+  const uniqueYtIds = Array.from(ytIdToItems.keys());
+  const uniqueChzzkNos = Array.from(chzzkNoToItems.keys());
   const totalUniqueTargets = uniqueYtIds.length + uniqueChzzkNos.length;
 
   let processedCount = 0;
@@ -142,6 +146,8 @@ async function executeViewCountSync(onProgress) {
     platform: "기타",
     id: it.video?.url || it.video?.id || "unknown",
     title: it.video?.title || "알 수 없는 영상",
+    url: it.video?.url || "",
+    streamer: it.member?.streamer || it.member?.name || "",
     reason: "URL 형식 확인 불가"
   }));
 
@@ -151,80 +157,95 @@ async function executeViewCountSync(onProgress) {
     ytChunks.push(uniqueYtIds.slice(i, i + 50));
   }
 
-  for (let cIdx = 0; cIdx < ytChunks.length; cIdx++) {
-    const chunk = ytChunks[cIdx];
-    try {
-      const res = await fetchWithTimeout(`https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${chunk.join(',')}&key=${apiKey.trim()}`, {}, 7000);
-      if (res.ok) {
-        const data = await res.json();
-        const foundMap = new Map();
-        (data.items || []).forEach(it => {
-          if (it.statistics && it.statistics.viewCount != null) {
-            foundMap.set(it.id, Number(it.statistics.viewCount));
-          }
-        });
-
-        let chunkFound = 0;
-        let chunkUnavail = 0;
-
-        chunk.forEach(ytId => {
-          processedCount++;
-          const videos = ytIdToVideos.get(ytId) || [];
-          if (foundMap.has(ytId)) {
-            const vCount = foundMap.get(ytId);
-            videos.forEach(v => {
-              v.viewCount = vCount;
-              updatedCount++;
-            });
-            chunkFound++;
-          } else {
-            // 유튜브 API 정상 응답에 미포함 -> 비공개/삭제된 영상
-            unavailableCount += videos.length;
-            chunkUnavail += videos.length;
-            unavailableList.push({
-              platform: "YouTube",
-              id: ytId,
-              title: videos[0]?.title || ytId,
-              reason: "비공개 또는 삭제된 영상"
-            });
-          }
-        });
-
-        const startIdx = cIdx * 50 + 1;
-        const endIdx = Math.min(uniqueYtIds.length, (cIdx + 1) * 50);
-        const unavailNotice = chunkUnavail > 0 ? ` (비공개/삭제 ${chunkUnavail}건)` : "";
-        if (onProgress) {
-          onProgress(processedCount, totalUniqueTargets, `유튜브 ${startIdx}~${endIdx}번 영상 (${chunk.length}개)`, `성공 (+${chunkFound}개 최신화)${unavailNotice}`);
-        }
-      } else {
-        processedCount += chunk.length;
-        let errMsg = `API 오류 (${res.status})`;
-        try {
-          const errData = await res.json();
-          if (errData?.error?.message) {
-            errMsg = errData.error.message;
-          }
-        } catch (_) {}
-        chunk.forEach(ytId => {
-          const videos = ytIdToVideos.get(ytId) || [];
-          failedCount += videos.length;
-        });
-        if (onProgress) {
-          onProgress(processedCount, totalUniqueTargets, `유튜브 배치 (${cIdx + 1}/${ytChunks.length})`, errMsg);
-        }
-      }
-    } catch (e) {
-      processedCount += chunk.length;
-      chunk.forEach(ytId => {
-        const videos = ytIdToVideos.get(ytId) || [];
-        failedCount += videos.length;
-      });
-      if (onProgress) {
-        onProgress(processedCount, totalUniqueTargets, `유튜브 배치 (${cIdx + 1}/${ytChunks.length})`, `네트워크 오류: ${e.message || e}`);
-      }
+  if (!apiKey && ytChunks.length > 0) {
+    console.warn("[ViewCount Sync] 유튜브 API 키가 설정되지 않아 유튜브 조회를 건너뜁니다.");
+    if (onProgress) {
+      onProgress(uniqueYtIds.length, totalUniqueTargets, "유튜브 영상", "⚠️ API 키 미설정");
     }
+    processedCount += uniqueYtIds.length;
+    uniqueYtIds.forEach(ytId => {
+      const items = ytIdToItems.get(ytId) || [];
+      failedCount += items.length;
+    });
+  } else {
+    for (let cIdx = 0; cIdx < ytChunks.length; cIdx++) {
+      const chunk = ytChunks[cIdx];
+      try {
+        const res = await fetchWithTimeout(`https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${chunk.join(',')}&key=${apiKey.trim()}`, {}, 7000);
+        if (res.ok) {
+          const data = await res.json();
+          const foundMap = new Map();
+          (data.items || []).forEach(it => {
+            if (it.statistics && it.statistics.viewCount != null) {
+              foundMap.set(it.id, Number(it.statistics.viewCount));
+            }
+          });
 
-    await new Promise(r => setTimeout(r, 20));
+          let chunkFound = 0;
+          let chunkUnavail = 0;
+
+          chunk.forEach(ytId => {
+            processedCount++;
+            const items = ytIdToItems.get(ytId) || [];
+            if (foundMap.has(ytId)) {
+              const vCount = foundMap.get(ytId);
+              items.forEach(it => {
+                it.video.viewCount = vCount;
+                updatedCount++;
+                chunkFound++;
+              });
+            } else {
+              items.forEach(it => {
+                unavailableCount++;
+                chunkUnavail++;
+                unavailableList.push({
+                  platform: "유튜브",
+                  id: ytId,
+                  title: it.video?.title || ytId,
+                  url: it.video?.url || `https://youtu.be/${ytId}`,
+                  streamer: it.member?.streamer || it.member?.name || "",
+                  reason: "비공개 또는 삭제된 동영상"
+                });
+              });
+            }
+          });
+
+          const startIdx = cIdx * 50 + 1;
+          const endIdx = Math.min((cIdx + 1) * 50, uniqueYtIds.length);
+          const unavailNotice = chunkUnavail > 0 ? ` (비공개/삭제 ${chunkUnavail}개)` : "";
+          if (onProgress) {
+            onProgress(processedCount, totalUniqueTargets, `유튜브 ${startIdx}~${endIdx}번 영상 (${chunk.length}개)`, `성공 (+${chunkFound}개 최신화)${unavailNotice}`);
+          }
+        } else {
+          processedCount += chunk.length;
+          let errMsg = `API 오류 (${res.status})`;
+          try {
+            const errData = await res.json();
+            if (errData?.error?.message) {
+              errMsg = errData.error.message;
+            }
+          } catch (_) {}
+          chunk.forEach(ytId => {
+            const items = ytIdToItems.get(ytId) || [];
+            failedCount += items.length;
+          });
+          if (onProgress) {
+            onProgress(processedCount, totalUniqueTargets, `유튜브 배치 (${cIdx + 1}/${ytChunks.length})`, errMsg);
+          }
+        }
+      } catch (e) {
+        processedCount += chunk.length;
+        chunk.forEach(ytId => {
+          const items = ytIdToItems.get(ytId) || [];
+          failedCount += items.length;
+        });
+        if (onProgress) {
+          onProgress(processedCount, totalUniqueTargets, `유튜브 배치 (${cIdx + 1}/${ytChunks.length})`, `네트워크 오류: ${e.message || e}`);
+        }
+      }
+
+      await new Promise(r => setTimeout(r, 20));
+    }
   }
 
   // 2단계: 치지직 영상 비동기 병렬 조회 (5개씩 안전 동시 처리)
@@ -236,7 +257,7 @@ async function executeViewCountSync(onProgress) {
 
     await Promise.all(chunk.map(async (chzzkNo) => {
       processedCount++;
-      const videos = chzzkNoToVideos.get(chzzkNo) || [];
+      const items = chzzkNoToItems.get(chzzkNo) || [];
       try {
         let readCount = null;
         let isUnavailable = false;
@@ -290,27 +311,31 @@ async function executeViewCountSync(onProgress) {
         }
 
         if (readCount != null) {
-          videos.forEach(v => {
-            v.viewCount = readCount;
+          items.forEach(it => {
+            it.video.viewCount = readCount;
             updatedCount++;
           });
           chunkFound++;
         } else if (isUnavailable || !hasNetworkOrServerError) {
           // 정상적으로 API 통신이 되었으나 영상이 존재하지 않거나 비공개/만료된 경우
-          unavailableCount += videos.length;
-          chunkUnavail += videos.length;
-          unavailableList.push({
-            platform: "치지직",
-            id: String(chzzkNo),
-            title: videos[0]?.title || String(chzzkNo),
-            reason: "VOD 만료 또는 비공개"
+          unavailableCount += items.length;
+          chunkUnavail += items.length;
+          items.forEach(it => {
+            unavailableList.push({
+              platform: "치지직",
+              id: String(chzzkNo),
+              title: it.video?.title || String(chzzkNo),
+              url: it.video?.url || `https://chzzk.naver.com/video/${chzzkNo}`,
+              streamer: it.member?.streamer || it.member?.name || "",
+              reason: "VOD 만료 또는 비공개"
+            });
           });
         } else {
           // 네트워크 단절, 5xx 서버 장애 등 실제 조회 실패
-          failedCount += videos.length;
+          failedCount += items.length;
         }
       } catch (e) {
-        failedCount += videos.length;
+        failedCount += items.length;
       }
     }));
 

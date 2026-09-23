@@ -433,9 +433,13 @@ async function handleFetchMultiVideos() {
     statusEl.classList.remove("hidden");
   }
 
-  const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
-    ? getEffectiveYouTubeApiKey() 
-    : (localStorage.getItem("youtube_api_key") || "AIzaSyCV5H0pcS3oz28AZS2oO3LiilfTZ3mUubo");
+  let apiKey = "";
+  if (typeof initYouTubeApiKeyFromBackend === "function") {
+    apiKey = await initYouTubeApiKeyFromBackend(true);
+  }
+  if (!apiKey && typeof getEffectiveYouTubeApiKey === "function") {
+    apiKey = getEffectiveYouTubeApiKey();
+  }
 
   // URL들을 YouTube와 Chzzk로 분류
   const items = [];

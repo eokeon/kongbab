@@ -92,6 +92,9 @@ function formatIsoDateToKst(isoDateStr) {
 }
 
 async function apiGetPlaylistInfo(urlOrId) {
+  if (typeof initYouTubeApiKeyFromBackend === "function") {
+    await initYouTubeApiKeyFromBackend();
+  }
   const playlistId = extractPlaylistId(urlOrId);
   if (!playlistId) {
     // 재생목록 ID가 없는 경우: 여러 개 또는 단일 유튜브 영상 링크를 입력했는지 확인하여 일괄 지원
@@ -103,9 +106,13 @@ async function apiGetPlaylistInfo(urlOrId) {
     }
 
     if (videoIds.length > 0) {
-      const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
-        ? getEffectiveYouTubeApiKey() 
-        : (localStorage.getItem("youtube_api_key") || "AIzaSyCV5H0pcS3oz28AZS2oO3LiilfTZ3mUubo");
+      let apiKey = "";
+      if (typeof initYouTubeApiKeyFromBackend === "function") {
+        apiKey = await initYouTubeApiKeyFromBackend();
+      }
+      if (!apiKey && typeof getEffectiveYouTubeApiKey === "function") {
+        apiKey = getEffectiveYouTubeApiKey();
+      }
       const fetchedVideos = [];
       for (let i = 0; i < videoIds.length; i += 50) {
         const chunk = videoIds.slice(i, i + 50);
@@ -171,9 +178,13 @@ async function apiGetPlaylistInfo(urlOrId) {
   // 2. 백엔드 실패 시 YouTube Data API v3 직접 호출 fallback
   if (videos.length === 0) {
     try {
-      const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
-        ? getEffectiveYouTubeApiKey() 
-        : (localStorage.getItem("youtube_api_key") || "AIzaSyCV5H0pcS3oz28AZS2oO3LiilfTZ3mUubo");
+      let apiKey = "";
+      if (typeof initYouTubeApiKeyFromBackend === "function") {
+        apiKey = await initYouTubeApiKeyFromBackend();
+      }
+      if (!apiKey && typeof getEffectiveYouTubeApiKey === "function") {
+        apiKey = getEffectiveYouTubeApiKey();
+      }
       let pageToken = "";
 
       for (let p = 0; p < 6; p++) {
@@ -222,9 +233,12 @@ async function apiGetPlaylistInfo(urlOrId) {
   // 3. ⭐ 핵심: 백엔드/프론트 출처에 무관하게, YouTube videos.list API로 실제 영상 게시일(snippet.publishedAt)과 길이를 정확히 일괄 보정!
   // 재생목록 추가 날짜(snippet.publishedAt in playlistItems)가 아닌 실제 영상 업로드일로 100% 보장
   try {
-    const apiKey = typeof getEffectiveYouTubeApiKey === "function" 
+    let apiKey = typeof getEffectiveYouTubeApiKey === "function" 
       ? getEffectiveYouTubeApiKey() 
-      : (localStorage.getItem("youtube_api_key") || "AIzaSyCV5H0pcS3oz28AZS2oO3LiilfTZ3mUubo");
+      : (localStorage.getItem("youtube_api_key") || "");
+    if (!apiKey && typeof initYouTubeApiKeyFromBackend === "function") {
+      apiKey = await initYouTubeApiKeyFromBackend(true);
+    }
     const vIds = videos.map(v => v.videoId || extractYoutubeId(v.url)).filter(Boolean);
 
     for (let i = 0; i < vIds.length; i += 50) {

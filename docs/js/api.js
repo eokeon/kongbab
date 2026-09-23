@@ -1,4 +1,4 @@
-const API_BASE = (
+﻿const API_BASE = (
   window.location.protocol === "file:" || 
   window.location.port === "63342" || 
   (window.location.hostname === "localhost" && window.location.port !== "8080") ||
@@ -787,6 +787,84 @@ async function apiGetChzzkChannelInfo(urlOrId) {
   return { success: false, message: "치지직 채널 정보를 불러올 수 없습니다." };
 }
 
+// ==========================================
+// YouTube API Key 동적 로드 및 관리 모듈
+// (하드코딩 금지: application.properties의 youtube.api.key 연동)
+// ==========================================
+const YOUTUBE_DEFAULT_API_KEY = "";
+let backendYouTubeApiKey = "";
+
+async function initYouTubeApiKeyFromBackend(force = false) {
+  if (backendYouTubeApiKey && !force) return backendYouTubeApiKey;
+  const candidateUrls = [];
+  if (typeof API_BASE !== "undefined" && API_BASE) {
+    candidateUrls.push(`${API_BASE}/api/youtube/key`);
+  }
+  candidateUrls.push("/api/youtube/key");
+  candidateUrls.push("http://localhost:8080/api/youtube/key");
+  candidateUrls.push("http://127.0.0.1:8080/api/youtube/key");
+
+  const uniqueUrls = Array.from(new Set(candidateUrls.filter(Boolean)));
+  const isFile = typeof window !== "undefined" && window.location.protocol === "file:";
+  const creds = isFile ? "omit" : "include";
+  const authHeaders = typeof getAuthHeaders === "function" ? getAuthHeaders() : {};
+
+  for (const url of uniqueUrls) {
+    try {
+      let res = await fetch(url, {
+        credentials: creds,
+        headers: authHeaders
+      });
+      if (!res.ok) {
+        res = await fetch(url);
+      }
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.apiKey && data.apiKey.trim()) {
+          backendYouTubeApiKey = data.apiKey.trim();
+          console.log("[YouTube API] 백엔드(/api/youtube/key)에서 API 키를 정상 수신했습니다.");
+          return backendYouTubeApiKey;
+        }
+      }
+    } catch (e) {
+      try {
+        const simpleRes = await fetch(url);
+        if (simpleRes.ok) {
+          const data = await simpleRes.json();
+          if (data && data.apiKey && data.apiKey.trim()) {
+            backendYouTubeApiKey = data.apiKey.trim();
+            console.log("[YouTube API] 백엔드(/api/youtube/key)에서 API 키를 정상 수신했습니다.");
+            return backendYouTubeApiKey;
+          }
+        }
+      } catch (err2) {}
+    }
+  }
+  console.warn("[YouTube API] 백엔드 YouTube API 키 조회 실패 (서버 미실행 또는 미설정)");
+  return "";
+}
+window.initYouTubeApiKeyFromBackend = initYouTubeApiKeyFromBackend;
+if (typeof window !== "undefined") {
+  initYouTubeApiKeyFromBackend();
+}
+
+function getEffectiveYouTubeApiKey() {
+  if (backendYouTubeApiKey && backendYouTubeApiKey.trim()) {
+    return backendYouTubeApiKey.trim();
+  }
+  try {
+    const stored = localStorage.getItem("youtube_api_key");
+    if (stored && stored.trim() && 
+        stored.trim() !== "AIzaSyAyY4g9-iwjwQNXb5F9Xx0LLGtLUEpowl8" &&
+        stored.trim() !== "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA" &&
+        stored.trim() !== "AIzaSyCV5H0pcS3oz28AZS2oO3LiilfTZ3mUubo") {
+      return stored.trim();
+    }
+  } catch (e) {}
+  return "";
+}
+window.getEffectiveYouTubeApiKey = getEffectiveYouTubeApiKey;
+
 async function apiGetVideoInfo(url) {
   if (!url) return { success: false, message: "URL이 없습니다." };
   if (typeof isChzzkUrl === "function" && isChzzkUrl(url)) {
@@ -814,58 +892,16 @@ async function apiGetYouTubeInfo(url) {
     console.warn("백엔드 YouTube API 조회 실패, 프론트 대체 조회 진행:", e);
   }
 
-const YOUTUBE_DEFAULT_API_KEY = "AIzaSyCV5H0pcS3oz28AZS2oO3LiilfTZ3mUubo";
-let backendYouTubeApiKey = "";
-
-async function initYouTubeApiKeyFromBackend() {
-  if (backendYouTubeApiKey) return backendYouTubeApiKey;
-  try {
-    const headers = typeof getAuthHeaders === "function" ? getAuthHeaders() : {};
-    const res = await fetch(`${API_BASE}/api/youtube/key`, {
-      credentials: "include",
-      headers
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data && data.apiKey && data.apiKey.trim()) {
-        backendYouTubeApiKey = data.apiKey.trim();
-        return backendYouTubeApiKey;
-      }
-    } else {
-      console.warn("YouTube API 키 조회 비정상 응답:", res.status);
-    }
-  } catch (e) {
-    console.warn("YouTube API 키 백엔드 연동 오류:", e);
-  }
-  return "";
-}
-window.initYouTubeApiKeyFromBackend = initYouTubeApiKeyFromBackend;
-if (typeof window !== "undefined") {
-  initYouTubeApiKeyFromBackend();
-}
-
-function getEffectiveYouTubeApiKey() {
-  try {
-    const stored = localStorage.getItem("youtube_api_key");
-    if (stored && stored.trim() && 
-        stored.trim() !== "AIzaSyAyY4g9-iwjwQNXb5F9Xx0LLGtLUEpowl8" &&
-        stored.trim() !== "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA") {
-      return stored.trim();
-    }
-  } catch (e) {}
-  if (backendYouTubeApiKey && backendYouTubeApiKey.trim()) {
-    return backendYouTubeApiKey.trim();
-  }
-  return YOUTUBE_DEFAULT_API_KEY;
-}
-window.getEffectiveYouTubeApiKey = getEffectiveYouTubeApiKey;
 
   // 2. 백엔드 오프라인 시 프론트엔드 직접 대체 조회
   const videoId = typeof extractYoutubeId === "function" ? extractYoutubeId(url) : null;
   if (!videoId) return { success: false, message: "유효한 유튜브 ID가 아닙니다." };
 
   // 사용자 로컬 API 키 또는 기본 등록 키 사용
-  const localKey = getEffectiveYouTubeApiKey();
+  let localKey = getEffectiveYouTubeApiKey();
+  if (!localKey && typeof initYouTubeApiKeyFromBackend === "function") {
+    localKey = await initYouTubeApiKeyFromBackend(true);
+  }
   if (localKey) {
     try {
       const apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${videoId}&key=${localKey.trim()}`;

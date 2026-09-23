@@ -130,6 +130,17 @@ class SecurityServiceTest {
         response = new MockHttpServletResponse();
         boolean authedResult = adminAuthInterceptor.preHandle(authedPostReq, response, new Object());
         assertThat(authedResult).isTrue();
+
+        // 6. 유튜브 공개 조회 GET (/api/youtube/info, /api/youtube/key) -> 허용
+        MockHttpServletRequest youtubeInfoReq = new MockHttpServletRequest("GET", "/api/youtube/info");
+        response = new MockHttpServletResponse();
+        boolean youtubeInfoResult = adminAuthInterceptor.preHandle(youtubeInfoReq, response, new Object());
+        assertThat(youtubeInfoResult).isTrue();
+
+        MockHttpServletRequest youtubeKeyReq = new MockHttpServletRequest("GET", "/api/youtube/key");
+        response = new MockHttpServletResponse();
+        boolean youtubeKeyResult = adminAuthInterceptor.preHandle(youtubeKeyReq, response, new Object());
+        assertThat(youtubeKeyResult).isTrue();
     }
 
     @Test
