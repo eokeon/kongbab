@@ -10,7 +10,12 @@ import java.util.Optional;
 
 @Repository
 public interface StreamerRepository extends JpaRepository<Streamer, Long> {
+    @EntityGraph(attributePaths = {"videos"})
     Optional<Streamer> findByCustomId(String customId);
+
+    @Override
+    @EntityGraph(attributePaths = {"videos"})
+    Optional<Streamer> findById(Long id);
 
     @EntityGraph(attributePaths = {"videos"})
     List<Streamer> findAllByOrderByDisplayOrderAscIdAsc();

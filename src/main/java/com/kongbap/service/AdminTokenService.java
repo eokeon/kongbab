@@ -61,11 +61,24 @@ public class AdminTokenService {
         return adminPassword;
     }
 
-    private String getSecretKey() {
-        String secret = (customTokenSecret != null && !customTokenSecret.isBlank())
-                ? customTokenSecret.trim()
-                : DEFAULT_SALT;
-        return adminPassword + "_" + secret;
+    private volatile SecretKeySpec cachedKeySpec;
+
+    private SecretKeySpec getSecretKeySpec() {
+        SecretKeySpec key = cachedKeySpec;
+        if (key == null) {
+            synchronized (this) {
+                key = cachedKeySpec;
+                if (key == null) {
+                    String secret = (customTokenSecret != null && !customTokenSecret.isBlank())
+                            ? customTokenSecret.trim()
+                            : DEFAULT_SALT;
+                    String secretStr = adminPassword + "_" + secret;
+                    key = new SecretKeySpec(secretStr.getBytes(StandardCharsets.UTF_8), HMAC_ALGORITHM);
+                    cachedKeySpec = key;
+                }
+            }
+        }
+        return key;
     }
 
     public String generateToken(String username) {
@@ -242,7 +255,7 @@ public class AdminTokenService {
     private String sign(String data) {
         try {
             Mac mac = Mac.getInstance(HMAC_ALGORITHM);
-            mac.init(new SecretKeySpec(getSecretKey().getBytes(StandardCharsets.UTF_8), HMAC_ALGORITHM));
+            mac.init(getSecretKeySpec());
             byte[] rawHmac = mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
             return Base64.getUrlEncoder().withoutPadding().encodeToString(rawHmac);
         } catch (Exception e) {

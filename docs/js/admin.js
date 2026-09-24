@@ -299,8 +299,8 @@ function updateAdminSettingsModalCounts() {
     const btn = document.getElementById("admin-sub-sync-btn");
 
     if (progressBar && (!progressBar.style.width || progressBar.style.width === "0%")) progressBar.style.width = "0%";
-    if (progressText && (!progressText.textContent || progressText.textContent.startsWith("대기 중"))) {
-      progressText.textContent = `대기 중 (대상: ${targetCount}명)`;
+    if (progressText && (!progressText.textContent || progressText.textContent.includes("대기 중"))) {
+      progressText.innerHTML = `<span class="text-amber-400 font-bold">대기 중</span> <span class="text-zinc-500 font-normal">(대상: <strong class="text-zinc-200 font-bold">${targetCount}</strong>명)</span>`;
     }
     if (logBox && (!logBox.children.length || logBox.innerHTML.includes("갱신 준비 완료"))) {
       logBox.innerHTML = `<div class="text-zinc-500 text-xs italic">갱신 준비 완료. 아래 [구독자·팔로워 수 일괄 갱신 시작] 버튼을 눌러주세요.</div>`;
@@ -343,8 +343,8 @@ function updateAdminSettingsModalCounts() {
     const btn = document.getElementById("admin-view-sync-btn");
 
     if (progressBar && (!progressBar.style.width || progressBar.style.width === "0%")) progressBar.style.width = "0%";
-    if (progressText && (!progressText.textContent || progressText.textContent.startsWith("대기 중"))) {
-      progressText.textContent = `대기 중 (대상: ${allVideos.length}개)`;
+    if (progressText && (!progressText.textContent || progressText.textContent.includes("대기 중"))) {
+      progressText.innerHTML = `<span class="text-emerald-400 font-bold">대기 중</span> <span class="text-zinc-500 font-normal">(대상: <strong class="text-zinc-200 font-bold">${allVideos.length}</strong>개)</span>`;
     }
     if (logBox && (!logBox.children.length || logBox.innerHTML.includes("갱신 준비 완료"))) {
       logBox.innerHTML = `<div class="text-zinc-500 text-xs italic">갱신 준비 완료. 아래 [전체 영상 조회수 일괄 갱신 시작] 버튼을 눌러주세요.</div>`;
@@ -508,6 +508,7 @@ function renderAdminPage(container) {
             <a 
               href="./analytics.html" 
               target="_blank" 
+              rel="noopener noreferrer"
               class="px-3 py-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 rounded-xl text-xs font-medium transition-all flex items-center gap-1"
               title="새 창에서 독립 대시보드로 열기"
             >
@@ -594,7 +595,7 @@ function renderAdminPage(container) {
               <span class="text-base">⚡</span>
               <span>진행 상황</span>
             </span>
-            <span id="admin-sub-progress-text" class="text-sm sm:text-base font-mono font-bold text-amber-400">대기 중</span>
+            <span id="admin-sub-progress-text" class="text-xs sm:text-sm font-mono text-zinc-300 font-medium"><span class="text-amber-400 font-bold">대기 중</span></span>
           </div>
 
           <div class="w-full h-3.5 sm:h-4 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800 p-0.5">
@@ -633,7 +634,7 @@ function renderAdminPage(container) {
               <span class="text-base">⚡</span>
               <span>진행 상황</span>
             </span>
-            <span id="admin-view-progress-text" class="text-sm sm:text-base font-mono font-bold text-emerald-400">대기 중</span>
+            <span id="admin-view-progress-text" class="text-xs sm:text-sm font-mono text-zinc-300 font-medium"><span class="text-emerald-400 font-bold">대기 중</span></span>
           </div>
 
           <div class="w-full h-3.5 sm:h-4 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800 p-0.5">
@@ -802,6 +803,42 @@ async function startSubscriberSync() {
     let liveFail = 0;
 
     const syncRes = await executeSubscriberSync((current, total, streamerName, status) => {
+      if (status === "SAVING_BACKUP") {
+        if (progressBar) progressBar.style.width = "100%";
+        if (progressText) {
+          progressText.innerHTML = `<span class="text-amber-400 font-bold">100%</span> <span class="text-zinc-500 font-normal">(<strong class="text-zinc-200 font-bold">${total}</strong>/<span class="text-zinc-400">${total}</span>명)</span> <span class="text-zinc-600">·</span> <span class="text-amber-300 font-semibold animate-pulse">데이터 저장 및 백업 생성 중...</span>`;
+        }
+        if (logBox) {
+          let spinner = document.getElementById("admin-sub-saving-spinner");
+          if (!spinner) {
+            spinner = document.createElement("div");
+            spinner.id = "admin-sub-saving-spinner";
+            spinner.className = "p-3.5 my-2.5 bg-zinc-900/95 rounded-xl border border-amber-500/40 flex items-center justify-between gap-3 text-xs shadow-lg shadow-black/40";
+            spinner.innerHTML = `
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center flex-shrink-0">
+                  <svg class="animate-spin h-4 w-4 text-amber-400" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </div>
+                <div class="truncate">
+                  <div class="flex items-center gap-2">
+                    <span class="text-amber-300 font-bold text-xs sm:text-[13px]">데이터 저장 및 백업 파일 생성 중...</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono font-medium">진행 중</span>
+                  </div>
+                  <p class="text-[11px] text-zinc-400 mt-0.5 truncate">조회된 최신 구독자/팔로워 정보를 MariaDB 및 백업 파일에 안전하게 반영하고 있습니다.</p>
+                </div>
+              </div>
+              <span class="text-[11px] text-amber-400/80 font-mono flex-shrink-0 hidden sm:inline-block">잠시만 기다려주세요...</span>
+            `;
+            logBox.appendChild(spinner);
+            logBox.scrollTop = logBox.scrollHeight;
+          }
+        }
+        return;
+      }
+
       const isSuccess = status.startsWith("성공");
       if (isSuccess) {
         liveSuccess++;
@@ -812,7 +849,7 @@ async function startSubscriberSync() {
       const pct = Math.round((current / total) * 100);
       if (progressBar) progressBar.style.width = `${pct}%`;
       if (progressText) {
-        progressText.textContent = `${pct}% (${current}/${total}명) · 성공 ${liveSuccess}명 / 실패 ${liveFail}명`;
+        progressText.innerHTML = `<span class="text-amber-400 font-bold">${pct}%</span> <span class="text-zinc-500 font-normal">(<strong class="text-zinc-200 font-bold">${current}</strong>/<span class="text-zinc-400">${total}</span>명)</span> <span class="text-zinc-600">·</span> <span class="text-zinc-400 font-normal">성공:</span> <strong class="text-emerald-400 font-bold">${liveSuccess}</strong>명 <span class="text-zinc-600">/</span> <span class="text-zinc-400 font-normal">실패:</span> <strong class="${liveFail > 0 ? 'text-rose-400 font-bold' : 'text-zinc-400 font-normal'}">${liveFail}</strong>명`;
       }
 
       if (logBox) {
@@ -829,6 +866,9 @@ async function startSubscriberSync() {
         logBox.scrollTop = logBox.scrollHeight;
       }
     });
+
+    const savingSpinner = document.getElementById("admin-sub-saving-spinner");
+    if (savingSpinner) savingSpinner.remove();
 
     const updatedCount = (typeof syncRes === "object" && syncRes !== null) ? syncRes.updatedCount : (Number(syncRes) || 0);
     const successCount = (typeof syncRes === "object" && syncRes !== null && syncRes.successCount !== undefined) 
@@ -850,7 +890,8 @@ async function startSubscriberSync() {
 
     if (progressBar) progressBar.style.width = "100%";
     if (progressText) {
-      progressText.textContent = `100% 완료 (${totalCount}명 중 성공: ${successCount}명, 실패: ${failedCount}명 | 총 증가: ${incText})`;
+      const incColor = totalIncrease > 0 ? 'text-amber-300' : (totalIncrease < 0 ? 'text-blue-400' : 'text-zinc-400');
+      progressText.innerHTML = `<span class="text-emerald-400 font-bold">100% 완료</span> <span class="text-zinc-500 font-normal">(<strong class="text-zinc-200 font-bold">${totalCount}</strong>명 중 <span class="text-zinc-400 font-normal">성공:</span> <strong class="text-emerald-400 font-bold">${successCount}</strong>명<span class="text-zinc-500 font-normal">,</span> <span class="text-zinc-400 font-normal">실패:</span> <strong class="${failedCount > 0 ? 'text-rose-400 font-bold' : 'text-zinc-400 font-normal'}">${failedCount}</strong>명 <span class="text-zinc-600 font-normal">|</span> <span class="text-zinc-400 font-normal">총 증가:</span> <strong class="${incColor} font-bold">${incText}</strong><span class="text-zinc-500 font-normal">)</span>`;
     }
 
     if (logBox) {
@@ -896,8 +937,9 @@ async function startSubscriberSync() {
       logBox.scrollTop = logBox.scrollHeight;
     }
 
-    showToast(`${failedCount === 0 ? '🎉' : '📊'} 구독자·팔로워 수 조회 완료 (성공: ${successCount}명 / 실패: ${failedCount}명 · 총 증가: ${incText})<br><span class="text-[11px] text-amber-300">💾 최신 데이터 자동 백업 완료</span>`);
+    showToast(`${failedCount === 0 ? '🎉' : '📊'} 구독자·팔로워 수 조회 완료 <span class="text-zinc-300 text-xs">(성공: <strong class="text-emerald-400">${successCount}명</strong> / 실패: <strong class="${failedCount > 0 ? 'text-rose-400 font-bold' : 'text-zinc-400'}">${failedCount}명</strong> · 총 증가: <strong class="text-amber-300">${incText}</strong>)</span><br><span class="text-[11px] text-amber-300">💾 최신 데이터 자동 백업 완료</span>`);
   } catch (err) {
+    document.getElementById("admin-sub-saving-spinner")?.remove();
     console.error("구독자 갱신 오류:", err);
     if (logBox) {
       const errLine = document.createElement("div");
@@ -907,6 +949,7 @@ async function startSubscriberSync() {
     }
     showToast("⚠️ 구독자/팔로워 갱신 중 오류가 발생했습니다.");
   } finally {
+    document.getElementById("admin-sub-saving-spinner")?.remove();
     isSyncingSubscribers = false;
     if (btn) {
       btn.disabled = false;
@@ -941,9 +984,47 @@ async function startViewCountSync() {
 
   try {
     const res = await executeViewCountSync((current, total, detailText, status) => {
+      if (status === "SAVING_BACKUP") {
+        if (progressBar) progressBar.style.width = "100%";
+        if (progressText) {
+          progressText.innerHTML = `<span class="text-emerald-400 font-bold">100%</span> <span class="text-zinc-500 font-normal">(<strong class="text-zinc-200 font-bold">${total}</strong>/<span class="text-zinc-400">${total}</span>건)</span> <span class="text-zinc-600">·</span> <span class="text-amber-300 font-semibold animate-pulse">MariaDB 및 백업 파일에 반영 중...</span>`;
+        }
+        if (logBox) {
+          let spinner = document.getElementById("admin-view-saving-spinner");
+          if (!spinner) {
+            spinner = document.createElement("div");
+            spinner.id = "admin-view-saving-spinner";
+            spinner.className = "p-3.5 my-2.5 bg-zinc-900/95 rounded-xl border border-amber-500/40 flex items-center justify-between gap-3 text-xs shadow-lg shadow-black/40";
+            spinner.innerHTML = `
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center flex-shrink-0">
+                  <svg class="animate-spin h-4 w-4 text-amber-400" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </div>
+                <div class="truncate">
+                  <div class="flex items-center gap-2">
+                    <span class="text-amber-300 font-bold text-xs sm:text-[13px]">조회수 저장 및 백업 스냅샷 생성 중...</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono font-medium">진행 중</span>
+                  </div>
+                  <p class="text-[11px] text-zinc-400 mt-0.5 truncate">갱신된 영상 조회수 데이터를 MariaDB 및 백업 파일에 안전하게 반영하고 있습니다.</p>
+                </div>
+              </div>
+              <span class="text-[11px] text-amber-400/80 font-mono flex-shrink-0 hidden sm:inline-block">잠시만 기다려주세요...</span>
+            `;
+            logBox.appendChild(spinner);
+            logBox.scrollTop = logBox.scrollHeight;
+          }
+        }
+        return;
+      }
+
       const pct = total > 0 ? Math.round((current / total) * 100) : 0;
       if (progressBar) progressBar.style.width = `${pct}%`;
-      if (progressText) progressText.textContent = `${pct}% (${current}/${total})`;
+      if (progressText) {
+        progressText.innerHTML = `<span class="text-emerald-400 font-bold">${pct}%</span> <span class="text-zinc-500 font-normal">(<strong class="text-zinc-200 font-bold">${current}</strong>/<span class="text-zinc-400">${total}</span>건)</span>`;
+      }
 
       if (logBox) {
         const line = document.createElement("div");
@@ -961,6 +1042,9 @@ async function startViewCountSync() {
       }
     });
 
+    const savingSpinner = document.getElementById("admin-view-saving-spinner");
+    if (savingSpinner) savingSpinner.remove();
+
     if (res && res.success) {
       if (progressBar) progressBar.style.width = "100%";
       const unavailCount = res.unavailableCount || 0;
@@ -974,7 +1058,8 @@ async function startViewCountSync() {
         : "";
 
       if (progressText) {
-        progressText.textContent = `완료 (성공: ${res.updatedCount.toLocaleString()}건 · 기존 대비 총 증가: ${incText} / 조회불가: ${unavailCount.toLocaleString()}건 / 실패: ${failCount.toLocaleString()}건)`;
+        const incColor = totalIncrease > 0 ? 'text-amber-300' : (totalIncrease < 0 ? 'text-blue-400' : 'text-zinc-400');
+        progressText.innerHTML = `<span class="text-emerald-400 font-bold">완료</span> <span class="text-zinc-500 font-normal">(<span class="text-zinc-400 font-normal">성공:</span> <strong class="text-emerald-400 font-bold">${res.updatedCount.toLocaleString()}</strong>건 <span class="text-zinc-600 font-normal">·</span> <span class="text-zinc-400 font-normal">기존 대비 총 증가:</span> <strong class="${incColor} font-bold">${incText}</strong> <span class="text-zinc-600 font-normal">/</span> <span class="text-zinc-400 font-normal">조회불가:</span> <strong class="${unavailCount > 0 ? 'text-amber-400 font-bold' : 'text-zinc-400 font-normal'}">${unavailCount.toLocaleString()}</strong>건 <span class="text-zinc-600 font-normal">/</span> <span class="text-zinc-400 font-normal">실패:</span> <strong class="${failCount > 0 ? 'text-rose-400 font-bold' : 'text-zinc-400 font-normal'}">${failCount.toLocaleString()}</strong>건<span class="text-zinc-500 font-normal">)</span>`;
       }
       if (logBox) {
         const finishLine = document.createElement("div");
@@ -1055,11 +1140,12 @@ async function startViewCountSync() {
       const backupToastMsg = res.backupSynced 
         ? `<br><span class="text-[11px] text-amber-300">💾 최신 데이터 자동 백업 완료</span>` 
         : "";
-      showToast(`🎉 영상 조회수 일괄 갱신 완료 (${res.updatedCount.toLocaleString()}개 · 총 증가: ${incText})<br><span class="text-[11px] text-zinc-300">성공: ${res.updatedCount.toLocaleString()}건 · 조회불가: ${unavailCount.toLocaleString()}건 · 실패: ${failCount.toLocaleString()}건</span>${backupToastMsg}`);
+      showToast(`🎉 영상 조회수 일괄 갱신 완료 <span class="text-zinc-300 text-xs">(${res.updatedCount.toLocaleString()}개 · 총 증가: <strong class="text-amber-300">${incText}</strong>)</span><br><span class="text-[11px] text-zinc-300">성공: <strong class="text-emerald-400">${res.updatedCount.toLocaleString()}건</strong> · 조회불가: <strong class="text-amber-400">${unavailCount.toLocaleString()}건</strong> · 실패: <strong class="${failCount > 0 ? 'text-rose-400 font-bold' : 'text-zinc-400'}">${failCount.toLocaleString()}건</strong></span>${backupToastMsg}`);
     } else {
       showToast(`⚠️ 조회수 갱신 중 문제가 발생했습니다: ${res?.message || '실패'}`);
     }
   } catch (err) {
+    document.getElementById("admin-view-saving-spinner")?.remove();
     console.error("조회수 갱신 오류:", err);
     if (logBox) {
       const errLine = document.createElement("div");
@@ -1069,6 +1155,7 @@ async function startViewCountSync() {
     }
     showToast("⚠️ 조회수 갱신 중 오류가 발생했습니다.");
   } finally {
+    document.getElementById("admin-view-saving-spinner")?.remove();
     isSyncingViewCounts = false;
     if (btn) {
       btn.disabled = false;

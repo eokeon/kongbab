@@ -1,4 +1,4 @@
-﻿const API_BASE = (
+const API_BASE = (
   window.location.protocol === "file:" || 
   window.location.port === "63342" || 
   (window.location.hostname === "localhost" && window.location.port !== "8080") ||
@@ -95,6 +95,10 @@ async function apiGetMe() {
       const expireAt = localStorage.getItem("kongbap_auth_expire_at");
       if (savedAuth && expireAt && Date.now() < Number(expireAt)) {
         const user = JSON.parse(savedAuth);
+        // 정적 웹(GitHub Pages) 배포 환경에서는 로컬 스토리지 조작을 통한 관리자 세션 복원을 원천 차단
+        if (user && user.role === "admin" && typeof isLocalEnvironment === "function" && !isLocalEnvironment()) {
+          return null;
+        }
         if (user && (user.role === "admin" || (user.role === "user" && user.username === "user1"))) {
           return { success: true, role: user.role, username: user.username, message: "정적 배포 세션 유지" };
         }
@@ -220,20 +224,21 @@ function buildLocalMyPageSummary() {
   let totalWatchedSeconds = 0;
   let totalWatchedVideos = 0;
 
-  byStreamer.forEach((recs, streamerId) => {
-    let originalMember = null;
-    for (const c of (KONGBAP_DATA.categories || [])) {
-      if (c.hasSubgroups) {
-        for (const g of (c.groups || [])) {
-          const f = (g.members || []).find(m => String(m.id) === String(streamerId) || String(m.customId) === String(streamerId));
-          if (f) { originalMember = f; break; }
+  const memberLookup = new Map();
+  if (KONGBAP_DATA && Array.isArray(KONGBAP_DATA.categories)) {
+    for (const c of KONGBAP_DATA.categories) {
+      const mems = c.hasSubgroups ? (c.groups || []).flatMap(g => g.members || []) : (c.members || []);
+      for (const m of mems) {
+        if (m) {
+          if (m.id) memberLookup.set(String(m.id), m);
+          if (m.customId) memberLookup.set(String(m.customId), m);
         }
-      } else {
-        const f = (c.members || []).find(m => String(m.id) === String(streamerId) || String(m.customId) === String(streamerId));
-        if (f) { originalMember = f; break; }
       }
-      if (originalMember) break;
     }
+  }
+
+  byStreamer.forEach((recs, streamerId) => {
+    const originalMember = memberLookup.get(String(streamerId)) || null;
 
     const sum = originalMember && typeof getMemberVideoSummary === "function"
       ? getMemberVideoSummary(originalMember)
@@ -673,9 +678,10 @@ async function syncAllStreamersToDb(streamersList) {
   return null;
 }
 
+const ISO_DURATION_REGEX = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
 function formatIsoDuration(iso) {
   if (!iso) return "";
-  const match = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  const match = iso.match(ISO_DURATION_REGEX);
   if (!match) return "";
   const hours = parseInt(match[1] || 0, 10);
   const minutes = parseInt(match[2] || 0, 10);
@@ -796,6 +802,12 @@ let backendYouTubeApiKey = "";
 
 async function initYouTubeApiKeyFromBackend(force = false) {
   if (backendYouTubeApiKey && !force) return backendYouTubeApiKey;
+
+  // 정적 배포(GitHub Pages 등) 환경에서는 로컬 백엔드가 없으므로 Mixed Content 및 404 요청 생략
+  if (typeof isLocalEnvironment === "function" && !isLocalEnvironment()) {
+    return "";
+  }
+
   const candidateUrls = [];
   if (typeof API_BASE !== "undefined" && API_BASE) {
     candidateUrls.push(`${API_BASE}/api/youtube/key`);
@@ -854,10 +866,7 @@ function getEffectiveYouTubeApiKey() {
   }
   try {
     const stored = localStorage.getItem("youtube_api_key");
-    if (stored && stored.trim() && 
-        stored.trim() !== "AIzaSyAyY4g9-iwjwQNXb5F9Xx0LLGtLUEpowl8" &&
-        stored.trim() !== "AIzaSyCaWTqIMqfGvXE8-Wg4FpYxvAW-qRWYDYA" &&
-        stored.trim() !== "AIzaSyCV5H0pcS3oz28AZS2oO3LiilfTZ3mUubo") {
+    if (stored && stored.trim()) {
       return stored.trim();
     }
   } catch (e) {}

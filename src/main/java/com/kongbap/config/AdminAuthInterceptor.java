@@ -19,7 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AdminAuthInterceptor implements HandlerInterceptor {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
     private final AdminTokenService adminTokenService;
 
     @Override

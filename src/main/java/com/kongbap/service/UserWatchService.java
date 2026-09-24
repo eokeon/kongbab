@@ -206,26 +206,37 @@ public class UserWatchService {
         String effectiveUsername = resolveEffectiveUsername(username);
         return watchRecordRepository.findByUsernameAndWatchedTrue(effectiveUsername).stream()
                 .map(WatchRecordDto::fromEntity)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional
     public MyPageSummaryDto getMyPageSummary(String username) {
         if (username == null || username.isBlank()) {
-            return MyPageSummaryDto.builder()
-                    .username("게스트")
-                    .totalWatchedSeconds(0L)
-                    .totalWatchedHours(0.0)
-                    .totalWatchedDurationFormatted("0시간 0분")
-                    .totalWatchedMembers(0)
-                    .totalWatchedSections(0)
-                    .totalWatchedVideos(0)
-                    .members(Collections.emptyList())
-                    .build();
+            return buildEmptySummary("게스트");
         }
 
         String effectiveUsername = resolveEffectiveUsername(username);
         List<UserWatchRecord> watchedList = watchRecordRepository.findByUsernameAndWatchedTrue(effectiveUsername);
+        return buildSummaryFromRecords(username, effectiveUsername, watchedList);
+    }
+
+    private MyPageSummaryDto buildEmptySummary(String username) {
+        return MyPageSummaryDto.builder()
+                .username(username)
+                .totalWatchedSeconds(0L)
+                .totalWatchedHours(0.0)
+                .totalWatchedDurationFormatted("0시간 0분")
+                .totalWatchedMembers(0)
+                .totalWatchedSections(0)
+                .totalWatchedVideos(0)
+                .members(Collections.emptyList())
+                .build();
+    }
+
+    private MyPageSummaryDto buildSummaryFromRecords(String originalUsername, String effectiveUsername, List<UserWatchRecord> watchedList) {
+        if (watchedList == null || watchedList.isEmpty()) {
+            return buildEmptySummary("admin".equalsIgnoreCase(originalUsername.trim()) ? "user1 (관리자 연동)" : effectiveUsername);
+        }
 
         long totalSeconds = 0L;
         int totalVideos = 0;
@@ -251,47 +262,49 @@ public class UserWatchService {
             byStreamer.computeIfAbsent(r.getStreamerId(), k -> new ArrayList<>()).add(r);
         }
 
-        List<WatchedMemberDto> memberDtos = new ArrayList<>();
+        List<WatchedMemberDto> memberDtos = new ArrayList<>(byStreamer.size());
         for (Map.Entry<String, List<UserWatchRecord>> entry : byStreamer.entrySet()) {
             String streamerId = entry.getKey();
             List<UserWatchRecord> records = entry.getValue();
 
-            String streamerName = records.stream()
-                    .map(UserWatchRecord::getStreamerName)
-                    .filter(Objects::nonNull)
-                    .findFirst()
-                    .orElse(streamerId);
+            String streamerName = null;
+            String category = null;
+            Set<String> watchedSections = new LinkedHashSet<>();
+            long memberSeconds = 0L;
+            int memberVideos = 0;
+            LocalDateTime latestUpdate = null;
 
-            String category = records.stream()
-                    .map(UserWatchRecord::getCategory)
-                    .filter(Objects::nonNull)
-                    .findFirst()
-                    .orElse(null);
+            for (UserWatchRecord r : records) {
+                if (streamerName == null && r.getStreamerName() != null && !r.getStreamerName().isBlank()) {
+                    streamerName = r.getStreamerName();
+                }
+                if (category == null && r.getCategory() != null && !r.getCategory().isBlank()) {
+                    category = r.getCategory();
+                }
+                if (r.getVideoType() != null && !r.getVideoType().isBlank()) {
+                    watchedSections.add(r.getVideoType());
+                }
+                if (r.getWatchedSeconds() != null) {
+                    memberSeconds += r.getWatchedSeconds();
+                }
+                if (r.getVideoCount() != null) {
+                    memberVideos += r.getVideoCount();
+                }
+                if (r.getUpdatedAt() != null) {
+                    if (latestUpdate == null || r.getUpdatedAt().isAfter(latestUpdate)) {
+                        latestUpdate = r.getUpdatedAt();
+                    }
+                }
+            }
 
-            List<String> watchedSections = records.stream()
-                    .map(UserWatchRecord::getVideoType)
-                    .distinct()
-                    .collect(Collectors.toList());
-
-            long memberSeconds = records.stream()
-                    .mapToLong(r -> r.getWatchedSeconds() != null ? r.getWatchedSeconds() : 0L)
-                    .sum();
-
-            int memberVideos = records.stream()
-                    .mapToInt(r -> r.getVideoCount() != null ? r.getVideoCount() : 0)
-                    .sum();
-
-            LocalDateTime latestUpdate = records.stream()
-                    .map(UserWatchRecord::getUpdatedAt)
-                    .filter(Objects::nonNull)
-                    .max(LocalDateTime::compareTo)
-                    .orElse(LocalDateTime.now());
+            if (streamerName == null) streamerName = streamerId;
+            if (latestUpdate == null) latestUpdate = LocalDateTime.now();
 
             memberDtos.add(WatchedMemberDto.builder()
                     .streamerId(streamerId)
                     .streamerName(streamerName)
                     .category(category)
-                    .watchedSections(watchedSections)
+                    .watchedSections(new ArrayList<>(watchedSections))
                     .totalSeconds(memberSeconds)
                     .durationFormatted(formatDuration(memberSeconds))
                     .totalVideos(memberVideos)
@@ -308,8 +321,7 @@ public class UserWatchService {
         });
 
         double totalHours = Math.round((totalSeconds / 3600.0) * 10.0) / 10.0;
-
-        String displayUsername = "admin".equalsIgnoreCase(username.trim()) ? "user1 (관리자 연동)" : effectiveUsername;
+        String displayUsername = "admin".equalsIgnoreCase(originalUsername.trim()) ? "user1 (관리자 연동)" : effectiveUsername;
 
         return MyPageSummaryDto.builder()
                 .username(displayUsername)
@@ -340,12 +352,14 @@ public class UserWatchService {
 
     /**
      * user1의 시청 완료 기록 및 마이페이지 요약 데이터를 정적 JSON 파일(user1-watch.json)로 내보냅니다.
-     * 이를 통해 GitHub Pages(외부 배포) 환경에서도 서버/DB 없이 user1의 마이페이지와 시청 체크 상태를 읽기 전용으로 열람할 수 있습니다.
+     * 단일 DB 조회로 요약과 목록을 모두 생성하여 중복 DB 쿼리를 제거합니다.
      */
     public synchronized void exportUser1WatchDataToJson() {
         try {
-            MyPageSummaryDto summary = getMyPageSummary("user1");
-            List<WatchRecordDto> records = getWatchRecords("user1");
+            String effectiveUsername = resolveEffectiveUsername("user1");
+            List<UserWatchRecord> watchedList = watchRecordRepository.findByUsernameAndWatchedTrue(effectiveUsername);
+            MyPageSummaryDto summary = buildSummaryFromRecords("user1", effectiveUsername, watchedList);
+            List<WatchRecordDto> records = watchedList.stream().map(WatchRecordDto::fromEntity).toList();
 
             Map<String, Object> exportMap = new LinkedHashMap<>();
             exportMap.put("exportedAt", LocalDateTime.now().toString());

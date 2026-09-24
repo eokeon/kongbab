@@ -42,6 +42,10 @@ public class YouTubeService {
             "(?:20)?(2[3-9])년\\s*(0?[1-9]|1[0-2])월\\s*(0?[1-9]|[12][0-9]|3[01])일"
     );
     private static final Pattern EXACT_11_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]{11}$");
+    private static final Pattern UPLOAD_DATE_PATTERN = Pattern.compile("\"uploadDate\"\\s*:\\s*\"(\\d{4}-\\d{2}-\\d{2})");
+    private static final Pattern ITEMPROP_DATE_PATTERN = Pattern.compile("itemprop=\"(?:datePublished|uploadDate)\"\\s+content=\"(\\d{4}-\\d{2}-\\d{2})");
+    private static final Pattern PLAYLIST_PARAM_PATTERN = Pattern.compile("[?&]list=([a-zA-Z0-9_-]+)");
+    private static final Pattern PLAYLIST_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]{12,}$");
 
     private static final java.time.ZoneId KST_ZONE = java.time.ZoneId.of("Asia/Seoul");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd").withZone(KST_ZONE);
@@ -238,14 +242,12 @@ public class YouTubeService {
                     .body(String.class);
 
             if (html != null) {
-                Pattern datePattern = Pattern.compile("\"uploadDate\"\\s*:\\s*\"(\\d{4}-\\d{2}-\\d{2})");
-                Matcher matcher = datePattern.matcher(html);
+                Matcher matcher = UPLOAD_DATE_PATTERN.matcher(html);
                 if (matcher.find()) {
                     return matcher.group(1).replace("-", ".");
                 }
 
-                Pattern metaPattern = Pattern.compile("itemprop=\"(?:datePublished|uploadDate)\"\\s+content=\"(\\d{4}-\\d{2}-\\d{2})");
-                Matcher metaMatcher = metaPattern.matcher(html);
+                Matcher metaMatcher = ITEMPROP_DATE_PATTERN.matcher(html);
                 if (metaMatcher.find()) {
                     return metaMatcher.group(1).replace("-", ".");
                 }
@@ -259,11 +261,11 @@ public class YouTubeService {
     public String extractPlaylistId(String urlOrId) {
         if (urlOrId == null || urlOrId.isBlank()) return null;
         String trimmed = urlOrId.trim();
-        Matcher matcher = Pattern.compile("[?&]list=([a-zA-Z0-9_-]+)").matcher(trimmed);
+        Matcher matcher = PLAYLIST_PARAM_PATTERN.matcher(trimmed);
         if (matcher.find()) {
             return matcher.group(1);
         }
-        if (trimmed.matches("^[a-zA-Z0-9_-]{12,}$")) {
+        if (PLAYLIST_ID_PATTERN.matcher(trimmed).matches()) {
             return trimmed;
         }
         return null;

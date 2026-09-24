@@ -376,6 +376,11 @@ async function executeViewCountSync(onProgress) {
     }
   });
 
+  // 조회 완료 후 백업 및 DB 저장 단계 진입 알림
+  if (onProgress) {
+    onProgress(allItems.length, allItems.length, "전체 영상 조회 완료", "SAVING_BACKUP");
+  }
+
   // 로컬 캐시 무효화 및 데이터 저장
   if (typeof clearRenderStatsCache === "function") clearRenderStatsCache();
   if (typeof invalidateLeaderboardCache === "function") invalidateLeaderboardCache();

@@ -574,6 +574,28 @@ public class GoogleAnalyticsService {
         sorted.sort((a, b) -> Long.compare(b.views, a.views));
 
         int limit = Math.min(sorted.size(), 50);
+        Map<String, String> memberTitleCache = new HashMap<>();
+        if (streamerService != null) {
+            for (int i = 0; i < limit; i++) {
+                String mId = sorted.get(i).member;
+                if (mId != null && !memberTitleCache.containsKey(mId)) {
+                    try {
+                        streamerService.getStreamer(mId).ifPresent(s -> {
+                            String name = s.getName() != null ? s.getName().trim() : "";
+                            String streamer = s.getStreamer() != null ? s.getStreamer().trim() : "";
+                            if (!name.isBlank() && !streamer.isBlank() && !name.equalsIgnoreCase(streamer)) {
+                                memberTitleCache.put(mId, name + " (" + streamer + ")");
+                            } else if (!streamer.isBlank()) {
+                                memberTitleCache.put(mId, streamer);
+                            } else if (!name.isBlank()) {
+                                memberTitleCache.put(mId, name);
+                            }
+                        });
+                    } catch (Exception ignored) {}
+                }
+            }
+        }
+
         for (int i = 0; i < limit; i++) {
             PageStatHolder h = sorted.get(i);
             Map<String, Object> item = new HashMap<>();
@@ -586,21 +608,8 @@ public class GoogleAnalyticsService {
             if (h.member != null) item.put("member", h.member);
             if (h.search != null) item.put("search", h.search);
 
-            // 스트리머/인원 상세 이름 매핑
-            if (h.member != null && streamerService != null) {
-                try {
-                    streamerService.getStreamer(h.member).ifPresent(s -> {
-                        String name = s.getName() != null ? s.getName().trim() : "";
-                        String streamer = s.getStreamer() != null ? s.getStreamer().trim() : "";
-                        if (!name.isBlank() && !streamer.isBlank() && !name.equalsIgnoreCase(streamer)) {
-                            item.put("title", name + " (" + streamer + ")");
-                        } else if (!streamer.isBlank()) {
-                            item.put("title", streamer);
-                        } else if (!name.isBlank()) {
-                            item.put("title", name);
-                        }
-                    });
-                } catch (Exception ignored) {}
+            if (h.member != null && memberTitleCache.containsKey(h.member)) {
+                item.put("title", memberTitleCache.get(h.member));
             }
 
             list.add(item);

@@ -54,6 +54,16 @@ if (typeof window !== "undefined") {
   window.state = state;
 }
 
+function isLocalEnvironment() {
+  if (typeof window === "undefined") return false;
+  const host = window.location.hostname;
+  return host === "localhost" || 
+         host === "127.0.0.1" || 
+         window.location.protocol === "file:" || 
+         host === "";
+}
+window.isLocalEnvironment = isLocalEnvironment;
+
 function isAdmin() {
   return !!(state.currentUser && state.currentUser.role === "admin");
 }
@@ -77,6 +87,14 @@ function loadStoredAuth() {
 
     if (saved && expireAt && now < Number(expireAt)) {
       const parsed = JSON.parse(saved);
+      // 보안 강화: 정적 웹(GitHub Pages) 배포 환경에서는 로컬 스토리지 조작을 통한 관리자 권한 복원을 원천 차단
+      if (parsed && parsed.role === "admin" && !isLocalEnvironment()) {
+        state.currentUser = { role: "guest", username: "게스트" };
+        localStorage.removeItem("kongbap_auth_user");
+        localStorage.removeItem("kongbap_auth_expire_at");
+        localStorage.removeItem("kongbap_admin_token");
+        return;
+      }
       if (parsed && (parsed.role === "admin" || (parsed.role === "user" && parsed.username === "user1"))) {
         state.currentUser = parsed;
         return;
@@ -108,15 +126,32 @@ window.escapeHtml = escapeHtml;
 
 function sanitizeUrl(url) {
   if (!url || typeof url !== "string") return "";
-  const trimmed = url.trim();
-  const lower = trimmed.toLowerCase();
-  // javascript:, vbscript:, data:text/html 등 악의적 실행 프로토콜 차단
-  if (lower.startsWith("javascript:") || lower.startsWith("vbscript:") || lower.startsWith("data:text/")) {
+  // 1. 비가시 제어문자(ASCII 0-31, 127) 및 공백 제거
+  const cleaned = url.replace(/[\u0000-\u001F\u007F-\u009F\s]/g, "");
+  const lower = cleaned.toLowerCase();
+  
+  // 2. 위험 프로토콜 차단 (javascript:, vbscript:, data:text/html, file:, blob:)
+  if (
+    lower.startsWith("javascript:") || 
+    lower.startsWith("vbscript:") || 
+    lower.startsWith("data:text") || 
+    lower.startsWith("file:") ||
+    lower.startsWith("blob:") ||
+    lower.includes("javascript:")
+  ) {
     return "#";
   }
-  // http://, https://, 상대경로, data:image/ 만 허용
-  if (lower.startsWith("http://") || lower.startsWith("https://") || lower.startsWith("./") || lower.startsWith("/") || lower.startsWith("assets/") || lower.startsWith("data:image/")) {
-    return trimmed;
+  
+  // 3. 안전한 프로토콜 및 상대경로만 허용
+  if (
+    lower.startsWith("http://") || 
+    lower.startsWith("https://") || 
+    lower.startsWith("./") || 
+    lower.startsWith("/") || 
+    lower.startsWith("assets/") || 
+    lower.startsWith("data:image/")
+  ) {
+    return url.trim();
   }
   return "#";
 }

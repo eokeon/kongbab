@@ -49,7 +49,7 @@ public class BotDetectionFilter implements Filter {
             "insomnia"
     );
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)

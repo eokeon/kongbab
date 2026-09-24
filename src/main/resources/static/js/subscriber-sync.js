@@ -749,6 +749,11 @@ async function executeSubscriberSync(onProgress) {
     await new Promise(resolve => setTimeout(resolve, 15));
   });
 
+  // 조회 완료 후 백업 및 DB 저장 단계 진입 알림
+  if (onProgress) {
+    onProgress(targetItems.length, targetItems.length, "전체 인원 조회 완료", "SAVING_BACKUP");
+  }
+
   // 3단계: 기존 대비 총 증가량 계산 (원래 정보가 등록되어 있던 인원 대상)
   let totalSubIncrease = 0;
   let prevTotalSub = 0;

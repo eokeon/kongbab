@@ -48,7 +48,7 @@ public class RateLimitingFilter implements Filter {
     }
 
     private final Map<String, RequestCounter> requestCounts = new ConcurrentHashMap<>();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)

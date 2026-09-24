@@ -25,15 +25,10 @@ dependencies {
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
-}
-
-test {
-    useJUnitPlatform()
 }
 
 // static 폴더의 파일들을 docs 폴더로 자동 복사 (배포 불필요 관리자 전용 화면 제외)

@@ -33,13 +33,13 @@ public class StreamerService {
     public List<StreamerDto> getAllStreamers() {
         return streamerRepository.findAllByOrderByDisplayOrderAscIdAsc().stream()
                 .map(StreamerDto::fromEntity)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<StreamerDto> getStreamersByCategory(String category) {
         return streamerRepository.findByCategoryOrderByDisplayOrderAscIdAsc(category).stream()
                 .map(StreamerDto::fromEntity)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public Optional<StreamerDto> getStreamer(String idOrCustomId) {
@@ -162,8 +162,8 @@ public class StreamerService {
         if (opt.isPresent()) {
             Streamer streamer = opt.get();
             if (streamer.getVideos() != null && !streamer.getVideos().isEmpty()) {
-                videoRepository.deleteAll(streamer.getVideos());
                 streamer.getVideos().clear();
+                streamerRepository.save(streamer);
                 exportStaticJson();
                 return true;
             }
@@ -376,11 +376,15 @@ public class StreamerService {
                             syncStreamers(new ArrayList<>(dtoMap.values()));
                             Set<String> validIds = dtoMap.keySet();
                             List<Streamer> allEntities = streamerRepository.findAll();
+                            List<Streamer> toDelete = new ArrayList<>();
                             for (Streamer s : allEntities) {
                                 if (s.getCustomId() != null && !validIds.contains(s.getCustomId())) {
-                                    log.info("DB 구버전 삭제: {} ({})", s.getCustomId(), s.getName());
-                                    streamerRepository.delete(s);
+                                    log.info("DB 구버전 삭제 대상 추가: {} ({})", s.getCustomId(), s.getName());
+                                    toDelete.add(s);
                                 }
+                            }
+                            if (!toDelete.isEmpty()) {
+                                streamerRepository.deleteAll(toDelete);
                             }
                             log.info("DB 스트리머 최신 동기화 완료: 총 {}명", streamerRepository.count());
                         }
