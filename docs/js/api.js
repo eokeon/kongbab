@@ -864,15 +864,14 @@ function getEffectiveYouTubeApiKey() {
   if (backendYouTubeApiKey && backendYouTubeApiKey.trim()) {
     return backendYouTubeApiKey.trim();
   }
-  try {
-    const stored = localStorage.getItem("youtube_api_key");
-    if (stored && stored.trim()) {
-      return stored.trim();
-    }
-  } catch (e) {}
   return "";
 }
 window.getEffectiveYouTubeApiKey = getEffectiveYouTubeApiKey;
+
+// 과거 구버전에서 사용하던 로컬 스토리지 키 잔재가 남아있다면 완전 자동 제거
+try {
+  localStorage.removeItem("youtube_api_key");
+} catch (e) {}
 
 async function apiGetVideoInfo(url) {
   if (!url) return { success: false, message: "URL이 없습니다." };

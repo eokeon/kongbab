@@ -235,7 +235,7 @@ async function apiGetPlaylistInfo(urlOrId) {
   try {
     let apiKey = typeof getEffectiveYouTubeApiKey === "function" 
       ? getEffectiveYouTubeApiKey() 
-      : (localStorage.getItem("youtube_api_key") || "");
+      : "";
     if (!apiKey && typeof initYouTubeApiKeyFromBackend === "function") {
       apiKey = await initYouTubeApiKeyFromBackend(true);
     }

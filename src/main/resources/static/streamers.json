@@ -1,8 +1,8 @@
 {
   "appName": "kongbap-gta-rp",
   "version": "1.0",
-  "createdAt": "2026.09.24 17:13:19",
-  "reason": "영상 조회수 일괄 갱신 (성공: 2149건, 증가: +1,382회, 조회불가: 68건, 실패: 0건)",
+  "createdAt": "2026.09.24 19:01:14",
+  "reason": "구독자/팔로워 수 일괄 갱신 (성공 181명, 실패 0명, 기존 대비 +20명)",
   "stats": {
     "totalCategories": 8,
     "totalMembers": 228,
@@ -12701,7 +12701,7 @@
           "badgeColor": "bg-emerald-500",
           "avatar": "https://yt3.googleusercontent.com/TgS_KFJyXi9XCJIQd2TODJajD3LA2QLjK8-o8DM-atFam0tDoK4M4khfbF3LF9-nLurlPhYkXw=s160-c-k-c0x00ffffff-no-rj",
           "displayOrder": 21,
-          "subscriberCount": "6,850명",
+          "subscriberCount": "6,870명",
           "youtubeUrl": "https://www.youtube.com/@심해덤",
           "videos": [],
           "affiliations": [
@@ -24747,7 +24747,7 @@
               "badgeColor": "bg-emerald-500",
               "avatar": "https://yt3.googleusercontent.com/TgS_KFJyXi9XCJIQd2TODJajD3LA2QLjK8-o8DM-atFam0tDoK4M4khfbF3LF9-nLurlPhYkXw=s160-c-k-c0x00ffffff-no-rj",
               "displayOrder": 21,
-              "subscriberCount": "6,850명",
+              "subscriberCount": "6,870명",
               "youtubeUrl": "https://www.youtube.com/@심해덤",
               "videos": [],
               "affiliations": [
