@@ -717,10 +717,10 @@ async function executeSubscriberSync(onProgress) {
   if (typeof createBackupSnapshot === "function") {
     let backupDesc = `구독자/팔로워 수 일괄 갱신 (성공 ${updatedCount}명, 실패 ${failedCount}명`;
     if (totalSubIncrease > 0) {
-      backupDesc += `, 기존 대비 +${totalSubIncrease.toLocaleString()}명`;
+      backupDesc += `, 기존 구독자 +${totalSubIncrease.toLocaleString()}명(${increasedCount}명 상승)`;
     }
     if (newlyAddedCount > 0) {
-      backupDesc += `, 신규 추가 ${newlyAddedCount}명(+${newlyAddedSubTotal.toLocaleString()}명)`;
+      backupDesc += `, 신규 인원 ${newlyAddedCount}명(+${newlyAddedSubTotal.toLocaleString()}명)`;
     }
     backupDesc += `)`;
     syncPromises.push(createBackupSnapshot(backupDesc, false));

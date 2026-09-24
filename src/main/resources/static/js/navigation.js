@@ -786,6 +786,8 @@ function goBackFromMember(type, targetId) {
   } catch (e) {}
 
   if (wasFromLoveline) {
+    if (typeof resetLovelineFilter === "function") resetLovelineFilter();
+    else if (typeof window.resetLovelineFilter === "function") window.resetLovelineFilter();
     state.currentCategory = 'loveline';
     state.currentGroup = null;
   } else if (type === 'category') {
@@ -826,8 +828,17 @@ function goBackFromMember(type, targetId) {
 
 function selectCategory(catId) {
   if (state.currentCategory === catId && !state.currentGroup && !state.currentMember && !state.searchQuery) {
+    if (catId === "loveline") {
+      if (typeof resetLovelineFilter === "function") resetLovelineFilter();
+      else if (typeof window.resetLovelineFilter === "function") window.resetLovelineFilter();
+      renderContent();
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     return;
+  }
+  if (catId === "loveline" || state.currentCategory === "loveline") {
+    if (typeof resetLovelineFilter === "function") resetLovelineFilter();
+    else if (typeof window.resetLovelineFilter === "function") window.resetLovelineFilter();
   }
   state.currentCategory = catId;
   state.currentGroup = null;
@@ -853,6 +864,8 @@ function selectCategory(catId) {
 
 function selectMyPage() {
   closeAllOpenModals();
+  if (typeof resetLovelineFilter === "function") resetLovelineFilter();
+  else if (typeof window.resetLovelineFilter === "function") window.resetLovelineFilter();
   state.currentCategory = "mypage";
   state.currentGroup = null;
   state.currentMember = null;
@@ -882,6 +895,8 @@ function selectAdminPage(tab = null) {
     return;
   }
   closeAllOpenModals();
+  if (typeof resetLovelineFilter === "function") resetLovelineFilter();
+  else if (typeof window.resetLovelineFilter === "function") window.resetLovelineFilter();
   state.currentCategory = "adminpage";
   state.currentGroup = null;
   state.currentMember = null;

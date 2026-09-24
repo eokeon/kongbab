@@ -1064,12 +1064,38 @@ async function renderMyPage(container) {
 }
 window.renderMyPage = renderMyPage;
 
+let _lastWasViewingLoveline = false;
+
 function renderContent() {
   const mainContent = document.getElementById("main-content");
   if (!mainContent) return;
 
   renderHeaderAuth();
   renderCategoryTabs();
+
+  const cat = typeof getCurrentCategory === "function" ? getCurrentCategory() : null;
+  const currentCatId = cat ? cat.id : state.currentCategory;
+  const isViewingLoveline = currentCatId === "loveline" && !state.currentMember && !state.searchQuery && state.currentCategory !== "mypage" && state.currentCategory !== "adminpage";
+
+  if (isViewingLoveline) {
+    if (!_lastWasViewingLoveline) {
+      if (typeof resetLovelineFilter === "function") {
+        resetLovelineFilter();
+      } else if (typeof window !== "undefined" && typeof window.resetLovelineFilter === "function") {
+        window.resetLovelineFilter();
+      }
+      _lastWasViewingLoveline = true;
+    }
+  } else {
+    if (_lastWasViewingLoveline) {
+      _lastWasViewingLoveline = false;
+      if (typeof resetLovelineFilter === "function") {
+        resetLovelineFilter();
+      } else if (typeof window !== "undefined" && typeof window.resetLovelineFilter === "function") {
+        window.resetLovelineFilter();
+      }
+    }
+  }
 
   if (state.currentCategory === "mypage") {
     renderMyPage(mainContent);
@@ -1097,7 +1123,6 @@ function renderContent() {
     return;
   }
 
-  const cat = getCurrentCategory();
   if (cat && cat.id === "loveline") {
     if (typeof renderLovelineContent === "function") {
       renderLovelineContent(mainContent);

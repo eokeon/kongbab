@@ -929,7 +929,7 @@ async function startSubscriberSync() {
     if (progressBar) progressBar.style.width = "100%";
     if (progressText) {
       const incColor = existingIncrease > 0 ? 'text-amber-300' : (existingIncrease < 0 ? 'text-blue-400' : 'text-zinc-400');
-      progressText.innerHTML = `<span class="text-emerald-400 font-bold">100% 완료</span> <span class="text-zinc-500 font-normal">(<strong class="text-zinc-200 font-bold">${totalCount}</strong>명 중 <span class="text-zinc-400 font-normal">성공:</span> <strong class="text-emerald-400 font-bold">${successCount}</strong>명<span class="text-zinc-500 font-normal">,</span> <span class="text-zinc-400 font-normal">실패:</span> <strong class="${failedCount > 0 ? 'text-rose-400 font-bold' : 'text-zinc-400 font-normal'}">${failedCount}</strong>명 <span class="text-zinc-600 font-normal">|</span> <span class="text-zinc-400 font-normal">기존 증가:</span> <strong class="${incColor} font-bold">${existingIncText}</strong> <span class="text-zinc-600 font-normal">|</span> <span class="text-zinc-400 font-normal">신규 추가:</span> <strong class="text-sky-300 font-bold">${newlyAddedCount}명</strong><span class="text-zinc-500 font-normal">)</span>`;
+      progressText.innerHTML = `<span class="text-emerald-400 font-bold">100% 완료</span> <span class="text-zinc-500 font-normal">(총 <strong class="text-zinc-200 font-bold">${totalCount}</strong>명 중 성공 <strong class="text-emerald-400 font-bold">${successCount}</strong>명 <span class="text-zinc-600">|</span> 기존 구독자 <strong class="${incColor} font-bold">${existingIncText}</strong> (${existingIncreasedCount}명 상승) <span class="text-zinc-600">|</span> 신규 인원 <strong class="text-sky-300 font-bold">${newlyAddedCount}명</strong>)</span>`;
     }
 
     if (logBox) {
@@ -958,40 +958,63 @@ async function startSubscriberSync() {
           </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
-          <!-- 1) 기존 등록자 기준 -->
+          <!-- 1) 기존 멤버 구독자 변동 -->
           <div class="p-2.5 bg-zinc-900/90 rounded-xl border border-zinc-800/80 flex items-center justify-between gap-2.5 text-xs">
             <div class="flex flex-col">
-              <span class="text-amber-400 font-bold">📈 기존 대비 총 증가량</span>
-              <span class="text-zinc-400 text-[11px] font-normal">(기존 등록자 기준)</span>
+              <span class="text-amber-400 font-bold flex items-center gap-1">
+                <span>📈</span>
+                <span>기존 멤버 구독자 증가</span>
+              </span>
+              <span class="text-zinc-500 text-[11px] font-normal">이전 등록 스트리머</span>
             </div>
             <div class="text-right">
-              <strong class="text-emerald-400 font-bold text-sm">${existingIncText}</strong>${formattedExistingInc ? `<span class="text-zinc-400 text-xs ml-1">${formattedExistingInc}</span>` : ""}
-              <div class="text-[10px] text-zinc-500">${existingIncreasedCount > 0 ? `${existingIncreasedCount}명 증가` : (existingIncrease === 0 ? "변동 없음" : "")}</div>
+              <div class="font-bold text-sm sm:text-base">
+                <span class="text-zinc-400 text-xs font-normal">구독자 </span><strong class="text-emerald-400 font-extrabold">${existingIncText}</strong>${formattedExistingInc ? `<span class="text-zinc-400 text-xs ml-1">${formattedExistingInc}</span>` : ""}
+              </div>
+              <div class="text-[11px] text-zinc-400 mt-0.5">
+                ${existingIncreasedCount > 0 ? `구독자 오른 인원: <strong class="text-amber-300 font-bold">${existingIncreasedCount}명</strong>` : `<span class="text-zinc-500">구독자 변동 없음</span>`}
+              </div>
             </div>
           </div>
           <!-- 2) 새로 추가된 인원 -->
           <div class="p-2.5 bg-zinc-900/90 rounded-xl border border-zinc-800/80 flex items-center justify-between gap-2.5 text-xs">
             <div class="flex flex-col">
-              <span class="text-sky-400 font-bold">✨ 새로 추가된 인원</span>
-              <span class="text-zinc-400 text-[11px] font-normal">(신규 등록 기준)</span>
+              <span class="text-sky-400 font-bold flex items-center gap-1">
+                <span>✨</span>
+                <span>새로 추가된 인원</span>
+              </span>
+              <span class="text-zinc-500 text-[11px] font-normal">최근 신규 등록 멤버</span>
             </div>
             <div class="text-right">
-              <strong class="${newlyAddedCount > 0 ? 'text-sky-300' : 'text-zinc-400'} font-bold text-sm">${newlyAddedCount > 0 ? `${newlyAddedCount}명` : "0명"}</strong>
-              <div class="text-[10px] text-zinc-400">${newlyAddedCount > 0 ? `(${newlyAddedSubText}${formattedNewlyAdded})` : "신규 인원 없음"}</div>
+              <div class="font-bold text-sm sm:text-base">
+                ${newlyAddedCount > 0 ? `<span class="text-zinc-400 text-xs font-normal">신규 </span><strong class="text-sky-300 font-extrabold">${newlyAddedCount}명</strong>` : `<strong class="text-zinc-400">0명</strong>`}
+              </div>
+              <div class="text-[11px] text-zinc-400 mt-0.5">
+                ${newlyAddedCount > 0 ? `보유 구독자: <strong class="text-sky-200 font-bold">${newlyAddedSubText}</strong>${formattedNewlyAdded ? ` (${formattedNewlyAdded.trim()})` : ""}` : `<span class="text-zinc-500">신규 인원 없음</span>`}
+              </div>
             </div>
           </div>
         </div>
-        <div class="text-zinc-400 text-[11px] leading-relaxed space-y-1 mt-1">
-          <div>• 전체 <strong>${totalCount}명</strong> 중 <strong class="text-emerald-400">${successCount}명</strong> 성공, <strong class="${failedCount > 0 ? 'text-rose-400' : 'text-zinc-300'}">${failedCount}명</strong> 실패했습니다.</div>
-          <div>• <strong>기존 등록자 기준:</strong> 총 구독자·팔로워 수가 <strong class="text-emerald-400">${existingIncText}</strong> (${existingIncreasedCount}명) 변동되었습니다.</div>
-          <div>• <strong>새로 추가된 인원:</strong> 신규 <strong class="text-sky-300">${newlyAddedCount}명</strong> 추가 반영 (구독자·팔로워 합계: <strong class="text-sky-300">${newlyAddedSubText}</strong>)</div>
+        <div class="text-zinc-300 text-xs leading-relaxed space-y-1.5 mt-2.5 p-3 bg-zinc-900/60 rounded-xl border border-zinc-800/60 font-sans">
+          <div class="flex items-center gap-2">
+            <span class="text-zinc-500">•</span>
+            <span>전체 <strong>${totalCount}명</strong> 중 <strong class="text-emerald-400">${successCount}명</strong> 조회 성공${failedCount > 0 ? `, <strong class="text-rose-400">${failedCount}명</strong> 실패` : ''}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-zinc-500">•</span>
+            <span><strong>기존 멤버 구독자:</strong> ${existingIncreasedCount > 0 ? `총 <strong class="text-amber-300">${existingIncreasedCount}명</strong>의 스트리머 구독자가 상승하여, 기존 인원 총 구독자 수가 <strong class="text-emerald-400">${existingIncText}</strong>${formattedExistingInc ? ` (${formattedExistingInc.trim()})` : ''} 증가했습니다.` : `구독자 수 변동이 없습니다.`}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-zinc-500">•</span>
+            <span><strong>새로 추가된 인원:</strong> 신규 스트리머 <strong class="text-sky-300">${newlyAddedCount}명</strong> (보유 구독자 합계: <strong class="text-sky-300">${newlyAddedSubText}</strong>${formattedNewlyAdded ? ` (${formattedNewlyAdded.trim()})` : ''})이 새롭게 반영되었습니다.</span>
+          </div>
         </div>
       `;
       logBox.appendChild(finishLine);
       logBox.scrollTop = logBox.scrollHeight;
     }
 
-    showToast(`${failedCount === 0 ? '🎉' : '📊'} 구독자·팔로워 수 조회 완료 <span class="text-zinc-300 text-xs">(성공: <strong class="text-emerald-400">${successCount}명</strong> · 기존 증가: <strong class="text-amber-300">${existingIncText}</strong> · 신규 추가: <strong class="text-sky-300">${newlyAddedCount}명</strong>)</span><br><span class="text-[11px] text-amber-300">💾 최신 데이터 자동 백업 완료</span>`);
+    showToast(`${failedCount === 0 ? '🎉' : '📊'} 구독자·팔로워 수 갱신 완료 <span class="text-zinc-300 text-xs">(성공: <strong class="text-emerald-400">${successCount}명</strong> · 기존 구독자: <strong class="text-amber-300">${existingIncText}</strong> (${existingIncreasedCount}명 상승) · 신규: <strong class="text-sky-300">${newlyAddedCount}명</strong>)</span><br><span class="text-[11px] text-amber-300">💾 최신 데이터 자동 백업 완료</span>`);
   } catch (err) {
     document.getElementById("admin-sub-saving-spinner")?.remove();
     console.error("구독자 갱신 오류:", err);

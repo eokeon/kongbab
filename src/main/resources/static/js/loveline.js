@@ -20,6 +20,14 @@ const LOVELINE_STATUS_CONFIG = {
 let lovelineCurrentFilter = "all";
 let lovelineSearchQuery = "";
 
+// 러브라인 내부 탭(필터 및 검색어) 초기화 (다른 곳으로 이동 시 "전체"로 리셋)
+function resetLovelineFilter() {
+  lovelineCurrentFilter = "all";
+  lovelineSearchQuery = "";
+  const input = document.getElementById("loveline-search-input");
+  if (input) input.value = "";
+}
+
 // 이전 임의 추가된 목 데이터 ID 집합
 const MOCK_LOVELINE_IDS = new Set(["love-1", "love-2", "love-3", "love-4", "love-5"]);
 
@@ -215,6 +223,7 @@ function navigateToLovelineMember(memberIdOrObj, name = "", streamer = "") {
 
   const result = findSystemMember(targetId, targetName, targetStreamer);
   if (result && result.member) {
+    resetLovelineFilter();
     if (typeof recordMemberClickPosition === "function") {
       recordMemberClickPosition(result.member.id);
     }
@@ -1254,6 +1263,7 @@ function confirmDeleteLoveline(coupleId) {
 window.getLovelineList = getLovelineList;
 window.renderLovelineContent = renderLovelineContent;
 window.setLovelineFilter = setLovelineFilter;
+window.resetLovelineFilter = resetLovelineFilter;
 window.handleLovelineSearch = handleLovelineSearch;
 window.clearLovelineSearch = clearLovelineSearch;
 window.navigateToLovelineMember = navigateToLovelineMember;
