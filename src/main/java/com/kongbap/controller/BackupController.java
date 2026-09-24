@@ -377,13 +377,7 @@ public class BackupController {
             String cleanStructureJson = extractCleanCategoryStructure(categoriesNode);
             saveCategoriesToDb(cleanStructureJson);
 
-            // 2. 카테고리 트리에서 스트리머 목록 추출 후 MariaDB 일괄 동기화
-            List<StreamerDto> streamerDtoList = extractStreamersFromCategoriesNode(categoriesNode);
-            if (!streamerDtoList.isEmpty()) {
-                streamerService.syncStreamers(streamerDtoList);
-            }
-
-            // 복원된 전체 백업 json을 backup 디렉토리의 backup.json 및 streamers.json / streamers.dat에 동기화
+            // 복원된 전체 백업 json을 backup 디렉토리의 backup.json 및 streamers.json / streamers.dat에 먼저 동기화
             File dir = getTargetDir();
             Path latestBackupPath = Paths.get(dir.getAbsolutePath(), "backup.json");
             try {
@@ -391,6 +385,12 @@ public class BackupController {
             } catch (Exception ignored) {}
 
             syncStreamersFiles(jsonContent);
+
+            // 2. 카테고리 트리에서 스트리머 목록 추출 후 MariaDB 일괄 동기화
+            List<StreamerDto> streamerDtoList = extractStreamersFromCategoriesNode(categoriesNode);
+            if (!streamerDtoList.isEmpty()) {
+                streamerService.syncStreamers(streamerDtoList);
+            }
 
             JsonNode lovelinesNode = root.has("lovelines") ? root.get("lovelines") : null;
             if (lovelinesNode == null && categoriesNode != null && categoriesNode.isArray()) {

@@ -12,12 +12,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -29,6 +31,8 @@ public class StreamerService {
     private final StreamerRepository streamerRepository;
     private final VideoRepository videoRepository;
     private final ObjectMapper objectMapper;
+    private final TransactionTemplate transactionTemplate;
+    private final ReentrantLock syncLock = new ReentrantLock();
 
     public List<StreamerDto> getAllStreamers() {
         return streamerRepository.findAllByOrderByDisplayOrderAscIdAsc().stream()
@@ -46,8 +50,19 @@ public class StreamerService {
         return findStreamerEntity(idOrCustomId).map(StreamerDto::fromEntity);
     }
 
-    @Transactional
-    public synchronized StreamerDto saveStreamer(StreamerDto dto) {
+    public StreamerDto saveStreamer(StreamerDto dto) {
+        syncLock.lock();
+        StreamerDto result;
+        try {
+            result = transactionTemplate.execute(status -> doSaveStreamer(dto));
+        } finally {
+            syncLock.unlock();
+        }
+        exportStaticJson();
+        return result;
+    }
+
+    private StreamerDto doSaveStreamer(StreamerDto dto) {
         Streamer streamer = null;
         if (dto.getId() != null && !dto.getId().isBlank()) {
             streamer = findStreamerEntity(dto.getId()).orElse(null);
@@ -83,9 +98,7 @@ public class StreamerService {
         }
 
         Streamer saved = streamerRepository.save(streamer);
-        StreamerDto result = StreamerDto.fromEntity(saved);
-        exportStaticJson();
-        return result;
+        return StreamerDto.fromEntity(saved);
     }
 
     @Transactional
@@ -171,13 +184,37 @@ public class StreamerService {
         return false;
     }
 
-    @Transactional
-    public synchronized List<StreamerDto> syncStreamers(List<StreamerDto> dtoList) {
+    public List<StreamerDto> syncStreamers(List<StreamerDto> dtoList) {
         if (dtoList == null || dtoList.isEmpty()) {
             return Collections.emptyList();
         }
 
-        List<StreamerDto> results = new ArrayList<>();
+        syncLock.lock();
+        List<StreamerDto> results;
+        try {
+            results = transactionTemplate.execute(status -> doSyncStreamers(dtoList));
+        } finally {
+            syncLock.unlock();
+        }
+        exportStaticJson();
+        return results != null ? results : Collections.emptyList();
+    }
+
+    private List<StreamerDto> doSyncStreamers(List<StreamerDto> dtoList) {
+        // 기존 스트리머 전체와 비디오 목록을 1번의 쿼리로 일괄 조회 (N+1 SELECT 및 잦은 Auto-Flush 방지)
+        List<Streamer> allExisting = streamerRepository.findAllByOrderByDisplayOrderAscIdAsc();
+        Map<String, Streamer> customIdMap = new HashMap<>(allExisting.size() * 2);
+        Map<Long, Streamer> idMap = new HashMap<>(allExisting.size() * 2);
+        for (Streamer s : allExisting) {
+            if (s.getCustomId() != null) {
+                customIdMap.put(s.getCustomId(), s);
+            }
+            if (s.getId() != null) {
+                idMap.put(s.getId(), s);
+            }
+        }
+
+        List<Streamer> toSave = new ArrayList<>(dtoList.size());
         int order = 0;
         for (StreamerDto dto : dtoList) {
             if (dto.getDisplayOrder() == null) {
@@ -185,7 +222,14 @@ public class StreamerService {
             }
             Streamer streamer = null;
             if (dto.getId() != null && !dto.getId().isBlank()) {
-                streamer = findStreamerEntity(dto.getId()).orElse(null);
+                streamer = customIdMap.get(dto.getId());
+                if (streamer == null) {
+                    try {
+                        Long numId = Long.parseLong(dto.getId());
+                        streamer = idMap.get(numId);
+                    } catch (NumberFormatException ignored) {
+                    }
+                }
             }
 
             if (streamer == null) {
@@ -195,6 +239,7 @@ public class StreamerService {
                 streamer = Streamer.builder()
                         .customId(customId)
                         .build();
+                customIdMap.put(customId, streamer);
             }
 
             streamer.setName(dto.getName());
@@ -263,11 +308,16 @@ public class StreamerService {
                 currentVideos.removeIf(v -> !keptVideos.contains(v));
             }
 
-            Streamer savedStreamer = streamerRepository.save(streamer);
-            results.add(StreamerDto.fromEntity(savedStreamer));
+            toSave.add(streamer);
         }
 
-        exportStaticJson();
+        List<Streamer> savedList = streamerRepository.saveAll(toSave);
+        streamerRepository.flush();
+        List<StreamerDto> results = new ArrayList<>(savedList.size());
+        for (Streamer saved : savedList) {
+            results.add(StreamerDto.fromEntity(saved));
+        }
+
         return results;
     }
 

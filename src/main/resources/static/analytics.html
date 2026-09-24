@@ -351,8 +351,8 @@
       </div>
     </section>
 
-    <!-- 4. 기기 환경 & 브라우저 & 접속 지역 (3분할) -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- 4. 기기 환경 & 브라우저 & 접속 국가 및 지역 (4분할) -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <!-- 4-A. 모바일 vs PC vs 태블릿 -->
       <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 shadow-lg">
         <div class="flex items-center justify-between mb-4 border-b border-zinc-800/80 pb-3">
@@ -381,7 +381,21 @@
         </div>
       </div>
 
-      <!-- 4-C. 접속 도시 순위 (서울, 부산 등) -->
+      <!-- 4-C. 접속 국가 순위 (대한민국, 미국 등) -->
+      <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 shadow-lg">
+        <div class="flex items-center justify-between mb-4 border-b border-zinc-800/80 pb-3">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>🌍</span>
+            <span>접속 국가 순위 (전체 누적)</span>
+          </h3>
+          <span class="text-xs text-zinc-500">전체 누적</span>
+        </div>
+        <div id="countries-container" class="space-y-2.5 max-h-[360px] overflow-y-auto pr-1">
+          <div class="text-xs text-zinc-500 py-6 text-center">국가 데이터를 불러오는 중...</div>
+        </div>
+      </div>
+
+      <!-- 4-D. 접속 도시 순위 (서울, 부산 등) -->
       <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 shadow-lg">
         <div class="flex items-center justify-between mb-4 border-b border-zinc-800/80 pb-3">
           <h3 class="text-sm font-bold text-white flex items-center gap-2">
@@ -390,7 +404,7 @@
           </h3>
           <span class="text-xs text-zinc-500">전체 누적</span>
         </div>
-        <div id="cities-container" class="space-y-2.5">
+        <div id="cities-container" class="space-y-2.5 max-h-[360px] overflow-y-auto pr-1">
           <div class="text-xs text-zinc-500 py-6 text-center">지역 데이터를 불러오는 중...</div>
         </div>
       </div>
@@ -687,6 +701,7 @@
       renderTopPages(data.topPages || []);
       renderDevices(data.devices || []);
       renderOsAndBrowsers(data.operatingSystems || [], data.browsers || []);
+      renderCountries(data.countries || []);
       renderCities(data.cities || []);
     }
 
@@ -1335,6 +1350,30 @@
 
       html += `</div>`;
       container.innerHTML = html;
+    }
+
+    function renderCountries(list) {
+      const container = document.getElementById("countries-container");
+      if (!container) return;
+
+      if (!list || list.length === 0) {
+        container.innerHTML = `<div class="text-xs text-zinc-500 py-6 text-center">국가 데이터가 아직 없습니다.</div>`;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="space-y-1.5 text-xs">
+          ${list.map((c, idx) => `
+            <div class="flex items-center justify-between py-1 px-2 rounded-lg hover:bg-zinc-800/60 transition-colors">
+              <span class="flex items-center gap-2 text-zinc-300 truncate">
+                <span class="w-4 text-[10px] text-zinc-500 font-mono text-center font-bold">${idx + 1}</span>
+                <span class="truncate font-medium">${escapeHtml(c.name || c.rawName || '기타')}</span>
+              </span>
+              <span class="font-bold text-white font-mono flex-shrink-0">${fmt(c.users)}명</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
     }
 
     function renderCities(list) {

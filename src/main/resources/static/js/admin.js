@@ -802,7 +802,28 @@ async function startSubscriberSync() {
     let liveSuccess = 0;
     let liveFail = 0;
 
-    const syncRes = await executeSubscriberSync((current, total, streamerName, status) => {
+    let syncFn = typeof executeSubscriberSync === "function" 
+      ? executeSubscriberSync 
+      : (typeof window !== "undefined" && typeof window.executeSubscriberSync === "function" ? window.executeSubscriberSync : null);
+
+    if (!syncFn) {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement("script");
+        s.src = `./js/subscriber-sync.js?v=${Date.now()}`;
+        s.onload = () => resolve();
+        s.onerror = () => reject(new Error("subscriber-sync.js 스크립트 파일을 불러오지 못했습니다."));
+        document.head.appendChild(s);
+      });
+      syncFn = typeof executeSubscriberSync === "function" 
+        ? executeSubscriberSync 
+        : (typeof window !== "undefined" && typeof window.executeSubscriberSync === "function" ? window.executeSubscriberSync : null);
+    }
+
+    if (typeof syncFn !== "function") {
+      throw new Error("구독자 갱신 모듈(executeSubscriberSync)을 찾을 수 없습니다. 브라우저 캐시(Ctrl + F5)를 갱신해주세요.");
+    }
+
+    const syncRes = await syncFn((current, total, streamerName, status) => {
       if (status === "SAVING_BACKUP") {
         if (progressBar) progressBar.style.width = "100%";
         if (progressText) {
@@ -880,18 +901,35 @@ async function startSubscriberSync() {
     const failedCount = (typeof syncRes === "object" && syncRes !== null && syncRes.failedCount !== undefined)
       ? syncRes.failedCount
       : Math.max(0, totalCount - successCount);
-    const totalIncrease = (typeof syncRes === "object" && syncRes !== null) ? (syncRes.totalIncrease || 0) : 0;
-    const incText = totalIncrease > 0 
-      ? `+${totalIncrease.toLocaleString()}명` 
-      : (totalIncrease === 0 ? "0명 (변동 없음)" : `-${Math.abs(totalIncrease).toLocaleString()}명`);
-    const formattedInc = (totalIncrease >= 10000 && typeof formatSubscriberCount === "function")
-      ? ` (${formatSubscriberCount(totalIncrease)})`
+
+    // 1) 기존 등록자 기준 증가량
+    const existingIncrease = (typeof syncRes === "object" && syncRes !== null)
+      ? (syncRes.existingIncrease !== undefined ? syncRes.existingIncrease : (syncRes.totalIncrease || 0))
+      : 0;
+    const existingIncreasedCount = (typeof syncRes === "object" && syncRes !== null)
+      ? (syncRes.existingIncreasedCount || syncRes.increasedCount || 0)
+      : 0;
+    const existingIncText = existingIncrease > 0 
+      ? `+${existingIncrease.toLocaleString()}명` 
+      : (existingIncrease === 0 ? "0명" : `-${Math.abs(existingIncrease).toLocaleString()}명`);
+    const formattedExistingInc = (existingIncrease >= 10000 && typeof formatSubscriberCount === "function")
+      ? ` (${formatSubscriberCount(existingIncrease)})`
+      : "";
+
+    // 2) 새로 추가된 인원 (신규 등록자)
+    const newlyAddedCount = (typeof syncRes === "object" && syncRes !== null) ? (syncRes.newlyAddedCount || 0) : 0;
+    const newlyAddedSubTotal = (typeof syncRes === "object" && syncRes !== null) ? (syncRes.newlyAddedSubTotal || 0) : 0;
+    const newlyAddedSubText = newlyAddedSubTotal > 0
+      ? `+${newlyAddedSubTotal.toLocaleString()}명`
+      : (newlyAddedCount > 0 ? `${newlyAddedCount}명` : "0명");
+    const formattedNewlyAdded = (newlyAddedSubTotal >= 10000 && typeof formatSubscriberCount === "function")
+      ? ` (${formatSubscriberCount(newlyAddedSubTotal)})`
       : "";
 
     if (progressBar) progressBar.style.width = "100%";
     if (progressText) {
-      const incColor = totalIncrease > 0 ? 'text-amber-300' : (totalIncrease < 0 ? 'text-blue-400' : 'text-zinc-400');
-      progressText.innerHTML = `<span class="text-emerald-400 font-bold">100% 완료</span> <span class="text-zinc-500 font-normal">(<strong class="text-zinc-200 font-bold">${totalCount}</strong>명 중 <span class="text-zinc-400 font-normal">성공:</span> <strong class="text-emerald-400 font-bold">${successCount}</strong>명<span class="text-zinc-500 font-normal">,</span> <span class="text-zinc-400 font-normal">실패:</span> <strong class="${failedCount > 0 ? 'text-rose-400 font-bold' : 'text-zinc-400 font-normal'}">${failedCount}</strong>명 <span class="text-zinc-600 font-normal">|</span> <span class="text-zinc-400 font-normal">총 증가:</span> <strong class="${incColor} font-bold">${incText}</strong><span class="text-zinc-500 font-normal">)</span>`;
+      const incColor = existingIncrease > 0 ? 'text-amber-300' : (existingIncrease < 0 ? 'text-blue-400' : 'text-zinc-400');
+      progressText.innerHTML = `<span class="text-emerald-400 font-bold">100% 완료</span> <span class="text-zinc-500 font-normal">(<strong class="text-zinc-200 font-bold">${totalCount}</strong>명 중 <span class="text-zinc-400 font-normal">성공:</span> <strong class="text-emerald-400 font-bold">${successCount}</strong>명<span class="text-zinc-500 font-normal">,</span> <span class="text-zinc-400 font-normal">실패:</span> <strong class="${failedCount > 0 ? 'text-rose-400 font-bold' : 'text-zinc-400 font-normal'}">${failedCount}</strong>명 <span class="text-zinc-600 font-normal">|</span> <span class="text-zinc-400 font-normal">기존 증가:</span> <strong class="${incColor} font-bold">${existingIncText}</strong> <span class="text-zinc-600 font-normal">|</span> <span class="text-zinc-400 font-normal">신규 추가:</span> <strong class="text-sky-300 font-bold">${newlyAddedCount}명</strong><span class="text-zinc-500 font-normal">)</span>`;
     }
 
     if (logBox) {
@@ -919,25 +957,41 @@ async function startSubscriberSync() {
             <strong class="${failedCount > 0 ? 'text-rose-400 font-bold' : 'text-zinc-400'} text-sm">${failedCount}명</strong>
           </div>
         </div>
-        <div class="p-2.5 bg-zinc-900/90 rounded-xl border border-zinc-800/80 flex items-center justify-between gap-3 text-xs mt-2">
-          <div class="flex items-center gap-2">
-            <span class="text-amber-400 font-bold">📈 기존 대비 총 증가량</span>
-            <span class="text-zinc-400 text-[11px] font-normal">(기존 등록자 기준)</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+          <!-- 1) 기존 등록자 기준 -->
+          <div class="p-2.5 bg-zinc-900/90 rounded-xl border border-zinc-800/80 flex items-center justify-between gap-2.5 text-xs">
+            <div class="flex flex-col">
+              <span class="text-amber-400 font-bold">📈 기존 대비 총 증가량</span>
+              <span class="text-zinc-400 text-[11px] font-normal">(기존 등록자 기준)</span>
+            </div>
+            <div class="text-right">
+              <strong class="text-emerald-400 font-bold text-sm">${existingIncText}</strong>${formattedExistingInc ? `<span class="text-zinc-400 text-xs ml-1">${formattedExistingInc}</span>` : ""}
+              <div class="text-[10px] text-zinc-500">${existingIncreasedCount > 0 ? `${existingIncreasedCount}명 증가` : (existingIncrease === 0 ? "변동 없음" : "")}</div>
+            </div>
           </div>
-          <div class="text-right">
-            <strong class="text-emerald-400 font-bold text-sm">${incText}</strong>${formattedInc ? `<span class="text-zinc-400 text-xs ml-1.5">${formattedInc}</span>` : ""}
+          <!-- 2) 새로 추가된 인원 -->
+          <div class="p-2.5 bg-zinc-900/90 rounded-xl border border-zinc-800/80 flex items-center justify-between gap-2.5 text-xs">
+            <div class="flex flex-col">
+              <span class="text-sky-400 font-bold">✨ 새로 추가된 인원</span>
+              <span class="text-zinc-400 text-[11px] font-normal">(신규 등록 기준)</span>
+            </div>
+            <div class="text-right">
+              <strong class="${newlyAddedCount > 0 ? 'text-sky-300' : 'text-zinc-400'} font-bold text-sm">${newlyAddedCount > 0 ? `${newlyAddedCount}명` : "0명"}</strong>
+              <div class="text-[10px] text-zinc-400">${newlyAddedCount > 0 ? `(${newlyAddedSubText}${formattedNewlyAdded})` : "신규 인원 없음"}</div>
+            </div>
           </div>
         </div>
-        <div class="text-zinc-400 text-[11px] leading-relaxed">
-          • 전체 <strong>${totalCount}명</strong> 중 <strong class="text-emerald-400">${successCount}명</strong> 성공, <strong class="${failedCount > 0 ? 'text-rose-400' : 'text-zinc-300'}">${failedCount}명</strong> 실패했습니다.<br>
-          • 기존 정보가 있던 인원 기준, 총 구독자·팔로워 수가 <strong class="text-emerald-400">${incText}</strong> 변동되었습니다.
+        <div class="text-zinc-400 text-[11px] leading-relaxed space-y-1 mt-1">
+          <div>• 전체 <strong>${totalCount}명</strong> 중 <strong class="text-emerald-400">${successCount}명</strong> 성공, <strong class="${failedCount > 0 ? 'text-rose-400' : 'text-zinc-300'}">${failedCount}명</strong> 실패했습니다.</div>
+          <div>• <strong>기존 등록자 기준:</strong> 총 구독자·팔로워 수가 <strong class="text-emerald-400">${existingIncText}</strong> (${existingIncreasedCount}명) 변동되었습니다.</div>
+          <div>• <strong>새로 추가된 인원:</strong> 신규 <strong class="text-sky-300">${newlyAddedCount}명</strong> 추가 반영 (구독자·팔로워 합계: <strong class="text-sky-300">${newlyAddedSubText}</strong>)</div>
         </div>
       `;
       logBox.appendChild(finishLine);
       logBox.scrollTop = logBox.scrollHeight;
     }
 
-    showToast(`${failedCount === 0 ? '🎉' : '📊'} 구독자·팔로워 수 조회 완료 <span class="text-zinc-300 text-xs">(성공: <strong class="text-emerald-400">${successCount}명</strong> / 실패: <strong class="${failedCount > 0 ? 'text-rose-400 font-bold' : 'text-zinc-400'}">${failedCount}명</strong> · 총 증가: <strong class="text-amber-300">${incText}</strong>)</span><br><span class="text-[11px] text-amber-300">💾 최신 데이터 자동 백업 완료</span>`);
+    showToast(`${failedCount === 0 ? '🎉' : '📊'} 구독자·팔로워 수 조회 완료 <span class="text-zinc-300 text-xs">(성공: <strong class="text-emerald-400">${successCount}명</strong> · 기존 증가: <strong class="text-amber-300">${existingIncText}</strong> · 신규 추가: <strong class="text-sky-300">${newlyAddedCount}명</strong>)</span><br><span class="text-[11px] text-amber-300">💾 최신 데이터 자동 백업 완료</span>`);
   } catch (err) {
     document.getElementById("admin-sub-saving-spinner")?.remove();
     console.error("구독자 갱신 오류:", err);
@@ -983,7 +1037,28 @@ async function startViewCountSync() {
   if (logBox) logBox.innerHTML = "";
 
   try {
-    const res = await executeViewCountSync((current, total, detailText, status) => {
+    let syncFn = typeof executeViewCountSync === "function"
+      ? executeViewCountSync
+      : (typeof window !== "undefined" && typeof window.executeViewCountSync === "function" ? window.executeViewCountSync : null);
+
+    if (!syncFn) {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement("script");
+        s.src = `./js/viewcount-sync.js?v=${Date.now()}`;
+        s.onload = () => resolve();
+        s.onerror = () => reject(new Error("viewcount-sync.js 스크립트 파일을 불러오지 못했습니다."));
+        document.head.appendChild(s);
+      });
+      syncFn = typeof executeViewCountSync === "function"
+        ? executeViewCountSync
+        : (typeof window !== "undefined" && typeof window.executeViewCountSync === "function" ? window.executeViewCountSync : null);
+    }
+
+    if (typeof syncFn !== "function") {
+      throw new Error("조회수 갱신 모듈(executeViewCountSync)을 찾을 수 없습니다. 브라우저 캐시(Ctrl + F5)를 갱신해주세요.");
+    }
+
+    const res = await syncFn((current, total, detailText, status) => {
       if (status === "SAVING_BACKUP") {
         if (progressBar) progressBar.style.width = "100%";
         if (progressText) {

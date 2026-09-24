@@ -208,10 +208,10 @@ function getSubscriberLookupTarget(member) {
   return null;
 }
 
-// 유튜브 핸들(@handle) -> 고유 채널 ID(UC...) 로컬 영구 캐시 (일괄 배치 조회 가속용)
+// 유튜브 핸들(@handle) -> 고유 채널 ID(UC...) 로컬 영구 캐시 (오직 인원 정보 공식 조회 결과만 저장)
 function getHandleChannelCache() {
   try {
-    const raw = localStorage.getItem("kongbap_yt_handle_cache");
+    const raw = localStorage.getItem("kongbap_yt_handle_cache_v2");
     return raw ? JSON.parse(raw) : {};
   } catch (e) {
     return {};
@@ -220,7 +220,7 @@ function getHandleChannelCache() {
 
 function saveHandleChannelCache(cache) {
   try {
-    localStorage.setItem("kongbap_yt_handle_cache", JSON.stringify(cache));
+    localStorage.setItem("kongbap_yt_handle_cache_v2", JSON.stringify(cache));
   } catch (e) {}
 }
 
@@ -263,7 +263,7 @@ async function fetchMemberSubscriberFromYouTube(member) {
     return null;
   }
 
-  // 2) 유튜브 채널 구독자 조회
+  // 2) 유튜브 채널 구독자 조회 (오직 인원 정보에 등록된 youtubeUrl 채널만 100% 참조)
   let apiKey = "";
   if (typeof initYouTubeApiKeyFromBackend === "function") {
     apiKey = await initYouTubeApiKeyFromBackend();
@@ -281,38 +281,33 @@ async function fetchMemberSubscriberFromYouTube(member) {
 
     if (target.type === "channelId") {
       channelId = target.value;
-    } else if (target.type === "videoId") {
-      const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${target.value}&key=${apiKey.trim()}`);
-      if (vRes.ok) {
-        const vData = await vRes.json();
-        channelId = vData.items?.[0]?.snippet?.channelId;
-      }
     } else if (target.type === "handle") {
       const cleanHandle = target.value.replace(/^@+/, "");
+      // 1) 인원 정보에 등록된 핸들로 공식 forHandle API 직접 조회 (타 채널/영상 절대 참조 안 함)
+      try {
+        const hRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&forHandle=${encodeURIComponent('@' + cleanHandle)}&key=${apiKey.trim()}`);
+        if (hRes.ok) {
+          const hData = await hRes.json();
+          const cItem = hData.items?.[0];
+          if (cItem) {
+            if (cItem.id) {
+              handleCache[cleanHandle] = cItem.id;
+              isCacheUpdated = true;
+            }
+            const stats = cItem.statistics;
+            if (stats && !stats.hiddenSubscriberCount && stats.subscriberCount) {
+              if (isCacheUpdated) saveHandleChannelCache(handleCache);
+              return formatSubscriberCount(stats.subscriberCount);
+            }
+          }
+        }
+      } catch (e) {}
+
+      // 2) 캐시에 등록된 ID 확인
       if (handleCache[cleanHandle]) {
         channelId = handleCache[cleanHandle];
       } else {
-        // 1) 공식 forHandle API 시도
-        try {
-          const hRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&forHandle=${encodeURIComponent('@' + cleanHandle)}&key=${apiKey.trim()}`);
-          if (hRes.ok) {
-            const hData = await hRes.json();
-            const cItem = hData.items?.[0];
-            if (cItem) {
-              if (cItem.id) {
-                handleCache[cleanHandle] = cItem.id;
-                isCacheUpdated = true;
-              }
-              const stats = cItem.statistics;
-              if (stats && !stats.hiddenSubscriberCount && stats.subscriberCount) {
-                if (isCacheUpdated) saveHandleChannelCache(handleCache);
-                return formatSubscriberCount(stats.subscriberCount);
-              }
-            }
-          }
-        } catch (e) {}
-
-        // 2) 한글 핸들이거나 forHandle 실패 시 search API fallback
+        // 3) forHandle 실패 시 search API fallback
         try {
           const sRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${encodeURIComponent(cleanHandle)}&key=${apiKey.trim()}`);
           if (sRes.ok) {
@@ -342,31 +337,6 @@ async function fetchMemberSubscriberFromYouTube(member) {
             }
           }
         } catch (e) {}
-      }
-    }
-
-    // 영상 목록으로부터 채널 ID 역추적 fallback (한글 핸들 대응 및 100% 확실성 보장)
-    if (!channelId && member.videos && member.videos.length > 0) {
-      for (const v of member.videos) {
-        const vId = typeof extractYoutubeId === "function" ? extractYoutubeId(v.url) : null;
-        if (vId) {
-          try {
-            const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${vId}&key=${apiKey.trim()}`);
-            if (vRes.ok) {
-              const vData = await vRes.json();
-              const cId = vData.items?.[0]?.snippet?.channelId;
-              if (cId) {
-                channelId = cId;
-                const cleanKey = (target.value || "").replace(/^@+/, "");
-                if (cleanKey) {
-                  handleCache[cleanKey] = cId;
-                  isCacheUpdated = true;
-                }
-                break;
-              }
-            }
-          } catch (e) {}
-        }
       }
     }
 
@@ -471,70 +441,8 @@ async function executeSubscriberSync(onProgress) {
   }
 
   // --- 1-2단계: 유튜브 채널 일괄 묶음(50개씩) 사전 조회 가속 ---
-  let videoToChannelMap = new Map();
+  // (오직 인원 정보의 직접 채널 ID 및 인원 정보 핸들로 검증된 캐시만 50개씩 일괄 요청)
   if (apiKey && ytItems.length > 0) {
-    // 1) 비디오 ID 직접 타깃 및 채널 ID가 아직 미등록된 핸들 인원의 대표 영상 ID를 50개씩 일괄 조회하여 채널 ID 사전 매핑
-    const videoIdToHandlesMap = new Map();
-    const allVideoIdsToQuery = new Set();
-
-    ytItems.forEach(item => {
-      const t = item.target;
-      const m = item.member;
-      if (!t) return;
-      if (t.type === "videoId") {
-        allVideoIdsToQuery.add(t.value);
-      } else if (t.type === "handle" || t.type === "username" || t.type === "search") {
-        const cleanHandle = t.value.replace(/^@+/, "");
-        if (!handleCache[cleanHandle] && m && Array.isArray(m.videos) && m.videos.length > 0) {
-          for (const v of m.videos) {
-            const vId = typeof extractYoutubeId === "function" ? extractYoutubeId(v.url) : null;
-            if (vId) {
-              allVideoIdsToQuery.add(vId);
-              if (!videoIdToHandlesMap.has(vId)) {
-                videoIdToHandlesMap.set(vId, new Set());
-              }
-              videoIdToHandlesMap.get(vId).add(cleanHandle);
-              videoIdToHandlesMap.get(vId).add(t.value);
-              break;
-            }
-          }
-        }
-      }
-    });
-
-    const videoIds = Array.from(allVideoIdsToQuery);
-    if (videoIds.length > 0) {
-      for (let i = 0; i < videoIds.length; i += 50) {
-        const chunk = videoIds.slice(i, i + 50);
-        try {
-          const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${chunk.join(",")}&key=${apiKey.trim()}`);
-          if (vRes.ok) {
-            const vData = await vRes.json();
-            (vData.items || []).forEach(vItem => {
-              if (vItem.id && vItem.snippet?.channelId) {
-                const cId = vItem.snippet.channelId;
-                videoToChannelMap.set(vItem.id, cId);
-                const associatedHandles = videoIdToHandlesMap.get(vItem.id);
-                if (associatedHandles) {
-                  associatedHandles.forEach(h => {
-                    const cleanH = h.replace(/^@+/, "");
-                    handleCache[cleanH] = cId;
-                    isHandleCacheDirty = true;
-                  });
-                }
-              }
-            });
-          }
-        } catch (err) {
-          console.warn("[YouTube Batch] 영상 정보 일괄 조회 오류:", err);
-        }
-      }
-      if (isHandleCacheDirty) {
-        saveHandleChannelCache(handleCache);
-      }
-    }
-
-    // 2) 직접 채널 ID + 영상에서 얻은 채널 ID + 핸들 캐시에 등록된 채널 ID들을 매핑
     const directChannelIds = ytItems
       .filter(item => item.target && item.target.type === "channelId")
       .map(item => item.target.value);
@@ -560,7 +468,7 @@ async function executeSubscriberSync(onProgress) {
       }
     });
 
-    const allChannelIds = Array.from(new Set([...directChannelIds, ...videoToChannelMap.values(), ...handleChannelIds]));
+    const allChannelIds = Array.from(new Set([...directChannelIds, ...handleChannelIds]));
     
     // 50개 단위 청크들을 병렬로 일괄 요청 (HTTP/2 다중화)
     const channelChunks = [];
@@ -594,6 +502,19 @@ async function executeSubscriberSync(onProgress) {
   }
 
   // --- 2단계: 각 스트리머별 실시간 병렬(동시 8개 풀) 조회 및 진행률 갱신 ---
+  const memberObjMap = new Map();
+  if (typeof KONGBAP_DATA !== "undefined" && Array.isArray(KONGBAP_DATA.categories)) {
+    KONGBAP_DATA.categories.forEach(cat => {
+      const list = cat.hasSubgroups ? (cat.groups || []).flatMap(g => g.members || []) : (cat.members || []);
+      list.forEach(mem => {
+        if (!mem || mem.id == null) return;
+        const idStr = String(mem.id);
+        if (!memberObjMap.has(idStr)) memberObjMap.set(idStr, []);
+        memberObjMap.get(idStr).push(mem);
+      });
+    });
+  }
+
   await runConcurrentPool(targetItems, 8, async (item) => {
     const m = item.member;
     const t = item.target;
@@ -619,8 +540,23 @@ async function executeSubscriberSync(onProgress) {
       } else if (t.type === "channelId") {
         subStr = subCountCache.get(t.value) || null;
       } else if (t.type === "videoId") {
-        const chId = videoToChannelMap.get(t.value);
-        if (chId) subStr = subCountCache.get(chId) || null;
+        try {
+          const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${t.value}&key=${apiKey.trim()}`);
+          if (vRes.ok) {
+            const vData = await vRes.json();
+            const chId = vData.items?.[0]?.snippet?.channelId;
+            if (chId) {
+              const cRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${chId}&key=${apiKey.trim()}`);
+              if (cRes.ok) {
+                const cData = await cRes.json();
+                const stats = cData.items?.[0]?.statistics;
+                if (stats && !stats.hiddenSubscriberCount && stats.subscriberCount) {
+                  subStr = formatSubscriberCount(stats.subscriberCount);
+                }
+              }
+            }
+          }
+        } catch (e) {}
       } else if (t.type === "handle" || t.type === "username" || t.type === "search") {
         const cleanHandle = t.value.replace(/^@+/, "");
         if (subCountCache.has(t.value)) {
@@ -632,34 +568,10 @@ async function executeSubscriberSync(onProgress) {
         } else if (handleCache[cleanHandle] && subCountCache.has(handleCache[cleanHandle])) {
           subStr = subCountCache.get(handleCache[cleanHandle]);
         } else {
-          let foundChId = handleCache[cleanHandle] || null;
+          let foundChId = null;
 
-          // 1) 등록 영상으로부터 채널 ID 역추적 fallback (한글 핸들 대응)
-          if (!foundChId && m && Array.isArray(m.videos) && m.videos.length > 0) {
-            for (const v of m.videos) {
-              const vId = typeof extractYoutubeId === "function" ? extractYoutubeId(v.url) : null;
-              if (vId) {
-                if (videoToChannelMap.has(vId)) {
-                  foundChId = videoToChannelMap.get(vId);
-                  break;
-                }
-                try {
-                  const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${vId}&key=${apiKey.trim()}`);
-                  if (vRes.ok) {
-                    const vData = await vRes.json();
-                    foundChId = vData.items?.[0]?.snippet?.channelId;
-                    if (foundChId) {
-                      videoToChannelMap.set(vId, foundChId);
-                      break;
-                    }
-                  }
-                } catch (e) {}
-              }
-            }
-          }
-
-          // 2) 공식 forHandle API 시도
-          if (!foundChId && !subStr && t.type === "handle") {
+          // 1) 인원 정보에 등록된 핸들(@handle)로 공식 forHandle API 직접 조회 (영상 역추적 절대 금지)
+          if (t.type === "handle") {
             try {
               const hRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&forHandle=${encodeURIComponent('@' + cleanHandle)}&key=${apiKey.trim()}`);
               if (hRes.ok) {
@@ -669,7 +581,7 @@ async function executeSubscriberSync(onProgress) {
                   if (cItem.id) {
                     foundChId = cItem.id;
                     handleCache[cleanHandle] = foundChId;
-                    saveHandleChannelCache(handleCache);
+                    isHandleCacheDirty = true;
                   }
                   const stats = cItem.statistics;
                   if (stats && !stats.hiddenSubscriberCount && stats.subscriberCount) {
@@ -680,7 +592,12 @@ async function executeSubscriberSync(onProgress) {
             } catch (err) {}
           }
 
-          // 3) forHandle 실패 시 또는 search/username인 경우 채널 검색 fallback
+          // 2) forHandle이 아닌 경우 또는 실패 시 기존 검증된 캐시 확인
+          if (!foundChId && !subStr && handleCache[cleanHandle]) {
+            foundChId = handleCache[cleanHandle];
+          }
+
+          // 3) forHandle 실패 시 또는 search/username인 경우 채널명 검색 fallback
           if (!foundChId && !subStr) {
             try {
               const sRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${encodeURIComponent(cleanHandle)}&key=${apiKey.trim()}`);
@@ -693,7 +610,7 @@ async function executeSubscriberSync(onProgress) {
 
           if (foundChId && !subStr) {
             handleCache[cleanHandle] = foundChId;
-            saveHandleChannelCache(handleCache);
+            isHandleCacheDirty = true;
             if (subCountCache.has(foundChId)) {
               subStr = subCountCache.get(foundChId);
             } else {
@@ -715,6 +632,7 @@ async function executeSubscriberSync(onProgress) {
             subCountCache.set(t.value, subStr);
             subCountCache.set(`@${cleanHandle}`, subStr);
             subCountCache.set(cleanHandle, subStr);
+            if (foundChId) subCountCache.set(foundChId, subStr);
           }
         }
       }
@@ -724,19 +642,12 @@ async function executeSubscriberSync(onProgress) {
 
     if (subStr) {
       m.subscriberCount = subStr;
-      KONGBAP_DATA.categories.forEach(cat => {
-        if (cat.hasSubgroups) {
-          (cat.groups || []).forEach(g => {
-            (g.members || []).forEach(mem => {
-              if (String(mem.id) === String(m.id)) mem.subscriberCount = subStr;
-            });
-          });
-        } else {
-          (cat.members || []).forEach(mem => {
-            if (String(mem.id) === String(m.id)) mem.subscriberCount = subStr;
-          });
+      const sameMembers = memberObjMap.get(String(m.id));
+      if (sameMembers) {
+        for (let i = 0; i < sameMembers.length; i++) {
+          sameMembers[i].subscriberCount = subStr;
         }
-      });
+      }
       updatedCount++;
       const platformPrefix = isChzzk ? "치지직 팔로워" : "유튜브 구독자";
       if (onProgress) onProgress(processedCount, targetItems.length, m.streamer, `성공 (${platformPrefix} ${subStr})`);
@@ -749,23 +660,31 @@ async function executeSubscriberSync(onProgress) {
     await new Promise(resolve => setTimeout(resolve, 15));
   });
 
+  if (isHandleCacheDirty) {
+    saveHandleChannelCache(handleCache);
+  }
+
   // 조회 완료 후 백업 및 DB 저장 단계 진입 알림
   if (onProgress) {
     onProgress(targetItems.length, targetItems.length, "전체 인원 조회 완료", "SAVING_BACKUP");
   }
 
-  // 3단계: 기존 대비 총 증가량 계산 (원래 정보가 등록되어 있던 인원 대상)
+  // 3단계: 기존 대비 총 증가량 및 새로 추가된 인원 증가량 계산
   let totalSubIncrease = 0;
   let prevTotalSub = 0;
   let newTotalSub = 0;
   let increasedCount = 0;
 
+  let newlyAddedCount = 0;
+  let newlyAddedSubTotal = 0;
+
   targets.forEach(m => {
     const memId = String(m.id);
-    if (originalSubMap.has(memId)) {
-      const prevCount = originalSubMap.get(memId);
-      const newCount = parseSubscriberCount(m.subscriberCount);
-      if (newCount > 0) {
+    const newCount = parseSubscriberCount(m.subscriberCount);
+    if (newCount > 0) {
+      if (originalSubMap.has(memId)) {
+        // 기존 등록자 기준
+        const prevCount = originalSubMap.get(memId);
         prevTotalSub += prevCount;
         newTotalSub += newCount;
         const diff = newCount - prevCount;
@@ -773,9 +692,15 @@ async function executeSubscriberSync(onProgress) {
           totalSubIncrease += diff;
           increasedCount++;
         }
+      } else {
+        // 새로 추가된 인원 (기존에 등록되어 있지 않았던 인원)
+        newlyAddedCount++;
+        newlyAddedSubTotal += newCount;
       }
     }
   });
+
+  const grandTotalIncrease = totalSubIncrease + newlyAddedSubTotal;
 
   persistData();
   if (typeof state !== "undefined" && state.currentCategory !== "adminpage" && typeof renderContent === "function") {
@@ -790,9 +715,14 @@ async function executeSubscriberSync(onProgress) {
   const failedCount = Math.max(0, totalCount - updatedCount);
 
   if (typeof createBackupSnapshot === "function") {
-    const backupDesc = totalSubIncrease > 0
-      ? `구독자/팔로워 수 일괄 갱신 (성공 ${updatedCount}명, 실패 ${failedCount}명, 기존 대비 +${totalSubIncrease.toLocaleString()}명)`
-      : `구독자/팔로워 수 일괄 갱신 (성공 ${updatedCount}명, 실패 ${failedCount}명)`;
+    let backupDesc = `구독자/팔로워 수 일괄 갱신 (성공 ${updatedCount}명, 실패 ${failedCount}명`;
+    if (totalSubIncrease > 0) {
+      backupDesc += `, 기존 대비 +${totalSubIncrease.toLocaleString()}명`;
+    }
+    if (newlyAddedCount > 0) {
+      backupDesc += `, 신규 추가 ${newlyAddedCount}명(+${newlyAddedSubTotal.toLocaleString()}명)`;
+    }
+    backupDesc += `)`;
     syncPromises.push(createBackupSnapshot(backupDesc, false));
   }
 
@@ -808,6 +738,11 @@ async function executeSubscriberSync(onProgress) {
     totalCount,
     targetsCount: totalCount,
     totalIncrease: totalSubIncrease,
+    existingIncrease: totalSubIncrease,
+    existingIncreasedCount: increasedCount,
+    newlyAddedCount,
+    newlyAddedSubTotal,
+    grandTotalIncrease,
     prevTotal: prevTotalSub,
     newTotal: newTotalSub,
     increasedCount,
@@ -815,4 +750,14 @@ async function executeSubscriberSync(onProgress) {
     valueOf() { return this.updatedCount; },
     toString() { return String(this.updatedCount); }
   };
+}
+
+// 전역 객체 바인딩 (브라우저 어디서나 안정적으로 접근 가능하도록 보장)
+if (typeof window !== "undefined") {
+  window.formatSubscriberCount = formatSubscriberCount;
+  window.parseSubscriberCount = parseSubscriberCount;
+  window.calculateGroupTotalSubscribers = calculateGroupTotalSubscribers;
+  window.calculateGroupPlatformSubscribers = calculateGroupPlatformSubscribers;
+  window.parseYouTubeTarget = parseYouTubeTarget;
+  window.executeSubscriberSync = executeSubscriberSync;
 }

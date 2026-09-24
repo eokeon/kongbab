@@ -237,7 +237,7 @@ public class GoogleAnalyticsService {
                 realtimeCacheExpiry = currentNow + REALTIME_CACHE_TTL_MS;
 
                 JsonNode reports1 = executeBatch("배치1(개요/일별/유입/기기/페이지)", headers, buildBatch1());
-                JsonNode reports2 = executeBatch("배치2(OS/브라우저/지역/시간)", headers, buildBatch2());
+                JsonNode reports2 = executeBatch("배치2(OS/브라우저/지역/시간/국가)", headers, buildBatch2());
 
                 // Batch 1 결과 매핑 (Overview, Daily, Sources, Devices, Top Pages)
                 JsonNode repOverview = (reports1 != null && reports1.size() > 0) ? reports1.get(0) : null;
@@ -246,11 +246,12 @@ public class GoogleAnalyticsService {
                 JsonNode repDevices = (reports1 != null && reports1.size() > 3) ? reports1.get(3) : null;
                 JsonNode repPages = (reports1 != null && reports1.size() > 4) ? reports1.get(4) : null;
 
-                // Batch 2 결과 매핑 (OS, Browsers, Cities, Hourly)
+                // Batch 2 결과 매핑 (OS, Browsers, Cities, Hourly, Countries)
                 JsonNode repOs = (reports2 != null && reports2.size() > 0) ? reports2.get(0) : null;
                 JsonNode repBrowsers = (reports2 != null && reports2.size() > 1) ? reports2.get(1) : null;
                 JsonNode repCities = (reports2 != null && reports2.size() > 2) ? reports2.get(2) : null;
                 JsonNode repHourly = (reports2 != null && reports2.size() > 3) ? reports2.get(3) : null;
+                JsonNode repCountries = (reports2 != null && reports2.size() > 4) ? reports2.get(4) : null;
 
                 Map<String, Object> overview = parseOverview(repOverview);
                 List<Map<String, Object>> dailyList = parseDaily(repDaily);
@@ -267,6 +268,7 @@ public class GoogleAnalyticsService {
                 result.put("operatingSystems", parseDimension(repOs, "operatingSystem"));
                 result.put("browsers", parseDimension(repBrowsers, "browser"));
                 result.put("cities", parseDimension(repCities, "city"));
+                result.put("countries", parseDimension(repCountries, "country"));
                 result.put("hourlyStats", parseHourly(repHourly));
                 result.put("topPages", parseTopPages(repPages));
                 result.put("updatedAt", java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
@@ -421,7 +423,9 @@ public class GoogleAnalyticsService {
         ObjectNode rOs = reqs.addObject();
         rOs.putArray("dateRanges").addObject().put("startDate", ALL_TIME_START_DATE).put("endDate", "today");
         rOs.putArray("dimensions").addObject().put("name", "operatingSystem");
-        rOs.putArray("metrics").addObject().put("name", "totalUsers");
+        ArrayNode mOs = rOs.putArray("metrics");
+        mOs.addObject().put("name", "totalUsers");
+        mOs.addObject().put("name", "sessions");
         rOs.put("limit", 20);
         ObjectNode oOs = rOs.putArray("orderBys").addObject();
         oOs.putObject("metric").put("metricName", "totalUsers");
@@ -431,7 +435,9 @@ public class GoogleAnalyticsService {
         ObjectNode rBrowsers = reqs.addObject();
         rBrowsers.putArray("dateRanges").addObject().put("startDate", ALL_TIME_START_DATE).put("endDate", "today");
         rBrowsers.putArray("dimensions").addObject().put("name", "browser");
-        rBrowsers.putArray("metrics").addObject().put("name", "totalUsers");
+        ArrayNode mBrowsers = rBrowsers.putArray("metrics");
+        mBrowsers.addObject().put("name", "totalUsers");
+        mBrowsers.addObject().put("name", "sessions");
         rBrowsers.put("limit", 20);
         ObjectNode oBrowsers = rBrowsers.putArray("orderBys").addObject();
         oBrowsers.putObject("metric").put("metricName", "totalUsers");
@@ -441,7 +447,9 @@ public class GoogleAnalyticsService {
         ObjectNode rCities = reqs.addObject();
         rCities.putArray("dateRanges").addObject().put("startDate", ALL_TIME_START_DATE).put("endDate", "today");
         rCities.putArray("dimensions").addObject().put("name", "city");
-        rCities.putArray("metrics").addObject().put("name", "totalUsers");
+        ArrayNode mCities = rCities.putArray("metrics");
+        mCities.addObject().put("name", "totalUsers");
+        mCities.addObject().put("name", "sessions");
         rCities.put("limit", 50);
         ObjectNode oCities = rCities.putArray("orderBys").addObject();
         oCities.putObject("metric").put("metricName", "totalUsers");
@@ -457,6 +465,18 @@ public class GoogleAnalyticsService {
         ObjectNode oHourly = rHourly.putArray("orderBys").addObject();
         oHourly.putObject("dimension").put("dimensionName", "hour");
         oHourly.put("desc", false);
+
+        // 4. Countries (전체 기간 누적 접속 국가 - 상위 30개 국가)
+        ObjectNode rCountries = reqs.addObject();
+        rCountries.putArray("dateRanges").addObject().put("startDate", ALL_TIME_START_DATE).put("endDate", "today");
+        rCountries.putArray("dimensions").addObject().put("name", "country");
+        ArrayNode mCountries = rCountries.putArray("metrics");
+        mCountries.addObject().put("name", "totalUsers");
+        mCountries.addObject().put("name", "sessions");
+        rCountries.put("limit", 30);
+        ObjectNode oCountries = rCountries.putArray("orderBys").addObject();
+        oCountries.putObject("metric").put("metricName", "totalUsers");
+        oCountries.put("desc", true);
 
         return batch;
     }
@@ -843,6 +863,138 @@ public class GoogleAnalyticsService {
             if ("mobile".equalsIgnoreCase(val)) return "모바일 (스마트폰)";
             if ("desktop".equalsIgnoreCase(val)) return "데스크톱 (PC)";
             if ("tablet".equalsIgnoreCase(val)) return "태블릿";
+        }
+        if ("country".equals(dim)) {
+            switch (val) {
+                case "South Korea": return "🇰🇷 대한민국";
+                case "United States": return "🇺🇸 미국";
+                case "Japan": return "🇯🇵 일본";
+                case "China": return "🇨🇳 중국";
+                case "Taiwan": return "🇹🇼 대만";
+                case "Hong Kong": return "🇭🇰 홍콩";
+                case "Canada": return "🇨🇦 캐나다";
+                case "United Kingdom": return "🇬🇧 영국";
+                case "Germany": return "🇩🇪 독일";
+                case "France": return "🇫🇷 프랑스";
+                case "Australia": return "🇦🇺 호주";
+                case "Singapore": return "🇸🇬 싱가포르";
+                case "Vietnam": return "🇻🇳 베트남";
+                case "Thailand": return "🇹🇭 태국";
+                case "Philippines": return "🇵🇭 필리핀";
+                case "Indonesia": return "🇮🇩 인도네시아";
+                case "Malaysia": return "🇲🇾 말레이시아";
+                case "Russia": return "🇷🇺 러시아";
+                case "Brazil": return "🇧🇷 브라질";
+                case "India": return "🇮🇳 인도";
+                case "Netherlands": return "🇳🇱 네덜란드";
+                case "Sweden": return "🇸🇪 스웨덴";
+                case "New Zealand": return "🇳🇿 뉴질랜드";
+                case "Poland": return "🇵🇱 폴란드";
+                case "Italy": return "🇮🇹 이탈리아";
+                case "Spain": return "🇪🇸 스페인";
+                case "Ireland": return "🇮🇪 아일랜드";
+                case "Finland": return "🇫🇮 핀란드";
+                case "Norway": return "🇳🇴 노르웨이";
+                case "Switzerland": return "🇨🇭 스위스";
+                case "Mexico": return "🇲🇽 멕시코";
+                case "Mongolia": return "🇲🇳 몽골";
+                case "Turkey":
+                case "Türkiye": return "🇹🇷 튀르키예";
+                default: return "🌐 " + val;
+            }
+        }
+        if ("city".equals(dim)) {
+            switch (val) {
+                case "Seoul": return "서울";
+                case "Busan": return "부산";
+                case "Incheon": return "인천";
+                case "Daegu": return "대구";
+                case "Daejeon": return "대전";
+                case "Gwangju": return "광주";
+                case "Ulsan": return "울산";
+                case "Suwon-si": return "수원";
+                case "Seongnam-si": return "성남";
+                case "Goyang-si": return "고양";
+                case "Yongin-si": return "용인";
+                case "Bucheon-si": return "부천";
+                case "Ansan-si": return "안산";
+                case "Cheongju-si": return "청주";
+                case "Jeonju-si": return "전주";
+                case "Cheonan-si": return "천안";
+                case "Changwon":
+                case "Changwon-si": return "창원";
+                case "Pohang":
+                case "Pohang-si": return "포항";
+                case "Jeju":
+                case "Jeju-si": return "제주";
+                case "Sejong":
+                case "Sejong-si": return "세종";
+                case "Gimpo-si": return "김포";
+                case "Hwaseong-si": return "화성";
+                case "Pyeongtaek-si": return "평택";
+                case "Siheung-si": return "시흥";
+                case "Uijeongbu-si": return "의정부";
+                case "Paju-si": return "파주";
+                case "Gimhae-si": return "김해";
+                case "Gumi-si": return "구미";
+                case "Jinju-si": return "진주";
+                case "Wonju-si": return "원주";
+                case "Chuncheon-si": return "춘천";
+                case "Gangneung-si": return "강릉";
+                case "Asan-si": return "아산";
+                case "Iksan-si": return "익산";
+                case "Mokpo-si": return "목포";
+                case "Suncheon-si": return "순천";
+                case "Yeosu-si": return "여수";
+                case "Andong-si": return "안동";
+                case "Gyeongju-si": return "경주";
+                case "Yangsan-si": return "양산";
+                case "Geoje-si": return "거제";
+                case "Gwangmyeong-si": return "광명";
+                case "Gunpo-si": return "군포";
+                case "Hanam-si": return "하남";
+                case "Osan-si": return "오산";
+                case "Icheon-si": return "이천";
+                case "Anseong-si": return "안성";
+                case "Uiwang-si": return "의왕";
+                case "Guri-si": return "구리";
+                case "Yangju-si": return "양주";
+                case "Dongducheon-si": return "동두천";
+                case "Gwacheon-si": return "과천";
+                case "Ashburn": return "애슈번 (미국/AWS)";
+                case "Council Bluffs": return "카운실블러프 (미국/GCP)";
+                case "Tokyo": return "도쿄 (일본)";
+                case "Osaka": return "오사카 (일본)";
+                case "Frankfurt": return "프랑크푸르트 (독일)";
+                case "London": return "런던 (영국)";
+                case "Sydney": return "시드니 (호주)";
+                case "San Jose": return "새너제이 (미국)";
+                case "Ulaanbaatar": return "울란바토르 (몽골)";
+                case "Komsomolsk-on-Amur": return "콤소몰스크나아무레 (러시아)";
+                case "Los Angeles": return "로스앤젤레스 (미국)";
+                case "New York": return "뉴욕 (미국)";
+                case "Santa Clara": return "산타클라라 (미국)";
+                case "Mountain View": return "마운틴뷰 (미국)";
+                case "Seattle": return "시애틀 (미국)";
+                case "Chicago": return "시카고 (미국)";
+                case "Boardman": return "보드먼 (미국/AWS)";
+                case "Gyeonggi-do": return "경기도";
+                case "Gangwon-do": return "강원도";
+                case "Chungcheongbuk-do": return "충청북도";
+                case "Chungcheongnam-do": return "충청남도";
+                case "Jeollabuk-do": return "전라북도";
+                case "Jeollanam-do": return "전라남도";
+                case "Gyeongsangbuk-do": return "경상북도";
+                case "Gyeongsangnam-do": return "경상남도";
+                default:
+                    if (val.endsWith("-si")) {
+                        return val.substring(0, val.length() - 3);
+                    }
+                    if (val.endsWith("-gun")) {
+                        return val.substring(0, val.length() - 4);
+                    }
+                    return val;
+            }
         }
         return val;
     }

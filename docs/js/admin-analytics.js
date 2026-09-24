@@ -286,6 +286,37 @@ function renderAnalyticsTabHtml() {
           </div>
         </div>
       </div>
+
+      <!-- 6. 2열 레이아웃: 접속 국가 및 접속 지역/도시 분석 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <!-- 접속 국가 분석 -->
+        <div class="bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-4 sm:p-5 shadow-md">
+          <div class="flex items-center justify-between mb-3 border-b border-zinc-800/80 pb-2.5">
+            <h4 class="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+              <span>🌍</span>
+              <span>접속 국가 (Country)</span>
+            </h4>
+            <span class="text-[11px] text-zinc-500">방문자 수 (세션)</span>
+          </div>
+          <div id="admin-countries-container" class="space-y-2.5 max-h-[420px] overflow-y-auto pr-1">
+            <div class="text-xs text-zinc-500 py-6 text-center">불러오는 중...</div>
+          </div>
+        </div>
+
+        <!-- 접속 지역/도시 분석 -->
+        <div class="bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-4 sm:p-5 shadow-md">
+          <div class="flex items-center justify-between mb-3 border-b border-zinc-800/80 pb-2.5">
+            <h4 class="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+              <span>📍</span>
+              <span>접속 지역 및 도시 (Region / City)</span>
+            </h4>
+            <span class="text-[11px] text-zinc-500">방문자 수 (세션)</span>
+          </div>
+          <div id="admin-cities-container" class="space-y-2.5 max-h-[420px] overflow-y-auto pr-1">
+            <div class="text-xs text-zinc-500 py-6 text-center">불러오는 중...</div>
+          </div>
+        </div>
+      </div>
     </div>
   `;
 }
@@ -428,6 +459,8 @@ function renderAdminAnalyticsData(data) {
   renderAdminHourlyChart(data.hourlyStats || []);
   renderAdminSources(data.sources || []);
   renderAdminDevices(data.devices || []);
+  renderAdminCountries(data.countries || []);
+  renderAdminCities(data.cities || []);
 }
 
 function renderAdminLoyalty(ov) {
@@ -614,6 +647,16 @@ function formatAdminPageHierarchy(item) {
   };
 }
 
+function getAnalyticsMaxMetric(list, key = "users") {
+  if (!list || list.length === 0) return 1;
+  let max = 1;
+  for (let i = 0; i < list.length; i++) {
+    const val = Number(list[i][key]) || 0;
+    if (val > max) max = val;
+  }
+  return max;
+}
+
 function renderAdminTopPagesJob(list, container) {
   const catStats = {};
   list.forEach(item => {
@@ -633,7 +676,7 @@ function renderAdminTopPagesJob(list, container) {
   });
 
   const sorted = Object.values(catStats).sort((a, b) => b.views - a.views);
-  const maxViews = Math.max(...sorted.map(s => s.views), 1);
+  const maxViews = getAnalyticsMaxMetric(sorted, "views");
 
   container.innerHTML = sorted.map((cat, idx) => {
     const percent = Math.min(100, Math.max(4, Math.round((cat.views / maxViews) * 100)));
@@ -681,7 +724,7 @@ function renderAdminTopPagesMember(list, container) {
     return;
   }
 
-  const maxViews = Math.max(...sorted.map(s => s.views), 1);
+  const maxViews = getAnalyticsMaxMetric(sorted, "views");
   const displayList = adminTopPagesShowAll ? sorted : sorted.slice(0, 10);
   const hasMore = sorted.length > 10;
 
@@ -724,7 +767,7 @@ function renderAdminTopPagesMember(list, container) {
 }
 
 function renderAdminTopPagesAll(list, container) {
-  const maxViews = Math.max(...list.map(s => s.views || 0), 1);
+  const maxViews = getAnalyticsMaxMetric(list, "views");
   const displayList = adminTopPagesShowAll ? list : list.slice(0, 10);
   const hasMore = list.length > 10;
 
@@ -771,7 +814,7 @@ function renderAdminDailyChart(list) {
     container.innerHTML = `<div class="text-xs text-zinc-500 py-6 text-center">수집된 일별 통계가 없습니다.</div>`;
     return;
   }
-  const maxUsers = Math.max(...list.map(d => d.users || 0), 1);
+  const maxUsers = getAnalyticsMaxMetric(list, "users");
   const reversed = list.slice().reverse();
 
   container.innerHTML = reversed.map(item => {
@@ -796,7 +839,7 @@ function renderAdminHourlyChart(list) {
     container.innerHTML = `<div class="text-xs text-zinc-500 py-6 text-center">시간대별 통계가 없습니다.</div>`;
     return;
   }
-  const maxUsers = Math.max(...list.map(d => d.users || 0), 1);
+  const maxUsers = getAnalyticsMaxMetric(list, "users");
 
   container.innerHTML = list.map(item => {
     const percent = Math.min(100, Math.max(2, Math.round(((item.users || 0) / maxUsers) * 100)));
@@ -820,7 +863,7 @@ function renderAdminSources(list) {
     container.innerHTML = `<div class="text-xs text-zinc-500 py-6 text-center">수집된 유입 경로가 없습니다. (직접 접속, 검색, 외부 링크 등)</div>`;
     return;
   }
-  const maxUsers = Math.max(...list.map(d => d.users || 0), 1);
+  const maxUsers = getAnalyticsMaxMetric(list, "users");
 
   container.innerHTML = list.map((item, idx) => {
     const percent = Math.min(100, Math.max(4, Math.round(((item.users || 0) / maxUsers) * 100)));
@@ -849,7 +892,7 @@ function renderAdminDevices(list) {
     container.innerHTML = `<div class="text-xs text-zinc-500 py-6 text-center">기기 데이터가 없습니다.</div>`;
     return;
   }
-  const maxUsers = Math.max(...list.map(d => d.users || 0), 1);
+  const maxUsers = getAnalyticsMaxMetric(list, "users");
 
   container.innerHTML = list.map(item => {
     const percent = Math.min(100, Math.max(4, Math.round(((item.users || 0) / maxUsers) * 100)));
@@ -866,6 +909,64 @@ function renderAdminDevices(list) {
         </div>
         <div class="w-full h-1.5 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800/80">
           <div class="h-full bg-gradient-to-r from-amber-500 to-orange-400 rounded-full" style="width: ${percent}%;"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderAdminCountries(list) {
+  const container = document.getElementById("admin-countries-container");
+  if (!container) return;
+  if (!list || list.length === 0) {
+    container.innerHTML = `<div class="text-xs text-zinc-500 py-6 text-center">수집된 국가 데이터가 없습니다.</div>`;
+    return;
+  }
+  const maxUsers = getAnalyticsMaxMetric(list, "users");
+
+  container.innerHTML = list.map((item, idx) => {
+    const percent = Math.min(100, Math.max(4, Math.round(((item.users || 0) / maxUsers) * 100)));
+    const safeName = escapeHtml(item.name || item.rawName || '기타');
+    return `
+      <div class="space-y-1 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="font-medium text-zinc-200 flex items-center gap-1.5 truncate">
+            <span class="w-4 h-4 rounded bg-zinc-800 text-zinc-400 font-mono text-[9px] flex items-center justify-center font-bold flex-shrink-0">${idx + 1}</span>
+            <span class="truncate font-semibold text-zinc-100" title="${safeName}">${safeName}</span>
+          </span>
+          <span class="font-bold text-white flex-shrink-0 ml-2">${formatNumber(item.users)}명 <span class="text-[10px] text-zinc-500">(${formatNumber(item.sessions)}세션)</span></span>
+        </div>
+        <div class="w-full h-1.5 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800/80">
+          <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full" style="width: ${percent}%;"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderAdminCities(list) {
+  const container = document.getElementById("admin-cities-container");
+  if (!container) return;
+  if (!list || list.length === 0) {
+    container.innerHTML = `<div class="text-xs text-zinc-500 py-6 text-center">수집된 지역 및 도시 데이터가 없습니다.</div>`;
+    return;
+  }
+  const maxUsers = getAnalyticsMaxMetric(list, "users");
+
+  container.innerHTML = list.map((item, idx) => {
+    const percent = Math.min(100, Math.max(4, Math.round(((item.users || 0) / maxUsers) * 100)));
+    const safeName = escapeHtml(item.name || item.rawName || '기타');
+    return `
+      <div class="space-y-1 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="font-medium text-zinc-200 flex items-center gap-1.5 truncate">
+            <span class="w-4 h-4 rounded bg-zinc-800 text-zinc-400 font-mono text-[9px] flex items-center justify-center font-bold flex-shrink-0">${idx + 1}</span>
+            <span class="truncate font-semibold text-zinc-100" title="${safeName}">${safeName}</span>
+          </span>
+          <span class="font-bold text-white flex-shrink-0 ml-2">${formatNumber(item.users)}명 <span class="text-[10px] text-zinc-500">(${formatNumber(item.sessions)}세션)</span></span>
+        </div>
+        <div class="w-full h-1.5 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800/80">
+          <div class="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" style="width: ${percent}%;"></div>
         </div>
       </div>
     `;

@@ -606,13 +606,20 @@ async function handleRestoreBackup(fileName, displayLabel) {
     if (res.ok) {
       const data = await res.json();
       if (data && data.success) {
-        if (typeof fetchCategoryStructure === "function") {
-          await fetchCategoryStructure();
+        if (typeof invalidateStaticStreamersCache === "function") {
+          invalidateStaticStreamersCache();
         }
-        if (typeof fetchStreamersFromDb === "function") {
-          const dbStreamers = await fetchStreamersFromDb();
-          if (Array.isArray(dbStreamers)) {
-            applyStreamersToKongbapData(dbStreamers);
+        if (data.categories && Array.isArray(data.categories) && data.categories.length > 0) {
+          KONGBAP_DATA.categories = data.categories;
+        } else {
+          if (typeof fetchCategoryStructure === "function") {
+            await fetchCategoryStructure();
+          }
+          if (typeof fetchStreamersFromDb === "function") {
+            const dbStreamers = await fetchStreamersFromDb();
+            if (Array.isArray(dbStreamers)) {
+              applyStreamersToKongbapData(dbStreamers);
+            }
           }
         }
 
@@ -679,13 +686,20 @@ async function handleBackupFileUpload(event) {
       if (res.ok) {
         const data = await res.json();
         if (data && data.success) {
-          if (typeof fetchCategoryStructure === "function") {
-            await fetchCategoryStructure();
+          if (typeof invalidateStaticStreamersCache === "function") {
+            invalidateStaticStreamersCache();
           }
-          if (typeof fetchStreamersFromDb === "function") {
-            const dbStreamers = await fetchStreamersFromDb();
-            if (Array.isArray(dbStreamers)) {
-              applyStreamersToKongbapData(dbStreamers);
+          if (data.categories && Array.isArray(data.categories) && data.categories.length > 0) {
+            KONGBAP_DATA.categories = data.categories;
+          } else {
+            if (typeof fetchCategoryStructure === "function") {
+              await fetchCategoryStructure();
+            }
+            if (typeof fetchStreamersFromDb === "function") {
+              const dbStreamers = await fetchStreamersFromDb();
+              if (Array.isArray(dbStreamers)) {
+                applyStreamersToKongbapData(dbStreamers);
+              }
             }
           }
 

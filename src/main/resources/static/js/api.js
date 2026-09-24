@@ -300,10 +300,15 @@ function buildLocalMyPageSummary() {
 window.buildLocalMyPageSummary = buildLocalMyPageSummary;
 
 let _staticStreamersPromise = null;
+function invalidateStaticStreamersCache() {
+  _staticStreamersPromise = null;
+}
+window.invalidateStaticStreamersCache = invalidateStaticStreamersCache;
+
 function getStaticStreamersData() {
   if (!_staticStreamersPromise) {
     const version = window.CURRENT_DATA_VERSION || "20260919_gang_mariadb_sync_v6";
-    _staticStreamersPromise = fetch(`./streamers.json?v=${version}`)
+    _staticStreamersPromise = fetch(`./streamers.json?v=${version}&_t=${Date.now()}`)
       .then(res => {
         if (res.ok) return res.json();
         return null;
@@ -657,11 +662,21 @@ async function deleteAllVideosFromDb(streamerId) {
 window.deleteVideoFromDb = deleteVideoFromDb;
 window.deleteAllVideosFromDb = deleteAllVideosFromDb;
 
+let isSyncingStreamersToDb = false;
+let pendingStreamersSyncList = null;
+
 async function syncAllStreamersToDb(streamersList) {
   if (!Array.isArray(streamersList) || streamersList.length < 200) {
     console.warn(`[DB 동기화 차단] 전달된 인원 수가 비정상적으로 적습니다 (${streamersList ? streamersList.length : 0}명 < 200명). 데이터 유실 방지를 위해 DB 동기화를 차단합니다.`);
     return null;
   }
+
+  if (isSyncingStreamersToDb) {
+    pendingStreamersSyncList = streamersList;
+    return null;
+  }
+
+  isSyncingStreamersToDb = true;
   try {
     const res = await fetch(`${API_BASE}/api/streamers/sync`, {
       method: "POST",
@@ -670,10 +685,20 @@ async function syncAllStreamersToDb(streamersList) {
       body: JSON.stringify(streamersList)
     });
     if (res.ok) {
+      if (typeof invalidateStaticStreamersCache === "function") {
+        invalidateStaticStreamersCache();
+      }
       return await res.json();
     }
   } catch (e) {
     console.error("DB 일괄 동기화 실패:", e);
+  } finally {
+    isSyncingStreamersToDb = false;
+    if (pendingStreamersSyncList) {
+      const nextList = pendingStreamersSyncList;
+      pendingStreamersSyncList = null;
+      setTimeout(() => syncAllStreamersToDb(nextList), 100);
+    }
   }
   return null;
 }
